@@ -1,0 +1,109 @@
+# 获取密钥状态
+- include_tasks: certificate/certs_stat.yml
+# 生成公共证书
+- include_tasks: certificate/common.yml
+# 生成该节点 kubelet证书
+- include_tasks: certificate/respective.yml
+
+- name: 读取 kubelet.conf 文件 stat 信息
+  stat: 
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf_stat
+
+- block:
+  - name: 确认 kubelet 已停止运行
+    service:
+      name: kubelet
+      state: stopped
+      enabled: yes
+      
+  - name: 获取 Docker Cgroup Driver 值
+    shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
+    register: docker_cgroup_driver
+
+  - name: 设置变量 DOCKER_CGROUP_DRIVER
+    set_fact: DOCKER_CGROUP_DRIVER="{{ docker_cgroup_driver.stdout }}"
+
+  - name: 创建 kubeadm 的配置文件
+    template: 
+      src: kubeadm-config.yaml.j2
+      dest: /etc/kubernetes/kubeadm-config.yaml
+      owner: root
+      mode: 0644
+      backup: yes
+
+  - name: 获取第一个 master 节点需要拉取的镜像列表
+    shell: kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml
+    register: image_list
+
+  - name: 第一个 master 节点拉取相关镜像
+    shell: "docker pull {{ item }}"
+    with_items:
+    - "{{ image_list.stdout_lines }}"
+
+  - name: 初始化第一个 master 节点
+    shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml
+    register: kubeadm_init_results
+
+  when: not kubelet_conf_stat.stat.exists
+
+# 所有节点根据证书重新生成各组件配置文件
+- include_tasks: kubeconfig.yml
+
+# openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+- name: 获取 kubeadm join 命令
+  shell: kubeadm token create --print-join-command --config=/etc/kubernetes/kubeadm-config.yaml
+  register: kubeadm_join_command
+
+- name: 设置变量 KUBEADM_JOIN_COMMAND
+  set_fact: KUBEADM_JOIN_COMMAND="{{ kubeadm_join_command.stdout }}"
+
+- block:
+  - name: 重新加载 daemon
+    systemd:
+      daemon_reload: yes
+
+  - name: 重新启动 kubelet
+    service:
+      name: kubelet
+      state: restarted
+      enabled: yes
+
+  - name: 等待 apiserver 运行
+    uri:
+      url: "https://{{ CURRENT_HOST_IP }}:6443/healthz"
+      validate_certs: no
+    register: apiserver_result
+    until: apiserver_result.status == 200
+    retries: 60
+    delay: 5
+
+  - name: 等待 kube-scheduler 运行
+    uri:
+      url: http://localhost:10251/healthz
+    register: scheduler_result
+    until: scheduler_result.status == 200
+    retries: 60
+    delay: 5
+
+  - name: 等待 kube-controller-manager 运行
+    uri:
+      url: http://localhost:10252/healthz
+    register: controller_manager_result
+    until: controller_manager_result.status == 200
+    retries: 60
+    delay: 5
+    
+  when: not kubelet_conf_stat.stat.exists
+
+- name: 创建 kubeconfig 目录
+  file: 
+    name: "{{ ansible_env.HOME }}/.kube"
+    state: directory
+
+- name: 复制 kubeconfig 文件到 .kube 目录
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ ansible_env.HOME }}/.kube/config"
+    mode: 0644
+    remote_src: yes

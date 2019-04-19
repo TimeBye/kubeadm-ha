@@ -1,0 +1,13 @@
+- name: 添加 Kubernetes apt 仓库
+  apt_repository:
+    repo: "{{ kubernetes_apt_repo }}"
+    state: present
+
+- name: 安装 kubeadm kubelet kubectl
+  apt: 
+    name:
+    - "kubectl={{ kube_version }}-00"
+    - "kubelet={{ kube_version }}-00"
+    - "kubeadm={{ kube_version }}-00"
+    state: present
+    allow_unauthenticated: true

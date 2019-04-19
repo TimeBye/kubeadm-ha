@@ -1,0 +1,66 @@
+- block:
+  # openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+  - name: 获取 kubeadm join 命令
+    shell: kubeadm token create --print-join-command --config=/etc/kubernetes/kubeadm-config.yaml
+    register: kubeadm_join_command
+  
+  - name: 设置变量 KUBEADM_JOIN_COMMAND
+    set_fact: KUBEADM_JOIN_COMMAND="{{ kubeadm_join_command.stdout }}"
+  when: inventory_hostname == groups['kube-master']|first and hostvars[groups['kube-master']|first]['KUBEADM_JOIN_COMMAND'] is not defined
+
+- name: 读取 kubelet.conf 文件 stat 信息
+  stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf_stat
+
+- block:
+  - name: 创建 kubernetes 相关目录
+    file: 
+      name: "{{ item }}"
+      state: directory
+    with_items:
+    - "{{ kubelet_root_dir }}"
+    - /usr/share/bash-completion/completions
+
+  - name: 获取 Docker Cgroup Driver 值
+    shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
+    register: docker_cgroup_driver
+
+  - name: 设置变量 DOCKER_CGROUP_DRIVER
+    set_fact: DOCKER_CGROUP_DRIVER="{{ docker_cgroup_driver.stdout }}"
+
+  - name: 确认 kubelet 已停止运行
+    service:
+      name: kubelet
+      state: stopped
+      enabled: yes
+
+  - name: Worker 节点加入集群
+    shell: "{{ hostvars[groups['kube-master']|first]['KUBEADM_JOIN_COMMAND'] }} --node-name={{ inventory_hostname }} --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests"
+    when: not kubelet_conf_stat.stat.exists
+
+  - name: 更新 kubeadm-flags.env 配置文件
+    template: 
+      src: kubeadm-flags.env.j2
+      dest: /var/lib/kubelet/kubeadm-flags.env
+      owner: root
+      mode: 0644
+      backup: yes
+
+  - name: 重新加载 daemon
+    systemd:
+      daemon_reload: yes
+
+  - name: 重新启动 kubelet
+    service:
+      name: kubelet
+      state: restarted
+      enabled: yes
+
+  when: inventory_hostname not in groups['kube-master'] and (inventory_hostname in (groups['kube-worker'] + groups['new-worker'])) and not kubelet_conf_stat.stat.exists
+
+- name: 取消在 worker 组的 master 节点 taint，使 master 节点可以调度
+  shell: "kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/master-"
+  delegate_to: "{{ groups['kube-master']|first }}"
+  ignore_errors: yes
+  when: inventory_hostname in groups['kube-master'] and (inventory_hostname in (groups['kube-worker'] + groups['new-worker']))

@@ -1,0 +1,10 @@
+ip_vs
+ip_vs_rr
+ip_vs_wrr
+ip_vs_sh
+br_netfilter
+{% if ansible_kernel is version_compare('4.19', '>=') %}
+nf_conntrack
+{% else %}
+nf_conntrack_ipv4
+{% endif %}

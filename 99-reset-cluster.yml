@@ -1,0 +1,104 @@
+- hosts: all
+  tasks:
+  - name: 使用 kubeadm 重置节点
+    command: kubeadm reset -f
+    ignore_errors: true
+
+  - name: 停止相关服务
+    service:
+      name: "{{ item }}"
+      state: stopped
+      enabled: no
+    with_items:
+    - docker
+    - kubelet
+    ignore_errors: true
+
+  - name: 卸载默认 kubelet 相关目录
+    mount: 
+      path: /var/run/kubelet 
+      state: unmounted
+
+  - name: 卸载 docker netns 相关目录
+    mount: 
+      path: /var/run/docker/netns/default 
+      state: unmounted
+
+  - name: 卸载 docker overlay 相关目录
+    mount: 
+      path: /var/lib/docker/overlay 
+      state: unmounted
+
+  - name: 卸载相关软件
+    yum:
+      name:
+      - kubeadm
+      - kubectl
+      - kubelet
+      - docker-ce
+      state: absent
+
+  - name: 清理 iptables
+    shell: >
+      iptables -F && 
+      iptables -X && 
+      iptables -F -t nat && 
+      iptables -X -t nat && 
+      iptables -F -t raw && 
+      iptables -X -t raw &&
+      iptables -F -t mangle && 
+      iptables -X -t mangle
+    ignore_errors: true
+
+  - name: 清除虚拟网卡
+    shell: >
+      ip link del docker0 &&
+      ip link del tunl0 &&
+      ip link del flannel.1 &&
+      ip link del cni0 &&
+      ip link del mynet0 &&
+      ip link del kube-bridge &&
+      ip link del dummy0 &&
+      ip link del kube-ipvs0 &&
+      ip link del cilium_net &&
+      ip link del cilium_vxlan
+    ignore_errors: true
+
+  - name: 重新加载 daemon
+    systemd:
+      daemon_reload: yes
+
+  - name: 重启网络组件
+    service:
+      name: "{{item}}"
+      state: restarted
+    with_items:
+    - networking
+    - network
+    ignore_errors: true
+
+  - name: 移除相关目录
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+    - "{{ kubelet_root_dir }}"
+    - "{{ docker_storage_dir }}"
+    - "{{ ansible_env.HOME }}/.kube"
+    - /etc/haproxy
+    - /etc/nginx
+    - /etc/docker
+    - /etc/cni/net.d
+    - /etc/kubernetes
+    - /etc/systemd/system/kubelet.service.d
+    - /var/lib/etcd
+    - /var/lib/docker
+    - /var/lib/kubelet
+    - /usr/share/bash-completion/completions/kubectl
+
+  - name: 移除添加的 hosts 信息
+    blockinfile:
+      path: "/etc/hosts"
+      state: absent
+      follow: yes
+      marker: "# Ansible inventory hosts {mark}"

@@ -1,0 +1,20 @@
+- name: 创建 kubernetes 相关目录
+  file: 
+    name: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ kubelet_root_dir }}"
+  - /etc/kubernetes/pki
+  - /etc/kubernetes/manifests
+  - /usr/share/bash-completion/completions
+
+# 初始化第一个 master 节点
+- include_tasks: master-first.yml
+  when: inventory_hostname == groups['kube-master']|first
+
+# 分发证书
+- include_tasks: certificate/distribute.yml
+
+# 初始化其他 master 节点
+- include_tasks: master-other.yml
+  when: inventory_hostname != groups['kube-master']|first

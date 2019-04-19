@@ -1,0 +1,45 @@
+- name: 校验 hostname 是否合法
+  assert:
+    that: inventory_hostname == "{{ inventory_hostname | lower }}"
+    msg: "hostname 中包含大写字母，请修改为小写后重启服务器再重试。"
+
+- name: 校验 nginx lb 模式节点设置
+  run_once: true
+  assert:
+    that: groups['all'] == groups['lb'] 
+    msg: "当前负载均衡模式为 nginx，请将所有节点添加至 lb 节点组中。"
+  when:
+  - (groups['kube-master']|length + groups['new-master']|length) > 1
+  - lb_mode == "nginx"
+
+- name: 校验 nginx lb 模式端口设置
+  run_once: true
+  assert:
+    that: lb_kube_apiserver_port != "6443"
+    msg: "当前负载均衡模式为 nginx，请勿使用6443端口。"
+  when:
+  - (groups['kube-master']|length + groups['new-master']|length) > 1
+  - lb_mode == "nginx"
+
+- name: 校验 haproxy lb 模式节点设置
+  run_once: true
+  assert:
+    that: groups['lb'] | length > 1
+    msg: "当前负载均衡模式为 haproxy，请将添加至少两个节点到 lb 节点组中。"
+  when:
+  - lb_mode == "haproxy"
+
+- name: 校验 haproxy lb 模式端口设置
+  run_once: true
+  assert:
+    that: lb_kube_apiserver_port != "6443"
+    msg: "当前负载均衡模式为 haproxy，lb 节点与 master 节点有复用情况，请勿使用6443端口。"
+  when:
+  - inventory_hostname in ((groups['kube-master'] + groups['new-master']) | unique) and (inventory_hostname in groups['lb'])
+  - lb_mode == "haproxy"
+
+- name: 校验 etcd 节点数量
+  run_once: true
+  assert:
+    that: groups['etcd'] | length is odd
+    msg: "etcd 节点数量必须为奇数，请添加或减少 etcd 节点数量至奇数个。"

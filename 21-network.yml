@@ -1,0 +1,5 @@
+# 安装基础插件
+- hosts: 
+  - all
+  roles:
+  - { role: addons/flannel, when: cluster_network =='flannel' }

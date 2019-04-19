@@ -1,0 +1,9 @@
+# 系统基础软件环境
+- include_tasks: centos.yml
+  when: ansible_distribution in [ 'CentOS','RedHat' ]
+
+- include_tasks: debian.yml
+  when: ansible_distribution in [ 'Ubuntu','Debian' ]
+
+# 公共系统参数设置
+- include_tasks: common.yml

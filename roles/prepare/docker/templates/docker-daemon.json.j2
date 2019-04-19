@@ -1,0 +1,18 @@
+{
+{% if docker_mirror is defined and docker_mirror != None %}
+  "registry-mirrors": [{% for registry in docker_mirror %}"{{ registry }}"{% if not loop.last %},{% endif %}{% endfor %}],
+{% endif %}
+  "max-concurrent-downloads": {{ docker_max_concurrent_downloads | int }},
+  "log-driver": "{{ docker_log_driver }}",
+  "log-level": "{{ docker_log_level }}",
+  "log-opts": {
+    "max-size": "{{ docker_log_max_size }}",
+    "max-file": "{{ docker_log_max_file }}"
+    },
+  "data-root": "{{ docker_storage_dir }}",
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "storage-driver": "overlay2",
+  "storage-opts": [
+    "overlay2.override_kernel_check=true"
+  ]
+}

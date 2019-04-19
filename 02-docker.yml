@@ -1,0 +1,5 @@
+# 所有节点安装 Docker
+- hosts: 
+  - all
+  roles:
+  - prepare/docker

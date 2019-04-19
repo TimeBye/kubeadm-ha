@@ -1,0 +1,30 @@
+# 提权操作
+ansible_become: true
+# Docker版本
+# apt-cache madison docker-ce
+# yum list docker-ce --showduplicates --enablerepo=docker-ce | sort -r
+docker_version: 18.09.3
+# CentOS
+docker_yum_repo: https://mirrors.aliyun.com/docker-ce/linux/centos/7/$basearch/stable
+# Debian
+# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7EA0A9C3F273FCD8
+docker_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
+
+# 国内镜像加速
+docker_mirror: 
+  - "https://dockerhub.azk8s.cn"
+  - "https://quay.azk8s.cn"
+  # - "https://docker.mirrors.ustc.edu.cn"
+  # - "https://quay.mirrors.ustc.edu.cn"
+
+# docker日志相关
+docker_log_driver: "json-file"
+docker_log_level: "warn"
+docker_log_max_size: "10m"
+docker_log_max_file: 3
+
+# docker容器存储目录
+docker_storage_dir: "/var/lib/docker"
+
+# 并行镜像下载数量
+docker_max_concurrent_downloads: 10

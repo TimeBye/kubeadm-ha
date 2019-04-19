@@ -1,0 +1,10 @@
+- include_tasks: centos.yml
+  when: ansible_distribution in [ 'CentOS','RedHat' ]
+
+- include_tasks: ubuntu.yml
+  when: ansible_distribution in [ 'Ubuntu' ]
+
+- include_tasks: debian.yml
+  when: ansible_distribution in [ 'Debian' ]
+
+- include_tasks: common.yml

@@ -1,0 +1,84 @@
+# 禁用系统swap
+- name: 禁用系统 swap
+  shell: "swapoff -a && sysctl -w vm.swappiness=0"
+  ignore_errors: true
+
+- name: 删除 fstab swap 相关配置
+  lineinfile:
+    path: /etc/fstab
+    regexp: 'swap'
+    state: absent
+    backup: 'yes'
+
+- name: 加载内核模块
+  modprobe: 
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - ip_vs
+  - ip_vs_rr
+  - ip_vs_sh
+  - ip_vs_wrr
+  - br_netfilter
+  ignore_errors: true
+
+- name: 加载nf_conntrack for kernel < 4.19
+  modprobe: 
+    name: nf_conntrack_ipv4
+    state: present
+  when: ansible_kernel is version_compare('4.19', '<')
+  ignore_errors: true
+
+- name: 加载nf_conntrack for kernel >= 4.19
+  modprobe: 
+    name: nf_conntrack
+    state: present
+  when: ansible_kernel is version_compare('4.19', '>=')
+  ignore_errors: true
+
+- name: 设置 systemd-modules-load 配置
+  template: 
+    src: 10-k8s-modules.conf.j2
+    dest: /etc/modules-load.d/10-k8s-modules.conf
+
+- name: 启动/重启 systemd-modules-load
+  service:
+    name: systemd-modules-load
+    state: restarted
+    enabled: yes
+
+- name: 设置系统参数
+  template: 
+    src: 95-k8s-sysctl.conf.j2 
+    dest: /etc/sysctl.d/95-k8s-sysctl.conf
+
+- name: 生效系统参数
+  shell: "sysctl -p /etc/sysctl.d/95-k8s-sysctl.conf"
+  ignore_errors: true
+
+- name: 添加集群节点 hostname 信息到hosts 文件中
+  blockinfile:
+    path: /etc/hosts
+    block: |-
+      {% for item in (groups['all']|default([]))|unique -%}{% if hostvars[item]['ansible_host'] is defined %}{{ hostvars[item]['ansible_host'] }}{% else %}{{ item }}{% endif %} {{ hostvars[item]['ansible_nodename'] }} {{ hostvars[item]['ansible_nodename'] }}.{{ kube_dns_domain }}
+      {% endfor %}
+    state: present
+    create: yes
+    backup: yes
+    marker: "# Ansible inventory hosts {mark}"
+
+- name: 确认 hosts 文件中 localhost ipv4 配置正确
+  lineinfile:
+    dest: /etc/hosts
+    line: "127.0.0.1 localhost localhost.localdomain"
+    regexp: '^127.0.0.1.*$'
+    state: present
+    backup: yes
+
+- name: 确认 hosts 文件中 localhost ipv6 配置正确
+  lineinfile:
+    dest: /etc/hosts
+    line: "::1 localhost6 localhost6.localdomain"
+    regexp: '^::1.*$'
+    state: present
+    backup: yes

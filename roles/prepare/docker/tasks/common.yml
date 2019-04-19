@@ -1,0 +1,43 @@
+- name: 准备 Docker 相关目录
+  file: 
+    name: "{{ item }}"
+    state: directory
+  with_items:
+  - /etc/docker
+  - "{{ docker_storage_dir }}"
+
+- name: 确认 Docker 配置是否有修改
+  template:
+    src: docker-daemon.json.j2
+    dest: /etc/docker/daemon.json
+    owner: root
+    mode: 0644
+  register: configuration_result
+
+- name: 清理 iptables
+  shell: >
+    iptables -F &&
+    iptables -X &&
+    iptables -F -t nat &&
+    iptables -X -t nat &&
+    iptables -F -t raw &&
+    iptables -X -t raw &&
+    iptables -F -t mangle &&
+    iptables -X -t mangle
+
+- name: 重新加载 daemon
+  systemd:
+    daemon_reload: yes
+
+- name: 启动/重启 Docker
+  service:
+    name: docker
+    state: restarted
+    enabled: yes
+  when: configuration_result.changed
+
+- name: 添加当前用户到 Docker 用户组
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes

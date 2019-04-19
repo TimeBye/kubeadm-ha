@@ -1,0 +1,18 @@
+- name: 添加 Kubernetes yum 仓库
+  yum_repository:
+    name: kubernetes
+    description: Kubernetes Repository
+    baseurl: "{{ kubernetes_yum_repo }}"
+    enabled: no
+    gpgcheck: no
+    state: present
+
+- name: 安装 kubeadm kubelet kubectl
+  yum:
+    name: 
+    - "kubectl-{{ kube_version }}"
+    - "kubelet-{{ kube_version }}"
+    - "kubeadm-{{ kube_version }}"
+    - "kubernetes-cni-{{ kube_cni_version }}"
+    state: present
+    enablerepo: kubernetes

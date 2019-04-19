@@ -1,0 +1,5 @@
+# 所有节点安装 load-balancer
+- hosts: 
+  - lb
+  roles:
+  - { role: load-balancer, when: "(groups['kube-master']|length + groups['new-master']|length) > 1 and lb_mode != 'slb'" }

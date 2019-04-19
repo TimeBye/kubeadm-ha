@@ -1,0 +1,24 @@
+error_log stderr notice;
+
+worker_processes 1;
+events {
+    multi_accept on;
+    use epoll;
+    worker_connections 1024;
+}
+
+stream {
+    upstream kube_apiserver {
+        least_conn;
+{% for host in (groups['kube-master'] + groups['new-master']) %}
+        server {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:6443;
+{% endfor %}
+    }
+
+    server {
+        listen 0.0.0.0:{{ lb_kube_apiserver_port }};
+        proxy_pass    kube_apiserver;
+        proxy_timeout 10m;
+        proxy_connect_timeout 1s;
+    }
+}

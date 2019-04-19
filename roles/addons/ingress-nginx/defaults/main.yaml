@@ -1,0 +1,6 @@
+# 提权操作
+ansible_become: true
+# nginx-ingress 镜像地址
+nginx_ingress_image: registry.cn-hangzhou.aliyuncs.com/setzero/nginx-ingress-controller:0.21.0
+# 默认apiserver负载类型
+lb_mode: nginx

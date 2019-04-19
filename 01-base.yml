@@ -1,0 +1,5 @@
+# 所有节点安装基础组件并加载所需内核模块
+- hosts: 
+  - all
+  roles:
+  - prepare/base

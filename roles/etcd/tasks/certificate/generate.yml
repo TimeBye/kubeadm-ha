@@ -1,0 +1,109 @@
+- name: 创建 etcd 的证书请求配置
+  template: 
+    src: etcd-openssl.cnf.j2
+    dest: /etc/kubernetes/pki/etcd/etcd-openssl.cnf
+    owner: root
+    mode: 0644
+    backup: yes
+
+- name: 创建 etcd-ca 根证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/etcd/ca.key 2048
+  when: etcd_ca_key_stat.stat.isreg is not defined
+
+- name: 创建 etcd-ca 根证书
+  shell: >
+    openssl req -x509 -new -nodes -extensions v3_ca
+    -subj "/CN=kubernetes"
+    -config /etc/kubernetes/pki/etcd/etcd-openssl.cnf
+    -key /etc/kubernetes/pki/etcd/ca.key
+    -out /etc/kubernetes/pki/etcd/ca.crt
+    -days {{ etcd_certs_time }}
+  when: etcd_ca_crt_stat.stat.isreg is not defined
+
+- name: 创建 etcd-server 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/etcd/server.key 2048
+  when: etcd_server_key_stat.stat.isreg is not defined
+
+- name: 创建 etcd-server 证书请求
+  shell: >
+    openssl req -new 
+    -key /etc/kubernetes/pki/etcd/server.key 
+    -subj "/CN=master" 
+    -out /etc/kubernetes/pki/etcd/server.csr
+
+- name: 创建 etcd-server 证书
+  shell: >
+    openssl x509 -req -CAcreateserial 
+    -extensions v3_req_peer 
+    -extfile /etc/kubernetes/pki/etcd/etcd-openssl.cnf 
+    -CA /etc/kubernetes/pki/etcd/ca.crt 
+    -CAkey /etc/kubernetes/pki/etcd/ca.key 
+    -in /etc/kubernetes/pki/etcd/server.csr 
+    -out /etc/kubernetes/pki/etcd/server.crt
+    -days {{ etcd_certs_time }} 
+
+- name: 创建 etcd-peer 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/etcd/peer.key 2048
+  when: etcd_peer_key_stat.stat.isreg is not defined
+
+- name: 创建 etcd-peer 证书请求
+  shell: >
+    openssl req -new 
+    -key /etc/kubernetes/pki/etcd/peer.key 
+    -subj "/CN=master" 
+    -out /etc/kubernetes/pki/etcd/peer.csr
+
+- name: 创建 etcd-peer 证书
+  shell: >
+    openssl x509 -req -CAcreateserial 
+    -extensions v3_req_peer 
+    -extfile /etc/kubernetes/pki/etcd/etcd-openssl.cnf 
+    -CA /etc/kubernetes/pki/etcd/ca.crt 
+    -CAkey /etc/kubernetes/pki/etcd/ca.key 
+    -in /etc/kubernetes/pki/etcd/peer.csr 
+    -out /etc/kubernetes/pki/etcd/peer.crt
+    -days {{ etcd_certs_time }} 
+
+- name: 创建 apiserver-etcd-client 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/apiserver-etcd-client.key 2048
+  when: apiserver_etcd_client_key_stat.stat.isreg is not defined
+
+- name: 创建 apiserver-etcd-client 证书请求
+  shell: >
+    openssl req -new 
+    -key /etc/kubernetes/pki/apiserver-etcd-client.key
+    -subj "/CN=kube-apiserver-etcd-client/O=system:masters" 
+    -out /etc/kubernetes/pki/apiserver-etcd-client.csr
+
+- name: 创建 apiserver-etcd-client 证书
+  shell: >
+    openssl x509 -req -CAcreateserial 
+    -extensions v3_req_client 
+    -extfile /etc/kubernetes/pki/etcd/etcd-openssl.cnf 
+    -CA /etc/kubernetes/pki/etcd/ca.crt 
+    -CAkey /etc/kubernetes/pki/etcd/ca.key 
+    -in /etc/kubernetes/pki/apiserver-etcd-client.csr
+    -out /etc/kubernetes/pki/apiserver-etcd-client.crt
+    -days {{ etcd_certs_time }} 
+
+- name: 创建 etcd-healthcheck-client 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/etcd/healthcheck-client.key 2048
+  when: etcd_healthcheck_client_key_stat.stat.isreg is not defined
+
+- name: 创建 etcd-healthcheck-client 证书请求
+  shell: >
+    openssl req -new -key /etc/kubernetes/pki/etcd/healthcheck-client.key 
+    -subj "/CN=kube-etcd-healthcheck-client/O=system:masters" 
+    -out /etc/kubernetes/pki/etcd/healthcheck-client.csr
+
+- name: 创建 etcd-healthcheck-client 证书
+  shell: >
+    cd  &&
+    openssl x509 -req -CAcreateserial 
+    -extensions v3_req_client 
+    -extfile /etc/kubernetes/pki/etcd/etcd-openssl.cnf 
+    -CA /etc/kubernetes/pki/etcd/ca.crt 
+    -CAkey /etc/kubernetes/pki/etcd/ca.key 
+    -in /etc/kubernetes/pki/etcd/healthcheck-client.csr 
+    -out /etc/kubernetes/pki/etcd/healthcheck-client.crt
+    -days {{ etcd_certs_time }} 

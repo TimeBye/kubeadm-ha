@@ -1,0 +1,5 @@
+- name: "安装 kernel-ml"
+  yum:
+    name:
+    - "{{ kernel_centos }}"
+    state: present

@@ -1,0 +1,4 @@
+# 提权操作
+ansible_become: true
+# kubernetes-dashboard 镜像地址
+kubernetes_dashboard_image: registry.cn-hangzhou.aliyuncs.com/setzero/kubernetes-dashboard-amd64:v1.10.1

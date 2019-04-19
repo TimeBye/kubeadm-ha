@@ -1,0 +1,11 @@
+# 提权操作
+ansible_become: true
+# 集群pod ip段
+kube_pod_subnet: 10.244.0.0/18
+# 设置flannel 后端
+#flannel_backend: "host-gw"
+flannel_backend: "vxlan"
+# flannel 镜像地址
+flannel_image: registry.cn-hangzhou.aliyuncs.com/setzero/flannel:v0.10.0-amd64
+# 选择默认网卡
+flannel_iface: true

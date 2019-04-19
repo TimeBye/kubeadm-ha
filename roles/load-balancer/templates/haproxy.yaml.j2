@@ -1,0 +1,33 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: kube-haproxy
+  namespace: kube-system
+  labels:
+    component: haproxy
+    tier: control-plane
+spec:
+  hostNetwork: true
+  priorityClassName: system-cluster-critical
+  containers:
+  - name: kube-haproxy
+    # image: haproxy:1.9.0
+    image: {{ kube_haproxy_image }}
+    # 检测当前节点haproxy是否存活，若不存活则重启
+    livenessProbe:
+      failureThreshold: 8
+      tcpSocket:
+        port: {{ lb_kube_apiserver_port }}
+      periodSeconds: 10  
+      initialDelaySeconds: 15
+      timeoutSeconds: 15
+    resources: {}
+    volumeMounts:
+    - name: haproxy-cfg
+      readOnly: true
+      mountPath: /usr/local/etc/haproxy/haproxy.cfg
+  volumes:
+  - name: haproxy-cfg
+    hostPath:
+      path: /etc/haproxy/haproxy.cfg
+      type: FileOrCreate

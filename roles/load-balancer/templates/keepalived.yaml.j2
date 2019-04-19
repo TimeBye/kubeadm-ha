@@ -1,0 +1,44 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  labels:
+    component: keepalived
+    tier: control-plane
+  name: kube-keepalived
+  namespace: kube-system
+spec:
+  hostNetwork: true
+  priorityClassName: system-cluster-critical
+  containers:
+  - name: kube-keepalived
+    # image: osixia/keepalived:2.0.10
+    image: {{ kube_keepalived_image }}
+    env:
+    - name: KEEPALIVED_VIRTUAL_IPS
+      value: {{ KUBE_APISERVER_IP | trim }}
+    - name: KEEPALIVED_INTERFACE
+      value: {{ KEEPALIVED_INTERFACE }}
+    - name: KEEPALIVED_UNICAST_PEERS
+      value: "#PYTHON2BASH:[{{ KEEPALIVED_UNICAST_PEERS }}]"
+    - name: keepalived_password
+      value: {{ keepalived_password }}
+    - name: KEEPALIVED_PRIORITY
+      value: "{{ KEEPALIVED_PRIORITY }}"
+    - name: keepalived_router_id
+      value: "{{ keepalived_router_id }}"
+    # 检测当前节点haproxy是否存活，若不存活则重启以让出vip
+    livenessProbe:
+      exec:
+        command:
+        - /bin/sh
+        - -ec
+        - nc -z -w 3 {{ CURRENT_HOST_IP }} {{ lb_kube_apiserver_port }}
+      failureThreshold: 8
+      initialDelaySeconds: 20
+      timeoutSeconds: 15
+    resources: {}
+    securityContext:
+      privileged: true
+      capabilities:
+        add:
+        - NET_ADMIN

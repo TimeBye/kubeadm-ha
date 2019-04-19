@@ -1,0 +1,14 @@
+# 提权操作
+ansible_become: true
+# Etcd证书过期时间（天）
+etcd_certs_time: 36500
+# Etcd使用的镜像
+etcd_image: gcr.azk8s.cn/google_containers/etcd:3.3.10
+# Pod根容器
+pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
+# 当前节点ip
+CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
+# etcd 集群
+INITIAL_CLUSTER: "{% for host in groups['etcd'] %}{% if hostvars[host]['ansible_host'] is defined %}etcd-{{ host }}=https://{{ hostvars[host]['ansible_host'] }}:2380{% else %}etcd-{{ host }}=https://{{ host }}:2380{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
+# Kubelet 根目录
+kubelet_root_dir: "/var/lib/kubelet"

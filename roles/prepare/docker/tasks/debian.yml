@@ -1,0 +1,11 @@
+- name: 添加 Docker apt 仓库
+  apt_repository:
+    repo: "{{ docker_apt_repo }}"
+    state: present
+
+- name: 安装 Docker
+  apt: 
+    name:
+    - "docker-ce={{ docker_version }}~ce~3-0~{{ ansible_distribution | lower }}"
+    state: present
+    allow_unauthenticated: true

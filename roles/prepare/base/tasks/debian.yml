@@ -1,0 +1,49 @@
+# # 删除默认安装
+# - name: 删除ubuntu默认安装
+#   apt: 
+#     name: 
+#       - ufw
+#       - lxd
+#       - lxd-client
+#       - lxcfs
+#       - lxc-common
+#     state: absent
+
+- name: 添加基础 Apt 仓库
+  apt_repository:
+    repo: "{{ base_apt_repo }}"
+    state: present
+  when: base_apt_repo is defined and base_apt_repo != ''
+  
+# Ubuntu 安装基础软件包
+- name: 安装 ubuntu 基础软件
+  apt: 
+    name:
+    - git
+    - sysstat
+    - libseccomp
+    - curl                        # 基础工具
+    - apt-transport-https         # 添加https协议的apt源会用到
+    - ca-certificates             # docker会用到
+    - software-properties-common  # docker会用到
+    - nfs-common                  # 挂载nfs 共享文件需要 (创建基于 nfs的PV 需要)
+    - conntrack                   # network connection cleanup 用到
+    - jq                          # 轻量JSON处理程序，安装docker查询镜像需要
+    - socat                       # 用于port forwarding
+    - bash-completion             # bash命令补全工具，需要重新登录服务器生效
+    - ipset                       # ipvs 模式需要
+    - ipvsadm                     # ipvs 模式需要
+    - netcat-openbsd              # 使用lb时进行端口判断时会用到
+    state: present
+    allow_unauthenticated: true
+
+- name: 设置 ulimits
+  lineinfile:
+    dest: /etc/profile
+    regexp: "ulimit -SHn"
+    line: "ulimit -SHn 65535"
+
+- name: 设置 ulimits 永久配置
+  template: 
+    src: 30-ulimits.conf.j2 
+    dest: /etc/security/limits.d/30-ulimits.conf

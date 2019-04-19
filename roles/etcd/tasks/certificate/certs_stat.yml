@@ -1,0 +1,31 @@
+# 根据stat信息判断是否已经生成过edcd证书，如果没有，下一步生成证书
+# 如果已经有etcd证书，为了保证整个安装的幂等性，跳过证书生成的步骤
+- name: 读取 etcd-ca 证书私钥 stat 信息
+  stat: 
+    path: /etc/kubernetes/pki/etcd/ca.key
+  register: etcd_ca_key_stat
+  
+- name: 读取 etcd-ca 根证书 stat 信息
+  stat: 
+    path: /etc/kubernetes/pki/etcd/ca.crt
+  register: etcd_ca_crt_stat
+
+- name: 读取 healthcheck-client 证书秘钥 stat 信息
+  stat: 
+    path: /etc/kubernetes/pki/etcd/healthcheck-client.key
+  register: etcd_healthcheck_client_key_stat
+
+- name: 读取 server 证书秘钥 stat 信息
+  stat: 
+    path: /etc/kubernetes/pki/etcd/server.key
+  register: etcd_server_key_stat
+
+- name: 读取 peer 证书秘钥 stat 信息
+  stat: 
+    path: /etc/kubernetes/pki/etcd/peer.key
+  register: etcd_peer_key_stat
+
+- name: 读取 apiserver-etcd-client 证书秘钥 stat 信息
+  stat: 
+    path: /etc/kubernetes/pki/apiserver-etcd-client.key
+  register: apiserver_etcd_client_key_stat

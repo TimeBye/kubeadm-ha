@@ -1,0 +1,204 @@
+# 生成共用的证书或秘钥
+- name: 创建 kubernetes 的证书请求配置
+  template: 
+    src: kube-openssl.cnf.j2
+    dest: /etc/kubernetes/pki/kube-openssl.cnf
+    owner: root
+    mode: 0644
+    backup: yes
+
+- name: 创建 kubernetes-ca 根证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/ca.key 2048
+  when: ca_key_stat.stat.isreg is not defined
+
+- name: 创建 kubernetes-ca 根证书
+  shell: >
+    openssl req -x509 -new -nodes
+    -extensions v3_ca -subj "/CN=kubernetes"
+    -config /etc/kubernetes/pki/kube-openssl.cnf
+    -key /etc/kubernetes/pki/ca.key
+    -out /etc/kubernetes/pki/ca.crt
+    -days {{ kube_certs_time }}
+  when: ca_crt_stat.stat.isreg is not defined
+
+- name: 创建 front-proxy-ca 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/front-proxy-ca.key 2048
+  when: front_proxy_ca_key_stat.stat.isreg is not defined
+
+- name: 创建 front-proxy-ca 根证书
+  shell: >
+    openssl req -x509 -new -nodes
+    -extensions v3_ca -subj "/CN=kubernetes"
+    -config /etc/kubernetes/pki/kube-openssl.cnf
+    -key /etc/kubernetes/pki/front-proxy-ca.key
+    -out /etc/kubernetes/pki/front-proxy-ca.crt
+    -days {{ kube_certs_time }}
+
+# - name: 创建 apiserver-etcd-client 证书私钥
+#   shell: openssl genrsa -out /etc/kubernetes/pki/apiserver-etcd-client.key 2048
+
+# - name: 创建 apiserver-etcd-client 证书请求
+#   shell: >
+#     openssl req -new 
+#     -key /etc/kubernetes/pki/apiserver-etcd-client.key
+#     -subj "/CN=kube-apiserver-etcd-client/O=system:masters"
+#     -out /etc/kubernetes/pki/apiserver-etcd-client.csr
+
+# - name: 创建 apiserver-etcd-client 证书
+#   shell: >
+#     openssl x509 -req -CAcreateserial
+#     -extensions v3_req_client
+#     -extfile /etc/kubernetes/pki/kube-openssl.cnf
+#     -CA /etc/kubernetes/pki/etcd/ca.crt
+#     -CAkey /etc/kubernetes/pki/etcd/ca.key 
+#     -in /etc/kubernetes/pki/apiserver-etcd-client.csr
+#     -out /etc/kubernetes/pki/apiserver-etcd-client.crt
+#     -days {{ kube_certs_time }}
+
+- name: 创建 apiserver 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/apiserver.key 2048
+  when: apiserver_key_stat.stat.isreg is not defined
+
+- name: 创建 apiserver 证书请求
+  shell: >
+    openssl req -new 
+    -subj "/CN=kube-apiserver" 
+    -key /etc/kubernetes/pki/apiserver.key 
+    -out /etc/kubernetes/pki/apiserver.csr
+  
+- name: 创建 apiserver 证书
+  shell: >
+    openssl x509 -req -CAcreateserial 
+    -extensions v3_req_server 
+    -extfile /etc/kubernetes/pki/kube-openssl.cnf 
+    -CA /etc/kubernetes/pki/ca.crt 
+    -CAkey /etc/kubernetes/pki/ca.key 
+    -in /etc/kubernetes/pki/apiserver.csr
+    -out /etc/kubernetes/pki/apiserver.crt
+    -days {{ kube_certs_time }} 
+
+- name: 创建 apiserver-kubelet-client 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/apiserver-kubelet-client.key 2048
+  when: apiserver_kubelet_client_key_stat.stat.isreg is not defined
+
+- name: 创建 apiserver-kubelet-client 证书请求
+  shell: >
+    openssl req -new 
+    -subj "/CN=kube-apiserver-kubelet-client/O=system:masters"
+    -key /etc/kubernetes/pki/apiserver-kubelet-client.key 
+    -out /etc/kubernetes/pki/apiserver-kubelet-client.csr
+
+- name: 创建 apiserver-kubelet-client 证书
+  shell: >
+    openssl x509 -req -CAcreateserial 
+    -extensions v3_req_client 
+    -extfile /etc/kubernetes/pki/kube-openssl.cnf 
+    -CA /etc/kubernetes/pki/ca.crt 
+    -CAkey /etc/kubernetes/pki/ca.key 
+    -in /etc/kubernetes/pki/apiserver-kubelet-client.csr
+    -out /etc/kubernetes/pki/apiserver-kubelet-client.crt
+    -days {{ kube_certs_time }} 
+
+- name: 创建 front-proxy-client 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/front-proxy-client.key 2048
+  when: front_proxy_client_key_stat.stat.isreg is not defined
+
+- name: 创建 front-proxy-client 证书请求
+  shell: >
+    openssl req -new 
+    -subj "/CN=front-proxy-client"
+    -key /etc/kubernetes/pki/front-proxy-client.key 
+    -out /etc/kubernetes/pki/front-proxy-client.csr
+
+- name: 创建 front-proxy-client 证书
+  shell: >
+    openssl x509 -req -CAcreateserial 
+    -extensions v3_req_client 
+    -extfile /etc/kubernetes/pki/kube-openssl.cnf 
+    -CA /etc/kubernetes/pki/front-proxy-ca.crt
+    -CAkey /etc/kubernetes/pki/front-proxy-ca.key
+    -in /etc/kubernetes/pki/front-proxy-client.csr
+    -out /etc/kubernetes/pki/front-proxy-client.crt
+    -days {{ kube_certs_time }} 
+
+- name: 创建 kube-scheduler 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/kube-scheduler.key 2048
+  when: kube_scheduler_key_stat.stat.isreg is not defined
+
+- name: 创建 kube-scheduler 证书请求
+  shell: >
+    openssl req -new 
+    -subj "/CN=system:kube-scheduler" 
+    -key /etc/kubernetes/pki/kube-scheduler.key
+    -out /etc/kubernetes/pki/kube-scheduler.csr
+
+- name: 创建 kube-scheduler 证书
+  shell: >
+    openssl x509 -req -CAcreateserial 
+    -extensions v3_req_client 
+    -extfile /etc/kubernetes/pki/kube-openssl.cnf 
+    -CA /etc/kubernetes/pki/ca.crt 
+    -CAkey /etc/kubernetes/pki/ca.key 
+    -in /etc/kubernetes/pki/kube-scheduler.csr
+    -out /etc/kubernetes/pki/kube-scheduler.crt
+    -days {{ kube_certs_time }} 
+
+- name: 创建 sa 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/sa.key 2048
+  when: sa_key_stat.stat.isreg is not defined
+
+- name: 根据 sa 私钥创建公钥
+  shell: openssl rsa -in /etc/kubernetes/pki/sa.key -pubout -out /etc/kubernetes/pki/sa.pub
+  when: sa_pud_stat.stat.isreg is not defined
+
+- name: 软链 sa 证书私钥为 kube-controller-manager 证书私钥
+  file: 
+    src: /etc/kubernetes/pki/sa.key
+    dest: /etc/kubernetes/pki/kube-controller-manager.key
+    state: link
+  run_once: true
+  delegate_to: "{{ groups['kube-master']|first }}"
+
+- name: 创建 kube-controller-manager 证书请求
+  shell: >
+    openssl req -new 
+    -subj "/CN=system:kube-controller-manager" 
+    -key /etc/kubernetes/pki/sa.key 
+    -out /etc/kubernetes/pki/kube-controller-manager.csr
+
+- name: 创建 kube-controller-manager 证书
+  shell: >
+    openssl x509 -req -CAcreateserial 
+    -extensions v3_req_client 
+    -extfile /etc/kubernetes/pki/kube-openssl.cnf 
+    -CA /etc/kubernetes/pki/ca.crt 
+    -CAkey /etc/kubernetes/pki/ca.key 
+    -in /etc/kubernetes/pki/kube-controller-manager.csr
+    -out /etc/kubernetes/pki/kube-controller-manager.crt
+    -days {{ kube_certs_time }} 
+
+- name: 创建 kubernetes cluster admin 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/admin.key 2048
+  when: admin_key_stat.stat.isreg is not defined
+
+- name: 创建 kubernetes cluster admin 证书请求
+  shell: >
+    openssl req -new 
+    -subj "/CN=kubernetes-admin/O=system:masters"
+    -key /etc/kubernetes/pki/admin.key
+    -out /etc/kubernetes/pki/admin.csr
+
+- name: 创建 kubernetes cluster admin 证书
+  shell: >
+    openssl x509 -req -CAcreateserial 
+    -extensions v3_req_client
+    -extfile /etc/kubernetes/pki/kube-openssl.cnf
+    -CA /etc/kubernetes/pki/ca.crt 
+    -CAkey /etc/kubernetes/pki/ca.key
+    -in /etc/kubernetes/pki/admin.csr
+    -out /etc/kubernetes/pki/admin.crt
+    -days {{ kube_certs_time }} 
+
+- name: 创建 kubelet 证书私钥
+  shell: openssl genrsa -out /etc/kubernetes/pki/kubelet.key 2048
+  when: kubelet_key_stat.stat.isreg is not defined

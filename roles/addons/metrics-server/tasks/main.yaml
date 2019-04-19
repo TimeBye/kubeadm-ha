@@ -1,0 +1,25 @@
+- block:
+  - name: 在第一台 master 节点创建 metrics-server 配置文件目录
+    file:
+      path: /etc/kubernetes/addons/metrics-server
+      state: directory
+
+  - name: 渲染 metrics-server 配置文件
+    template:
+      src: metrics-server.yaml.j2
+      dest: /etc/kubernetes/addons/metrics-server/metrics-server.yaml
+    register: metrics_server_manifest
+
+  - name: 部署 metrics-server
+    command: kubectl apply -f /etc/kubernetes/addons/metrics-server/metrics-server.yaml
+    when: metrics_server_manifest.changed
+
+  - name: 轮询等待 metrics-server 运行
+    shell: kubectl get pod --all-namespaces -o wide | grep 'metrics-server' | awk '{print $4}'
+    register: pod_status
+    until: "'Running' in pod_status.stdout"
+    retries: 12
+    delay: 5
+    ignore_errors: true
+
+  when: inventory_hostname == groups['kube-master']|first

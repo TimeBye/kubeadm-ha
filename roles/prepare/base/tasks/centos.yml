@@ -1,0 +1,86 @@
+# - name: 删除centos默认安装
+#   yum: 
+#     name: 
+#     - firewalld
+#     - python-firewall
+#     - firewalld-filesystem
+#     state: absent
+#     disablerepo: "*"
+
+- name: 添加基础 yum 仓库
+  yum_repository:
+    name: custom
+    description: Custom Repository
+    baseurl: "{{ base_yum_repo }}"
+    enabled: no
+    gpgcheck: no
+    state: present
+  when: base_yum_repo is defined and base_yum_repo != ''
+
+- name: 安装基础软件包
+  yum: 
+    name: 
+    - git
+    - iotop
+    - htop
+    - net-tools
+    - sysstat
+    - conntrack
+    - libseccomp
+    - conntrack-tools                 # ipvs 模式需要
+    - ipset                           # ipvs 模式需要
+    - ipvsadm                         # ipvs 模式需要
+    - nfs-utils                       # 挂载nfs 共享文件需要 (创建基于 nfs的 PV 需要)
+    - jq                              # 轻量JSON处理程序
+    - socat                           # 用于port forwarding
+    - bash-completion                 # bash命令补全工具，需要重新登录服务器生效
+    - device-mapper-persistent-data   # docker会用到
+    - lvm2                            # docker会用到
+    - curl                            # 基础工具
+    - yum-utils                       # 基础工具
+    - nc                              # 使用lb时进行端口判断时会用到
+    state: latest
+    enablerepo: custom
+    disablerepo: "*"
+  when: base_yum_repo is defined and base_yum_repo != ''
+
+- block:
+  - name: 添加 epel 仓库
+    yum: 
+      name: epel-release 
+      state: latest
+
+  - name: 安装基础软件包
+    yum: 
+      name: 
+      - git
+      - iotop
+      - htop
+      - net-tools
+      - sysstat
+      - conntrack
+      - libseccomp
+      - conntrack-tools                 # ipvs 模式需要
+      - ipset                           # ipvs 模式需要
+      - ipvsadm                         # ipvs 模式需要
+      - nfs-utils                       # 挂载nfs 共享文件需要 (创建基于 nfs的 PV 需要)
+      - jq                              # 轻量JSON处理程序
+      - socat                           # 用于port forwarding
+      - bash-completion                 # bash命令补全工具，需要重新登录服务器生效
+      - device-mapper-persistent-data   # docker会用到
+      - lvm2                            # docker会用到
+      - curl                            # 基础工具
+      - yum-utils                       # 基础工具
+      - nc                              # 使用lb时进行端口判断时会用到
+      state: latest
+  when: base_yum_repo is not defined
+
+- name: 临时关闭 selinux
+  shell: "setenforce 0"
+  failed_when: false
+
+- name: 永久关闭 selinux
+  lineinfile:
+    dest: /etc/selinux/config
+    regexp: "^SELINUX="
+    line: "SELINUX=disabled"

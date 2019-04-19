@@ -1,0 +1,42 @@
+- name: Haproxy | 创建 lb 相关目录
+  file: 
+    name: "{{ item }}"
+    state: directory
+  with_items:
+  - /etc/haproxy
+  - /etc/kubernetes/manifests
+
+- name: Haproxy | 拉取相关镜像
+  shell: docker pull {{ item }}
+  with_items:
+  - "{{ kube_haproxy_image }}"
+  - "{{ kube_keepalived_image }}"
+  - "{{ pod_infra_container_image }}"
+
+- name: Haproxy | 获取网卡名称
+  shell: "ip a|grep '{{ CURRENT_HOST_IP }}/'|awk '{print $NF}'"
+  register: KEEPALIVED_INTERFACE_TMP
+- name: Haproxy | 设置变量 KEEPALIVED_INTERFACE
+  set_fact: KEEPALIVED_INTERFACE="{{ KEEPALIVED_INTERFACE_TMP.stdout }}"
+
+- name: Haproxy | 生成 haproxy static pod 文件
+  template: 
+    src: haproxy.yaml.j2
+    dest: /etc/kubernetes/manifests/haproxy.yaml
+    owner: root
+    mode: 0644
+
+- name: Haproxy | 生成 haproxy 配置文件
+  template: 
+    src: haproxy.cfg.j2 
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    mode: 0644
+
+- name: Haproxy | 生成 keepalived static pod 文件
+  template: 
+    src: keepalived.yaml.j2
+    dest: /etc/kubernetes/manifests/keepalived.yaml
+    owner: root
+    mode: 0644
+  register: lb_configuration_result

@@ -1,0 +1,110 @@
+- name: 创建 kubelet 相关目录
+  file: 
+    name: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ kubelet_root_dir }}"
+  - /etc/systemd/system/kubelet.service.d
+
+- block:
+  - name: 在 etcd 节点创建 etcd 相关目录
+    file: 
+      name: "{{ item }}"
+      state: directory
+    with_items:
+    - /var/lib/etcd
+    - /etc/kubernetes/pki/etcd
+    - /etc/kubernetes/manifests
+
+  - name: 在 etcd 节点拉取相关镜像
+    shell: docker pull {{ item }}
+    with_items:
+    - "{{ etcd_image }}"
+    - "{{ pod_infra_container_image }}"
+
+  when: inventory_hostname in groups['etcd']
+
+- name: 在 master 节点创建 etcd 证书相关目录
+  file: 
+    name: /etc/kubernetes/pki/etcd
+    state: directory
+  when: inventory_hostname in groups['kube-master']
+
+- block:
+  # 获取密钥状态
+  - include_tasks: certificate/certs_stat.yml
+  # 生成证书
+  - include_tasks: certificate/generate.yml
+  when: inventory_hostname == groups['etcd']|first
+
+# 分发证书
+- include_tasks: certificate/distribute.yml
+
+- name: 生成 etcd static pod 文件
+  template: 
+    src: etcd-external.yaml.j2
+    dest: /etc/kubernetes/manifests/etcd-external.yaml
+    owner: root
+    mode: 0644
+  register: etcd_configuration_result
+  when: inventory_hostname in groups['etcd']
+
+- block:
+  - name: 获取 Docker Cgroup Driver 值
+    shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
+    register: docker_cgroup_driver
+  
+  - name: 设置变量 DOCKER_CGROUP_DRIVER
+    set_fact: DOCKER_CGROUP_DRIVER="{{ docker_cgroup_driver.stdout }}"
+
+  - name: 生成临时 kubelet unit 文件
+    template: 
+      src: 20-kubelet-override.conf.j2
+      dest: "/etc/systemd/system/kubelet.service.d/20-kubelet-override.conf"
+      owner: root
+      mode: 0644
+
+  - name: 重新加载 daemon
+    systemd:
+      daemon_reload: yes
+
+  - name: 临时启动 kubelet 以引导 etcd 运行
+    service:
+      name: kubelet
+      state: restarted
+      enabled: yes
+
+  - name: 以轮询的方式等待 etcd 运行完成
+    shell: >
+      docker run --name etcd-healthcheck --net host -e ETCDCTL_API=3 
+      -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
+      --rm {{ etcd_image }}
+      etcdctl 
+      --endpoints=https://[127.0.0.1]:2379
+      --cacert=/etc/kubernetes/pki/etcd/ca.crt
+      --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+      --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+      endpoint health
+    register: etcd_status
+    until: '"is healthy" in etcd_status.stdout'
+    retries: 12
+    delay: 5
+
+  when: inventory_hostname in groups['etcd'] and etcd_configuration_result.changed
+
+- block:
+  - name: 移除临时 kubelet unit 文件
+    file: 
+      name: "{{ item }}"
+      state: absent
+    with_items:
+    - /etc/systemd/system/kubelet.service.d/20-kubelet-override.conf
+  - name: 重新加载 daemon
+    systemd:
+      daemon_reload: yes
+  - name: 停止临时启动 kubelet
+    service:
+      name: kubelet
+      state: stopped
+      enabled: yes
+  when: inventory_hostname in (groups['kube-master'] + groups['kube-worker']) and etcd_configuration_result.changed

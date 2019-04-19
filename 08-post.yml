@@ -1,0 +1,5 @@
+# 标记各节点角色
+- hosts: 
+  - all
+  roles:
+  - post

@@ -1,0 +1,4 @@
+# 提权操作
+ansible_become: true
+# metrics-server image地址
+metrics_server_image: registry.cn-hangzhou.aliyuncs.com/setzero/metrics-server-amd64:v0.3.1

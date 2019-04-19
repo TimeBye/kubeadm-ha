@@ -1,0 +1,58 @@
+[ req ]
+default_bits = 2048
+default_md = sha256
+distinguished_name = req_distinguished_name
+
+[req_distinguished_name]
+
+[ v3_ca ]
+basicConstraints = critical, CA:TRUE
+keyUsage = critical, digitalSignature, keyEncipherment, keyCertSign
+
+[ v3_req_server ]
+basicConstraints = CA:FALSE
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names_cluster
+
+[ v3_req_client ]
+basicConstraints = CA:FALSE
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = clientAuth
+
+[ alt_names_cluster ]
+DNS.1 = localhost
+DNS.2 = kubernetes
+DNS.3 = kubernetes.default
+DNS.4 = kubernetes.default.svc
+{% set dns_idx = 4 | int %}
+{% for sub_domain in kube_dns_domain.split('.') %}
+{% set outer_loop = loop %}
+DNS.{{ dns_idx + loop.index }} = kubernetes.default.svc.{% for domain in kube_dns_domain.split('.') %}{% if loop.index <= outer_loop.index %}{{ domain }}{% if loop.index < outer_loop.index %}.{% endif %}{% endif %}{% endfor %}
+
+{% endfor %}
+{% set dns_idx = 4 + (kube_dns_domain.split('.')|length) | int %}
+{% for domain in kube_master_external_demain %}
+DNS.{{ dns_idx + loop.index }} = {{ domain }}
+{% endfor %}
+{% if hostvars[inventory_hostname]['ansible_host'] is defined %}
+{% set dns_idx = 4 + (kube_dns_domain.split('.')|length + kube_master_external_demain|length) | int %}
+{% for host in (groups['kube-master'] + groups['new-master'] | default([])) | unique %}
+DNS.{{ dns_idx + loop.index }} = {{ host }}
+{% endfor %}
+{% endif %}
+IP.1 = 127.0.0.1
+IP.2 = 0:0:0:0:0:0:0:1
+IP.3 = {{ KUBERNETES_SERVICE_IP }}
+{% set ip_idx = 3 | int %}
+{% for host in (groups['kube-master'] + groups['new-master'] | default([])) | unique %}
+IP.{{ ip_idx + loop.index }} = {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}
+
+{% endfor %}
+{% set ip_idx = 3 + (groups['kube-master']|length + groups['new-master']|length) | int %}
+{% for ip in kube_master_external_ip %}
+IP.{{ ip_idx + loop.index }} = {{ ip }}
+{% endfor %}
+{% if lb_mode != 'nginx' %}
+IP.{{4 + (groups['kube-master']|length + groups['new-master']|length + kube_master_external_ip|length) | int }} = {{ lb_kube_apiserver_ip | trim }}
+{% endif %}

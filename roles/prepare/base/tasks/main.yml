@@ -1,0 +1,17 @@
+# 参数校验
+- include_tasks: verify_variables.yml
+
+# 预检内存是否满足要求
+- name: 校验节点资源配置
+  include_tasks: verify_node.yml
+  when: not ( skip_verify_node | bool )
+
+# 系统基础软件环境
+- include_tasks: centos.yml
+  when: ansible_distribution in [ 'CentOS','RedHat' ]
+
+- include_tasks: debian.yml
+  when: ansible_distribution in [ 'Ubuntu','Debian' ]
+
+# 公共系统参数设置
+- include_tasks: common.yml

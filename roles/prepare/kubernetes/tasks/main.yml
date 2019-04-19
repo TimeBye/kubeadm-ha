@@ -1,0 +1,9 @@
+# 系统基础软件环境
+- include_tasks: centos.yml
+  when: ansible_distribution in [ 'CentOS','RedHat' ]
+
+- include_tasks: debian.yml
+  when: ansible_distribution in [ 'Ubuntu','Debian' ]
+
+- name: 配置 kubectl 命令行自动补全
+  shell: kubectl completion bash > /usr/share/bash-completion/completions/kubectl

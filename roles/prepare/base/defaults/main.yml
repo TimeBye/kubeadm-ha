@@ -1,0 +1,6 @@
+# 提权操作
+ansible_become: true
+# 是否跳过节点资源校验
+skip_verify_node: false
+# 默认apiserver负载类型
+lb_mode: nginx

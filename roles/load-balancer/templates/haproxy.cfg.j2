@@ -1,0 +1,62 @@
+global
+    log 127.0.0.1 local0
+    log 127.0.0.1 local1 notice
+    tune.ssl.default-dh-param 2048
+
+defaults
+    log global
+    mode http
+    option dontlognull
+    timeout connect 5000ms
+    timeout client 1800000ms
+    timeout server 1800000ms
+
+listen stats
+    bind :{{ haproxy_stats_bind_address }}
+    mode http
+    balance {{ haproxy_balance_alg }}
+    stats enable
+    stats refresh {{ haproxy_stats_refresh }}s
+    stats uri {{ haproxy_stats_uri }}
+    stats auth {{ haproxy_stats_user }}:{{ haproxy_stats_password }}
+    stats admin if TRUE
+
+listen kube-master
+    bind :{{ lb_kube_apiserver_port }}
+    mode tcp
+    option tcplog
+    balance {{ haproxy_balance_alg }} 
+{% for host in groups['kube-master'] %}
+    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:6443 check inter 2000 fall 2 rise 2 weight 1
+{% endfor %}
+{% for host in groups['new-master'] %}
+    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:6443 check inter 2000 fall 2 rise 2 weight 1
+{% endfor %}
+
+{% if enabel_ingress_nodeport_lb | bool %}
+listen ingress-node
+    bind :80
+    mode tcp
+    option tcplog
+    balance {{ haproxy_balance_alg }}
+{% for host in groups['kube-worker'] %}
+    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30080 check inter 2000 fall 2 rise 2 weight 1
+{% endfor %}
+{% for host in groups['new-worker'] %}
+    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30080 check inter 2000 fall 2 rise 2 weight 1
+{% endfor %}
+{% endif %}
+
+{% if enabel_ingress_tls_nodeport_lb | bool %}
+listen ingress-node-tls
+    bind :443
+    mode tcp
+    option tcplog
+    balance {{ haproxy_balance_alg }}
+{% for host in groups['kube-worker'] %}
+    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30443 check inter 2000 fall 2 rise 2 weight 1
+{% endfor %}
+{% for host in groups['new-worker'] %}
+    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30443 check inter 2000 fall 2 rise 2 weight 1
+{% endfor %}
+{% endif %}
