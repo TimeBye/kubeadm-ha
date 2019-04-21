@@ -38,11 +38,9 @@ lb_kube_apiserver_ip: "192.168.56.14"
 # 使用负载均衡集群 Master Port
 lb_kube_apiserver_port: "8443"
 # 使用nginx进行apiserver负载时使用的nginx镜像
-kube_nginx_image: registry.cn-hangzhou.aliyuncs.com/setzero/nginx:1.15.8
-# kube_nginx_image: registry.saas.hand-china.com/google_containers/nginx:1.15.8
+kube_nginx_image: dockerhub.azk8s.cn/library/nginx:1.15.8
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-kube_haproxy_image: registry.cn-hangzhou.aliyuncs.com/setzero/haproxy:1.9.0
-# kube_haproxy_image: registry.saas.hand-china.com/google_containers/haproxy:1.9.0
+kube_haproxy_image: dockerhub.azk8s.cn/library/haproxy:1.9.0
 # haproxy监控绑定端口
 haproxy_stats_bind_address: 9090
 # haproxy监控访问路径
@@ -64,8 +62,7 @@ enabel_ingress_nodeport_lb: false
 # 启用 ingress tls NodePort服务的负载均衡 (true/false)
 enabel_ingress_tls_nodeport_lb: false
 # 使用haproxy进行apiserver负载时使用的keepalived镜像
-kube_keepalived_image: registry.cn-hangzhou.aliyuncs.com/setzero/keepalived:2.0.10
-# kube_keepalived_image: registry.saas.hand-china.com/google_containers/keepalived:2.0.10
+kube_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.10
 # Keepalived auth_type 的 Password
 keepalived_password: "d0cker"
 # 区分多个instance的VRRP组播，同网段不能重复，取值在0-255之间
@@ -88,12 +85,10 @@ kube_master_external_demain:
 - "kubernetes.io"
 # Pod根容器
 pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
-# pod_infra_container_image: registry.saas.hand-china.com/google_containers/pause:3.1
 # Redhat 用此镜像
 # pod_infra_container_image: registry.access.redhat.com/rhel7/pod-infrastructure:latest
 # kubernetes各组件镜像仓库前缀
 kube_image_repository: gcr.azk8s.cn/google_containers
-# kube_image_repository: registry.saas.hand-china.com/google_containers
 # kubernetes版本
 kube_version: 1.14.1
 # 集群内部dns域名
@@ -122,16 +117,17 @@ kube_max_pods: 110
 #flannel_backend: "host-gw"
 flannel_backend: "vxlan"
 # flannel 镜像地址
-flannel_image: registry.cn-hangzhou.aliyuncs.com/setzero/flannel:v0.10.0-amd64
+flannel_image: quay.azk8s.cn/coreos/flannel:v0.10.0-amd64
 # 选择默认网卡
 flannel_iface: true
-#-------------------------------- metrics-server 相关参数配置 -------------------------------#
-metrics_server_image: registry.cn-hangzhou.aliyuncs.com/setzero/metrics-server-amd64:v0.3.1
 
 #-------------------------------- nginx-ingress 相关参数配置 --------------------------------#
 # nginx-ingress 镜像地址
-nginx_ingress_image: registry.cn-hangzhou.aliyuncs.com/setzero/nginx-ingress-controller:0.21.0
+nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
 
 #----------------------------- kubernetes-dashboard 相关参数配置 ----------------------------#
 # kubernetes-dashboard 镜像地址
-kubernetes_dashboard_image: registry.cn-hangzhou.aliyuncs.com/setzero/kubernetes-dashboard-amd64:v1.10.1
+kubernetes_dashboard_image: gcr.azk8s.cn/google_containers/kubernetes-dashboard-amd64:v1.10.1
+
+#-------------------------------- metrics-server 相关参数配置 -------------------------------#
+metrics_server_image: gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.1
