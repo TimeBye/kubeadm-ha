@@ -29,12 +29,12 @@ spec:
     - --client-cert-auth=true
     - --snapshot-count=10000
     - --data-dir=/var/lib/etcd
-    # # 推荐一小时压缩一次数据这样可以极大的保证集群稳定
-    # - --auto-compaction-retention=1
-    # # etcd Raft消息最大字节数，但是官方推荐的是10M
-    # - --max-request-bytes=16777216
-    # # ETCD db数据大小，默认是2G，官方推荐是8G
-    # - --quota-backend-bytes=8589934592
+    # 推荐一小时压缩一次数据这样可以极大的保证集群稳定
+    - --auto-compaction-retention=1
+    # etcd Raft消息最大字节数，但是官方推荐的是10M
+    - --max-request-bytes=16777216
+    # ETCD db数据大小，默认是2G，官方推荐是8G
+    - --quota-backend-bytes=8589934592
     image: {{ etcd_image }}
     imagePullPolicy: IfNotPresent
     livenessProbe:
