@@ -26,10 +26,7 @@ listen kube-master
     mode tcp
     option tcplog
     balance {{ haproxy_balance_alg }} 
-{% for host in groups['kube-master'] %}
-    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:6443 check inter 2000 fall 2 rise 2 weight 1
-{% endfor %}
-{% for host in groups['new-master'] %}
+{% for host in (groups['kube-master'] + groups['new-master']) %}
     server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:6443 check inter 2000 fall 2 rise 2 weight 1
 {% endfor %}
 
@@ -39,10 +36,7 @@ listen ingress-node
     mode tcp
     option tcplog
     balance {{ haproxy_balance_alg }}
-{% for host in groups['kube-worker'] %}
-    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30080 check inter 2000 fall 2 rise 2 weight 1
-{% endfor %}
-{% for host in groups['new-worker'] %}
+{% for host in (groups['kube-worker'] + groups['new-worker']) %}
     server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30080 check inter 2000 fall 2 rise 2 weight 1
 {% endfor %}
 {% endif %}
@@ -53,10 +47,7 @@ listen ingress-node-tls
     mode tcp
     option tcplog
     balance {{ haproxy_balance_alg }}
-{% for host in groups['kube-worker'] %}
-    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30443 check inter 2000 fall 2 rise 2 weight 1
-{% endfor %}
-{% for host in groups['new-worker'] %}
+{% for host in (groups['kube-worker'] + groups['new-worker']) %}
     server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30443 check inter 2000 fall 2 rise 2 weight 1
 {% endfor %}
 {% endif %}

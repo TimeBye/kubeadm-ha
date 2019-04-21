@@ -104,7 +104,9 @@
     retries: 12
     delay: 5
 
-  when: inventory_hostname in groups['etcd'] and kubelet_config_yaml_stat.stat.isreg is not defined
+  when: 
+  - inventory_hostname in groups['etcd']
+  - kubelet_config_yaml_stat.stat.isreg is not defined
 
 - block:
   - name: 移除临时 kubelet unit 文件
@@ -121,4 +123,7 @@
       name: kubelet
       state: stopped
       enabled: yes
-  when: inventory_hostname in (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) and kubelet_config_yaml_stat.stat.isreg is not defined
+  when: 
+  - inventory_hostname in (groups['kube-master'] + groups['kube-worker']) 
+  - inventory_hostname in (groups['new-master'] + groups['new-worker']) 
+  - kubelet_config_yaml_stat.stat.isreg is not defined

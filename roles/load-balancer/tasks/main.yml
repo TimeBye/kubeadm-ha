@@ -13,6 +13,11 @@
 - include_tasks: haproxy.yml
   when: lb_mode == "haproxy"
 
+- name: 读取 kubelet config yaml 文件 stat 信息
+  stat: 
+    path: /var/lib/kubelet/config.yaml
+  register: kubelet_config_yaml_stat
+
 - block:
   - name: 获取 Docker Cgroup Driver 值
     shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
@@ -39,7 +44,7 @@
       name: kubelet
       state: restarted
       enabled: yes
-  when: lb_configuration_result.changed
+  when: kubelet_config_yaml_stat.stat.isreg is not defined
 
 - name: 以轮询的方式等待 nginx 运行完成
   shell: nc -z -w 3 127.0.0.1 {{ lb_kube_apiserver_port }}
@@ -82,4 +87,7 @@
       name: kubelet
       state: stopped
       enabled: yes
-  when: inventory_hostname in groups['kube-master'] or (inventory_hostname in groups['kube-worker']) and lb_configuration_result.changed
+  when: 
+  - inventory_hostname in (groups['kube-master'] + groups['kube-worker']) 
+  - inventory_hostname in (groups['new-master'] + groups['new-worker']) 
+  - kubelet_config_yaml_stat.stat.isreg is not defined
