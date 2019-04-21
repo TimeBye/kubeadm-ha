@@ -4,13 +4,7 @@
 
 - name: 获取默认内核版本
   shell: "grubby --default-kernel"
-  register: kernel_default_version
   ignore_errors: true
-
-- name: 检查内核是否设置正确
-  assert:
-    that: kernel_version in kernel_default_version.stdout
-    msg: "内核版本验证不通过，实际获取：{{ kernel_default_version.stdout }}，期望获取 {{ kernel_version }}。"
 
 - name: 开启 User namespaces
   shell: grubby --args="user_namespace.enable=1" --update-kernel="$(grubby --default-kernel)"

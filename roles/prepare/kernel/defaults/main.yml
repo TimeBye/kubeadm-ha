@@ -10,3 +10,10 @@ kernel_ubuntu:
 - "https://kernel.ubuntu.com/~kernel-ppa/mainline/v4.20.17/linux-headers-4.20.17-042017_4.20.17-042017.201903190933_all.deb"
 - "https://kernel.ubuntu.com/~kernel-ppa/mainline/v4.20.17/linux-image-unsigned-4.20.17-042017-generic_4.20.17-042017.201903190933_amd64.deb"
 - "https://kernel.ubuntu.com/~kernel-ppa/mainline/v4.20.17/linux-modules-4.20.17-042017-generic_4.20.17-042017.201903190933_amd64.deb"
+kernel_debian: 
+- "http://mirrors.kernel.org/debian/pool/main/l/linux/linux-image-4.12.0-1-amd64_4.12.6-1_amd64.deb"
+- "http://mirrors.kernel.org/debian/pool/main/l/linux/linux-kbuild-4.12_4.12.6-1_amd64.deb"
+- "http://mirrors.kernel.org/debian/pool/main/l/linux/linux-headers-4.12.0-1-common_4.12.6-1_all.deb"
+- "http://mirrors.kernel.org/debian/pool/main/l/linux/linux-headers-4.12.0-1-amd64_4.12.6-1_amd64.deb"
+- "http://mirrors.kernel.org/debian/pool/main/l/linux/linux-headers-4.12.0-1-all-amd64_4.12.6-1_amd64.deb"
+- "http://mirrors.kernel.org/debian/pool/main/l/linux/linux-headers-4.12.0-1-all_4.12.6-1_amd64.deb"
