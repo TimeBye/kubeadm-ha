@@ -7,7 +7,6 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
 
 ---
-
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -184,7 +183,6 @@ subjects:
     namespace: ingress-nginx
 
 ---
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -195,6 +193,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
 spec:
   replicas: {% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker'] | default([])) | unique | length > 1 %}2{% else %}1{% endif %}
+
   selector:
     matchLabels:
       app.kubernetes.io/name: ingress-nginx
@@ -208,6 +207,18 @@ spec:
         prometheus.io/port: "10254"
         prometheus.io/scrape: "true"
     spec:
+      affinity:	
+        podAntiAffinity:	
+          preferredDuringSchedulingIgnoredDuringExecution:	
+          - weight: 100	
+            podAffinityTerm:	
+              labelSelector:	
+                matchExpressions:	
+                - key: app.kubernetes.io/name	
+                  operator: In	
+                  values:	
+                  - ingress-nginx	
+              topologyKey: kubernetes.io/hostname
       serviceAccountName: nginx-ingress-serviceaccount
       containers:
         - name: nginx-ingress-controller
