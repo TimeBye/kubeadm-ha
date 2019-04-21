@@ -4,7 +4,7 @@
 - include_tasks: ubuntu.yml
   when: ansible_distribution in [ 'Ubuntu' ]
 
-- include_tasks: debian.yml
-  when: ansible_distribution in [ 'Debian' ]
+# - include_tasks: debian.yml
+#   when: ansible_distribution in [ 'Debian' ]
 
 - include_tasks: common.yml
