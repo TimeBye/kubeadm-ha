@@ -124,6 +124,5 @@
       state: stopped
       enabled: yes
   when: 
-  - inventory_hostname in (groups['kube-master'] + groups['kube-worker']) 
-  - inventory_hostname in (groups['new-master'] + groups['new-worker']) 
+  - inventory_hostname in (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) 
   - kubelet_config_yaml_stat.stat.isreg is not defined
