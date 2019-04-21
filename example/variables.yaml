@@ -123,7 +123,7 @@ flannel_iface: true
 
 #-------------------------------- nginx-ingress 相关参数配置 --------------------------------#
 # nginx-ingress 镜像地址
-nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
+nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.24.1
 
 #----------------------------- kubernetes-dashboard 相关参数配置 ----------------------------#
 # kubernetes-dashboard 镜像地址
