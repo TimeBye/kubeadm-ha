@@ -58,10 +58,10 @@
   register: etcd_configuration_result
   when: inventory_hostname in groups['etcd']
 
-- name: 读取 kubelet config yaml 文件 stat 信息
+- name: 读取 kubelet.conf 文件 stat 信息
   stat: 
-    path: /var/lib/kubelet/config.yaml
-  register: kubelet_config_yaml_stat
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf_stat
 
 - block:
   - name: 获取 Docker Cgroup Driver 值
@@ -106,7 +106,7 @@
 
   when: 
   - inventory_hostname in groups['etcd']
-  - not kubelet_config_yaml_stat.stat.exists
+  - not kubelet_conf_stat.stat.exists
 
 - block:
   - name: 移除临时 kubelet unit 文件
@@ -125,4 +125,4 @@
       enabled: yes
   when: 
   - inventory_hostname in (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) 
-  - not kubelet_config_yaml_stat.stat.exists
+  - not kubelet_conf_stat.stat.exists
