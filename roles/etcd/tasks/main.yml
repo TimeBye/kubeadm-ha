@@ -47,7 +47,7 @@
 
 - name: 设置变量 CLUSTER_STATE
   set_fact: CLUSTER_STATE="existing"
-  when: etcd_static_pod_stat.stat.isreg is defined
+  when: etcd_static_pod_stat.stat.exists
 
 - name: 生成 etcd static pod 文件
   template: 
@@ -106,7 +106,7 @@
 
   when: 
   - inventory_hostname in groups['etcd']
-  - kubelet_config_yaml_stat.stat.isreg is not defined
+  - not kubelet_config_yaml_stat.stat.exists
 
 - block:
   - name: 移除临时 kubelet unit 文件
@@ -125,4 +125,4 @@
       enabled: yes
   when: 
   - inventory_hostname in (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) 
-  - kubelet_config_yaml_stat.stat.isreg is not defined
+  - not kubelet_config_yaml_stat.stat.exists

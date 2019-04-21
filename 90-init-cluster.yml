@@ -18,13 +18,12 @@
   - etcd
 
 # 生成master节点证书，初始化master节点
-- hosts: 
-  - kube-master
+- hosts: kube-master:new-master
   roles:
   - kube-master
 
 # 初始化worker节点
-- hosts: kube-master:kube-worker
+- hosts: kube-master:kube-worker:new-worker
   roles:
   - kube-worker
 

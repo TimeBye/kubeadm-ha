@@ -1,4 +1,4 @@
-# 生成master节点证书，初始化master节点
-- hosts: kube-master:kube-worker
+# 初始化worker节点
+- hosts: kube-master:kube-worker:new-worker
   roles:
   - kube-worker

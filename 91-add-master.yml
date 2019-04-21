@@ -1,0 +1,20 @@
+# 校验节点软件系统及硬件系统、安装必要基础组件、docker、kubeadm、kubelet、kubectl
+- hosts: 
+  - new-master
+  roles:
+  - prepare/base
+  - prepare/docker
+  - prepare/kubernetes
+
+# 初始化master节点
+- hosts: etcd:kube-master:new-master
+  roles:
+  - etcd
+  - kube-master
+  - kube-worker
+
+# 标记各节点角色
+- hosts: 
+  - new-master
+  roles:
+  - post
