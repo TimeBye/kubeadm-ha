@@ -46,4 +46,4 @@
     mode: 0700
   no_log: true
   with_items: "{{ etcd_client_certs.results }}"
-  when: inventory_hostname != groups['etcd']|first and (inventory_hostname in groups['kube-master'])
+  when: inventory_hostname != groups['etcd']|first and (inventory_hostname in (groups['kube-master'] + groups['new-master']))

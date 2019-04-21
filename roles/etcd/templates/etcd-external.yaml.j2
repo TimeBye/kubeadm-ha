@@ -22,7 +22,7 @@ spec:
     - --peer-client-cert-auth=true
     - --listen-peer-urls=https://{{ CURRENT_HOST_IP }}:2380
     - --listen-client-urls=https://127.0.0.1:2379,https://{{ CURRENT_HOST_IP }}:2379
-    - --initial-cluster-state=new
+    - --initial-cluster-state={{ CLUSTER_STATE }}
     - --initial-advertise-peer-urls=https://{{ CURRENT_HOST_IP }}:2380
     - --initial-cluster={{ INITIAL_CLUSTER }}
     - --initial-cluster-token=etcd-cluster-token

@@ -28,7 +28,7 @@
   file: 
     name: /etc/kubernetes/pki/etcd
     state: directory
-  when: inventory_hostname in groups['kube-master']
+  when: inventory_hostname in (groups['kube-master'] + groups['new-master'])
 
 - block:
   # 获取密钥状态
@@ -40,6 +40,15 @@
 # 分发证书
 - include_tasks: certificate/distribute.yml
 
+- name: 读取 etcd static pod yaml 文件 stat 信息
+  stat: 
+    path: /etc/kubernetes/manifests/etcd-external.yaml
+  register: etcd_static_pod_stat
+
+- name: 设置变量 CLUSTER_STATE
+  set_fact: CLUSTER_STATE="existing"
+  when: etcd_static_pod_stat.stat.isreg is defined
+
 - name: 生成 etcd static pod 文件
   template: 
     src: etcd-external.yaml.j2
@@ -48,6 +57,11 @@
     mode: 0644
   register: etcd_configuration_result
   when: inventory_hostname in groups['etcd']
+
+- name: 读取 kubelet config yaml 文件 stat 信息
+  stat: 
+    path: /var/lib/kubelet/config.yaml
+  register: kubelet_config_yaml_stat
 
 - block:
   - name: 获取 Docker Cgroup Driver 值
@@ -90,7 +104,7 @@
     retries: 12
     delay: 5
 
-  when: inventory_hostname in groups['etcd'] and etcd_configuration_result.changed
+  when: inventory_hostname in groups['etcd'] and kubelet_config_yaml_stat.stat.isreg is not defined
 
 - block:
   - name: 移除临时 kubelet unit 文件
@@ -107,4 +121,4 @@
       name: kubelet
       state: stopped
       enabled: yes
-  when: inventory_hostname in (groups['kube-master'] + groups['kube-worker']) and etcd_configuration_result.changed
+  when: inventory_hostname in (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) and kubelet_config_yaml_stat.stat.isreg is not defined

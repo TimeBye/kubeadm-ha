@@ -13,9 +13,7 @@
   - { role: load-balancer, when: "(groups['kube-master']|length + groups['new-master']|length) > 1 and lb_mode != 'slb'" }
 
 # 安装etcd，并分发etcd证书到master节点
-- hosts: 
-  - etcd
-  - kube-master
+- hosts: etcd:kube-master:new-master
   roles:
   - etcd
 
@@ -26,9 +24,7 @@
   - kube-master
 
 # 初始化worker节点
-- hosts: 
-  - kube-master
-  - kube-worker
+- hosts: kube-master:kube-worker
   roles:
   - kube-worker
 

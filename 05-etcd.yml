@@ -1,4 +1,4 @@
 # 安装etcd，并分发etcd证书到master节点
-- hosts: etcd:kube-master
+- hosts: etcd:kube-master:new-master
   roles:
   - etcd
