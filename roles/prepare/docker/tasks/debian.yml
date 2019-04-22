@@ -3,8 +3,15 @@
     repo: "{{ docker_apt_repo }}"
     state: present
 
+- name: 生成 Docker GPG 公钥
+  template:
+    src: docker.gpg.j2
+    dest: /tmp/docker.gpg
+    owner: root
+    mode: 0644
+
 - name: 添加 Docker GPG 公钥
-  shell: echo {{ docker_gpg_key }} | apt-key add -
+  shell: apt-key add /tmp/docker.gpg
 
 - name: 安装 Docker
   apt: 
