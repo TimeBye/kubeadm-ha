@@ -1,47 +1,32 @@
 # Kubeadm HA
 
-本项目使用`kubeadm`进行高可用kubernetes集群搭建，利用ansible-playbook实现自动化一键安装。
+本项目使用 `kubeadm` 进行高可用 kubernetes 集群搭建，利用 ansible-playbook 实现自动化一键安装。
 
 - 支持版本：
 
   |组件|支持|
   |:-|:-|
-  |OS|Ubuntu 16.04+, Debian 9, CentOS/RedHat 7|
+  |OS|Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7|
   |k8s|v1.14.1|
-  |etcd|v3.2.4|
+  |etcd|v3.3.10|
   |docker|18.06.3, 18.09.3|
   |network|flannel|
 
-## 1. 环境准备
+## 1. 克隆本项目
 
-- 在执行ansible本脚本的机器上安装ansible运行需要的环境：
-    - Ubuntu 16.04 请执行以下脚本：
+- 克隆本项目至任意节点中：
 
-        ``` bash
-        sudo apt-get install git python3-pip sshpass -y
-        ```
+    ```
+    git clone https://github.com/TimeBye/kubeadm-ha.git
+    ```
 
-    - CentOS 7 请执行以下脚本：
+## 2. Ansible 环境准备
 
-        ``` bash
-        sudo yum install epel-release -y 
-        sudo yum install git python36 sshpass -y
-        sudo python3.6 -m ensurepip
-        sudo ln -s /usr/local/bin/pip3 /usr/bin/pip3
-        ```
+- 进入项目安装ansible运行需要的环境：
 
-    - 安装ansible
-        
-        ``` bash
-        sudo pip3 install --no-cache-dir ansible==2.7.5 netaddr -i https://mirrors.aliyun.com/pypi/simple/
-        python -m SimpleHTTPServer 80 &
-        ```
-
-## 2. 克隆本项目至ansible环境中：
-
-```
-git clone https://github.com/TimeBye/kubeadm-ha.git
-```
+    ``` bash
+    sudo ./install-ansible.sh
+    ```
 
 ## 3. 修改 hosts 文件
 
@@ -50,18 +35,18 @@ git clone https://github.com/TimeBye/kubeadm-ha.git
 - 搭建集群后有以下两种“样式”显示，请自行选择：
     - 样式一
         ```
-        NAME             STATUS    ROLES                 AGE    VERSION
-        192.168.56.11    Ready     etcd,master,worker    1d     v1.14.1
-        192.168.56.12    Ready     etcd,master,worker    1d     v1.14.1
-        192.168.56.13    Ready     etcd,master,worker    1d     v1.14.1
+        NAME             STATUS    ROLES                    AGE    VERSION
+        192.168.56.11    Ready     lb,etcd,master,worker    1d     v1.14.1
+        192.168.56.12    Ready     lb,etcd,master,worker    1d     v1.14.1
+        192.168.56.13    Ready     lb,etcd,master,worker    1d     v1.14.1
         ```
 
     - 样式二
         ```
-        NAME     STATUS    ROLES                 AGE    VERSION
-        node1    Ready     etcd,master,worker    1d     v1.14.1
-        node2    Ready     etcd,master,worker    1d     v1.14.1
-        node3    Ready     etcd,master,worker    1d     v1.14.1
+        NAME     STATUS    ROLES                    AGE    VERSION
+        node1    Ready     lb,etcd,master,worker    1d     v1.14.1
+        node2    Ready     lb,etcd,master,worker    1d     v1.14.1
+        node3    Ready     lb,etcd,master,worker    1d     v1.14.1
         ```
 
     - 对应的hosts配置文件事例如下：
@@ -74,24 +59,24 @@ git clone https://github.com/TimeBye/kubeadm-ha.git
 
 ## 4. 部署
 
-进行安装:
+一句命令拥有一个高可用 kubernetes 集群:
 
 - 基本配置执行
-```
-ansible-playbook -i example/hosts.allinone.ip.ini cluster.yaml
-```
+    ```
+    ansible-playbook -i example/hosts.m-master.ip.ini 90-init-cluster.yml
+    ```
 
 - 高级配置执行
-```
-ansible-playbook -i example/hosts.allinone.ip.ini -e @example/variables.yaml cluster.yaml
-```
+    ```
+    ansible-playbook -i example/hosts.m-master.ip.ini -e @example/variables.yaml 90-init-cluster.yml
+    ```
 
-> 若`example/hosts.allinone.ip.ini`文件中与`example/variables.yaml`参数冲突，则以`example/variables.yaml`文件为准。
+> 若`example/hosts.m-master.ip.ini`文件中与`example/variables.yaml`参数冲突，则以`example/variables.yaml`文件为准。
 
-## 5. 重置
+## 5. 重置集群
 
-如果部署失败，想要重置集群(所有数据),执行：
+- 如果部署失败，想要重置集群(所有数据),执行：
 
-```
-ansible-playbook -i example/hosts.allinone.ip.ini reset.yml
-```
+    ```
+    ansible-playbook -i example/hosts.allinone.ip.ini 99-reset-cluster.yml
+    ```
