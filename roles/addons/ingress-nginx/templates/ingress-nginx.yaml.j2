@@ -285,6 +285,8 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
 spec:
   type: NodePort
+  # 该参数主要是保护客户端IP，避免loadbalancer/nodeport的服务的第二跳。这样nodeport的服务路口只会去找本节点的pod服务。
+  externalTrafficPolicy: Cluster
   ports:
     - name: http
       port: 80
