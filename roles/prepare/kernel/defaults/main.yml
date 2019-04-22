@@ -7,7 +7,7 @@ kernel_centos:
 - http://files.saas.hand-china.com/yum/repos/kernel/kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm
 - http://files.saas.hand-china.com/yum/repos/kernel/kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm
 
-kernel_debian: 
+kernel_ubuntu: 
 - https://kernel.ubuntu.com/~kernel-ppa/mainline/v4.20.17/linux-headers-4.20.17-042017_4.20.17-042017.201903190933_all.deb
 - https://kernel.ubuntu.com/~kernel-ppa/mainline/v4.20.17/linux-modules-4.20.17-042017-generic_4.20.17-042017.201903190933_amd64.deb
 - https://kernel.ubuntu.com/~kernel-ppa/mainline/v4.20.17/linux-image-unsigned-4.20.17-042017-generic_4.20.17-042017.201903190933_amd64.deb
