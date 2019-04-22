@@ -3,6 +3,16 @@
     repo: "{{ kubernetes_apt_repo }}"
     state: present
 
+- name: 生成 Kubernetes GPG 公钥
+  template:
+    src: kubernetes.gpg.j2
+    dest: /tmp/kubernetes.gpg
+    owner: root
+    mode: 0644
+
+- name: 添加 Kubernetes GPG 公钥
+  shell: apt-key add /tmp/kubernetes.gpg
+
 - name: 安装 kubeadm kubelet kubectl
   apt: 
     name:
