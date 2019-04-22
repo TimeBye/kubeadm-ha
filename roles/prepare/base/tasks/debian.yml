@@ -20,8 +20,11 @@
   apt: 
     name:
     - git
+    - iotop
+    - htop
+    - net-tools
     - sysstat
-    - libseccomp
+    - libseccomp-dev
     - curl                        # 基础工具
     - apt-transport-https         # 添加https协议的apt源会用到
     - ca-certificates             # docker会用到
