@@ -6,6 +6,15 @@
 - name: 安装 Docker
   apt: 
     name:
-    - "docker-ce={{ docker_version }}{% if docker_version is version_compare('18.09', '<') %}~ce{% endif %}~3-0~{{ ansible_distribution | lower }}"
+    - "docker-ce={{ docker_version }}~ce~3-0~{{ ansible_distribution | lower }}"
     state: present
     allow_unauthenticated: true
+    when: docker_version is version_compare('18.09', '<')
+
+- name: 安装 Docker
+  apt: 
+    name:
+    - "docker-ce=5:{{ docker_version }}~3-0~{{ ansible_distribution | lower }}-{{ ansible_distribution_release }}"
+    state: present
+    allow_unauthenticated: true
+    when: docker_version is version_compare('18.09', '>=')
