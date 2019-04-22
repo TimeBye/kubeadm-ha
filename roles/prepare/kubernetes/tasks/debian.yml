@@ -1,6 +1,6 @@
 - name: 生成 Kubernetes GPG 公钥
-  template:
-    src: kubernetes.gpg.j2
+  copy:
+    src: kubernetes.gpg
     dest: /tmp/kubernetes.gpg
     owner: root
     mode: 0644

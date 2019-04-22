@@ -1,6 +1,6 @@
 - name: 生成 Docker GPG 公钥
-  template:
-    src: docker.gpg.j2
+  copy:
+    src: docker.gpg
     dest: /tmp/docker.gpg
     owner: root
     mode: 0644
