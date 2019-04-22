@@ -1,3 +1,8 @@
-- name: "安装 kernel-ml"
+- name: 安装 kernel-ml
   apt:
-    deb: "{{ kernel_debian }}"
+    deb: "{{ item }}"
+  with_items: "{{ kernel_debian }}"
+
+- name: 更新 grub
+  shell: update-grub
+  ignore_errors: true

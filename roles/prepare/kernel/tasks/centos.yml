@@ -1,4 +1,16 @@
-- name: "安装 kernel-ml"
+- name: 安装 kernel-ml
   yum:
     name: "{{ kernel_centos }}"
     state: present
+
+- name: 设置默认内核为最新版本
+  shell: "grub2-set-default 0 && grub2-mkconfig -o /etc/grub2.cfg"
+  ignore_errors: true
+
+- name: 获取默认内核版本
+  shell: "grubby --default-kernel"
+  ignore_errors: true
+
+- name: 开启 User namespaces
+  shell: grubby --args="user_namespace.enable=1" --update-kernel="$(grubby --default-kernel)"
+  ignore_errors: true
