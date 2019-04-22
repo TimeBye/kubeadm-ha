@@ -21,8 +21,8 @@
 
 - name: 校验节点系统版本
   assert:
-    that: ansible_distribution_version is version_compare('7.2', '>=')
-    msg: "节点：{{ inventory_hostname }} 系统版本期望不小于CentOS 7.2，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
+    that: ansible_distribution_version is version_compare('7.4', '>=')
+    msg: "节点：{{ inventory_hostname }} 系统版本期望不小于CentOS 7.4，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
   when:
     - ansible_distribution == "CentOS"
 
