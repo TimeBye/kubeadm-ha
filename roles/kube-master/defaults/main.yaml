@@ -35,7 +35,7 @@ KUBE_APISERVER_PORT: >-
 KUBERNETES_SERVICE_IP: "{{ kube_service_subnet | ipaddr(1) | ipaddr('address') }}"
 CLUSTER_DNS_SERVICE_IP: "{{ kube_service_subnet | ipaddr(10) | ipaddr('address') }}"
 # kubernetes证书过期时间（天）
-kube_certs_time: 36500
+kube_certs_time: 3650
 
 # k8s 集群 master 节点证书配置，可以添加多个ip和域名（比如增加公网ip和域名）
 kube_master_external_ip:

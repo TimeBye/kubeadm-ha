@@ -1,7 +1,7 @@
 # 提权操作
 ansible_become: true
 # Etcd证书过期时间（天）
-etcd_certs_time: 36500
+etcd_certs_time: 3650
 # Etcd使用的镜像
 etcd_image: gcr.azk8s.cn/google_containers/etcd:3.3.10
 # Pod根容器

@@ -8,7 +8,6 @@ kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-
 # Debian apt源仓库
 # base_apt_repo: deb http://mirrors.aliyun.com/{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }} main restricted universe multiverse
 docker_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
-# kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt kubernetes-{{ ansible_distribution_release }} main
 kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main
 
 #-------------------------------- Docker 相关参数配置 ----------------------------------#
@@ -70,14 +69,14 @@ keepalived_router_id: 111
 
 #---------------------------------- Etcd 相关参数配置 ------------------------------------#
 # Etcd证书过期时间（天）
-etcd_certs_time: 36500
+etcd_certs_time: 3650
 # Etcd使用的镜像
 etcd_image: gcr.azk8s.cn/google_containers/etcd:3.2.24
 # etcd_image: registry.saas.hand-china.com/google_containers/etcd:3.2.24
 
 #---------------------------------- kubernetes 相关参数配置 ------------------------------------#
 # kubernetes证书过期时间（天）
-kube_certs_time: 36500
+kube_certs_time: 3650
 # k8s 集群 master 节点证书配置，可以添加多个ip和域名（比如增加公网ip和域名）
 kube_master_external_ip:
 - "8.8.8.8"
