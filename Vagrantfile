@@ -1,5 +1,11 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+
+$script = <<-SCRIPT
+sed -i 's/PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+systemctl restart sshd
+SCRIPT
+
 Vagrant.configure(2) do |config|
     config.vm.define "node1" do |s|
         s.vm.box = "bento/centos-7.4"
@@ -16,6 +22,7 @@ Vagrant.configure(2) do |config|
         s.vm.box_url = "http://files.saas.hand-china.com/vagrant/generic_rhel7.box"
         s.vm.hostname = "node2"
         s.vm.network "private_network", ip: "192.168.56.12"
+        s.vm.provision "shell", inline: $script
         s.vm.provider "virtualbox" do |v|
             v.memory = 4096
             v.cpus = 2
