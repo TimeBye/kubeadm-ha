@@ -6,6 +6,8 @@ metadata:
   labels:
     component: haproxy
     tier: control-plane
+  annotations:
+    checksum/config: {{ LB_CONFIGURATION_CHECKSUM }}
 spec:
   hostNetwork: true
   priorityClassName: system-cluster-critical

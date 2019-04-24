@@ -19,6 +19,16 @@
 - name: Haproxy | 设置变量 KEEPALIVED_INTERFACE
   set_fact: KEEPALIVED_INTERFACE="{{ KEEPALIVED_INTERFACE_TMP.stdout }}"
 
+- name: Haproxy | 生成 haproxy 配置文件
+  template: 
+    src: haproxy.cfg.j2 
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    mode: 0644
+  register: lb_configuration_result
+- name: 设置变量 LB_CONFIGURATION_CHECKSUM
+  set_fact: LB_CONFIGURATION_CHECKSUM="{{ lb_configuration_result.checksum }}"
+
 - name: Haproxy | 生成 haproxy static pod 文件
   template: 
     src: haproxy.yaml.j2
@@ -26,12 +36,6 @@
     owner: root
     mode: 0644
 
-- name: Haproxy | 生成 haproxy 配置文件
-  template: 
-    src: haproxy.cfg.j2 
-    dest: /etc/haproxy/haproxy.cfg
-    owner: root
-    mode: 0644
 
 - name: Haproxy | 生成 keepalived static pod 文件
   template: 
@@ -39,4 +43,3 @@
     dest: /etc/kubernetes/manifests/keepalived.yaml
     owner: root
     mode: 0644
-  register: lb_configuration_result

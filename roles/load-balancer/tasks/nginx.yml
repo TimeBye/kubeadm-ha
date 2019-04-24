@@ -18,6 +18,9 @@
     dest: /etc/nginx/nginx.conf
     owner: root
     mode: 0644
+  register: lb_configuration_result
+- name: 设置变量 LB_CONFIGURATION_CHECKSUM
+  set_fact: LB_CONFIGURATION_CHECKSUM="{{ lb_configuration_result.checksum }}"
 
 - name: Nginx lb | 生成 nginx lb static pod 文件
   template:
@@ -25,4 +28,3 @@
     dest: /etc/kubernetes/manifests/nginx-lb.yaml
     owner: root
     mode: 0644
-  register: lb_configuration_result
