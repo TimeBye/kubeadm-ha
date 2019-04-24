@@ -45,10 +45,19 @@
   when: base_yum_repo is defined and base_yum_repo != ''
 
 - block:
+  # - name: 添加 epel 仓库
+  #   yum: 
+  #     name: epel-release 
+  #     state: latest
+
   - name: 添加 epel 仓库
-    yum: 
-      name: epel-release 
-      state: latest
+    yum_repository:
+      name: epel
+      description: epel repo
+      baseurl: "{{ epel_yum_repo }}"
+      enabled: no
+      gpgcheck: no
+      state: present
 
   - name: 安装基础软件包
     yum: 

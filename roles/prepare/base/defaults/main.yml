@@ -4,3 +4,5 @@ ansible_become: true
 skip_verify_node: false
 # 默认apiserver负载类型
 lb_mode: nginx
+# CentOS
+epel_yum_repo: http://mirrors.aliyun.com/epel/7/$basearch
