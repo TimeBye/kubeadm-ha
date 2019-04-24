@@ -55,7 +55,7 @@
       name: epel
       description: epel repo
       baseurl: "{{ epel_yum_repo }}"
-      enabled: no
+      enabled: yes
       gpgcheck: no
       state: present
 
