@@ -47,7 +47,7 @@ networking:
   serviceSubnet: {{ kube_service_subnet }}
 apiServer:
   extraArgs:
-    enable-admission-plugins: NamespaceLifecycle,LimitRanger,ServiceAccount,TaintNodesByCondition,Priority,DefaultTolerationSeconds,DefaultStorageClass,PersistentVolumeClaimResize,MutatingAdmissionWebhook,ValidatingAdmissionWebhook,ResourceQuota
+    enable-admission-plugins: NodeRestriction,DefaultStorageClass
     allow-privileged: "true"
     apiserver-count: "{{ groups['kube-master']|length + groups['new-master']|length }}"
     service-node-port-range: {{ kube_service_node_port_range }}

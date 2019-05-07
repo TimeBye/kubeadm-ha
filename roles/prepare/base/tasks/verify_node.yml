@@ -50,28 +50,28 @@
 # 物理资源校验
 - name: 校验Master节点内存
   assert:
-    that: ansible_memtotal_mb >= 4*1024*0.9
-    msg: "Master节点：{{ inventory_hostname }} 内存期望不小于4G，实际获取：{{ ansible_memtotal_mb }}MB，安装需求校验不通过。"
+    that: ansible_memtotal_mb >= 2*1024*0.9
+    msg: "Master节点：{{ inventory_hostname }} 内存期望不小于2G，实际获取：{{ ansible_memtotal_mb }}MB，安装需求校验不通过。"
   when:
-    - inventory_hostname in groups['kube-master']
+    - inventory_hostname in (groups['kube-master'] + groups['new-master'])
 
 - name: 校验Worker节点内存
   assert:
-    that: ansible_memtotal_mb >= 8*1024*0.9
-    msg: "Worker节点：{{ inventory_hostname }} 内存期望不小于8G，实际获取：{{ ansible_memtotal_mb }}MB，安装需求校验不通过。"
+    that: ansible_memtotal_mb >= 4*1024*0.9
+    msg: "Worker节点：{{ inventory_hostname }} 内存期望不小于4G，实际获取：{{ ansible_memtotal_mb }}MB，安装需求校验不通过。"
   when:
-    - inventory_hostname in groups['kube-worker']
+    - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
 
 - name: 校验Master节点CPU核数
   assert:
     that: ansible_processor_vcpus >= 2
     msg: "Master节点：{{ inventory_hostname }} CPU核数期望不小于2C，实际获取：{{ ansible_memtotal_mb }}C，安装需求校验不通过。"
   when:
-    - inventory_hostname in groups['kube-master']
+    - inventory_hostname in (groups['kube-master'] + groups['new-master'])
 
 - name: 校验Master节点CPU核数
   assert:
-    that: ansible_processor_vcpus >= 4
-    msg: "Worker节点：{{ inventory_hostname }} CPU核数期望不小于4C,实际获取：{{ ansible_memtotal_mb }}C，安装需求校验不通过。"
+    that: ansible_processor_vcpus >= 2
+    msg: "Worker节点：{{ inventory_hostname }} CPU核数期望不小于2C,实际获取：{{ ansible_memtotal_mb }}C，安装需求校验不通过。"
   when:
-    - inventory_hostname in groups['kube-worker']
+    - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])

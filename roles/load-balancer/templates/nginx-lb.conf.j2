@@ -1,10 +1,13 @@
 error_log stderr notice;
 
-worker_processes 1;
+worker_processes 2;
+worker_rlimit_nofile 130048;
+worker_shutdown_timeout 10s;
+
 events {
     multi_accept on;
     use epoll;
-    worker_connections 1024;
+    worker_connections 16384;
 }
 
 stream {
