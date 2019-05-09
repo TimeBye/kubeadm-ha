@@ -9,6 +9,18 @@
 
 - name: 安装 Docker
   yum:
-    name: "docker-ce-{{ docker_version }}{% if docker_version is version_compare('18.09', '<') %}.ce{% endif %}"
+    name: 
+    - "docker-ce-{{ docker_version }}.ce"
     state: present
     enablerepo: docker-ce
+  when: docker_version is version_compare('18.09', '<')
+
+- name: 安装 Docker
+  yum:
+    name: 
+    - "docker-ce-{{ docker_version }}"
+    - "docker-ce-cli-{{ docker_version }}"
+    - "containerd.io"
+    state: present
+    enablerepo: docker-ce
+  when: docker_version is version_compare('18.09', '>=')
