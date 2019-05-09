@@ -10,7 +10,7 @@
 #     state: absent
 - name: 校验安装模式
   assert:
-    that: base_apt_repo is not defined or base_apt_repo == None
+    that: base_apt_repo is defined or base_apt_repo != None
     msg: "当前安装模式为 {{ install_mode }}，请设置变量 base_apt_repo 。"
   when: install_mode != 'online'
 
