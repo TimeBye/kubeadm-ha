@@ -67,7 +67,7 @@ eviction_hard_memory_available: 100Mi
 eviction_hard_nodefs_available: 10%
 eviction_hard_nodefs_inodes_free: 5%
 # 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
-kube_proxy_mode: "ipvs"
+kube_proxy_mode: "iptables"
 
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
