@@ -9,7 +9,7 @@
   |OS|Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7|
   |k8s|v1.14.1|
   |etcd|v3.3.10|
-  |docker|18.06.3, 18.09.3|
+  |docker|18.06.3, 18.09.3, 18.09.6|
   |network|flannel|
 
 ## 1. 克隆本项目
