@@ -40,6 +40,7 @@
     shell: "docker pull {{ item }}"
     with_items:
     - "{{ image_list.stdout_lines }}"
+    when: install_mode == 'online'
 
   - name: 初始化第一个 master 节点
     shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml

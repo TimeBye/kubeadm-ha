@@ -36,6 +36,7 @@
     shell: "docker pull {{ item }}"
     with_items:
     - "{{ image_list.stdout_lines }}"
+    when: install_mode == 'online'
     
   - name: 其他 master 节点加入集群
     shell: "{{ hostvars[groups['kube-master']|first]['KUBEADM_JOIN_COMMAND'] }} --apiserver-advertise-address={{ CURRENT_HOST_IP }} --node-name={{ inventory_hostname }} --experimental-control-plane --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests"

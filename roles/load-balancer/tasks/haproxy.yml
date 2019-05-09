@@ -12,7 +12,8 @@
   - "{{ kube_haproxy_image }}"
   - "{{ kube_keepalived_image }}"
   - "{{ pod_infra_container_image }}"
-
+  when: install_mode == 'online'
+  
 - name: Haproxy | 获取网卡名称
   shell: "ip a|grep '{{ CURRENT_HOST_IP }}/'|awk '{print $NF}'"
   register: KEEPALIVED_INTERFACE_TMP

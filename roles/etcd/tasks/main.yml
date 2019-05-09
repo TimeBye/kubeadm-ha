@@ -21,6 +21,7 @@
     with_items:
     - "{{ etcd_image }}"
     - "{{ pod_infra_container_image }}"
+    when: install_mode == 'online'
 
   when: inventory_hostname in groups['etcd']
 

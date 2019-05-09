@@ -11,7 +11,8 @@
   with_items:
   - "{{ pod_infra_container_image }}"
   - "{{ kube_nginx_image }}"
-
+  when: install_mode == 'online'
+  
 - name: Nginx lb | 生成 nginx lb 配置文件
   template:
     src: nginx-lb.conf.j2
