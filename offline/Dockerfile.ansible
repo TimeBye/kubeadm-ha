@@ -1,0 +1,28 @@
+FROM alpine:3.8
+
+RUN \
+    sed -i 's dl-cdn.alpinelinux.org mirrors.aliyun.com g' /etc/apk/repositories && \
+    apk add --no-cache \
+        sudo \
+        python \
+        py-pip \
+        openssl \
+        ca-certificates && \
+    apk add --no-cache --virtual \
+        build-dependencies \
+        python-dev \
+        libffi-dev \
+        openssl-dev \
+        build-base && \
+    pip install --no-cache-dir --upgrade pip cffi -i https://mirrors.aliyun.com/pypi/simple/ && \
+    pip install --no-cache-dir ansible==2.7.5 netaddr -i https://mirrors.aliyun.com/pypi/simple/ && \
+    pip install --no-cache-dir --upgrade pycrypto pywinrm -i https://mirrors.aliyun.com/pypi/simple/ && \
+    apk add --no-cache \
+        sshpass \
+        openssh-client \
+        rsync && \
+    apk del build-dependencies && \
+    mkdir -p /etc/ansible && \
+    echo 'localhost' > /etc/ansible/hosts
+
+CMD [ "ansible-playbook", "--version" ]

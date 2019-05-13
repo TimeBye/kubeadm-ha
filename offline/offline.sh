@@ -1,0 +1,92 @@
+#!/bin/bash
+# https://rdc.hand-china.com/gitlab/DevOps/issue/issues/170
+
+# 缓存yum包
+sed "s/keepcache=0/keepcache=1/" -i /etc/yum.conf
+
+# 安装基础工具
+yum install -y yum-utils createrepo
+
+# 移除原有源
+rm -rf /etc/yum.repos.d/*
+
+# 添加基础源
+yum-config-manager \
+    --add-repo \
+    http://mirrors.aliyun.com/repo/Centos-7.repo
+
+# 添加epel源
+yum-config-manager \
+    --add-repo \
+    http://mirrors.aliyun.com/repo/epel-7.repo
+
+# 添加docker源
+yum-config-manager \
+    --add-repo \
+    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+# 添加kubernetes源
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+
+# 创建缓存目录
+mkdir -p /kubernetes
+
+# 下载内核
+# curl -o /kubernetes/kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm \
+#     http://mirror.rc.usf.edu/compute_lock/elrepo/kernel/el7/x86_64/RPMS/kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm
+# curl -o /kubernetes/kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm \
+#     http://mirror.rc.usf.edu/compute_lock/elrepo/kernel/el7/x86_64/RPMS/kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm
+curl -o /kubernetes/kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm \
+    http://files.saas.hand-china.com/yum/repos/kernel/kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm
+curl -o /kubernetes/kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm \
+    http://files.saas.hand-china.com/yum/repos/kernel/kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm
+
+# 缓存元数据
+yum makecache fast
+
+# 下载需要的基础包
+yumdownloader --destdir=/kubernetes --resolve \
+    nc \
+    jq \
+    git \
+    perl \
+    lvm2 \
+    curl \
+    htop \
+    iotop \
+    socat \
+    ipset \
+    sysstat \
+    ipvsadm \
+    nfs-utils \
+    yum-utils \
+    net-tools \
+    conntrack \
+    libseccomp \
+    conntrack-tools \
+    bash-completion \
+    device-mapper-persistent-data
+
+# 下载docker
+yumdownloader --destdir=/kubernetes --resolve \
+    docker-ce-18.09.6 \
+    docker-ce-cli-18.09.6 \
+    containerd.io
+
+# 下载kubernetes
+yumdownloader --destdir=/kubernetes --resolve \
+    kubeadm-1.14.1-0.x86_64 \
+    kubectl-1.14.1-0.x86_64 \
+    kubelet-1.14.1-0.x86_64 \
+    kubernetes-cni-0.7.5
+
+cp -n $(find /var/cache/yum -name "*.rpm") /kubernetes
+createrepo --update /kubernetes
