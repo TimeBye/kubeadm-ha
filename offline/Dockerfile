@@ -6,6 +6,7 @@ FROM nginx:1.15.1-alpine
 COPY default.conf /etc/nginx/conf.d/default.conf
 COPY --from=centos /kubernetes /kubernetes/yum
 RUN \
+    sed -i 's dl-cdn.alpinelinux.org mirrors.aliyun.com g' /etc/apk/repositories && \
     apk add --no-cache \
         sudo \
         python \
