@@ -90,5 +90,45 @@ yumdownloader --destdir=/kubernetes --resolve \
     kubelet-1.14.1-0.x86_64 \
     kubernetes-cni-0.7.5
 
+# 下载需要的基础包
+yum install -y \
+    nc \
+    jq \
+    git \
+    perl \
+    nss \
+    nss-pem \
+    lvm2 \
+    curl \
+    htop \
+    iotop \
+    socat \
+    ipset \
+    sysstat \
+    ipvsadm \
+    nfs-utils \
+    yum-utils \
+    net-tools \
+    conntrack \
+    libseccomp \
+    conntrack-tools \
+    bash-completion \
+    device-mapper-persistent-data
+
+# 下载docker
+yum install -y \
+    docker-ce-18.09.6 \
+    docker-ce-cli-18.09.6 \
+    containerd.io
+
+# 下载kubernetes
+yum install -y \
+    kubeadm-1.14.1-0.x86_64 \
+    kubectl-1.14.1-0.x86_64 \
+    kubelet-1.14.1-0.x86_64 \
+    kubernetes-cni-0.7.5
+    
+yum update -y
+
 cp -n $(find /var/cache/yum -name "*.rpm") /kubernetes
 createrepo --update /kubernetes

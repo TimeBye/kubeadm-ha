@@ -4,7 +4,7 @@
     state: present
 
 - name: 设置默认内核为最新版本
-  shell: "grub2-set-default 0 && grub2-mkconfig -o /etc/grub2.cfg"
+  shell: "grub2-set-default 0 && grub2-mkconfig -o /boot/grub2/grub.cfg"
   ignore_errors: true
 
 - name: 获取默认内核版本
