@@ -58,6 +58,8 @@ yumdownloader --destdir=/kubernetes --resolve \
     jq \
     git \
     perl \
+    nss \
+    nss-pem \
     lvm2 \
     curl \
     htop \
