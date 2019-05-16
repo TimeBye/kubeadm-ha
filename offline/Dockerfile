@@ -13,7 +13,7 @@ RUN apk add --no-cache \
         py-pip \
         openssl \
         sshpass \
-        openssh-client
+        openssh-client \
         ca-certificates && \
     apk add --no-cache --virtual \
         build-dependencies \
