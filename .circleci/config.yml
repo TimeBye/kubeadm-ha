@@ -12,7 +12,7 @@ jobs:
           cd offline
           sh download_images
           docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PWD
-          docker build -t setzero/kubeadm-ha-${CIRCLE_BRANCH} .
+          docker build -t setzero/kubeadm-ha:${CIRCLE_BRANCH} .
           docker push setzero/kubeadm-ha-${CIRCLE_BRANCH}       
 workflows:
   version: 2
