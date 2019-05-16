@@ -1,18 +1,19 @@
 FROM centos:centos7.5.1804 as centos
-COPY offline.sh .
-RUN bash offline.sh
+COPY download_yum .
+RUN bash download_yum
 
 FROM nginx:1.15.1-alpine
 COPY default.conf /etc/nginx/conf.d/default.conf
+COPY kubernetes-v1.14.1.tar /kubernetes/kubernetes-v1.14.1.tar
 COPY --from=centos /kubernetes /kubernetes/yum
-RUN \
-    sed -i 's dl-cdn.alpinelinux.org mirrors.aliyun.com g' /etc/apk/repositories && \
-    apk add --no-cache \
-        sudo \
+RUN apk add --no-cache \
         bash \
+        rsync \
         python \
         py-pip \
         openssl \
+        sshpass \
+        openssh-client
         ca-certificates && \
     apk add --no-cache --virtual \
         build-dependencies \
@@ -20,11 +21,7 @@ RUN \
         libffi-dev \
         openssl-dev \
         build-base && \
-    pip install --no-cache-dir --upgrade pip cffi -i https://mirrors.aliyun.com/pypi/simple/ && \
-    pip install --no-cache-dir ansible==2.7.5 netaddr -i https://mirrors.aliyun.com/pypi/simple/ && \
-    pip install --no-cache-dir --upgrade pycrypto pywinrm -i https://mirrors.aliyun.com/pypi/simple/ && \
-    apk add --no-cache \
-        sshpass \
-        openssh-client \
-        rsync && \
+    pip install --no-cache-dir --upgrade pip cffi && \
+    pip install --no-cache-dir ansible==2.7.5 netaddr && \
+    pip install --no-cache-dir --upgrade pycrypto pywinrm && \
     apk del build-dependencies
