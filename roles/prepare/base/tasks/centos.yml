@@ -15,10 +15,20 @@
 
 - block:
   - name: 备份原有 yum 源
-    raw: mv /etc/yum.repos.d /etc/yum.repos.d.orig.$(date -Iseconds)
+    copy:
+      remote_src: yes
+      src: /etc/yum.repos.d 
+      dest: /etc/yum.repos.d.orig.{{ ansible_date_time.iso8601 }}
 
   - name: 移除原有 yum 源
-    shell: rm -f /etc/yum.repos.d/*
+    file:
+      path: /etc/yum.repos.d
+      state: absent
+
+  - name: 创建相关目录
+    file:
+      path: /etc/yum.repos.d
+      state: directory
 
   - name: 添加基础 yum 仓库
     yum_repository:
