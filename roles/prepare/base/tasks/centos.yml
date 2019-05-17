@@ -31,6 +31,15 @@
       gpgcheck: no
       state: present
 
+  - name: 添加 epel 仓库
+    yum_repository:
+      name: epel
+      description: EPEL Repository
+      baseurl: "{{ epel_yum_repo }}"
+      enabled: yes
+      gpgcheck: no
+      state: present
+
   - name: 安装基础软件包
     yum: 
       name: 
@@ -65,7 +74,7 @@
   - name: 添加 epel 仓库
     yum_repository:
       name: epel
-      description: epel repo
+      description: EPEL Repository
       baseurl: "{{ epel_yum_repo }}"
       enabled: yes
       gpgcheck: no
