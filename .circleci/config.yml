@@ -11,6 +11,8 @@ jobs:
           export COMMIT_SHA=$(git log -1 --pretty=format:"%H" | awk '{print substr($1,1,8)}') 
           cd offline
           sh download_images
+          wget https://file.choerodon.com.cn/kubernetes/kubernetes-${CIRCLE_BRANCH}-centos7.4.tar
+          tar -xvf kubernetes-${CIRCLE_BRANCH}-centos7.4.tar
           docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PWD
           docker build --build-arg COMMIT_SHA=${COMMIT_SHA} -t setzero/kubeadm-ha:${CIRCLE_BRANCH}-${COMMIT_SHA} .
           docker push setzero/kubeadm-ha:${CIRCLE_BRANCH}-${COMMIT_SHA}

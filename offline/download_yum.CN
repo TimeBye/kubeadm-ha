@@ -7,13 +7,12 @@ sed "s/keepcache=0/keepcache=1/" -i /etc/yum.conf
 # 安装基础工具
 yum install -y yum-utils createrepo
 
-# 移除原有源
-rm -rf /etc/yum.repos.d/*
-
-# 添加基础源
-yum-config-manager \
-    --add-repo \
-    http://mirrors.aliyun.com/repo/Centos-7.repo
+# # 移除原有源
+# rm -rf /etc/yum.repos.d/*
+# # 添加基础源
+# yum-config-manager \
+#     --add-repo \
+#     http://mirrors.aliyun.com/repo/Centos-7.repo
 
 # 添加epel源
 yum-config-manager \
