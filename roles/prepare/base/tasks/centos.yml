@@ -24,7 +24,7 @@
 
   - name: 添加基础 yum 仓库
     yum_repository:
-      name: custom
+      name: base
       description: Custom Repository
       baseurl: "{{ base_yum_repo }}"
       enabled: no
