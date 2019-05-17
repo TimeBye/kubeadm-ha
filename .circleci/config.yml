@@ -2,18 +2,18 @@ version: 2
 jobs:
   build:
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: docker:18.09.3-git
     steps:
-      - checkout
       - setup_remote_docker:
-          version: 17.05.0-ce
+          version: 18.09.3
+      - checkout
       - run : |
           export COMMIT_SHA=$(git log -1 --pretty=format:"%H" | awk '{print substr($1,1,8)}') 
           cd offline
           sh download_images
           docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PWD
-          docker build -t setzero/kubeadm-ha:${CIRCLE_BRANCH} .
-          docker push setzero/kubeadm-ha-${CIRCLE_BRANCH}       
+          docker build --build-arg COMMIT_SHA=${COMMIT_SHA} -t setzero/kubeadm-ha:${CIRCLE_BRANCH}-${COMMIT_SHA} .
+          docker push setzero/kubeadm-ha:${CIRCLE_BRANCH}-${COMMIT_SHA}
 workflows:
   version: 2
   build:

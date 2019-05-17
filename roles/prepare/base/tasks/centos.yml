@@ -14,6 +14,12 @@
   when: install_mode != 'online'
 
 - block:
+  - name: 备份原有 yum 源
+    raw: mv /etc/yum.repos.d /etc/yum.repos.d.orig.$(date -Iseconds)
+
+  - name: 移除原有 yum 源
+    shell: rm -f /etc/yum.repos.d/*
+
   - name: 添加基础 yum 仓库
     yum_repository:
       name: custom
@@ -47,7 +53,6 @@
       - nc                              # 使用lb时进行端口判断时会用到
       state: latest
       enablerepo: custom
-      disablerepo: "*"
   when: base_yum_repo is defined and base_yum_repo != None
 
 - block:

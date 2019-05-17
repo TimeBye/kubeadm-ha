@@ -1,8 +1,14 @@
+- name: 确认相关目录是否存在
+  file:
+    path: /kubernetes
+    state: directory
+    mode: 0755
+
 - name: 分发所需的 Docker 镜像
   copy: 
-    src: /root/kubernetes-images-v1.14.1.tar 
-    dest: /root/kubernetes-images-v1.14.1.tar 
+    src: /kubernetes/kubernetes-1.14.1.tar
+    dest: /kubernetes/kubernetes-1.14.1.tar
     mode: 0755
 
 - name: 加载所需的 Docker 镜像
-  shell: docker load -i /root/kubernetes-images-v1.14.1.tar
+  shell: docker load -i /kubernetes/kubernetes-1.14.1.tar

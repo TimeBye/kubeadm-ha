@@ -1,3 +1,5 @@
+#!/bin/sh
+
 docker pull gcr.io/google_containers/kube-proxy:v1.14.1
 docker pull gcr.io/google_containers/kube-apiserver:v1.14.1
 docker pull gcr.io/google_containers/kube-scheduler:v1.14.1
@@ -39,4 +41,4 @@ docker save \
     gcr.azk8s.cn/kubernetes-helm/tiller:v2.13.1 \
     dockerhub.azk8s.cn/library/nginx:1.15.8 \
     quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.24.1 \
-    quay.azk8s.cn/coreos/flannel:v0.10.0-amd64 | gzip -1 > kubernetes-v1.14.1.tar
+    quay.azk8s.cn/coreos/flannel:v0.10.0-amd64 | gzip -1 > kubernetes-1.14.1.tar
