@@ -3,6 +3,7 @@ COPY download_yum .
 RUN bash download_yum
 
 FROM nginx:1.15.1-alpine
+ENV LANG=C.UTF-8
 COPY default.conf /etc/nginx/conf.d/default.conf
 COPY kubernetes-1.14.1.tar /kubernetes/kubernetes-1.14.1.tar
 COPY --from=centos /kubernetes /kubernetes/yum
@@ -29,3 +30,4 @@ RUN apk add --no-cache \
     cd /etc/ansible && \
     git checkout ${COMMIT_SHA} && \
     apk del build-dependencies
+WORKDIR /etc/ansible
