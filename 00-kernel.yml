@@ -2,4 +2,5 @@
 - hosts: 
   - all
   roles:
+  - prepare/base
   - prepare/kernel
