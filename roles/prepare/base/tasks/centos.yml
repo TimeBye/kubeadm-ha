@@ -27,7 +27,7 @@
       name: base
       description: Custom Repository
       baseurl: "{{ base_yum_repo }}"
-      enabled: no
+      enabled: yes
       gpgcheck: no
       state: present
 
@@ -54,7 +54,6 @@
       - yum-utils                       # 基础工具
       - nc                              # 使用lb时进行端口判断时会用到
       state: latest
-      enablerepo: custom
   when: base_yum_repo is defined and base_yum_repo != None
 
 - block:
