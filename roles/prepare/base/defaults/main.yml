@@ -11,3 +11,5 @@ lb_mode: nginx
 epel_yum_repo: http://mirrors.aliyun.com/epel/7/$basearch
 # 默认kube_dns_domain
 kube_dns_domain: cluster.local
+# 默认 lb_kube_apiserver_port
+lb_kube_apiserver_port: 8443
