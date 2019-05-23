@@ -60,7 +60,7 @@
   blockinfile:
     path: /etc/hosts
     block: |-
-      {% for item in (groups['all']|unique -%}{% if hostvars[item]['ansible_host'] is defined %}{{ hostvars[item]['ansible_host'] }}{% else %}{{ item }}{% endif %} {{ hostvars[item]['ansible_hostname'] }} {{ hostvars[item]['ansible_hostname'] }}.{{ kube_dns_domain }}
+      {% for item in (groups['all']|unique) -%}{% if hostvars[item]['ansible_host'] is defined %}{{ hostvars[item]['ansible_host'] }}{% else %}{{ item }}{% endif %} {{ hostvars[item]['ansible_hostname'] }} {{ hostvars[item]['ansible_hostname'] }}.{{ kube_dns_domain }}
       {% endfor %}
     state: present
     create: yes
