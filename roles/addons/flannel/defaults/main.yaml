@@ -9,3 +9,5 @@ flannel_backend: "vxlan"
 flannel_image: quay.azk8s.cn/coreos/flannel:v0.10.0-amd64
 # 选择默认网卡
 flannel_iface: true
+# 默认网络插件
+cluster_network: flannel
