@@ -28,7 +28,7 @@ spec:
     - --initial-cluster-token=etcd-cluster-token
     - --client-cert-auth=true
     - --snapshot-count=10000
-    - --data-dir=/var/lib/etcd
+    - --data-dir={{ etcd_data_dir }}
     # 推荐一小时压缩一次数据这样可以极大的保证集群稳定
     - --auto-compaction-retention=1
     # etcd Raft消息最大字节数，但是官方推荐的是10M
@@ -59,7 +59,7 @@ spec:
   priorityClassName: system-cluster-critical
   volumes:
   - hostPath:
-      path: /var/lib/etcd
+      path: {{ etcd_data_dir }}
       type: DirectoryOrCreate
     name: etcd-data
   - hostPath:

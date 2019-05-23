@@ -12,7 +12,7 @@
       name: "{{ item }}"
       state: directory
     with_items:
-    - /var/lib/etcd
+    - "{{ etcd_data_dir }}"
     - /etc/kubernetes/pki/etcd
     - /etc/kubernetes/manifests
 
