@@ -28,6 +28,7 @@
   with_items:
   - /var/run/docker
   - /var/lib/docker/overlay
+  - /var/run/docker/netns/default
 
 - name: 删除 docker 相关目录
   file: 
