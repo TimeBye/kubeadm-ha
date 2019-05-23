@@ -6,9 +6,9 @@
 
 - name: 分发所需的 Docker 镜像
   copy: 
-    src: /kubernetes/kubernetes-1.14.1.tar
-    dest: /kubernetes/kubernetes-1.14.1.tar
+    src: /kubernetes/kubernetes-1.14.2.tar
+    dest: /kubernetes/kubernetes-1.14.2.tar
     mode: 0755
 
 - name: 加载所需的 Docker 镜像
-  shell: docker load -i /kubernetes/kubernetes-1.14.1.tar
+  shell: docker load -i /kubernetes/kubernetes-1.14.2.tar
