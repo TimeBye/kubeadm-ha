@@ -31,7 +31,7 @@
 
 - name: 删除 docker 相关目录
   file: 
-    name: "{{ item }} "
+    name: "{{ item }}"
     state: absent
   with_items:
   - "{{ docker_storage_dir }}"
@@ -50,7 +50,7 @@
 
 - name: 删除 kubelet 相关文件或目录
   file: 
-    name: "{{ item }} "
+    name: "{{ item }}"
     state: absent
   with_items:
   - "{{ kubelet_root_dir }}"
@@ -74,44 +74,46 @@
   - /etc/modules-load.d/10-k8s-modules.conf
 
 - name: 清理 iptables
-  shell: >
-    iptables -F && 
-    iptables -X && 
-    iptables -F -t nat && 
-    iptables -X -t nat && 
-    iptables -F -t raw && 
-    iptables -X -t raw &&
-    iptables -F -t mangle && 
-    iptables -X -t mangle
+  shell: "{{ item }} || true"
+  with_items:
+  - iptables -F
+  - iptables -X
+  - iptables -F -t nat
+  - iptables -X -t nat
+  - iptables -F -t raw
+  - iptables -X -t raw
+  - iptables -F -t mangle
+  - iptables -X -t mangle
   ignore_errors: true
 
 - name: 清除虚拟网卡
-  shell: >
-    ip link del docker0 &&
-    ip link del tunl0 &&
-    ip link del flannel.1 &&
-    ip link del cni0 &&
-    ip link del mynet0 &&
-    ip link del kube-bridge &&
-    ip link del dummy0 &&
-    ip link del kube-ipvs0 &&
-    ip link del cilium_net &&
-    ip link del cilium_vxlan
+  shell: "{{ item }} || true"
+  with_items:
+  - ip link del docker0
+  - ip link del tunl0
+  - ip link del flannel.1
+  - ip link del cni0
+  - ip link del mynet0
+  - ip link del kube-bridge
+  - ip link del dummy0
+  - ip link del kube-ipvs0
+  - ip link del cilium_net
+  - ip link del cilium_vxlan
   ignore_errors: true
 
 - name: 重新加载 daemon
   systemd:
     daemon_reload: yes
 
-- name: 重启 networking 网络组件
-  service:
-    name: networking
-    state: restarted
-  ignore_errors: true
-
 - name: 重启 network 网络组件
   service:
     name: network
+    state: restarted
+  ignore_errors: true
+
+- name: 重启 networking 网络组件
+  service:
+    name: networking
     state: restarted
   ignore_errors: true
 
