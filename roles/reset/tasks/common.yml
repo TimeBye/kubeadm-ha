@@ -105,16 +105,11 @@
   systemd:
     daemon_reload: yes
 
-- name: 重启 network 网络组件
-  service:
-    name: network
-    state: restarted
-  ignore_errors: true
-
-- name: 重启 networking 网络组件
-  service:
-    name: networking
-    state: restarted
+- name: 重启网络组件
+  shell: "{{ item }} || true"
+  with_items:
+  - systemctl restart network
+  - systemctl restart networking
   ignore_errors: true
 
 - name: 移除添加的 hosts 信息

@@ -56,11 +56,11 @@
   shell: "sysctl -p /etc/sysctl.d/95-k8s-sysctl.conf"
   ignore_errors: true
 
-- name: 添加集群节点 hostname 信息到hosts 文件中
+- name: 添加集群节点 hostname 信息到 hosts 文件中
   blockinfile:
     path: /etc/hosts
     block: |-
-      {% for item in (groups['all']|unique) -%}{% if hostvars[item]['ansible_host'] is defined %}{{ hostvars[item]['ansible_host'] }}{% else %}{{ item }}{% endif %} {{ hostvars[item]['ansible_hostname'] }} {{ hostvars[item]['ansible_hostname'] }}.{{ kube_dns_domain }}
+      {% for item in (groups['all']|unique) -%}{% if hostvars[item]['ansible_host'] is defined %}{{ hostvars[item]['ansible_host'] }} {{ hostvars[item]['inventory_hostname'] }} {{ hostvars[item]['inventory_hostname'] }}.{{ kube_dns_domain }}{% endif %}
       {% endfor %}
     state: present
     create: yes
