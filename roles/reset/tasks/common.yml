@@ -1,0 +1,123 @@
+- name: 使用 kubeadm 重置节点
+  command: kubeadm reset -f
+  ignore_errors: true
+
+- name: 停止相关服务
+  service:
+    name: "{{ item }}"
+    state: stopped
+    enabled: no
+  with_items:
+  - docker
+  - kubelet
+  ignore_errors: true
+
+- name: 卸载相关软件
+  yum:
+    name:
+    - kubeadm
+    - kubectl
+    - kubelet
+    - docker-ce
+    state: absent
+
+- name: 卸载 docker 相关文件或目录
+  mount: 
+    path: "{{ item }}"
+    state: unmounted
+  with_items:
+  - /var/run/docker
+  - /var/lib/docker/overlay
+
+- name: 删除 docker 相关目录
+  file: 
+    name: "{{ item }} "
+    state: absent
+  with_items:
+  - "{{ docker_storage_dir }}"
+  - /etc/docker
+  - /var/lib/docker
+  - /var/run/docker
+  - /usr/share/bash-completion/completions/docker
+
+- name: 卸载 kubelet 相关目录
+  mount: 
+    path: "{{ item }}"
+    state: unmounted
+  with_items:
+  - /var/lib/kubelet 
+  - /var/run/kubelet 
+
+- name: 删除 kubelet 相关文件或目录
+  file: 
+    name: "{{ item }} "
+    state: absent
+  with_items:
+  - "{{ kubelet_root_dir }}"
+  - "{{ ansible_env.HOME }}/.kube"
+  - /etc/kubernetes
+  - /var/lib/kubelet
+  - /var/run/kubelet
+  - /etc/systemd/system/kubelet.service.d
+  - /usr/share/bash-completion/completions/kubectl
+
+- name: 移除其他相关文件或目录
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+  - /etc/nginx
+  - /etc/haproxy
+  - /var/lib/etcd
+  - /etc/cni/net.d
+  - /etc/sysctl.d/95-k8s-sysctl.conf
+  - /etc/modules-load.d/10-k8s-modules.conf
+
+- name: 清理 iptables
+  shell: >
+    iptables -F && 
+    iptables -X && 
+    iptables -F -t nat && 
+    iptables -X -t nat && 
+    iptables -F -t raw && 
+    iptables -X -t raw &&
+    iptables -F -t mangle && 
+    iptables -X -t mangle
+  ignore_errors: true
+
+- name: 清除虚拟网卡
+  shell: >
+    ip link del docker0 &&
+    ip link del tunl0 &&
+    ip link del flannel.1 &&
+    ip link del cni0 &&
+    ip link del mynet0 &&
+    ip link del kube-bridge &&
+    ip link del dummy0 &&
+    ip link del kube-ipvs0 &&
+    ip link del cilium_net &&
+    ip link del cilium_vxlan
+  ignore_errors: true
+
+- name: 重新加载 daemon
+  systemd:
+    daemon_reload: yes
+
+- name: 重启 networking 网络组件
+  service:
+    name: networking
+    state: restarted
+  ignore_errors: true
+
+- name: 重启 network 网络组件
+  service:
+    name: network
+    state: restarted
+  ignore_errors: true
+
+- name: 移除添加的 hosts 信息
+  blockinfile:
+    path: "/etc/hosts"
+    state: absent
+    follow: yes
+    marker: "# Ansible inventory hosts {mark}"

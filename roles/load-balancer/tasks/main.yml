@@ -5,7 +5,6 @@
   with_items:
   - "{{ kubelet_root_dir }}"
   - /etc/systemd/system/kubelet.service.d
-  - /usr/lib/systemd/system/kubelet.service.d
 
 - include_tasks: nginx.yml
   when: lb_mode == "nginx"
