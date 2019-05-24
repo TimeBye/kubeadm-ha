@@ -15,16 +15,16 @@ spec:
   - name: kube-haproxy
     # image: haproxy:1.9.0
     image: {{ kube_haproxy_image }}
-    {% if loadbalancer_apiserver_healthcheck_port is defined -%}
+    {% if lb_kube_apiserver_healthcheck_port is defined -%}
     # 检测当前节点haproxy是否存活，若不存活则重启
     livenessProbe:
       httpGet:
         path: /healthz
-        port: {{ loadbalancer_apiserver_healthcheck_port }}
+        port: {{ lb_kube_apiserver_healthcheck_port }}
     readinessProbe:
       httpGet:
         path: /healthz
-        port: {{ loadbalancer_apiserver_healthcheck_port }}
+        port: {{ lb_kube_apiserver_healthcheck_port }}
     {% endif -%}
     resources: {}
     volumeMounts:

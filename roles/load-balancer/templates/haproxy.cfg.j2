@@ -29,9 +29,9 @@ listen stats
     stats auth {{ haproxy_stats_user }}:{{ haproxy_stats_password }}
     stats admin if TRUE
 
-{% if loadbalancer_apiserver_healthcheck_port is defined -%}
+{% if lb_kube_apiserver_healthcheck_port is defined -%}
 frontend healthz
-    bind *:{{ loadbalancer_apiserver_healthcheck_port }}
+    bind *:{{ lb_kube_apiserver_healthcheck_port }}
     mode http
     monitor-uri /healthz
 {% endif %}
