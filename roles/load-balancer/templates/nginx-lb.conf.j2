@@ -42,8 +42,8 @@ http {
     server {
         listen {{ lb_kube_apiserver_healthcheck_port }};
         location /healthz {
-        access_log off;
-        return 200;
+            access_log off;
+            return 200;
         }
     }
     {% endif %}
