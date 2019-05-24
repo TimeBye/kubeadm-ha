@@ -51,13 +51,13 @@
 # 所有节点根据证书重新生成各组件配置文件
 - include_tasks: kubeconfig.yml
 
-# openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
-- name: 获取 kubeadm join 命令
-  shell: kubeadm token create --print-join-command --config=/etc/kubernetes/kubeadm-config.yaml
-  register: kubeadm_join_command
+# # openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
+# - name: 获取 kubeadm join 命令
+#   shell: kubeadm token create --print-join-command --config=/etc/kubernetes/kubeadm-config.yaml
+#   register: kubeadm_join_command
 
-- name: 设置变量 KUBEADM_JOIN_COMMAND
-  set_fact: KUBEADM_JOIN_COMMAND="{{ kubeadm_join_command.stdout }}"
+# - name: 设置变量 KUBEADM_JOIN_COMMAND
+#   set_fact: KUBEADM_JOIN_COMMAND="{{ kubeadm_join_command.stdout }}"
 
 - block:
   - name: 重新加载 daemon
