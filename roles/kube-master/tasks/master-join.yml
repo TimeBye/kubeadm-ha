@@ -28,9 +28,6 @@
       mode: 0644
       backup: yes
 
-  - debug: 
-      msg: "{{ hostvars[groups['kube-master']|first]['KUBE_IMAGE_LIST'] }}"
-
   - name: 其他 master 节点拉取相关镜像
     shell: "docker pull {{ item }}"
     with_items: "{{ hostvars[groups['kube-master']|first]['KUBE_IMAGE_LIST'] }}"
