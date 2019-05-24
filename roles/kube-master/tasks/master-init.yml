@@ -43,7 +43,10 @@
     when: install_mode == 'online'
 
   - name: 设置变量 KUBE_IMAGE_LIST
-    set_fact: KUBE_IMAGE_LIST="{{ KUBE_IMAGE_LIST.stdout_lines }}"
+    set_fact: KUBE_IMAGE_LIST="{{ KUBE_IMAGE_LIST.stdout }}"
+  
+  - debug: 
+      msg: "{{ KUBE_IMAGE_LIST }}"
 
   - name: 初始化第一个 master 节点
     shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml

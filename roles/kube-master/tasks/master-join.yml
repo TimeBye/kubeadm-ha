@@ -28,10 +28,12 @@
       mode: 0644
       backup: yes
 
+  - debug: 
+      msg: "{{ hostvars[groups['kube-master']|first]['KUBE_IMAGE_LIST'] }}"
+
   - name: 其他 master 节点拉取相关镜像
     shell: "docker pull {{ item }}"
-    with_items:
-    - "{{ hostvars[groups['kube-master']|first]['KUBE_IMAGE_LIST'] }}"
+    with_items: "{{ hostvars[groups['kube-master']|first]['KUBE_IMAGE_LIST'] }}"
     when: install_mode == 'online'
   
   # "{{ hostvars[groups['kube-master']|first]['KUBEADM_JOIN_COMMAND'] }} --apiserver-advertise-address={{ CURRENT_HOST_IP }} --node-name={{ inventory_hostname }} --experimental-control-plane --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests"
