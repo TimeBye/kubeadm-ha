@@ -1,0 +1,27 @@
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: JoinConfiguration
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "{{ KUBE_APISERVER_IP | trim }}:{{ KUBE_APISERVER_PORT | trim }}"
+    token: {{ kubeadm_token }}
+    unsafeSkipCAVerification: true
+  timeout: 5m0s
+  tlsBootstrapToken: {{ kubeadm_token }}
+controlPlane:
+  localAPIEndpoint:
+    advertiseAddress: {{ CURRENT_HOST_IP }}
+    bindPort: 6443
+nodeRegistration:
+  kubeletExtraArgs:
+    pod-infra-container-image: {{ pod_infra_container_image }}
+    root-dir: {{ kubelet_root_dir }}
+    hostname-override: {{ inventory_hostname }}
+  criSocket: /var/run/dockershim.sock
+  name: {{ inventory_hostname }}
+{% if inventory_hostname in (groups['kube-master'] + groups['new-master']) and inventory_hostname not in (groups['kube-worker'] + groups['new-worker']) %}
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+{% else %}
+  taints: []
+{% endif %}

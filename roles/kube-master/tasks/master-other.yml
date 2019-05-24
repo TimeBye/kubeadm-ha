@@ -22,7 +22,7 @@
 
   - name: 创建 kubeadm 的配置文件
     template: 
-      src: kubeadm-config.yaml.j2
+      src: kubeadm-controlplane.yaml.j2
       dest: /etc/kubernetes/kubeadm-config.yaml
       owner: root
       mode: 0644
@@ -38,8 +38,8 @@
     - "{{ image_list.stdout_lines }}"
     when: install_mode == 'online'
     
-  - name: 其他 master 节点加入集群
-    shell: "{{ hostvars[groups['kube-master']|first]['KUBEADM_JOIN_COMMAND'] }} --apiserver-advertise-address={{ CURRENT_HOST_IP }} --node-name={{ inventory_hostname }} --experimental-control-plane --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests"
+  # - name: 其他 master 节点加入集群
+  #   shell: "{{ hostvars[groups['kube-master']|first]['KUBEADM_JOIN_COMMAND'] }} --apiserver-advertise-address={{ CURRENT_HOST_IP }} --node-name={{ inventory_hostname }} --experimental-control-plane --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests"
 
   when: not kubelet_conf_stat.stat.exists
   

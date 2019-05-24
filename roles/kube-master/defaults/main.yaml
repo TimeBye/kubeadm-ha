@@ -26,6 +26,9 @@ KUBE_APISERVER_IP: >-
   {% endif %}
   {% endif %}
 
+# 加入集群token
+kubeadm_token: "abcdef.0123456789abcdef"
+
 # 负载后的apiserver端口号
 lb_kube_apiserver_port: 8443
 KUBE_APISERVER_PORT: >-

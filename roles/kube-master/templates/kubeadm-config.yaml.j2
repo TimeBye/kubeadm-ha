@@ -3,23 +3,30 @@ kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: {{ CURRENT_HOST_IP }}
   bindPort: 6443
+nodeRegistration:
+  kubeletExtraArgs:
+    network-plugin: cni
+    root-dir: {{ kubelet_root_dir }}
+    cgroup-driver: {{ DOCKER_CGROUP_DRIVER }}
+    hostname-override: {{ inventory_hostname }}
+    pod-infra-container-image: {{ pod_infra_container_image }}
+  criSocket: /var/run/dockershim.sock
+  name: {{ inventory_hostname }}
+{% if inventory_hostname in (groups['kube-master'] + groups['new-master']) and inventory_hostname not in (groups['kube-worker'] + groups['new-worker']) %}
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+{% else %}
+  taints: []
+{% endif %}
 bootstrapTokens:
 - groups:
   - system:bootstrappers:kubeadm:default-node-token
+  token: {{ kubeadm_token }}
   ttl: 0s
   usages:
   - signing
   - authentication
-nodeRegistration:
-  kubeletExtraArgs:
-    pod-infra-container-image: {{ pod_infra_container_image }}
-    root-dir: {{ kubelet_root_dir }}
-    hostname-override: {{ inventory_hostname }}
-  criSocket: /var/run/dockershim.sock
-  name: {{ inventory_hostname }}
-  taints:
-  - effect: NoSchedule
-    key: node-role.kubernetes.io/master
 ---
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
