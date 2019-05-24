@@ -9,6 +9,8 @@ CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined 
 lb_mode: nginx
 # 经过负载后的apiserver端口号
 lb_kube_apiserver_port: 8443
+# 负载均衡器健康检查端口
+lb_kube_apiserver_healthcheck_port: 8081
 # Pod根容器
 pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
 # Kubelet 根目录
@@ -36,7 +38,7 @@ haproxy_stats_password: "admin"
 # "leastconn": 基于服务器最小连接数
 # "source": 基于请求源IP地址
 # "uri": 基于请求的URI
-haproxy_balance_alg: "roundrobin"
+haproxy_balance_alg: "leastconn"
 # 启用 ingress NodePort服务的负载均衡 (true/false)
 enabel_ingress_nodeport_lb: false
 # 启用 ingress tls NodePort服务的负载均衡 (true/false)

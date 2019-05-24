@@ -55,7 +55,7 @@ haproxy_stats_password: "admin"
 # "leastconn": 基于服务器最小连接数
 # "source": 基于请求源IP地址
 # "uri": 基于请求的URI
-haproxy_balance_alg: "roundrobin"
+haproxy_balance_alg: "leastconn"
 # 启用 ingress NodePort服务的负载均衡 (true/false)
 enabel_ingress_nodeport_lb: false
 # 启用 ingress tls NodePort服务的负载均衡 (true/false)
