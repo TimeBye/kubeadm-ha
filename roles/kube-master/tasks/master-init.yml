@@ -31,19 +31,22 @@
       owner: root
       mode: 0644
       backup: yes
+      
+  when: not kubelet_conf_stat.stat.exists
 
-  - name: 获取第一个 master 节点需要拉取的镜像列表
-    shell: kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml
-    register: kube_image_list
+- name: 获取第一个 master 节点需要拉取的镜像列表
+  shell: kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml
+  register: kube_image_list
 
+- name: 设置变量 KUBE_IMAGE_LIST
+  set_fact: KUBE_IMAGE_LIST="{{ kube_image_list.stdout_lines }}"
+
+- block:
   - name: 第一个 master 节点拉取相关镜像
     shell: "docker pull {{ item }}"
     with_items:
     - "{{ kube_image_list.stdout_lines }}"
     when: install_mode == 'online'
-
-  - name: 设置变量 KUBE_IMAGE_LIST
-    set_fact: KUBE_IMAGE_LIST="{{ kube_image_list.stdout_lines }}"
 
   - name: 初始化第一个 master 节点
     shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml
