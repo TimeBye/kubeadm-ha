@@ -43,7 +43,7 @@
     when: install_mode == 'online'
 
   - name: 设置变量 KUBE_IMAGE_LIST
-    set_fact: KUBE_IMAGE_LIST="{{ KUBE_IMAGE_LIST.stdout }}"
+    set_fact: KUBE_IMAGE_LIST="{{ kube_image_list.stdout_lines }}"
   
   - debug: 
       msg: "{{ KUBE_IMAGE_LIST }}"
