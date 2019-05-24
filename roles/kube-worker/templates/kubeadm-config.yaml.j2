@@ -7,21 +7,12 @@ discovery:
     unsafeSkipCAVerification: true
   timeout: 5m0s
   tlsBootstrapToken: {{ kubeadm_token }}
-controlPlane:
-  localAPIEndpoint:
-    advertiseAddress: {{ CURRENT_HOST_IP }}
-    bindPort: 6443
 nodeRegistration:
   kubeletExtraArgs:
-    pod-infra-container-image: {{ pod_infra_container_image }}
+    network-plugin: cni
     root-dir: {{ kubelet_root_dir }}
+    cgroup-driver: {{ DOCKER_CGROUP_DRIVER }}
     hostname-override: {{ inventory_hostname }}
+    pod-infra-container-image: {{ pod_infra_container_image }}
   criSocket: /var/run/dockershim.sock
   name: {{ inventory_hostname }}
-{% if inventory_hostname in (groups['kube-master'] + groups['new-master']) and inventory_hostname not in (groups['kube-worker'] + groups['new-worker']) %}
-  taints:
-  - effect: NoSchedule
-    key: node-role.kubernetes.io/master
-{% else %}
-  taints: []
-{% endif %}

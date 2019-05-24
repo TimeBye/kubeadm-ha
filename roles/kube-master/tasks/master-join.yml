@@ -22,24 +22,23 @@
 
   - name: 创建 kubeadm 的配置文件
     template: 
-      src: kubeadm-controlplane.yaml.j2
+      src: kubeadm-controlplane-join.yaml.j2
       dest: /etc/kubernetes/kubeadm-config.yaml
       owner: root
       mode: 0644
       backup: yes
 
-  - name: 获取其他 master 节点需要拉取的镜像列表
-    shell: kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml
-    register: image_list
-
   - name: 其他 master 节点拉取相关镜像
     shell: "docker pull {{ item }}"
     with_items:
-    - "{{ image_list.stdout_lines }}"
+    - "{{ hostvars[groups['kube-master']|first]['KUBE_IMAGE_LIST'] }}"
     when: install_mode == 'online'
-    
-  # - name: 其他 master 节点加入集群
-  #   shell: "{{ hostvars[groups['kube-master']|first]['KUBEADM_JOIN_COMMAND'] }} --apiserver-advertise-address={{ CURRENT_HOST_IP }} --node-name={{ inventory_hostname }} --experimental-control-plane --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests"
+  
+  # "{{ hostvars[groups['kube-master']|first]['KUBEADM_JOIN_COMMAND'] }} --apiserver-advertise-address={{ CURRENT_HOST_IP }} --node-name={{ inventory_hostname }} --experimental-control-plane --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests"
+  - name: 其他 master 节点加入集群
+    shell: >-
+      kubeadm join --config /etc/kubernetes/kubeadm-config.yaml 
+      --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests
 
   when: not kubelet_conf_stat.stat.exists
   
@@ -47,14 +46,6 @@
 - include_tasks: kubeconfig.yml
 
 - block:
-  - name: 更新 kubeadm-flags.env 配置文件
-    template: 
-      src: kubeadm-flags.env.j2
-      dest: /var/lib/kubelet/kubeadm-flags.env
-      owner: root
-      mode: 0644
-      backup: yes
-
   - name: 重新加载 daemon
     systemd:
       daemon_reload: yes
