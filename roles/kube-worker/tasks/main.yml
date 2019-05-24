@@ -40,7 +40,7 @@
       --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests
 
   when: 
-  - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])) 
+  - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
   - inventory_hostname not in (groups['kube-master'] + groups['new-master'])
   - not kubelet_conf_stat.stat.exists
 
