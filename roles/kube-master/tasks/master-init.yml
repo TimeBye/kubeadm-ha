@@ -44,8 +44,7 @@
 - block:
   - name: 第一个 master 节点拉取相关镜像
     shell: "docker pull {{ item }}"
-    with_items:
-    - "{{ kube_image_list.stdout_lines }}"
+    with_items: "{{ KUBE_IMAGE_LIST }}"
     when: install_mode == 'online'
 
   - name: 初始化第一个 master 节点

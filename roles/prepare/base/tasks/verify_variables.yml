@@ -6,8 +6,8 @@
 - name: 校验 nginx lb 模式节点设置
   run_once: true
   assert:
-    that: groups['all'] == groups['lb'] 
-    msg: "当前负载均衡模式为 nginx，请将所有节点添加至 lb 节点组中。"
+    that: groups['all']|unique|length == groups['lb']|unique|length 
+    msg: "当前负载均衡模式为 nginx 且 master 节点数量大于 1，请将所有节点添加至 lb 节点组中。"
   when:
   - (groups['kube-master']|length + groups['new-master']|length) > 1
   - lb_mode == "nginx"
