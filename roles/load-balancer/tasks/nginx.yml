@@ -26,6 +26,6 @@
 - name: Nginx lb | 生成 nginx lb static pod 文件
   template:
     src: nginx-lb.yaml.j2
-    dest: /etc/kubernetes/manifests/nginx-lb.yaml
+    dest: /etc/kubernetes/manifests/kube-apiserver-lb.yaml
     owner: root
     mode: 0644

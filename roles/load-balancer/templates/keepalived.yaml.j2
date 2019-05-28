@@ -27,7 +27,7 @@ spec:
     - name: keepalived_router_id
       value: "{{ keepalived_router_id }}"
     {% if lb_kube_apiserver_healthcheck_port is defined -%}
-    # 检测当前节点haproxy是否存活，若不存活则重启
+    # 检测当前节点 lb 是否存活，若不存活则重启
     livenessProbe:
       httpGet:
         path: /healthz
@@ -37,7 +37,7 @@ spec:
         path: /healthz
         port: {{ lb_kube_apiserver_healthcheck_port }}
     {% endif -%}
-    # # 检测当前节点haproxy是否存活，若不存活则重启以让出vip
+    # # 检测当前节点 lb 是否存活，若不存活则重启以让出 vip
     # livenessProbe:
     #   exec:
     #     command:
