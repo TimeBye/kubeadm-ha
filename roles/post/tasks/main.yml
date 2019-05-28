@@ -1,15 +1,14 @@
-- block:
-  - name: 设置 worker 节点 role
-    shell: "kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker='' --overwrite"
-    delegate_to: "{{ groups['kube-master']|first }}"
-    ignore_errors: true
+- name: 设置 worker 节点 role
+  shell: "kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker='' --overwrite"
+  delegate_to: "{{ groups['kube-master']|first }}"
+  ignore_errors: true
   when: inventory_hostname in (groups['kube-worker'] + groups['new-worker']) 
 
 - name: 设置 load balancer 节点 role
   shell: "kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/lb='' --overwrite"
   delegate_to: "{{ groups['kube-master']|first }}"
   ignore_errors: true
-  when: inventory_hostname in groups['lb'] 
+  when: inventory_hostname in groups['lb']
 
 - name: 设置 etcd 节点 role
   shell: "kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/etcd='' --overwrite"
