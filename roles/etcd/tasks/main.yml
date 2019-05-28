@@ -41,22 +41,22 @@
 # 分发证书
 - include_tasks: certificate/distribute.yml
 
-- name: 读取 etcd static pod yaml 文件 stat 信息
-  stat: 
-    path: /etc/kubernetes/manifests/etcd-external.yaml
-  register: etcd_static_pod_stat
+- block:
+  - name: 读取 etcd static pod yaml 文件 stat 信息
+    stat: 
+      path: /etc/kubernetes/manifests/etcd-external.yaml
+    register: etcd_static_pod_stat
 
-- name: 设置变量 CLUSTER_STATE
-  set_fact: CLUSTER_STATE="existing"
-  when: etcd_static_pod_stat.stat.exists
+  - name: 设置变量 CLUSTER_STATE
+    set_fact: CLUSTER_STATE="existing"
+    when: etcd_static_pod_stat.stat.exists
 
-- name: 生成 etcd static pod 文件
-  template: 
-    src: etcd-external.yaml.j2
-    dest: /etc/kubernetes/manifests/etcd-external.yaml
-    owner: root
-    mode: 0644
-  register: etcd_configuration_result
+  - name: 生成 etcd static pod 文件
+    template: 
+      src: etcd-external.yaml.j2
+      dest: /etc/kubernetes/manifests/etcd-external.yaml
+      owner: root
+      mode: 0644
   when: inventory_hostname in groups['etcd']
 
 - name: 读取 kubelet.conf 文件 stat 信息
