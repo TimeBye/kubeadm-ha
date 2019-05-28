@@ -13,7 +13,7 @@ spec:
   priorityClassName: system-cluster-critical
   containers:
   - name: lb-nginx
-    # image: nginx:1.15.8
+    # image: nginx:1.15.12
     image: {{ kube_nginx_image }}
     imagePullPolicy: IfNotPresent
     {% if lb_kube_apiserver_healthcheck_port is defined -%}

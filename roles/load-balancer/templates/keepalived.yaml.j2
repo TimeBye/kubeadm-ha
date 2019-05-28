@@ -11,7 +11,7 @@ spec:
   priorityClassName: system-cluster-critical
   containers:
   - name: kube-keepalived
-    # image: osixia/keepalived:2.0.10
+    # image: osixia/keepalived:2.0.15
     image: {{ kube_keepalived_image }}
     env:
     - name: KEEPALIVED_VIRTUAL_IPS

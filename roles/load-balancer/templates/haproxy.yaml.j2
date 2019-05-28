@@ -13,7 +13,7 @@ spec:
   priorityClassName: system-cluster-critical
   containers:
   - name: lb-nginx
-    # image: haproxy:1.9.0
+    # image: haproxy:1.9.8
     image: {{ kube_haproxy_image }}
     {% if lb_kube_apiserver_healthcheck_port is defined -%}
     # 检测当前节点haproxy是否存活，若不存活则重启

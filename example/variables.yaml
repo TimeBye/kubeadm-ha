@@ -37,9 +37,9 @@ lb_mode: nginx
 # 使用负载均衡集群 Master Port
 lb_kube_apiserver_port: "8443"
 # 使用nginx进行apiserver负载时使用的nginx镜像
-kube_nginx_image: dockerhub.azk8s.cn/library/nginx:1.15.8
+kube_nginx_image: dockerhub.azk8s.cn/library/nginx:1.15.12
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-kube_haproxy_image: dockerhub.azk8s.cn/library/haproxy:1.9.0
+kube_haproxy_image: dockerhub.azk8s.cn/library/haproxy:1.9.8
 # haproxy监控绑定端口
 haproxy_stats_bind_address: 9090
 # haproxy监控访问路径
@@ -61,7 +61,7 @@ enabel_ingress_nodeport_lb: false
 # 启用 ingress tls NodePort服务的负载均衡 (true/false)
 enabel_ingress_tls_nodeport_lb: false
 # 使用haproxy进行apiserver负载时使用的keepalived镜像
-kube_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.10
+kube_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.15
 # Keepalived auth_type 的 Password
 keepalived_password: "d0cker"
 # 区分多个instance的VRRP组播，同网段不能重复，取值在0-255之间

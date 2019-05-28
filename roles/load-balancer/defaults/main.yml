@@ -18,11 +18,11 @@ kubelet_root_dir: "/var/lib/kubelet"
 
 #---------------------------------------------- Nginx 相关参数 --------------------------------------------#
 # 使用nginx进行apiserver负载时使用的nginx镜像
-kube_nginx_image: dockerhub.azk8s.cn/library/nginx:1.15.8
+kube_nginx_image: dockerhub.azk8s.cn/library/nginx:1.15.12
 
 #--------------------------------------------- Haproxy 相关参数 --------------------------------------------#
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-kube_haproxy_image: dockerhub.azk8s.cn/library/haproxy:1.9.0
+kube_haproxy_image: dockerhub.azk8s.cn/library/haproxy:1.9.8
 # haproxy监控绑定端口
 haproxy_stats_bind_address: 9090
 # haproxy监控访问路径
@@ -61,7 +61,7 @@ KUBE_APISERVER_IP: >-
     {% endif %}
   {% endif %}
 
-kube_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.10
+kube_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.15
 # 其他 Keepalived 节点的单点传播 IP
 KEEPALIVED_UNICAST_PEERS: "{% for host in groups['lb'] %}{% if hostvars[host]['ansible_host'] is defined %}'{{ hostvars[host]['ansible_host'] }}'{% else %}'{{ host }}'{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
 # Keepalived auth_type 的 Password
