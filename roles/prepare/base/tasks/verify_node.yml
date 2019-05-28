@@ -9,7 +9,7 @@
     that: ansible_service_mgr == "systemd"
     msg: "节点：{{ inventory_hostname }} 期望为systemd类型操作系统，实际获取：{{ ansible_service_mgr }}，安装需求校验不通过。"
 
-- name: 校验节点系统内核 <Verify node kernel>
+- name: 校验节点系统内核
   assert:
     that: ansible_kernel is version_compare('3.10', '>=')
     msg: "节点：{{ inventory_hostname }} 系统内核版本小于3.10，实际获取：{{ ansible_kernel }}，安装需求校验不通过。"

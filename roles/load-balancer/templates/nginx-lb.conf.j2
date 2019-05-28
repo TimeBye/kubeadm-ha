@@ -38,7 +38,7 @@ http {
     server_tokens off;
     autoindex off;
 
-{% if lb_kube_apiserver_healthcheck_port is defined -%}
+    {% if lb_kube_apiserver_healthcheck_port is defined -%}
     server {
         listen {{ lb_kube_apiserver_healthcheck_port }};
         location /healthz {
