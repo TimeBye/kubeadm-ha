@@ -9,9 +9,15 @@
     that: groups['kube-master']|length >= 1
     msg: "请将添加至少一个节点到 kube-master 节点组中。"
 
+- name: 校验 slb 模式 lb_kube_apiserver_ip 是否赋值
+  assert:
+    that: lb_kube_apiserver_ip is defined and lb_kube_apiserver_ip|length > 6
+    msg: "当前负载均衡为 slb 模式，请将 slb 的 ip 地址赋值给变量 lb_kube_apiserver_ip。"
+  when: lb_mode == 'slb'
+
 - name: 校验 lb_kube_apiserver_ip 是否合法
   assert:
-    that: lb_kube_apiserver_ip != CURRENT_HOST_IP
+    that: lb_kube_apiserver_ip != CURRENT_HOST_IP and lb_kube_apiserver_ip|length > 6
     msg: "VIP 不能设置为集群节点的 IP。"
   when: lb_kube_apiserver_ip is defined
 
