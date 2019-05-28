@@ -6,8 +6,8 @@
 - name: 校验 master 节点数量
   run_once: true
   assert:
-    that: groups['kube-master'] | length > 1
-    msg: "请将添加至少两个节点到 kube-master 节点组中。"
+    that: groups['kube-master']|length >= 1
+    msg: "请将添加至少一个节点到 kube-master 节点组中。"
 
 - name: 校验 lb_kube_apiserver_ip 是否合法
   assert:
@@ -34,7 +34,7 @@
   - name: 校验 lb 模式节点设置
     run_once: true
     assert:
-      that: groups['lb'] | length > 1
+      that: groups['lb']|length > 1
       msg: "请将添加至少两个节点到 lb 节点组中。"
   - name: 校验 lb 模式端口设置
     assert:
@@ -50,5 +50,5 @@
 - name: 校验 etcd 节点数量
   run_once: true
   assert:
-    that: groups['etcd'] | length is odd
+    that: groups['etcd']|length is odd
     msg: "etcd 节点数量必须为奇数，请添加或减少 etcd 节点数量至奇数个。"
