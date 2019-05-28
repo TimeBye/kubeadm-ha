@@ -46,7 +46,21 @@ enabel_ingress_tls_nodeport_lb: false
 
 #---------------------------------------------- Keepalived 相关参数 ---------------------------------------#
 # Keepalived 提供的 VIPs
-KUBE_APISERVER_IP: "{% if lb_mode == 'nginx' %}127.0.0.1{% else %}{{ lb_kube_apiserver_ip }}{% endif %}"
+KUBE_APISERVER_IP: >-
+  {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
+    {% if hostvars[groups['kube-master']|first]['ansible_host'] is defined %}
+      {{ hostvars[groups['kube-master']|first]['ansible_host'] }}
+    {% else %}
+      {{ groups['kube-master']|first }}
+    {% endif %}
+  {% else %}
+    {% if lb_kube_apiserver_ip is not defined %}
+      127.0.0.1
+    {% else %}
+      {{ lb_kube_apiserver_ip }}
+    {% endif %}
+  {% endif %}
+
 kube_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.10
 # 其他 Keepalived 节点的单点传播 IP
 KEEPALIVED_UNICAST_PEERS: "{% for host in groups['lb'] %}{% if hostvars[host]['ansible_host'] is defined %}'{{ hostvars[host]['ansible_host'] }}'{% else %}'{{ host }}'{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"

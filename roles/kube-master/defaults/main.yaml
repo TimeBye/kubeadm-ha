@@ -11,19 +11,17 @@ lb_mode: nginx
 # apiserver ip
 KUBE_APISERVER_IP: >-
   {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
-  {% if hostvars[groups['kube-master']|first]['ansible_host'] is defined %}
-  {{ hostvars[groups['kube-master']|first]['ansible_host'] }}
+    {% if hostvars[groups['kube-master']|first]['ansible_host'] is defined %}
+      {{ hostvars[groups['kube-master']|first]['ansible_host'] }}
+    {% else %}
+      {{ groups['kube-master']|first }}
+    {% endif %}
   {% else %}
-  {{ groups['kube-master']|first }}
-  {% endif %}
-  {% else %}
-  {% if lb_mode == 'nginx' %}
-  127.0.0.1
-  {% elif lb_mode == 'slb' %}
-  {{ CURRENT_HOST_IP }}
-  {% else %}
-  {{ lb_kube_apiserver_ip }}
-  {% endif %}
+    {% if lb_kube_apiserver_ip is not defined %}
+      127.0.0.1
+    {% else %}
+      {{ lb_kube_apiserver_ip }}
+    {% endif %}
   {% endif %}
 
 # 加入集群token
@@ -32,10 +30,10 @@ kubeadm_token: "abcdef.0123456789abcdef"
 # 负载后的apiserver端口号
 lb_kube_apiserver_port: 8443
 KUBE_APISERVER_PORT: >-
-  {% if (groups['kube-master']|length + groups['new-master']|length) == 1 or lb_mode == 'slb' %}
-  6443
+  {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
+    6443
   {% else %}
-  {{ lb_kube_apiserver_port }}
+    {{ lb_kube_apiserver_port }}
   {% endif %}
 
 KUBERNETES_SERVICE_IP: "{{ kube_service_subnet | ipaddr(1) | ipaddr('address') }}"

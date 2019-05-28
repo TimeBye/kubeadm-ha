@@ -79,7 +79,7 @@ apiServer:
   - 127.0.0.1
   - 0:0:0:0:0:0:0:1
   - {{ KUBERNETES_SERVICE_IP }}
-{% if lb_mode != 'nginx' %}
+{% if lb_kube_apiserver_ip is defined %}
   - {{ lb_kube_apiserver_ip | trim }}
 {% endif %}
 {% for host in (groups['kube-master'] + groups['new-master'] | default([])) | unique %}

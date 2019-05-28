@@ -53,6 +53,6 @@ IP.{{ ip_idx + loop.index }} = {% if hostvars[host]['ansible_host'] is defined %
 {% for ip in kube_master_external_ip %}
 IP.{{ ip_idx + loop.index }} = {{ ip }}
 {% endfor %}
-{% if lb_mode != 'nginx' %}
+{% if lb_kube_apiserver_ip is defined %}
 IP.{{4 + (groups['kube-master']|length + groups['new-master']|length + kube_master_external_ip|length) | int }} = {{ lb_kube_apiserver_ip | trim }}
 {% endif %}

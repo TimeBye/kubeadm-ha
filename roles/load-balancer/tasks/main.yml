@@ -12,6 +12,14 @@
 - include_tasks: haproxy.yml
   when: lb_mode == "haproxy"
 
+- name: 生成 keepalived static pod 文件
+  template: 
+    src: keepalived.yaml.j2
+    dest: /etc/kubernetes/manifests/keepalived.yaml
+    owner: root
+    mode: 0644
+  when: lb_kube_apiserver_ip is defined
+
 - name: 读取 kubelet.conf 文件 stat 信息
   stat: 
     path: /etc/kubernetes/kubelet.conf
@@ -53,21 +61,21 @@
   delay: 5
   when: lb_mode == "nginx"
 
-- block:
-  - name: 以轮询的方式等待 haproxy 运行完成
-    shell: nc -z -w 3 127.0.0.1 {{ lb_kube_apiserver_port }}
-    register: haproxy_status
-    until: haproxy_status.rc == 0
-    retries: 12
-    delay: 5
-
-  - name: 以轮询的方式等待 keepalived 运行完成
-    shell: nc -z -w 3 {{ KUBE_APISERVER_IP | trim }} {{ lb_kube_apiserver_port }}
-    register: keepalived_status
-    until: keepalived_status.rc == 0
-    retries: 12
-    delay: 5
+- name: 以轮询的方式等待 haproxy 运行完成
+  shell: nc -z -w 3 127.0.0.1 {{ lb_kube_apiserver_port }}
+  register: haproxy_status
+  until: haproxy_status.rc == 0
+  retries: 12
+  delay: 5
   when: lb_mode == "haproxy"
+
+- name: 以轮询的方式等待 keepalived 运行完成
+  shell: nc -z -w 3 {{ KUBE_APISERVER_IP | trim }} {{ lb_kube_apiserver_port }}
+  register: keepalived_status
+  until: keepalived_status.rc == 0
+  retries: 12
+  delay: 5
+  when: lb_kube_apiserver_ip is defined
 
 - block:
   - name: 移除临时 kubelet unit 文件
