@@ -89,26 +89,27 @@
       state: restarted
       enabled: yes
 
-  - name: 以轮询的方式等待 etcd 运行完成
-    shell: >
-      docker run --name etcd-healthcheck --net host -e ETCDCTL_API=3 
-      -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
-      --rm {{ etcd_image }}
-      etcdctl 
-      --endpoints=https://[127.0.0.1]:2379
-      --cacert=/etc/kubernetes/pki/etcd/ca.crt
-      --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
-      --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
-      endpoint health
-    register: etcd_status
-    until: '"is healthy" in etcd_status.stdout'
-    retries: 12
-    delay: 5
-
   when: 
   - inventory_hostname in groups['etcd']
   - not kubelet_conf_stat.stat.exists
 
+- name: 以轮询的方式等待 etcd 运行完成
+  shell: >
+    docker run --name etcd-healthcheck --net host -e ETCDCTL_API=3 
+    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
+    --rm {{ etcd_image }}
+    etcdctl 
+    --endpoints=https://[127.0.0.1]:2379
+    --cacert=/etc/kubernetes/pki/etcd/ca.crt
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+    endpoint health
+  register: etcd_status
+  until: '"is healthy" in etcd_status.stdout'
+  retries: 12
+  delay: 5
+  when: inventory_hostname in groups['etcd']
+  
 - block:
   - name: 移除临时 kubelet unit 文件
     file: 
