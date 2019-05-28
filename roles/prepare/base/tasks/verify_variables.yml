@@ -21,7 +21,6 @@
     assert:
       that: groups['lb']|unique|length == groups['all']|unique|length
       msg: "master 节点数量大于 1，请将所有节点添加至 lb 节点组中。"
-    with_items: groups['lb']|unique
   - name: 校验 lb 模式端口设置
     run_once: true
     assert:
