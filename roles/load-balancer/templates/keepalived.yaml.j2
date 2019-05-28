@@ -2,8 +2,8 @@ kind: Pod
 apiVersion: v1
 metadata:
   labels:
-    component: keepalived
-    tier: control-plane
+    addonmanager.kubernetes.io/mode: Reconcile
+    k8s-app: kube-keepalived
   name: kube-keepalived
   namespace: kube-system
 spec:
@@ -11,7 +11,7 @@ spec:
   priorityClassName: system-cluster-critical
   containers:
   - name: kube-keepalived
-    # image: osixia/keepalived:2.0.10
+    # image: osixia/keepalived:2.0.15
     image: {{ kube_keepalived_image }}
     env:
     - name: KEEPALIVED_VIRTUAL_IPS
@@ -26,16 +26,27 @@ spec:
       value: "{{ KEEPALIVED_PRIORITY }}"
     - name: keepalived_router_id
       value: "{{ keepalived_router_id }}"
-    # 检测当前节点haproxy是否存活，若不存活则重启以让出vip
+    {% if lb_kube_apiserver_healthcheck_port is defined -%}
+    # 检测当前节点 lb 是否存活，若不存活则重启
     livenessProbe:
-      exec:
-        command:
-        - /bin/sh
-        - -ec
-        - nc -z -w 3 {{ CURRENT_HOST_IP }} {{ lb_kube_apiserver_port }}
-      failureThreshold: 8
-      initialDelaySeconds: 20
-      timeoutSeconds: 15
+      httpGet:
+        path: /healthz
+        port: {{ lb_kube_apiserver_healthcheck_port }}
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: {{ lb_kube_apiserver_healthcheck_port }}
+    {% endif -%}
+    # # 检测当前节点 lb 是否存活，若不存活则重启以让出 vip
+    # livenessProbe:
+    #   exec:
+    #     command:
+    #     - /bin/sh
+    #     - -ec
+    #     - nc -z -w 3 {{ CURRENT_HOST_IP }} {{ lb_kube_apiserver_healthcheck_port }}
+    #   failureThreshold: 8
+    #   initialDelaySeconds: 20
+    #   timeoutSeconds: 15
     resources: {}
     securityContext:
       privileged: true

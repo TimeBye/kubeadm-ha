@@ -1,15 +1,23 @@
 global
-    log 127.0.0.1 local0
-    log 127.0.0.1 local1 notice
-    tune.ssl.default-dh-param 2048
+    maxconn                 4000
+    log                     127.0.0.1 local0
 
 defaults
-    log global
-    mode http
-    option dontlognull
-    timeout connect 5000ms
-    timeout client 1800000ms
-    timeout server 1800000ms
+    mode                    http
+    log                     global
+    option                  httplog
+    option                  dontlognull
+    option                  http-server-close
+    option                  redispatch
+    retries                 5
+    timeout http-request    5m
+    timeout queue           5m
+    timeout connect         30s
+    timeout client          15m
+    timeout server          15m
+    timeout http-keep-alive 30s
+    timeout check           30s
+    maxconn                 4000
 
 listen stats
     bind :{{ haproxy_stats_bind_address }}
@@ -21,13 +29,27 @@ listen stats
     stats auth {{ haproxy_stats_user }}:{{ haproxy_stats_password }}
     stats admin if TRUE
 
-listen kube-master
+{% if lb_kube_apiserver_healthcheck_port is defined -%}
+frontend healthz
+    bind *:{{ lb_kube_apiserver_healthcheck_port }}
+    mode http
+    monitor-uri /healthz
+{% endif %}
+
+frontend kube_api_frontend
     bind :{{ lb_kube_apiserver_port }}
     mode tcp
     option tcplog
-    balance {{ haproxy_balance_alg }} 
+    default_backend kube_api_backend
+
+backend kube_api_backend
+    mode tcp
+    balance {{ haproxy_balance_alg }}
+    default-server inter 15s downinter 15s rise 2 fall 2 slowstart 60s maxconn 1000 maxqueue 256 weight 100
+    option httpchk GET /healthz
+    http-check expect status 200
 {% for host in (groups['kube-master'] + groups['new-master']) %}
-    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:6443 check inter 2000 fall 2 rise 2 weight 1
+    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:6443 check check-ssl verify none
 {% endfor %}
 
 {% if enabel_ingress_nodeport_lb | bool %}

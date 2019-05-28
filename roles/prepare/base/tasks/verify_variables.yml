@@ -1,45 +1,66 @@
 - name: 校验 hostname 是否合法
   assert:
-    that: inventory_hostname == "{{ inventory_hostname | lower }}"
+    that: inventory_hostname == "{{ inventory_hostname|lower }}"
     msg: "hostname 中包含大写字母，请修改为小写后重启服务器再重试。"
 
-- name: 校验 nginx lb 模式节点设置
+- name: 校验 master 节点数量
   run_once: true
   assert:
-    that: groups['all'] == groups['lb'] 
-    msg: "当前负载均衡模式为 nginx，请将所有节点添加至 lb 节点组中。"
-  when:
+    that: groups['kube-master']|length >= 1
+    msg: "请将添加至少一个节点到 kube-master 节点组中。"
+
+- name: 校验 lb 模式类型
+  run_once: true
+  assert:
+    that: lb_mode in ['nginx','haproxy','slb']
+    msg: "不支持当前 {{ lb_mode }} 负载均衡模式，请在 ['nginx','haproxy','slb'] 中进行选择。"
+
+- name: 校验 slb 模式 lb_kube_apiserver_ip 是否赋值
+  assert:
+    that: lb_kube_apiserver_ip is defined and lb_kube_apiserver_ip|length > 6
+    msg: "当前负载均衡为 slb 模式，请将 slb 的 ip 地址赋值给变量 lb_kube_apiserver_ip。"
+  when: lb_mode == 'slb'
+
+- name: 校验 lb_kube_apiserver_ip 是否合法
+  assert:
+    that: lb_kube_apiserver_ip != CURRENT_HOST_IP and lb_kube_apiserver_ip|length > 6
+    msg: "VIP 不能设置为集群节点的 IP。"
+  when: lb_kube_apiserver_ip is defined
+
+- block:
+  - name: 校验 lb 模式节点设置
+    run_once: true
+    assert:
+      that: groups['lb']|unique|length == groups['all']|unique|length
+      msg: "master 节点数量大于 1，请将所有节点添加至 lb 节点组中。"
+  - name: 校验 lb 模式端口设置
+    run_once: true
+    assert:
+      that: lb_kube_apiserver_port != "6443"
+      msg: "lb 节点与 master 节点有复用情况，lb_kube_apiserver_port 请勿使用6443端口。"
+  when: 
   - (groups['kube-master']|length + groups['new-master']|length) > 1
-  - lb_mode == "nginx"
+  - lb_kube_apiserver_ip is not defined
 
-- name: 校验 nginx lb 模式端口设置
-  run_once: true
-  assert:
-    that: lb_kube_apiserver_port != "6443"
-    msg: "当前负载均衡模式为 nginx，请勿使用6443端口。"
-  when:
+- block:
+  - name: 校验 lb 模式节点设置
+    run_once: true
+    assert:
+      that: groups['lb']|length > 1
+      msg: "请将添加至少两个节点到 lb 节点组中。"
+  - name: 校验 lb 模式端口设置
+    assert:
+      that: lb_kube_apiserver_port != "6443"
+      msg: "lb 节点与 master 节点有复用情况，lb_kube_apiserver_port 请勿使用6443端口。"
+    when:
+    - inventory_hostname in ((groups['kube-master'] + groups['new-master'])|unique) 
+    - inventory_hostname in groups['lb']
+  when: 
   - (groups['kube-master']|length + groups['new-master']|length) > 1
-  - lb_mode == "nginx"
-
-- name: 校验 haproxy lb 模式节点设置
-  run_once: true
-  assert:
-    that: groups['lb'] | length > 1
-    msg: "当前负载均衡模式为 haproxy，请将添加至少两个节点到 lb 节点组中。"
-  when:
-  - lb_mode == "haproxy"
-
-- name: 校验 haproxy lb 模式端口设置
-  run_once: true
-  assert:
-    that: lb_kube_apiserver_port != "6443"
-    msg: "当前负载均衡模式为 haproxy，lb 节点与 master 节点有复用情况，请勿使用6443端口。"
-  when:
-  - inventory_hostname in ((groups['kube-master'] + groups['new-master']) | unique) and (inventory_hostname in groups['lb'])
-  - lb_mode == "haproxy"
+  - lb_kube_apiserver_ip is defined
 
 - name: 校验 etcd 节点数量
   run_once: true
   assert:
-    that: groups['etcd'] | length is odd
+    that: groups['etcd']|length is odd
     msg: "etcd 节点数量必须为奇数，请添加或减少 etcd 节点数量至奇数个。"

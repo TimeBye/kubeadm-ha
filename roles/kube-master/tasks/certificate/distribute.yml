@@ -32,7 +32,7 @@
     content: "{{ item.content | b64decode }}"
     owner: root
     group: root
-    mode: 0700
+    mode: 0600
   no_log: true
   with_items: "{{ kubernetes_certs.results }}"
   when: inventory_hostname != groups['kube-master']|first

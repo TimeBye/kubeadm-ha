@@ -9,6 +9,8 @@ CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined 
 lb_mode: nginx
 # 经过负载后的apiserver端口号
 lb_kube_apiserver_port: 8443
+# 负载均衡器健康检查端口
+lb_kube_apiserver_healthcheck_port: 8081
 # Pod根容器
 pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
 # Kubelet 根目录
@@ -16,11 +18,11 @@ kubelet_root_dir: "/var/lib/kubelet"
 
 #---------------------------------------------- Nginx 相关参数 --------------------------------------------#
 # 使用nginx进行apiserver负载时使用的nginx镜像
-kube_nginx_image: dockerhub.azk8s.cn/library/nginx:1.15.8
+kube_nginx_image: dockerhub.azk8s.cn/library/nginx:1.15.12
 
 #--------------------------------------------- Haproxy 相关参数 --------------------------------------------#
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-kube_haproxy_image: dockerhub.azk8s.cn/library/haproxy:1.9.0
+kube_haproxy_image: dockerhub.azk8s.cn/library/haproxy:1.9.8
 # haproxy监控绑定端口
 haproxy_stats_bind_address: 9090
 # haproxy监控访问路径
@@ -36,7 +38,7 @@ haproxy_stats_password: "admin"
 # "leastconn": 基于服务器最小连接数
 # "source": 基于请求源IP地址
 # "uri": 基于请求的URI
-haproxy_balance_alg: "roundrobin"
+haproxy_balance_alg: "leastconn"
 # 启用 ingress NodePort服务的负载均衡 (true/false)
 enabel_ingress_nodeport_lb: false
 # 启用 ingress tls NodePort服务的负载均衡 (true/false)
@@ -44,8 +46,22 @@ enabel_ingress_tls_nodeport_lb: false
 
 #---------------------------------------------- Keepalived 相关参数 ---------------------------------------#
 # Keepalived 提供的 VIPs
-KUBE_APISERVER_IP: "{% if lb_mode == 'nginx' %}127.0.0.1{% else %}{{ lb_kube_apiserver_ip }}{% endif %}"
-kube_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.10
+KUBE_APISERVER_IP: >-
+  {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
+    {% if hostvars[groups['kube-master']|first]['ansible_host'] is defined %}
+      {{ hostvars[groups['kube-master']|first]['ansible_host'] }}
+    {% else %}
+      {{ groups['kube-master']|first }}
+    {% endif %}
+  {% else %}
+    {% if lb_kube_apiserver_ip is not defined %}
+      127.0.0.1
+    {% else %}
+      {{ lb_kube_apiserver_ip }}
+    {% endif %}
+  {% endif %}
+
+kube_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.15
 # 其他 Keepalived 节点的单点传播 IP
 KEEPALIVED_UNICAST_PEERS: "{% for host in groups['lb'] %}{% if hostvars[host]['ansible_host'] is defined %}'{{ hostvars[host]['ansible_host'] }}'{% else %}'{{ host }}'{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
 # Keepalived auth_type 的 Password

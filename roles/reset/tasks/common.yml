@@ -85,7 +85,11 @@
   - iptables -X -t raw
   - iptables -F -t mangle
   - iptables -X -t mangle
-  ignore_errors: true
+  
+- name: 清理 ipvsadm
+  shell: "{{ item }} || true"
+  with_items:
+  - ipvsadm --clear
 
 - name: 清除虚拟网卡
   shell: "{{ item }} || true"
@@ -100,7 +104,6 @@
   - ip link del kube-ipvs0
   - ip link del cilium_net
   - ip link del cilium_vxlan
-  ignore_errors: true
 
 - name: 重新加载 daemon
   systemd:
@@ -111,7 +114,6 @@
   with_items:
   - systemctl restart network
   - systemctl restart networking
-  ignore_errors: true
 
 - name: 移除添加的 hosts 信息
   blockinfile:

@@ -33,14 +33,6 @@
 - name: Haproxy | 生成 haproxy static pod 文件
   template: 
     src: haproxy.yaml.j2
-    dest: /etc/kubernetes/manifests/haproxy.yaml
-    owner: root
-    mode: 0644
-
-
-- name: Haproxy | 生成 keepalived static pod 文件
-  template: 
-    src: keepalived.yaml.j2
-    dest: /etc/kubernetes/manifests/keepalived.yaml
+    dest: /etc/kubernetes/manifests/kube-apiserver-lb.yaml
     owner: root
     mode: 0644

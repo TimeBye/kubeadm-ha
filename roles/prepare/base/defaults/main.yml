@@ -13,3 +13,5 @@ epel_yum_repo: http://mirrors.aliyun.com/epel/7/$basearch
 kube_dns_domain: cluster.local
 # 默认 lb_kube_apiserver_port
 lb_kube_apiserver_port: 8443
+# 当前节点ip
+CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"

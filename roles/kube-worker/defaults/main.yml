@@ -9,25 +9,29 @@ lb_mode: "nginx"
 # apiserver ip
 KUBE_APISERVER_IP: >-
   {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
-  {% if hostvars[groups['kube-master']|first]['ansible_host'] is defined %}
-  {{ hostvars[groups['kube-master']|first]['ansible_host'] }}
+    {% if hostvars[groups['kube-master']|first]['ansible_host'] is defined %}
+      {{ hostvars[groups['kube-master']|first]['ansible_host'] }}
+    {% else %}
+      {{ groups['kube-master']|first }}
+    {% endif %}
   {% else %}
-  {{ groups['kube-master']|first }}
+    {% if lb_kube_apiserver_ip is not defined %}
+      127.0.0.1
+    {% else %}
+      {{ lb_kube_apiserver_ip }}
+    {% endif %}
   {% endif %}
-  {% else %}
-  {% if lb_mode == 'nginx' %}
-  127.0.0.1
-  {% else %}
-  {{ lb_kube_apiserver_ip }}
-  {% endif %}
-  {% endif %}
+
+# 加入集群token
+kubeadm_token: "abcdef.0123456789abcdef"
+
 # 负载后的apiserver端口号
 lb_kube_apiserver_port: 8443
 KUBE_APISERVER_PORT: >-
   {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
-  6443
+    6443
   {% else %}
-  {{ lb_kube_apiserver_port }}
+    {{ lb_kube_apiserver_port }}
   {% endif %}
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
@@ -48,4 +52,7 @@ kube_version: 1.14.2
 kube_dns_domain: cluster.local
 # 集群pod ip段
 kube_pod_subnet: 10.244.0.0/18
+# 集群service ip段
+kube_service_subnet: 10.244.64.0/18
+
 CLUSTER_DNS_SERVICE_IP: "{{ kube_service_subnet | ipaddr(10) | ipaddr('address') }}"

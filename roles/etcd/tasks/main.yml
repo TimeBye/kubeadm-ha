@@ -41,22 +41,22 @@
 # 分发证书
 - include_tasks: certificate/distribute.yml
 
-- name: 读取 etcd static pod yaml 文件 stat 信息
-  stat: 
-    path: /etc/kubernetes/manifests/etcd-external.yaml
-  register: etcd_static_pod_stat
+- block:
+  - name: 读取 etcd static pod yaml 文件 stat 信息
+    stat: 
+      path: /etc/kubernetes/manifests/etcd-external.yaml
+    register: etcd_static_pod_stat
 
-- name: 设置变量 CLUSTER_STATE
-  set_fact: CLUSTER_STATE="existing"
-  when: etcd_static_pod_stat.stat.exists
+  - name: 设置变量 CLUSTER_STATE
+    set_fact: CLUSTER_STATE="existing"
+    when: etcd_static_pod_stat.stat.exists
 
-- name: 生成 etcd static pod 文件
-  template: 
-    src: etcd-external.yaml.j2
-    dest: /etc/kubernetes/manifests/etcd-external.yaml
-    owner: root
-    mode: 0644
-  register: etcd_configuration_result
+  - name: 生成 etcd static pod 文件
+    template: 
+      src: etcd-external.yaml.j2
+      dest: /etc/kubernetes/manifests/etcd-external.yaml
+      owner: root
+      mode: 0644
   when: inventory_hostname in groups['etcd']
 
 - name: 读取 kubelet.conf 文件 stat 信息
@@ -89,26 +89,27 @@
       state: restarted
       enabled: yes
 
-  - name: 以轮询的方式等待 etcd 运行完成
-    shell: >
-      docker run --name etcd-healthcheck --net host -e ETCDCTL_API=3 
-      -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
-      --rm {{ etcd_image }}
-      etcdctl 
-      --endpoints=https://[127.0.0.1]:2379
-      --cacert=/etc/kubernetes/pki/etcd/ca.crt
-      --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
-      --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
-      endpoint health
-    register: etcd_status
-    until: '"is healthy" in etcd_status.stdout'
-    retries: 12
-    delay: 5
-
   when: 
   - inventory_hostname in groups['etcd']
   - not kubelet_conf_stat.stat.exists
 
+- name: 以轮询的方式等待 etcd 运行完成
+  shell: >
+    docker run --name etcd-healthcheck --net host -e ETCDCTL_API=3 
+    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
+    --rm {{ etcd_image }}
+    etcdctl 
+    --endpoints=https://[127.0.0.1]:2379
+    --cacert=/etc/kubernetes/pki/etcd/ca.crt
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+    endpoint health
+  register: etcd_status
+  until: '"is healthy" in etcd_status.stdout'
+  retries: 12
+  delay: 5
+  when: inventory_hostname in groups['etcd']
+  
 - block:
   - name: 移除临时 kubelet unit 文件
     file: 
