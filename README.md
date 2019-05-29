@@ -1,5 +1,4 @@
 [Kubeadm HA](https://github.com/TimeBye/kubeadm-ha)
-=======
 **🎉 项目受 [kubeasz](https://github.com/easzlab/kubeasz) 启发，考虑使用二进制进行安装的童鞋可以参考这个项目。**
 
 `kubeadm-ha` 使用kubeadm 进行高可用 kubernetes 集群搭建，利用 ansible-playbook 实现自动化一键安装。
@@ -15,6 +14,12 @@
 [![](https://img.shields.io/badge/Net-Flannel-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Net-Flannel-brightgreen.svg?style=flat-square)
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square)](https://github.com/TimeBye/kubeadm-ha/blob/master/LICENSE)
 [![HitCount](http://hits.dwyl.io/timebye/kubeadm-ha.svg)](http://hits.dwyl.io/timebye/kubeadm-ha)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha?ref=badge_shield)
+
+
+🎉 本项目受[kubeasz](https://github.com/easzlab/kubeasz)启发，考虑使用二进制进行安装的童鞋可以参考这个项目。
+
+本项目使用 `kubeadm` 进行高可用 kubernetes 集群搭建，利用 ansible-playbook 实现自动化一键安装。
 
 - 支持版本：
 
@@ -94,3 +99,6 @@
     ```
     ansible-playbook -i example/hosts.allinone.ip.ini 99-reset-cluster.yml
     ```
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha?ref=badge_large)
