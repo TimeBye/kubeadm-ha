@@ -12,12 +12,19 @@
 - include_tasks: haproxy.yml
   when: lb_mode == "haproxy"
 
-- name: 生成 keepalived static pod 文件
-  template: 
-    src: keepalived.yaml.j2
-    dest: /etc/kubernetes/manifests/keepalived.yaml
-    owner: root
-    mode: 0644
+- block:
+  - name: keepalived | 获取网卡名称
+    shell: "ip a|grep '{{ CURRENT_HOST_IP }}/'|awk '{print $NF}'"
+    register: KEEPALIVED_INTERFACE_TMP
+  - name: Haproxy | 设置变量 KEEPALIVED_INTERFACE
+    set_fact: KEEPALIVED_INTERFACE="{{ KEEPALIVED_INTERFACE_TMP.stdout }}"
+
+  - name: keepalived | 生成 static pod 文件
+    template: 
+      src: keepalived.yaml.j2
+      dest: /etc/kubernetes/manifests/keepalived.yaml
+      owner: root
+      mode: 0644
   when: lb_kube_apiserver_ip is defined
 
 - name: 读取 kubelet.conf 文件 stat 信息
