@@ -6,6 +6,15 @@
   - prepare/docker
   - prepare/kubernetes
 
+# 进行apiserver负载均衡
+- hosts: 
+  - lb
+  roles:
+  - role: load-balancer
+    when: 
+    - (groups['kube-master']|length + groups['new-master']|length) > 1 
+    - lb_mode != 'slb'
+
 # 初始化master节点
 - hosts: 
   - etcd

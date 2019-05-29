@@ -22,7 +22,7 @@
   - name: keepalived | 生成 static pod 文件
     template: 
       src: keepalived.yaml.j2
-      dest: /etc/kubernetes/manifests/keepalived.yaml
+      dest: /etc/kubernetes/manifests/lb-keepalived.yaml
       owner: root
       mode: 0644
   when: lb_kube_apiserver_ip is defined

@@ -33,7 +33,7 @@ docker_max_concurrent_downloads: 10
 # 负载均衡模式(有nginx和haproxy、slb三个选项。默认使用nginx；选择haproxy时必须设置lb_kube_apiserver_ip环境变量，这个变量就是VIP；选择slb表示使用公有云负载均衡，必须设置lb_kube_apiserver_ip环境变量，这个变量就是slb的IP)
 lb_mode: nginx
 # 使用负载均衡集群 Master IP
-# lb_kube_apiserver_ip: "192.168.56.14"
+# lb_kube_apiserver_ip: "192.168.56.15"
 # 使用负载均衡集群 Master Port
 lb_kube_apiserver_port: "8443"
 # 使用nginx进行apiserver负载时使用的nginx镜像
@@ -129,4 +129,4 @@ nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-c
 kubernetes_dashboard_image: gcr.azk8s.cn/google_containers/kubernetes-dashboard-amd64:v1.10.1
 
 #-------------------------------- metrics-server 相关参数配置 -------------------------------#
-metrics_server_image: gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.1
+metrics_server_image: gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.3

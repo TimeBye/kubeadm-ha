@@ -27,6 +27,6 @@
 - name: Haproxy | 生成 haproxy static pod 文件
   template: 
     src: haproxy.yaml.j2
-    dest: /etc/kubernetes/manifests/kube-apiserver-lb.yaml
+    dest: /etc/kubernetes/manifests/lb-kube-apiserver.yaml
     owner: root
     mode: 0644
