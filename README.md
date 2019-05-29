@@ -1,4 +1,6 @@
 # Kubeadm HA
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha?ref=badge_shield)
+
 
 🎉 本项目受[kubeasz](https://github.com/easzlab/kubeasz)启发，考虑使用二进制进行安装的童鞋可以参考这个项目。
 
@@ -82,3 +84,6 @@
     ```
     ansible-playbook -i example/hosts.allinone.ip.ini 99-reset-cluster.yml
     ```
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha?ref=badge_large)
