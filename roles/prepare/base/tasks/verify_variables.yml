@@ -18,7 +18,7 @@
 - name: 校验 lb_kube_apiserver_ip 是否合法
   run_once: true
   assert:
-    that: "{{ lb_kube_apiserver_ip|ipaddr }}"
+    that: lb_kube_apiserver_ip is regex("^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$")
     msg: "请设置一个正确的 VIP 地址。"
   when: lb_kube_apiserver_ip is defined
 
@@ -66,6 +66,7 @@
   when: 
   - (groups['kube-master']|length + groups['new-master']|length) > 1
   - lb_kube_apiserver_ip is defined
+  - lb_mode != 'slb'
 
 - name: 校验 etcd 节点数量
   run_once: true
