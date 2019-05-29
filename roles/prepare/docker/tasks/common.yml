@@ -14,26 +14,27 @@
     mode: 0644
   register: configuration_result
 
-- name: 清理 iptables
-  shell: >
-    iptables -F &&
-    iptables -X &&
-    iptables -F -t nat &&
-    iptables -X -t nat &&
-    iptables -F -t raw &&
-    iptables -X -t raw &&
-    iptables -F -t mangle &&
-    iptables -X -t mangle
+- block:
+  - name: 清理 iptables
+    shell: >
+      iptables -F &&
+      iptables -X &&
+      iptables -F -t nat &&
+      iptables -X -t nat &&
+      iptables -F -t raw &&
+      iptables -X -t raw &&
+      iptables -F -t mangle &&
+      iptables -X -t mangle
 
-- name: 重新加载 daemon
-  systemd:
-    daemon_reload: yes
+  - name: 重新加载 daemon
+    systemd:
+      daemon_reload: yes
 
-- name: 启动/重启 Docker
-  service:
-    name: docker
-    state: restarted
-    enabled: yes
+  - name: 启动/重启 Docker
+    service:
+      name: docker
+      state: restarted
+      enabled: yes
   when: configuration_result.changed
 
 - name: 添加当前用户到 Docker 用户组
