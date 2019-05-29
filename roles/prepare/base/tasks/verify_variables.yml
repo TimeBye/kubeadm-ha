@@ -15,15 +15,23 @@
     that: lb_mode in ['nginx','haproxy','slb']
     msg: "不支持当前 {{ lb_mode }} 负载均衡模式，请在 ['nginx','haproxy','slb'] 中进行选择。"
 
-- name: 校验 slb 模式 lb_kube_apiserver_ip 是否赋值
+- name: 校验 lb_kube_apiserver_ip 是否合法
+  run_once: true
   assert:
-    that: lb_kube_apiserver_ip is defined and lb_kube_apiserver_ip|length > 6
+    that: "{{ lb_kube_apiserver_ip|ipaddr }}"
+    msg: "请设置一个正确的 VIP 地址。"
+  when: lb_kube_apiserver_ip is defined
+
+- name: 校验 slb 模式 lb_kube_apiserver_ip 是否赋值
+  run_once: true
+  assert:
+    that: lb_kube_apiserver_ip is defined
     msg: "当前负载均衡为 slb 模式，请将 slb 的 ip 地址赋值给变量 lb_kube_apiserver_ip。"
   when: lb_mode == 'slb'
 
 - name: 校验 lb_kube_apiserver_ip 是否合法
   assert:
-    that: lb_kube_apiserver_ip != CURRENT_HOST_IP and lb_kube_apiserver_ip|length > 6
+    that: lb_kube_apiserver_ip != CURRENT_HOST_IP
     msg: "VIP 不能设置为集群节点的 IP。"
   when: lb_kube_apiserver_ip is defined
 

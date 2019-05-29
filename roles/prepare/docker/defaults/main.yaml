@@ -1,5 +1,10 @@
 # 提权操作
 ansible_become: true
+# 集群pod ip段
+kube_pod_subnet: 10.244.0.0/18
+# 集群service ip段
+kube_service_subnet: 10.244.64.0/18
+
 # Docker版本
 # apt-cache madison docker-ce
 # yum list docker-ce --showduplicates --enablerepo=docker-ce | sort -r
@@ -16,6 +21,10 @@ docker_mirror:
   - "https://quay.azk8s.cn"
   # - "https://docker.mirrors.ustc.edu.cn"
   # - "https://quay.mirrors.ustc.edu.cn"
+
+docker_insecure_registries:
+  - "{{ kube_pod_subnet }}"
+  - "{{ kube_service_subnet }}"
 
 # docker日志相关
 docker_log_driver: "json-file"

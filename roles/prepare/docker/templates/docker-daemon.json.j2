@@ -2,6 +2,9 @@
 {% if docker_mirror is defined and docker_mirror != None %}
   "registry-mirrors": [{% for registry in docker_mirror %}"{{ registry }}"{% if not loop.last %},{% endif %}{% endfor %}],
 {% endif %}
+{% if docker_insecure_registries is defined and docker_insecure_registries != None %}
+  "insecure-registries": [{% for registry in docker_insecure_registries %}"{{ registry }}"{% if not loop.last %},{% endif %}{% endfor %}],
+{% endif %}
   "max-concurrent-downloads": {{ docker_max_concurrent_downloads | int }},
   "log-driver": "{{ docker_log_driver }}",
   "log-level": "{{ docker_log_level }}",
