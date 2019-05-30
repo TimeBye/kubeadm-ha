@@ -1,0 +1,239 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-ingress-controller
+  namespace: ingress-controller
+  labels:
+    app: traefik
+data:
+  traefik.toml: |
+    # traefik.toml
+    logLevel = "INFO"
+    # 设置insecureSkipVerify = true，可以配置backend为443(比如dashboard)的ingress规则
+    insecureSkipVerify = true
+    defaultEntryPoints = ["http","https"]
+    [entryPoints]
+      [entryPoints.http]
+        address = ":80"
+        compress = true
+        # 配置http 强制跳转 https
+        # [entryPoints.http.redirect]
+        #   entryPoint = "https"
+        # 配置只信任trustedIPs传递过来X-Forwarded-*，默认全部信任；为了防止客户端地址伪造，需开启这个
+        # [entryPoints.http.forwardedHeaders]
+        #   trustedIPs = ["10.1.0.0/16", "172.20.0.0/16", "192.168.1.3"]
+      [entryPoints.https]
+        address = ":443"
+        compress = true
+        [entryPoints.https.tls]
+          [[entryPoints.https.tls.certificates]]
+          CertFile = "/ssl/tls.crt"
+          KeyFile = "/ssl/tls.key"
+      [entryPoints.traefik]
+        address = ":8080"
+    [kubernetes]
+    [traefikLog]
+      format = "json"
+    [api]
+      entryPoint = "traefik"
+      dashboard = true
+    [metrics]
+      [metrics.prometheus]
+        entryPoint = "traefik"
+---
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: traefik-ingress-controller
+  namespace: ingress-controller
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: traefik-ingress-controller
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - services
+      - endpoints
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: traefik-ingress-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik-ingress-controller
+subjects:
+- kind: ServiceAccount
+  name: traefik-ingress-controller
+  namespace: ingress-controller
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-ingress-controller
+  namespace: ingress-controller
+  labels:
+    app: traefik
+spec:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+  selector:
+    app: traefik
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+    protocol: TCP
+    # 集群hosts文件中设置的 NODE_PORT_RANGE 作为 NodePort 的可用范围
+    # 从默认30000-32767之间选一个可用端口，让ingress-controller暴露给外部的访问
+    nodePort: 30080
+  - name: https
+    port: 443
+    targetPort: https
+    protocol: TCP
+    # 集群hosts文件中设置的 NODE_PORT_RANGE 作为 NodePort 的可用范围
+    # 从默认30000-32767之间选一个可用端口，让ingress-controller暴露https
+    nodePort: 30443
+  - name: dash
+    port: 8080
+    targetPort: dash
+  - name: metrics
+    port: 8880
+    targetPort: metrics
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traefik-ingress-controller
+  namespace: ingress-controller
+  labels:
+    app: traefik
+spec:
+  replicas: "{% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker'] | default([])) | unique | length > 1 %}2{% else %}1{% endif %}"
+
+  selector:
+    matchLabels:
+      app: traefik
+  template:
+    metadata:
+      labels:
+        app: traefik
+    spec:
+      affinity:	
+        podAntiAffinity:	
+          preferredDuringSchedulingIgnoredDuringExecution:	
+          - weight: 100	
+            podAffinityTerm:	
+              labelSelector:	
+                matchExpressions:	
+                - key: app
+                  operator: In	
+                  values:	
+                  - traefik
+              topologyKey: kubernetes.io/hostname
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: traefik-ingress-controller
+        # image: traefik:1.7.11
+        image: "{{ traefik_ingress_image }}"
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          failureThreshold: 1
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /ssl
+          name: ssl
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+        - name: https
+          containerPort: 443
+          protocol: TCP
+        - name: dash
+          containerPort: 8080
+          protocol: TCP
+        - name: metrics
+          containerPort: 8880
+          protocol: TCP
+        args:
+        - --configfile=/config/traefik.toml
+      volumes:
+      - name: config
+        configMap:
+          name: traefik-ingress-controller
+      - name: ssl
+        secret:
+          secretName: traefik-ingress-controller-default-cert
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: traefik-ingress-controller
+  namespace: ingress-controller
+  labels:
+    app: traefik
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: traefik-ingress-controller
+  minReplicas: "{% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker'] | unique | length > 1 %}2{% else %}1{% endif %}"
+  maxReplicas: "{{ groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker'] | unique | length }}"
+  metrics:
+    - resource:
+        name: cpu
+        targetAverageUtilization: 60
+      type: Resource
+    - resource:
+        name: memory
+        targetAverageUtilization: 60
+      type: Resource

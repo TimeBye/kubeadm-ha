@@ -1,0 +1,20 @@
+- block:
+  - name: 渲染 nginx-ingress-controller 配置文件
+    template:
+      src: nginx-ingress-controller.yaml.j2
+      dest: /etc/kubernetes/addons/ingress-controller/nginx-ingress-controller.yaml
+    register: ingress_nginx_manifest
+
+  - name: 部署 nginx-ingress-controller
+    command: kubectl apply -f /etc/kubernetes/addons/ingress-controller/nginx-ingress-controller.yaml
+    when: ingress_nginx_manifest.changed
+
+  - name: 轮询等待 nginx-ingress-controller 运行
+    shell: kubectl get pod --all-namespaces -o wide | grep 'nginx-ingress' | awk '{print $4}'
+    register: pod_status
+    until: "'Running' in pod_status.stdout"
+    retries: 12
+    delay: 5
+    ignore_errors: true
+
+  when: inventory_hostname == groups['kube-master']|first

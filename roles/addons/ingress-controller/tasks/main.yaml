@@ -1,0 +1,11 @@
+- block:
+  - name: 在第一台 master 节点创建 ingress-controller 配置文件目录
+    file:
+      path: /etc/kubernetes/addons/ingress-controller
+      state: directory
+  - include_tasks: nginx-ingress-controller.yaml
+    when: ingress_controller == 'nginx'
+  - include_tasks: traefik-ingress-controller.yaml
+    when: ingress_controller == 'traefik'
+
+  when: inventory_hostname == groups['kube-master']|first
