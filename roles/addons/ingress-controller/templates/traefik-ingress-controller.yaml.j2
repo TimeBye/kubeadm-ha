@@ -123,9 +123,6 @@ spec:
   - name: dash
     port: 8080
     targetPort: dash
-  - name: metrics
-    port: 8880
-    targetPort: metrics
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -200,9 +197,6 @@ spec:
           protocol: TCP
         - name: dash
           containerPort: 8080
-          protocol: TCP
-        - name: metrics
-          containerPort: 8880
           protocol: TCP
         args:
         - --configfile=/config/traefik.toml
