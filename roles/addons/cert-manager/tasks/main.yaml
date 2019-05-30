@@ -25,7 +25,7 @@
     register: apply_status
     until: apply_status.rc == 0
     retries: 12
-    delay: 5
+    delay: 10
     when: cert_manager_manifest.changed
 
   - name: 轮询等待 cert-manager 运行
