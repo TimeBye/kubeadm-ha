@@ -2,4 +2,4 @@
 - hosts: 
   - all
   roles:
-  - { role: addons/flannel, when: cluster_network =='flannel' }
+  - addons/network
