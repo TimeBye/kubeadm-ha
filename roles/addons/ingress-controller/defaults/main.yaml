@@ -1,6 +1,6 @@
 # 提权操作
 ansible_become: true
-# ingress-controller类型（nginx，traefik）
+# ingress-controller类型(nginx,traefik)
 ingress_controller: nginx
 # nginx-ingress-controller 镜像地址
 nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.24.1

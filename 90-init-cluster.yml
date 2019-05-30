@@ -52,6 +52,6 @@
   - all
   roles:
   - addons/network
-  - addons/ingress-nginx
+  - addons/ingress-controller
   - addons/metrics-server
   - addons/kubernetes-dashboard
