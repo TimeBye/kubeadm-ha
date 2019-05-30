@@ -325,7 +325,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: nginx-ingress-controller
-  minReplicas: {% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker'] | unique | length > 1 %}2{% else %}1{% endif %}
+  minReplicas: {% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length > 1 %}2{% else %}1{% endif %}
   maxReplicas: {{ groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker'] | unique | length }}
   metrics:
     - resource:
