@@ -2,9 +2,10 @@
   file: 
     name: /etc/cni/net.d
     state: directory
+  when: cluster_network_enabled|bool
 
 - block:
   - include_tasks: flannel.yaml
     when: cluster_network == 'flannel'
 
-  when: inventory_hostname == groups['kube-master']|first
+  when: inventory_hostname == groups['kube-master']|first and cluster_network_enabled|bool

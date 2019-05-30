@@ -1,5 +1,6 @@
 # 提权操作
 ansible_become: true
+cluster_network_enabled: true
 # 默认网络插件
 cluster_network: flannel
 # 集群pod ip段

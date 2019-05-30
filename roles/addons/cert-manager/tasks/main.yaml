@@ -32,4 +32,4 @@
     delay: 5
     ignore_errors: true
 
-  when: inventory_hostname == groups['kube-master']|first
+  when: inventory_hostname == groups['kube-master']|first and cert_manager_enabled|bool

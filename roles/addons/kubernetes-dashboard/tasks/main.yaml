@@ -22,4 +22,4 @@
     delay: 5
     ignore_errors: true
 
-  when: inventory_hostname == groups['kube-master']|first
+  when: inventory_hostname == groups['kube-master']|first and kubernetes_dashboard_enabled|bool

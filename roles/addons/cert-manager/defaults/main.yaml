@@ -1,6 +1,6 @@
 # 提权操作
 ansible_become: true
-
+cert_manager_enabled: true
 # acme相关配置
 acme_server: https://acme-v02.api.letsencrypt.org/directory
 acme_email: yourname@gmail.com

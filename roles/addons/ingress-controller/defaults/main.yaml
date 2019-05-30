@@ -1,5 +1,6 @@
 # 提权操作
 ansible_become: true
+ingress_controller_enabled: true
 # ingress-controller类型(nginx,traefik)
 ingress_controller: nginx
 # nginx-ingress-controller 镜像地址
