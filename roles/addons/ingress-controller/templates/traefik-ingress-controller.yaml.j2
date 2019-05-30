@@ -135,7 +135,7 @@ metadata:
   labels:
     app: traefik
 spec:
-  replicas: "{% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker'] | default([])) | unique | length > 1 %}2{% else %}1{% endif %}"
+  replicas: "{% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length > 1 %}2{% else %}1{% endif %}"
 
   selector:
     matchLabels:
@@ -227,6 +227,7 @@ spec:
     kind: Deployment
     name: traefik-ingress-controller
   minReplicas: "{% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length > 1 %}2{% else %}1{% endif %}"
+
   maxReplicas: "{{ (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length }}"
   metrics:
     - resource:
