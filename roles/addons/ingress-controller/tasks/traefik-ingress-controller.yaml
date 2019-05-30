@@ -25,7 +25,7 @@
       traefik-ingress-controller-default-cert \
       --key=/etc/kubernetes/addons/ingress-controller/tls.key \
       --cert=/etc/kubernetes/addons/ingress-controller/tls.crt \
-      --dry-run -o yaml | kubectl replace -f -
+      --dry-run -o yaml | kubectl apply -f -
 
   - name: 部署 traefik-ingress-controller
     command: kubectl apply -f /etc/kubernetes/addons/ingress-controller/traefik-ingress-controller.yaml
