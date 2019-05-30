@@ -10,7 +10,6 @@
   shell: docker pull {{ item }}
   with_items:
   - "{{ kube_haproxy_image }}"
-  - "{{ kube_keepalived_image }}"
   - "{{ pod_infra_container_image }}"
   when: install_mode == 'online'
 
