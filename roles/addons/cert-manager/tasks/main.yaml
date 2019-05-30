@@ -17,11 +17,15 @@
     register: cert_manager_manifest
 
   - name: 部署 cert-manager crds
-    shell: kubectl apply -f /etc/kubernetes/addons/cert-manager/cert-manager-crds.yaml
+    shell: kubectl apply -f /etc/kubernetes/addons/cert-manager/cert-manager-crds.yaml && sleep 15
     when: cert_manager_crds_manifest.changed
 
   - name: 部署 cert-manager
-    shell: sleep 5 && kubectl apply -f /etc/kubernetes/addons/cert-manager/cert-manager.yaml
+    shell: kubectl apply -f /etc/kubernetes/addons/cert-manager/cert-manager.yaml
+    register: apply_status
+    until: apply_status.rc == 0
+    retries: 12
+    delay: 5
     when: cert_manager_manifest.changed
 
   - name: 轮询等待 cert-manager 运行
