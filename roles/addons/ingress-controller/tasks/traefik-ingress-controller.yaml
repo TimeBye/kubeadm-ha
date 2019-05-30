@@ -21,6 +21,8 @@
 
   - name: 应用 traefik-ingress-controller 默认证书
     shell: >
+      kubectl create ns ingress-controller
+      --dry-run -o yaml | kubectl apply -f - &&
       kubectl -n ingress-controller create secret tls \
       traefik-ingress-controller-default-cert \
       --key=/etc/kubernetes/addons/ingress-controller/tls.key \
