@@ -16,5 +16,5 @@ INITIAL_CLUSTER: "{% for host in groups['etcd'] %}{% if hostvars[host]['ansible_
 CLUSTER_STATE: "new"
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
-# Kubelet 根目录
+# Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"

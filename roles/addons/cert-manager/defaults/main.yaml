@@ -1,9 +1,12 @@
 # 提权操作
 ansible_become: true
+# 是否启用cert-manager
 cert_manager_enabled: true
+
 # acme相关配置
 acme_server: https://acme-v02.api.letsencrypt.org/directory
 acme_email: yourname@gmail.com
+
 # cert-manager 相关 image 地址
 cert_manager_cainjector_image: "quay.azk8s.cn/jetstack/cert-manager-cainjector:v0.8.0"
 cert_manager_webhook_image: "quay.azk8s.cn/jetstack/cert-manager-webhook:v0.8.0"
