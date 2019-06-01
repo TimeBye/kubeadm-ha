@@ -24,7 +24,7 @@ docker tag gcr.io/google_containers/etcd:3.3.10 gcr.azk8s.cn/google_containers/e
 docker tag gcr.io/google_containers/metrics-server-amd64:v0.3.3 gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.3
 docker tag quay.io/coreos/flannel:v0.10.0-amd64 quay.azk8s.cn/coreos/flannel:v0.10.0-amd64
 docker tag gcr.io/google_containers/pause:3.1 gcr.azk8s.cn/google_containers/pause:3.1
-docker tag nginx:1.15.12 dockerhub.azk8s.cn/library/nginx:1.15.12
+docker tag nginx:1.15.12 dockerhub.azk8s.cn/library/nginx:1.15.12-alpine
 docker tag gcr.io/kubernetes-helm/tiller:v2.13.1 gcr.azk8s.cn/kubernetes-helm/tiller:v2.13.1
 docker tag quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.24.1 quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.24.1
 
@@ -39,6 +39,6 @@ docker save \
     gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.3 \
     gcr.azk8s.cn/google_containers/pause:3.1 \
     gcr.azk8s.cn/kubernetes-helm/tiller:v2.13.1 \
-    dockerhub.azk8s.cn/library/nginx:1.15.12 \
+    dockerhub.azk8s.cn/library/nginx:1.15.12-alpine \
     quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.24.1 \
     quay.azk8s.cn/coreos/flannel:v0.10.0-amd64 | gzip -1 > kubernetes-1.14.2.tar
