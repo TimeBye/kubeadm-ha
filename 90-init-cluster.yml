@@ -51,7 +51,7 @@
 - hosts: 
   - all
   roles:
-  - addons/cluster-network
+  - addons/network-plugins
   - addons/ingress-controller
   - addons/metrics-server
   - addons/kubernetes-dashboard

@@ -1,16 +1,11 @@
-- name: 节点创建 flannel 配置文件目录
-  file:
-    path: /etc/kubernetes/addons/flannel
-    state: directory
-
 - name: 渲染 flannel 配置文件
   template:
-    src: flannel/kube-flannel.yaml.j2
-    dest: /etc/kubernetes/addons/flannel/kube-flannel.yaml
+    src: kube-flannel.yaml.j2
+    dest: /etc/kubernetes/addons/network-plugin/kube-flannel.yaml
   register: flannel_manifest
 
 - name: 部署 flannel
-  command: kubectl apply -f /etc/kubernetes/addons/flannel/kube-flannel.yaml
+  command: kubectl apply -f /etc/kubernetes/addons/network-plugin/kube-flannel.yaml
   when: flannel_manifest.changed
 
 - name: 轮询等待 flannel 运行

@@ -1,0 +1,17 @@
+- name: 渲染 calico 配置文件
+  template:
+    src: calico-typha.yaml.j2
+    dest: /etc/kubernetes/addons/network-plugin/calico-typha.yaml
+  register: calico_manifest
+
+- name: 部署 calico
+  command: kubectl apply -f /etc/kubernetes/addons/network-plugin/calico-typha.yaml
+  when: calico_manifest.changed
+
+- name: 轮询等待 calico 运行
+  shell: kubectl get pod --all-namespaces -o wide | grep 'calico' | awk '{print $4}'
+  register: pod_status
+  until: "'Running' in pod_status.stdout"
+  retries: 12
+  delay: 5
+  ignore_errors: true
