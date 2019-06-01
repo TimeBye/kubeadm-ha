@@ -10,6 +10,8 @@ skip_verify_node: false
   # 应用于可能没有公网的环境
 install_mode: online
 
+timezone: Asia/Shanghai
+
 # CentOS yum源仓库
   # 基础软件源
 # base_yum_repo: http://mirrors.cloud.aliyuncs.com/centos/$releasever/os/$basearch/

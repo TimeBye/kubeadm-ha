@@ -1,4 +1,14 @@
-# 禁用系统swap
+- name: "统一时区为 {{ timezone }}"
+  timezone:
+    name: "{{ timezone }}"
+
+- name: 重新启动 crond 避免应修改时区而导致的作业错乱问题
+  service:
+    name: crond
+    state: restarted
+    enabled: yes
+  ignore_errors: true
+
 - name: 禁用系统 swap
   shell: "swapoff -a && sysctl -w vm.swappiness=0"
   ignore_errors: true
