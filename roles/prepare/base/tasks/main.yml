@@ -6,6 +6,10 @@
   include_tasks: verify_node.yml
   when: not ( skip_verify_node | bool )
 
+- name: "统一时区为 {{ timezone }}"
+  timezone:
+    name: "{{ timezone }}"
+
 # 系统基础软件环境
 - include_tasks: centos.yml
   when: ansible_distribution in [ 'CentOS','RedHat' ]
