@@ -509,6 +509,8 @@ spec:
       labels:
         k8s-app: calico-typha
       annotations:
+        # prometheus.io/port: "9093"
+        # prometheus.io/scrape: "true"
         # This, along with the CriticalAddonsOnly toleration below, marks the pod as a critical
         # add-on, ensuring it gets priority scheduling and that its resources are reserved
         # if it ever gets evicted.
@@ -533,6 +535,9 @@ spec:
         - containerPort: 5473
           name: calico-typha
           protocol: TCP
+        # - containerPort: 9093
+        #   name: calico-typha-metrics
+        #   protocol: TCP
         env:
           # Enable "info" logging by default.  Can be set to "debug" to increase verbosity.
           - name: TYPHA_LOGSEVERITYSCREEN
@@ -611,6 +616,8 @@ spec:
       labels:
         k8s-app: calico-node
       annotations:
+        # prometheus.io/port: "9091"
+        # prometheus.io/scrape: "true"
         # This, along with the CriticalAddonsOnly toleration below,
         # marks the pod as a critical add-on, ensuring it gets
         # priority scheduling and that its resources are reserved
@@ -756,6 +763,10 @@ spec:
               value: "{{ calico_felix_log_level }}"
             - name: FELIX_HEALTHENABLED
               value: "true"
+            # - name: FELIX_PROMETHEUSMETRICSENABLED
+            #   value: "true"
+            # - name: FELIX_PROMETHEUSMETRICSPORT
+            #   value: "9091"
           securityContext:
             privileged: true
           resources:

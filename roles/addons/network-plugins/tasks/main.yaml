@@ -1,16 +1,16 @@
-- name: 创建 cni 相关目录
-  file: 
-    name: "{{ item }}"
-    state: directory
-  with_items:
-  - /etc/cni/net.d
-  - /etc/kubernetes/addons/network-plugin
-  when: cluster_network_enabled|bool
-
 - block:
+  - name: 创建 cni 相关目录
+    file: 
+      name: "{{ item }}"
+      state: directory
+    with_items:
+    - /etc/cni/net.d
+    - /etc/kubernetes/addons/network-plugin
+
   - include_tasks: flannel.yaml
     when: cluster_network == 'flannel'
+
   - include_tasks: calico.yaml
     when: cluster_network == 'calico'
-
-  when: inventory_hostname == groups['kube-master']|first and cluster_network_enabled|bool
+    
+  when: network_plugin_enabled|bool

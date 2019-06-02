@@ -115,7 +115,7 @@ keepalived_router_id: 111
 # Etcd证书过期时间（天）
 etcd_certs_time: 3650
 # Etcd使用的镜像
-etcd_image: gcr.azk8s.cn/google_containers/etcd:3.2.24
+etcd_image: gcr.azk8s.cn/google_containers/etcd:3.3.10
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
 
@@ -178,18 +178,32 @@ kube_max_pods: 110
 ---
 
 # 是否启用网络组建
-cluster_network_enabled: true
+network_plugin_enabled: true
 
 # 默认网络插件
 cluster_network: flannel
 
-# 设置flannel 后端
-#flannel_backend: "host-gw"
+# 设置 flannel 后端
+# flannel_backend: "host-gw"
 flannel_backend: "vxlan"
 # flannel 镜像地址
 flannel_image: quay.azk8s.cn/coreos/flannel:v0.10.0-amd64
 # 选择默认网卡
 flannel_iface: true
+
+# calico mtu
+calico_veth_mtu: 1440
+# calico 相关镜像
+calico_typha_image: dockerhub.azk8s.cn/calico/typha:v3.7.2
+calico_cni_image: dockerhub.azk8s.cn/calico/cni:v3.7.2
+calico_node_image: dockerhub.azk8s.cn/calico/node:v3.7.2
+calico_kube_controllers_image: dockerhub.azk8s.cn/calico/kube-controllers:v3.7.2
+# 设置 Felix 日志级别(debug, info, warning, error)
+calico_felix_log_level: "warning"
+# calicoctl 下载地址
+calicoctl_url: https://file.choerodon.com.cn/kubernetes/calico/calicoctl/v3.7.2/calicoctl
+# calicoctl sha校验码
+calicoctl_sha256: ca1a5612d534d785bf191fdbfeed1f6c6eb89d800d990589b2ae09cd07c98634
 
 ---
 # ingress-controller 相关参数配置
