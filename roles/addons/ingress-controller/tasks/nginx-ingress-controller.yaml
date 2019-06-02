@@ -6,7 +6,7 @@
     register: ingress_nginx_manifest
 
   - name: 部署 nginx-ingress-controller
-    command: kubectl apply -f /etc/kubernetes/addons/ingress-controller/nginx-ingress-controller.yaml
+    shell: kubectl apply -f /etc/kubernetes/addons/ingress-controller/nginx-ingress-controller.yaml
     when: ingress_nginx_manifest.changed
 
   - name: 轮询等待 nginx-ingress-controller 运行

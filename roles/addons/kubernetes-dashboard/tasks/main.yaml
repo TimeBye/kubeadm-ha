@@ -11,7 +11,7 @@
     register: kubernetes_dashboard_manifest
 
   - name: 部署 kubernetes-dashboard
-    command: kubectl apply -f /etc/kubernetes/addons/kubernetes-dashboard/kubernetes-dashboard.yaml
+    shell: kubectl apply -f /etc/kubernetes/addons/kubernetes-dashboard/kubernetes-dashboard.yaml
     when: kubernetes_dashboard_manifest.changed
 
   - name: 轮询等待 kubernetes-dashboard 运行

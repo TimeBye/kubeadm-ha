@@ -12,5 +12,8 @@
 
   - include_tasks: calico.yaml
     when: network_plugin == 'calico'
-    
+
+  - include_tasks: kube-ovn.yaml
+    when: network_plugin == 'kube-ovn'
+
   when: network_plugin_enabled|bool

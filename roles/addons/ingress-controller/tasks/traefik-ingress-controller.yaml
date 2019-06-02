@@ -30,7 +30,7 @@
       --dry-run -o yaml | kubectl apply -f -
 
   - name: 部署 traefik-ingress-controller
-    command: kubectl apply -f /etc/kubernetes/addons/ingress-controller/traefik-ingress-controller.yaml
+    shell: kubectl apply -f /etc/kubernetes/addons/ingress-controller/traefik-ingress-controller.yaml
     when: ingress_nginx_manifest.changed
 
   - name: 轮询等待 traefik-ingress-controller 运行

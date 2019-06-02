@@ -15,6 +15,7 @@
 [![](https://img.shields.io/badge/DNS-CoreDNS-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/DNS-CoreDNS-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/Net-Flannel-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Net-Flannel-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/Net-Calico-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Net-Calico-brightgreen.svg?style=flat-square)
+[![](https://img.shields.io/badge/Net-KubeOVN-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Net-KubeOVN-brightgreen.svg?style=flat-square)
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square)](https://github.com/TimeBye/kubeadm-ha/blob/master/LICENSE)
 [![HitCount](http://hits.dwyl.io/timebye/kubeadm-ha.svg)](http://hits.dwyl.io/timebye/kubeadm-ha)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha?ref=badge_shield)
@@ -27,7 +28,7 @@
   |k8s|v1.14.1, v1.14.2|
   |etcd|v3.3.10|
   |docker|18.06.3, 18.09.3, 18.09.6|
-  |network|flannel, calico|
+  |network|flannel, calico, kube-ovn|
   |ingress-controller|traefik, nginx-ingress|
 
 ## 1. 克隆本项目

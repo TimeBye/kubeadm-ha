@@ -6,7 +6,7 @@
     register: flannel_manifest
 
   - name: 部署 flannel
-    command: kubectl apply -f /etc/kubernetes/addons/network-plugin/kube-flannel.yaml
+    shell: kubectl apply -f /etc/kubernetes/addons/network-plugin/kube-flannel.yaml
     when: flannel_manifest.changed
 
   - name: 轮询等待 flannel 运行

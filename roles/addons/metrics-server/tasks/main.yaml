@@ -11,7 +11,7 @@
     register: metrics_server_manifest
 
   - name: 部署 metrics-server
-    command: kubectl apply -f /etc/kubernetes/addons/metrics-server/metrics-server.yaml
+    shell: kubectl apply -f /etc/kubernetes/addons/metrics-server/metrics-server.yaml
     when: metrics_server_manifest.changed
 
   - name: 轮询等待 metrics-server 运行

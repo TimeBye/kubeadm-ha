@@ -3,16 +3,21 @@
     template:
       src: calico/calico-typha.yaml.j2
       dest: /etc/kubernetes/addons/network-plugin/calico-typha.yaml
-    register: calico_manifest
+    register: calico_typha_manifest
 
   - name: 渲染 calicoctl serviceaccount 配置文件
     template:
       src: calico/calicoctl-serviceaccount.yaml.j2
       dest: /etc/kubernetes/addons/network-plugin/calicoctl-serviceaccount.yaml
+    register: calicoctl_sa_manifest
 
   - name: 部署 calico
-    shell: kubectl apply -f /etc/kubernetes/addons/network-plugin
-    when: calico_manifest.changed
+    shell: kubectl apply -f /etc/kubernetes/addons/network-plugin/calico-typha.yaml
+    when: calico_typha_manifest.changed
+
+  - name: 部署 calicoctl serviceaccount
+    shell: kubectl apply -f /etc/kubernetes/addons/network-plugin/calicoctl-serviceaccount.yaml
+    when: calicoctl_sa_manifest.changed
 
   - name: 轮询等待 calico 运行
     shell: kubectl get pod --all-namespaces -o wide | grep 'calico' | awk '{print $4}'
