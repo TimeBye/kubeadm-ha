@@ -2,7 +2,7 @@
 ansible_become: true
 # 是否启用网络组建
 network_plugin_enabled: true
-# 集群网络插件，目前支持flannel,calico
+# 集群网络插件，目前支持flannel, calico, kube-ovn
 network_plugin: "flannel"
 # 集群pod ip段
 kube_pod_subnet: 10.244.0.0/18

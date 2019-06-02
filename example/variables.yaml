@@ -180,14 +180,14 @@ kube_max_pods: 110
 # 是否启用网络组建
 network_plugin_enabled: true
 
-# 集群网络插件，目前支持flannel,calico
+# 集群网络插件，目前支持flannel, calico, kube-ovn
 network_plugin: "flannel"
 
 # 设置 flannel 后端
 # flannel_backend: "host-gw"
 flannel_backend: "vxlan"
 # flannel 镜像地址
-flannel_image: quay.azk8s.cn/coreos/flannel:v0.10.0-amd64
+flannel_image: quay.azk8s.cn/coreos/flannel:v0.11.0-amd64
 # 选择默认网卡
 flannel_iface: true
 
