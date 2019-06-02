@@ -73,6 +73,16 @@
   - /etc/cni/net.d
   - /etc/sysctl.d/95-k8s-sysctl.conf
   - /etc/modules-load.d/10-k8s-modules.conf
+  - /run/flannel
+  - /etc/calico
+  - /var/run/calico
+  - /var/lib/calico
+  - /var/log/calico
+  - /var/run/openvswitch
+  - /etc/origin/openvswitch
+  - /etc/openvswitch
+  - /var/log/openvswitch
+
 
 - name: 清理 iptables
   shell: "{{ item }} || true"
@@ -104,6 +114,8 @@
   - ip link del kube-ipvs0
   - ip link del cilium_net
   - ip link del cilium_vxlan
+  - ip link del ovn0
+  - ip link del ovs-system
 
 - name: 重新加载 daemon
   systemd:
