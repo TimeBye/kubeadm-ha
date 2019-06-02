@@ -8,9 +8,9 @@
     - /etc/kubernetes/addons/network-plugin
 
   - include_tasks: flannel.yaml
-    when: cluster_network == 'flannel'
+    when: network_plugin == 'flannel'
 
   - include_tasks: calico.yaml
-    when: cluster_network == 'calico'
+    when: network_plugin == 'calico'
     
   when: network_plugin_enabled|bool

@@ -11,7 +11,10 @@
 - hosts: 
   - lb
   roles:
-  - { role: load-balancer, when: "(groups['kube-master']|length + groups['new-master']|length) > 1 and lb_mode != 'slb'" }
+  - role: load-balancer
+    when: 
+    - (groups['kube-master']|length + groups['new-master']|length) > 1 
+    - lb_mode != 'slb'
 
 # 安装etcd，并分发etcd证书到master节点
 - hosts: 
@@ -46,7 +49,8 @@
 - hosts: 
   - all
   roles:
-  - { role: addons/flannel, when: cluster_network =='flannel' }
-  - { role: addons/ingress-nginx }
-  - { role: addons/metrics-server }
-  - { role: addons/kubernetes-dashboard }
+  - addons/network-plugins
+  - addons/ingress-controller
+  - addons/metrics-server
+  - addons/kubernetes-dashboard
+  - addons/cert-manager

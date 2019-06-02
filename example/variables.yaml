@@ -180,8 +180,8 @@ kube_max_pods: 110
 # 是否启用网络组建
 network_plugin_enabled: true
 
-# 默认网络插件
-cluster_network: flannel
+# 集群网络插件，目前支持flannel,calico
+network_plugin: "flannel"
 
 # 设置 flannel 后端
 # flannel_backend: "host-gw"
