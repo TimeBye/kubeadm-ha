@@ -1,13 +1,13 @@
 - block:
   - name: 渲染 calico 配置文件
     template:
-      src: calico-typha.yaml.j2
+      src: calico/calico-typha.yaml.j2
       dest: /etc/kubernetes/addons/network-plugin/calico-typha.yaml
     register: calico_manifest
 
   - name: 渲染 calicoctl serviceaccount 配置文件
     template:
-      src: calicoctl-serviceaccount.yaml.j2
+      src: calico/calicoctl-serviceaccount.yaml.j2
       dest: /etc/kubernetes/addons/network-plugin/calicoctl-serviceaccount.yaml
 
   - name: 部署 calico
@@ -46,12 +46,12 @@
 
 - name: 渲染 calicoctl-kubeconfig 配置文件
   template:
-    src: calicoctl-kubeconfig.j2
+    src: calico/calicoctl-kubeconfig.j2
     dest: /etc/calico/calicoctl-kubeconfig
 
 - name: 渲染 calicoctl 配置文件
   template:
-    src: calicoctl.cfg.j2
+    src: calico/calicoctl.cfg.j2
     dest: /etc/calico/calicoctl.cfg
 
 - name: 安装 calicoctl
