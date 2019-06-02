@@ -205,6 +205,20 @@ calicoctl_url: https://file.choerodon.com.cn/kubernetes/calico/calicoctl/v3.7.2/
 # calicoctl sha校验码
 calicoctl_sha256: ca1a5612d534d785bf191fdbfeed1f6c6eb89d800d990589b2ae09cd07c98634
 
+# kube-ovn master 节点
+kube_ovn_master:
+- "{{ groups['kube-master'][0] }}"
+KUBE_OVN_NODE_IPS: "{% for host in kube_ovn_master %}{% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
+# kube-ovn 相关镜像
+kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v0.4.0
+kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v0.4.0
+kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v0.4.0
+kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v0.4.0
+# 默认网段设置
+kube_ovn_default_cidr: 10.16.0.0/16
+kube_ovn_default_gateway: "10.16.0.1"
+kube_ovn_node_switch_cidr: 100.64.0.0/16
+
 ---
 # ingress-controller 相关参数配置
 ---

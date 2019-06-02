@@ -1,3 +1,7 @@
+- name: "统一时区为 {{ timezone }}"
+  timezone:
+    name: "{{ timezone }}"
+
 - name: 禁用系统 swap
   shell: "swapoff -a && sysctl -w vm.swappiness=0"
   ignore_errors: true
