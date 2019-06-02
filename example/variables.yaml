@@ -1,6 +1,6 @@
----
+# ------------------------ #
 # 基础信息配置
----
+# ------------------------ #
 # 是否跳过节点物理资源校验
 skip_verify_node: false
 
@@ -31,9 +31,9 @@ docker_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/{{ 
   # kubernetes源
 kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main
 
----
+# ------------------------ #
 # Docker 相关参数配置
----
+# ------------------------ #
 # Docker版本
 docker_version: 18.09.6
 
@@ -56,9 +56,9 @@ docker_storage_dir: "/var/lib/docker"
 # 并行镜像下载数量
 docker_max_concurrent_downloads: 10
 
----
+# ------------------------ #
 # load-balancer 相关参数配置
----
+# ------------------------ #
 # 负载均衡模式
   # 有nginx和haproxy、slb三个选项，默认使用nginx；
   # 选择slb时必须设置lb_kube_apiserver_ip变量，值为slb内网ip；
@@ -108,9 +108,9 @@ keepalived_password: "d0cker"
 # 区分多个instance的VRRP组播，同网段不能重复，取值在0-255之间
 keepalived_router_id: 111
 
----
+# ------------------------ #
 # Etcd 相关参数配置
----
+# ------------------------ #
 
 # Etcd证书过期时间（天）
 etcd_certs_time: 3650
@@ -119,9 +119,9 @@ etcd_image: gcr.azk8s.cn/google_containers/etcd:3.3.10
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
 
----
+# ------------------------ #
 # kubernetes 相关参数配置
----
+# ------------------------ #
 
 # kubernetes证书过期时间（天）
 kube_certs_time: 3650
@@ -173,9 +173,9 @@ kubelet_root_dir: "/var/lib/kubelet"
 # node节点最大pod 数
 kube_max_pods: 110
 
----
+# ------------------------ #
 # 集群网络插件相关参数配置
----
+# ------------------------ #
 
 # 是否启用网络组建
 network_plugin_enabled: true
@@ -219,9 +219,9 @@ kube_ovn_default_cidr: "{{ kube_pod_subnet }}"
 kube_ovn_default_gateway: "{{ kube_pod_subnet | ipaddr(1) | ipaddr('address') }}"
 kube_ovn_node_switch_cidr: 100.64.0.0/16
 
----
+# ------------------------ #
 # ingress-controller 相关参数配置
----
+# ------------------------ #
 
 # 是否启用ingress-controller
 ingress_controller_enabled: true
@@ -237,9 +237,9 @@ traefik_certs_time: 3650
 # traefik-ingress-controller 镜像地址
 traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.11
 
----
+# ------------------------ #
 # kubernetes-dashboard 相关参数配置
----
+# ------------------------ #
 
 # 是否启用kubernetes-dashboard 
 kubernetes_dashboard_enabled: true
@@ -247,9 +247,9 @@ kubernetes_dashboard_enabled: true
 # kubernetes-dashboard 镜像地址
 kubernetes_dashboard_image: gcr.azk8s.cn/google_containers/kubernetes-dashboard-amd64:v1.10.1
 
----
+# ------------------------ #
 # metrics-server 相关参数配置 
----
+# ------------------------ #
 
 # 是否启用metrics-server
 metrics_server_enabled: true
@@ -257,9 +257,9 @@ metrics_server_enabled: true
 # metrics-server image地址
 metrics_server_image: gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.3
 
----
+# ------------------------ #
 # cert-manager 相关配置
----
+# ------------------------ #
 
 # 是否启用cert-manager
 cert_manager_enabled: true
