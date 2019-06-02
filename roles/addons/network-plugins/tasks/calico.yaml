@@ -60,4 +60,4 @@
     dest: /usr/bin/calicoctl
     mode: 0755
     checksum: "sha256:{{ calicoctl_sha256 }}"
-  when: calico_manifest.changed
+  ignore_errors: true
