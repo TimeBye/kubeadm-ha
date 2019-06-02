@@ -19,7 +19,7 @@
 [![HitCount](http://hits.dwyl.io/timebye/kubeadm-ha.svg)](http://hits.dwyl.io/timebye/kubeadm-ha)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha?ref=badge_shield)
 
-- 支持版本：
+- 相关组件及支持：
 
   |组件|支持|
   |:-|:-|
@@ -28,6 +28,7 @@
   |etcd|v3.3.10|
   |docker|18.06.3, 18.09.3, 18.09.6|
   |network|flannel, calico|
+  |ingress-controller|traefik, nginx-ingress|
 
 ## 1. 克隆本项目
 
