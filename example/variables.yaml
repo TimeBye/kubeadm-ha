@@ -215,8 +215,8 @@ kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v0.4.0
 kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v0.4.0
 kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v0.4.0
 # 默认网段设置
-kube_ovn_default_cidr: 10.16.0.0/16
-kube_ovn_default_gateway: "10.16.0.1"
+kube_ovn_default_cidr: "{{ kube_pod_subnet }}"
+kube_ovn_default_gateway: "{{ kube_pod_subnet | ipaddr(1) | ipaddr('address') }}"
 kube_ovn_node_switch_cidr: 100.64.0.0/16
 
 ---

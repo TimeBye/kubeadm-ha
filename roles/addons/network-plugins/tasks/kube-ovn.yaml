@@ -19,7 +19,7 @@
     shell: kubectl apply -f /etc/kubernetes/addons/network-plugin/kube-ovn.yaml
     when: kube_ovn_manifest.changed
 
-  - name: 部署 kube-ovn
+  - name: 标记 kube-ovn master 节点
     shell: kubectl label node {{ item }} kube-ovn/role=master --overwrite
     with_items: "{{ kube_ovn_master }}"
 
