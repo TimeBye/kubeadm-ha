@@ -56,8 +56,8 @@
 
 - name: 安装 calicoctl
   get_url:
-    url: {{ calicoctl_url }}
+    url: "{{ calicoctl_url }}"
     dest: /usr/bin/calicoctl
     mode: 0755
-    checksum: sha256:{{ calicoctl_sha256 }}
+    checksum: "sha256:{{ calicoctl_sha256 }}"
   when: calico_manifest.changed
