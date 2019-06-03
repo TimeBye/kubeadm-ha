@@ -88,3 +88,14 @@
     regexp: '^::1.*$'
     state: present
     backup: yes
+
+- name: 设置 ulimits
+  lineinfile:
+    dest: /etc/profile
+    regexp: "ulimit -SHn"
+    line: "ulimit -SHn 3000000"
+
+- name: 设置 ulimits 永久配置
+  template: 
+    src: 30-ulimits.conf.j2 
+    dest: /etc/security/limits.d/30-ulimits.conf
