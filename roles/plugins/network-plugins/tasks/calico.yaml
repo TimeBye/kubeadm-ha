@@ -2,21 +2,21 @@
   - name: 渲染 calico 配置文件
     template:
       src: calico/calico-typha.yaml.j2
-      dest: /etc/kubernetes/addons/network-plugin/calico-typha.yaml
+      dest: /etc/kubernetes/plugins/network-plugin/calico-typha.yaml
     register: calico_typha_manifest
 
   - name: 渲染 calicoctl serviceaccount 配置文件
     template:
       src: calico/calicoctl-serviceaccount.yaml.j2
-      dest: /etc/kubernetes/addons/network-plugin/calicoctl-serviceaccount.yaml
+      dest: /etc/kubernetes/plugins/network-plugin/calicoctl-serviceaccount.yaml
     register: calicoctl_sa_manifest
 
   - name: 部署 calico
-    shell: kubectl apply -f /etc/kubernetes/addons/network-plugin/calico-typha.yaml
+    shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/calico-typha.yaml
     when: calico_typha_manifest.changed
 
   - name: 部署 calicoctl serviceaccount
-    shell: kubectl apply -f /etc/kubernetes/addons/network-plugin/calicoctl-serviceaccount.yaml
+    shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/calicoctl-serviceaccount.yaml
     when: calicoctl_sa_manifest.changed
 
   - name: 轮询等待 calico 运行
@@ -26,6 +26,7 @@
     retries: 12
     delay: 5
     ignore_errors: true
+    when: wait_plugins_ready|bool
 
   - name: 获取 calicoctl token
     shell: >

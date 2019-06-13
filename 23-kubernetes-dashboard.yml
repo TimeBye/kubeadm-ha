@@ -2,4 +2,4 @@
 - hosts: 
   - kube-master[0]
   roles:
-  - addons/kubernetes-dashboard
+  - plugins/kubernetes-dashboard

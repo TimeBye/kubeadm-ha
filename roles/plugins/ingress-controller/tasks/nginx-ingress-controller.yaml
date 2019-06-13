@@ -2,11 +2,11 @@
   - name: 渲染 nginx-ingress-controller 配置文件
     template:
       src: nginx-ingress-controller.yaml.j2
-      dest: /etc/kubernetes/addons/ingress-controller/nginx-ingress-controller.yaml
+      dest: /etc/kubernetes/plugins/ingress-controller/nginx-ingress-controller.yaml
     register: ingress_nginx_manifest
 
   - name: 部署 nginx-ingress-controller
-    shell: kubectl apply -f /etc/kubernetes/addons/ingress-controller/nginx-ingress-controller.yaml
+    shell: kubectl apply -f /etc/kubernetes/plugins/ingress-controller/nginx-ingress-controller.yaml
     when: ingress_nginx_manifest.changed
 
   - name: 轮询等待 nginx-ingress-controller 运行
@@ -16,5 +16,6 @@
     retries: 12
     delay: 5
     ignore_errors: true
+    when: wait_plugins_ready|bool
 
   when: inventory_hostname == groups['kube-master']|first

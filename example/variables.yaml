@@ -174,11 +174,18 @@ kubelet_root_dir: "/var/lib/kubelet"
 kube_max_pods: 110
 
 # ------------------------ #
+# 集群插件相关参数配置
+# ------------------------ #
+
+# 是否等待插件运行成功
+wait_plugins_ready: true
+
+# ------------------------ #
 # 集群网络插件相关参数配置
 # ------------------------ #
 
 # 是否启用网络组建
-network_plugin_enabled: true
+network_plugins_enabled: true
 
 # 集群网络插件，目前支持flannel, calico, kube-ovn
 network_plugin: "flannel"

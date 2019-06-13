@@ -1,5 +1,9 @@
 # 提权操作
 ansible_become: true
+
+# 是否等待启动
+wait_plugins_ready: true
+
 # 是否启用kubernetes-dashboard 
 kubernetes_dashboard_enabled: true
 

@@ -1,7 +1,12 @@
 # 提权操作
 ansible_become: true
+
+# 是否等待启动
+wait_plugins_ready: true
+
 # 是否启用网络组建
-network_plugin_enabled: true
+network_plugins_enabled: true
+
 # 集群网络插件，目前支持flannel, calico, kube-ovn
 network_plugin: "flannel"
 # 集群pod ip段

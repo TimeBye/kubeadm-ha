@@ -2,20 +2,20 @@
   - name: 渲染 traefik-ingress-controller 配置文件
     template:
       src: traefik-ingress-controller.yaml.j2
-      dest: /etc/kubernetes/addons/ingress-controller/traefik-ingress-controller.yaml
+      dest: /etc/kubernetes/plugins/ingress-controller/traefik-ingress-controller.yaml
     register: ingress_nginx_manifest
 
   - name: 读取 traefik-ingress-controller 默认证书 stat 信息
     stat: 
-      path: /etc/kubernetes/addons/ingress-controller/tls.crt
+      path: /etc/kubernetes/plugins/ingress-controller/tls.crt
     register: tls_cert_stat
 
   - name: 创建 traefik-ingress-controller 默认证书
     shell: >
       openssl req -x509 -nodes -days {{ traefik_certs_time }} \
       -newkey rsa:2048 \
-      -keyout /etc/kubernetes/addons/ingress-controller/tls.key \
-      -out /etc/kubernetes/addons/ingress-controller/tls.crt \
+      -keyout /etc/kubernetes/plugins/ingress-controller/tls.key \
+      -out /etc/kubernetes/plugins/ingress-controller/tls.crt \
       -subj "/CN=traefik.io"
     when: tls_cert_stat.stat.isreg is not defined
 
@@ -25,12 +25,12 @@
       --dry-run -o yaml | kubectl apply -f - &&
       kubectl -n ingress-controller create secret tls \
       traefik-ingress-controller-default-cert \
-      --key=/etc/kubernetes/addons/ingress-controller/tls.key \
-      --cert=/etc/kubernetes/addons/ingress-controller/tls.crt \
+      --key=/etc/kubernetes/plugins/ingress-controller/tls.key \
+      --cert=/etc/kubernetes/plugins/ingress-controller/tls.crt \
       --dry-run -o yaml | kubectl apply -f -
 
   - name: 部署 traefik-ingress-controller
-    shell: kubectl apply -f /etc/kubernetes/addons/ingress-controller/traefik-ingress-controller.yaml
+    shell: kubectl apply -f /etc/kubernetes/plugins/ingress-controller/traefik-ingress-controller.yaml
     when: ingress_nginx_manifest.changed
 
   - name: 轮询等待 traefik-ingress-controller 运行
@@ -40,5 +40,6 @@
     retries: 12
     delay: 5
     ignore_errors: true
+    when: wait_plugins_ready|bool
 
   when: inventory_hostname == groups['kube-master']|first

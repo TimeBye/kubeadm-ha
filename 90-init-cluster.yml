@@ -51,8 +51,8 @@
 - hosts: 
   - all
   roles:
-  - addons/network-plugins
-  - addons/ingress-controller
-  - addons/metrics-server
-  - addons/kubernetes-dashboard
-  - addons/cert-manager
+  - plugins/network-plugins
+  - plugins/ingress-controller
+  - plugins/metrics-server
+  - plugins/kubernetes-dashboard
+  - plugins/cert-manager

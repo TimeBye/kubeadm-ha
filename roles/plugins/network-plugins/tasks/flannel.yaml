@@ -2,11 +2,11 @@
   - name: 渲染 flannel 配置文件
     template:
       src: kube-flannel.yaml.j2
-      dest: /etc/kubernetes/addons/network-plugin/kube-flannel.yaml
+      dest: /etc/kubernetes/plugins/network-plugin/kube-flannel.yaml
     register: flannel_manifest
 
   - name: 部署 flannel
-    shell: kubectl apply -f /etc/kubernetes/addons/network-plugin/kube-flannel.yaml
+    shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/kube-flannel.yaml
     when: flannel_manifest.changed
 
   - name: 轮询等待 flannel 运行
@@ -16,4 +16,6 @@
     retries: 12
     delay: 5
     ignore_errors: true
+    when: wait_plugins_ready|bool
+
   when: inventory_hostname == groups['kube-master']|first

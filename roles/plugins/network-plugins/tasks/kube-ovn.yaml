@@ -2,21 +2,21 @@
   - name: 渲染 ovn 配置文件
     template:
       src: kube-ovn/ovn.yaml.j2
-      dest: /etc/kubernetes/addons/network-plugin/ovn.yaml
+      dest: /etc/kubernetes/plugins/network-plugin/ovn.yaml
     register: ovn_manifest
 
   - name: 渲染 kube-ovn 配置文件
     template:
       src: kube-ovn/kube-ovn.yaml.j2
-      dest: /etc/kubernetes/addons/network-plugin/kube-ovn.yaml
+      dest: /etc/kubernetes/plugins/network-plugin/kube-ovn.yaml
     register: kube_ovn_manifest
 
   - name: 部署 ovn
-    shell: kubectl apply -f /etc/kubernetes/addons/network-plugin/ovn.yaml
+    shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/ovn.yaml
     when: ovn_manifest.changed
 
   - name: 部署 kube-ovn
-    shell: kubectl apply -f /etc/kubernetes/addons/network-plugin/kube-ovn.yaml
+    shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/kube-ovn.yaml
     when: kube_ovn_manifest.changed
 
   - name: 标记 kube-ovn master 节点
@@ -30,4 +30,6 @@
     retries: 12
     delay: 5
     ignore_errors: true
+    when: wait_plugins_ready|bool
+
   when: inventory_hostname == groups['kube-master']|first

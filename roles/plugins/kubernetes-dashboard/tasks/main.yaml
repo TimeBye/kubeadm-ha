@@ -1,17 +1,17 @@
 - block:
   - name: 在第一台 master 节点创建 kubernetes-dashboard 配置文件目录
     file:
-      path: /etc/kubernetes/addons/kubernetes-dashboard
+      path: /etc/kubernetes/plugins/kubernetes-dashboard
       state: directory
 
   - name: 渲染 kubernetes-dashboard 配置文件
     template:
       src: kubernetes-dashboard.yaml.j2
-      dest: /etc/kubernetes/addons/kubernetes-dashboard/kubernetes-dashboard.yaml
+      dest: /etc/kubernetes/plugins/kubernetes-dashboard/kubernetes-dashboard.yaml
     register: kubernetes_dashboard_manifest
 
   - name: 部署 kubernetes-dashboard
-    shell: kubectl apply -f /etc/kubernetes/addons/kubernetes-dashboard/kubernetes-dashboard.yaml
+    shell: kubectl apply -f /etc/kubernetes/plugins/kubernetes-dashboard/kubernetes-dashboard.yaml
     when: kubernetes_dashboard_manifest.changed
 
   - name: 轮询等待 kubernetes-dashboard 运行
@@ -21,5 +21,6 @@
     retries: 12
     delay: 5
     ignore_errors: true
+    when: wait_plugins_ready|bool
 
   when: inventory_hostname == groups['kube-master']|first and kubernetes_dashboard_enabled|bool

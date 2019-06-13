@@ -2,4 +2,4 @@
 - hosts: 
   - kube-master[0]
   roles:
-  - addons/ingress-controller
+  - plugins/ingress-controller

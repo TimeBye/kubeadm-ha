@@ -5,7 +5,7 @@
       state: directory
     with_items:
     - /etc/cni/net.d
-    - /etc/kubernetes/addons/network-plugin
+    - /etc/kubernetes/plugins/network-plugin
 
   - include_tasks: flannel.yaml
     when: network_plugin == 'flannel'
@@ -16,4 +16,4 @@
   - include_tasks: kube-ovn.yaml
     when: network_plugin == 'kube-ovn'
 
-  when: network_plugin_enabled|bool
+  when: network_plugins_enabled|bool
