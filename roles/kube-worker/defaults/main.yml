@@ -47,7 +47,7 @@ eviction_hard_nodefs_inodes_free: 5%
 # kubernetes各组件镜像仓库前缀
 kube_image_repository: gcr.azk8s.cn/google_containers
 # kubernetes版本
-kube_version: 1.14.2
+kube_version: 1.14.3
 # 集群内部dns域名
 kube_dns_domain: cluster.local
 # 集群pod ip段
