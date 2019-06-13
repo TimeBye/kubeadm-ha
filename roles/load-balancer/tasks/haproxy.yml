@@ -6,13 +6,6 @@
   - /etc/haproxy
   - /etc/kubernetes/manifests
 
-- name: Haproxy | 拉取相关镜像
-  shell: docker pull {{ item }}
-  with_items:
-  - "{{ kube_haproxy_image }}"
-  - "{{ pod_infra_container_image }}"
-  when: install_mode == 'online'
-
 - name: Haproxy | 生成 haproxy 配置文件
   template: 
     src: haproxy.cfg.j2 
@@ -29,3 +22,10 @@
     dest: /etc/kubernetes/manifests/lb-kube-apiserver.yaml
     owner: root
     mode: 0644
+
+- name: Haproxy | 拉取相关镜像
+  shell: docker pull {{ item }}
+  with_items:
+  - "{{ kube_haproxy_image }}"
+  - "{{ pod_infra_container_image }}"
+  when: install_mode == 'online'

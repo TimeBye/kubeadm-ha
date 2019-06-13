@@ -5,13 +5,6 @@
   with_items:
   - /etc/nginx
   - /etc/kubernetes/manifests
-
-- name: Nginx lb | 拉取相关镜像
-  shell: docker pull {{ item }}
-  with_items:
-  - "{{ pod_infra_container_image }}"
-  - "{{ kube_nginx_image }}"
-  when: install_mode == 'online'
   
 - name: Nginx lb | 生成 nginx lb 配置文件
   template:
@@ -29,3 +22,10 @@
     dest: /etc/kubernetes/manifests/lb-kube-apiserver.yaml
     owner: root
     mode: 0644
+
+- name: Nginx lb | 拉取相关镜像
+  shell: docker pull {{ item }}
+  with_items:
+  - "{{ pod_infra_container_image }}"
+  - "{{ kube_nginx_image }}"
+  when: install_mode == 'online'
