@@ -17,7 +17,7 @@ defaults
     timeout server          15m
     timeout http-keep-alive 30s
     timeout check           30s
-    maxconn                 4000
+    maxconn                 {{ 10000 * ansible_processor_vcpus|int }}
 
 listen stats
     bind :{{ haproxy_stats_bind_address }}

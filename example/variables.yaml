@@ -208,7 +208,6 @@ calicoctl_sha256: ca1a5612d534d785bf191fdbfeed1f6c6eb89d800d990589b2ae09cd07c986
 # kube-ovn master 节点
 kube_ovn_master:
 - "{{ groups['kube-master'][0] }}"
-KUBE_OVN_NODE_IPS: "{% for host in kube_ovn_master %}{% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
 # kube-ovn 相关镜像
 kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v0.4.0
 kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v0.4.0
