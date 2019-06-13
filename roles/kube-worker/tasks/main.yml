@@ -33,9 +33,8 @@
       mode: 0644
       backup: yes
 
-  # "{{ hostvars[groups['kube-master']|first]['KUBEADM_JOIN_COMMAND'] }} --node-name={{ inventory_hostname }} --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests"
   - name: Worker 节点加入集群
-    shell: >-
+    shell: >
       kubeadm join --config /etc/kubernetes/kubeadm-config.yaml 
       --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests
 
