@@ -5,19 +5,19 @@
       dest: /etc/kubernetes/plugins/network-plugin/calico-typha.yaml
     register: calico_typha_manifest
 
-  - name: 渲染 calicoctl serviceaccount 配置文件
+  - name: 渲染 calicoctl 配置文件
     template:
-      src: calico/calicoctl-serviceaccount.yaml.j2
-      dest: /etc/kubernetes/plugins/network-plugin/calicoctl-serviceaccount.yaml
-    register: calicoctl_sa_manifest
+      src: calico/calicoctl-daemonset.yaml.j2
+      dest: /etc/kubernetes/plugins/network-plugin/calicoctl-daemonset.yaml
+    register: calicoctl_manifest
 
   - name: 部署 calico
     shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/calico-typha.yaml
     when: calico_typha_manifest.changed
 
-  - name: 部署 calicoctl serviceaccount
-    shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/calicoctl-serviceaccount.yaml
-    when: calicoctl_sa_manifest.changed
+  - name: 部署 calicoctl
+    shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/calicoctl-daemonset.yaml
+    when: calicoctl_manifest.changed
 
   - name: 轮询等待 calico 运行
     shell: kubectl get pod --all-namespaces -o wide | grep 'calico' | awk '{print $4}'
@@ -28,42 +28,4 @@
     ignore_errors: true
     when: wait_plugins_ready|bool
 
-  - name: 获取 calicoctl token
-    shell: >
-      kubectl get secrets -n kube-system | 
-      grep 'calicoctl-token' | 
-      awk '{print $1}' | 
-      xargs kubectl describe secrets -n kube-system | 
-      grep 'token:' | 
-      awk '{print $2}'
-    register: calicoctl_token
-
-  - name: 设置变量 CALICOCTL_TOKEN
-    set_fact: CALICOCTL_TOKEN="{{ calicoctl_token.stdout }}"
-
   when: inventory_hostname == groups['kube-master']|first
-
-- name: 创建 calicoctl 相关目录
-  file: 
-    name: "{{ item }}"
-    state: directory
-  with_items:
-  - /etc/calico
-
-- name: 渲染 calicoctl-kubeconfig 配置文件
-  template:
-    src: calico/calicoctl-kubeconfig.j2
-    dest: /etc/calico/calicoctl-kubeconfig
-
-- name: 渲染 calicoctl 配置文件
-  template:
-    src: calico/calicoctl.cfg.j2
-    dest: /etc/calico/calicoctl.cfg
-
-- name: 安装 calicoctl
-  get_url:
-    url: "{{ calicoctl_url }}"
-    dest: /usr/bin/calicoctl
-    mode: 0755
-    checksum: "sha256:{{ calicoctl_sha256 }}"
-  ignore_errors: true

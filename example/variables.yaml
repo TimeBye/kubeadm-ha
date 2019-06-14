@@ -201,16 +201,14 @@ flannel_iface: true
 # calico mtu
 calico_veth_mtu: 1440
 # calico 相关镜像
-calico_typha_image: dockerhub.azk8s.cn/calico/typha:v3.7.2
-calico_cni_image: dockerhub.azk8s.cn/calico/cni:v3.7.2
-calico_node_image: dockerhub.azk8s.cn/calico/node:v3.7.2
-calico_kube_controllers_image: dockerhub.azk8s.cn/calico/kube-controllers:v3.7.2
+calico_typha_image: dockerhub.azk8s.cn/calico/typha:v3.7.3
+calico_cni_image: dockerhub.azk8s.cn/calico/cni:v3.7.3
+calico_node_image: dockerhub.azk8s.cn/calico/node:v3.7.3
+calico_kube_controllers_image: dockerhub.azk8s.cn/calico/kube-controllers:v3.7.3
 # 设置 Felix 日志级别(debug, info, warning, error)
 calico_felix_log_level: "warning"
-# calicoctl 下载地址
-calicoctl_url: https://file.choerodon.com.cn/kubernetes/calico/calicoctl/v3.7.2/calicoctl
-# calicoctl sha校验码
-calicoctl_sha256: ca1a5612d534d785bf191fdbfeed1f6c6eb89d800d990589b2ae09cd07c98634
+# calicoctl image 地址
+calicoctl_image: dockerhub.azk8s.cn/calico/ctl:v3.7.3
 
 # kube-ovn master 节点
 kube_ovn_master:

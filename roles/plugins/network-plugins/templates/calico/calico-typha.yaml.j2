@@ -529,7 +529,7 @@ spec:
       serviceAccountName: calico-node
       containers:
       - name: calico-typha
-        # image: calico/typha:v3.7.2
+        # image: calico/typha:v3.7.3
         image: {{ calico_typha_image }}
         ports:
         - containerPort: 5473
@@ -645,7 +645,7 @@ spec:
         # It can be deleted if this is a fresh installation, or if you have already
         # upgraded to use calico-ipam.
         - name: upgrade-ipam
-          # image: calico/cni:v3.7.2
+          # image: calico/cni:v3.7.3
           image: {{ calico_cni_image }}
           command: ["/opt/cni/bin/calico-ipam", "-upgrade"]
           env:
@@ -666,7 +666,7 @@ spec:
         # This container installs the CNI binaries
         # and CNI network config file on each node.
         - name: install-cni
-          # image: calico/cni:v3.7.2
+          # image: calico/cni:v3.7.3
           image: {{ calico_cni_image }}
           command: ["/install-cni.sh"]
           env:
@@ -703,7 +703,7 @@ spec:
         # container programs network policy and routes on each
         # host.
         - name: calico-node
-          # image: calico/node:v3.7.2
+          # image: calico/node:v3.7.3
           image: {{ calico_node_image }}
           env:
             # Use Kubernetes API as the backing datastore.
@@ -871,7 +871,7 @@ spec:
       serviceAccountName: calico-kube-controllers
       containers:
         - name: calico-kube-controllers
-          # image: calico/kube-controllers:v3.7.2
+          # image: calico/kube-controllers:v3.7.3
           image: {{ calico_kube_controllers_image }}
           env:
             # Choose which controllers to run.
