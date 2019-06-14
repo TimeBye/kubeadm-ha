@@ -734,7 +734,10 @@ spec:
               value: "k8s,bgp"
             # Auto-detect the BGP IP address.
             - name: IP
-              value: "autodetect"
+              # value: "autodetect"
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             # Enable IPIP
             - name: CALICO_IPV4POOL_IPIP
               value: "Always"
