@@ -18,3 +18,9 @@ CLUSTER_STATE: "new"
 kubelet_root_dir: "/var/lib/kubelet"
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
+# Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
+etcd_backup_hour: 3
+# Etcd 每日备份文件保留时长，默认7天
+etcd_backup_expiry: 7
+# Etcd 数据备份目录
+etcd_backup_dir: "/etc/kubernetes/backup/etcd"

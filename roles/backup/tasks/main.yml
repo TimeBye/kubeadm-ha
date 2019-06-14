@@ -1,0 +1,24 @@
+- block:
+  - name: 创建 etcd 备份目录
+    file: 
+      name: "{{ item }}"
+      state: directory
+    with_items:
+    - "{{ etcd_backup_dir }}"
+
+  - name: 备份 etcd 数据库至 {{ etcd_backup_dir }}
+    raw: >
+        docker run --name etcd-backup --net host -e ETCDCTL_API=3
+        -v {{ etcd_backup_dir }}:/snapshot
+        -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/
+        --rm {{ etcd_image }}
+        etcdctl snapshot save 
+        /snapshot/etcd-snapshot-$(date -Iseconds).db 
+        --cacert=/etc/kubernetes/pki/etcd/ca.crt 
+        --key=/etc/kubernetes/pki/etcd/healthcheck-client.key 
+        --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+  when: inventory_hostname == groups['etcd']|first
+
+- name: 备份 /etc/kubernetes 目录
+  raw: cp -rf /etc/kubernetes /etc/kubernetes.orig.$(date -Iseconds)
+  when: inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])

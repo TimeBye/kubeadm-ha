@@ -13,6 +13,7 @@
       state: directory
     with_items:
     - "{{ etcd_data_dir }}"
+    - "{{ etcd_backup_dir }}"
     - /etc/kubernetes/pki/etcd
     - /etc/kubernetes/manifests
 
@@ -101,8 +102,8 @@
     etcdctl 
     --endpoints=https://[127.0.0.1]:2379
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
-    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
     --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
     endpoint health
   register: etcd_status
   until: '"is healthy" in etcd_status.stdout'
@@ -128,3 +129,28 @@
   when: 
   - inventory_hostname in (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) 
   - not kubelet_conf_stat.stat.exists
+
+- block:
+  - name: 第一个 etcd 节点创建 etcd 定时备份 crontab
+    cron: 
+      minute: "0"
+      hour: "{{ etcd_backup_hour }}"
+      name: Backup etcd databases
+      job: >
+        docker run --name etcd-backup --net host -e ETCDCTL_API=3
+        -v {{ etcd_backup_dir }}:/snapshot
+        -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/
+        --rm {{ etcd_image }}
+        etcdctl snapshot save 
+        /snapshot/etcd-snapshot-$(date -Iseconds).db 
+        --cacert=/etc/kubernetes/pki/etcd/ca.crt 
+        --key=/etc/kubernetes/pki/etcd/healthcheck-client.key 
+        --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+  - name: 第一个 etcd 节点创建清理 etcd 定时备份文件 crontab
+    cron: 
+      minute: "0"
+      hour: "{{ etcd_backup_hour }}"
+      name: Clean etcd databases backup file
+      job: >
+        find {{ etcd_backup_dir }} -ctime +{{ etcd_backup_expiry }} -name 'etcd-snapshot*.db' | xargs rm -rf
+  when: inventory_hostname == groups['etcd']|first

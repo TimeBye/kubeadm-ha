@@ -26,7 +26,7 @@
   with_items: "{{ etcd_certs.results }}"
   when: inventory_hostname != groups['etcd']|first and (inventory_hostname in groups['etcd'])
 
-- name: 获取 apiserver kubelet etcd client 证书
+- name: 获取 apiserver etcd client 证书
   slurp:
     src: /etc/kubernetes/pki/{{ item }} 
   with_items:
@@ -37,7 +37,7 @@
   delegate_to: "{{ groups['etcd']|first }}"
   run_once: true
 
-- name: 分发 apiserver kubelet etcd clien 证书到 master 节点
+- name: 分发 apiserver etcd client 证书到 master 节点
   copy:
     dest: "{{ item.source }}"
     content: "{{ item.content | b64decode }}"

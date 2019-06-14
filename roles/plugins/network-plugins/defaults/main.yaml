@@ -37,16 +37,11 @@ KUBE_APISERVER_IP: >-
     {% endif %}
   {% endif %}
 
-# 当前节点ip
-CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
-
 # 设置 flannel 后端
 # flannel_backend: "host-gw"
 flannel_backend: "vxlan"
 # flannel 镜像地址
 flannel_image: quay.azk8s.cn/coreos/flannel:v0.11.0-amd64
-# 选择默认网卡
-flannel_iface: true
 
 # calico mtu
 calico_veth_mtu: 1440

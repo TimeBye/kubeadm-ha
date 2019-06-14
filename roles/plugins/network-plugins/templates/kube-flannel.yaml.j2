@@ -176,9 +176,7 @@ spec:
         args:
         - --ip-masq
         - --kube-subnet-mgr
-{% if flannel_iface %}
         - --iface=$(POD_IP)
-{% endif %}
         resources:
           requests:
             cpu: "100m"
@@ -199,12 +197,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
-{% if flannel_iface %}
         - name: POD_IP
           valueFrom:
             fieldRef:
               fieldPath: status.podIP
-{% endif %}
         volumeMounts:
         - name: run
           mountPath: /run/flannel

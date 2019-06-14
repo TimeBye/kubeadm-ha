@@ -1,0 +1,9 @@
+# 备份各节点相关数据及文件
+- hosts: 
+  - etcd[0]
+  - kube-master
+  - kube-worker
+  - new-master
+  - new-worker
+  roles:
+  - backup

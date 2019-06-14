@@ -118,6 +118,12 @@ etcd_certs_time: 3650
 etcd_image: gcr.azk8s.cn/google_containers/etcd:3.3.10
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
+# Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
+etcd_backup_hour: 3
+# Etcd 每日备份文件保留时长，默认7天
+etcd_backup_expiry: 7
+# Etcd 数据备份目录
+etcd_backup_dir: "/etc/kubernetes/backup/etcd"
 
 # ------------------------ #
 # kubernetes 相关参数配置
@@ -195,8 +201,6 @@ network_plugin: "flannel"
 flannel_backend: "vxlan"
 # flannel 镜像地址
 flannel_image: quay.azk8s.cn/coreos/flannel:v0.11.0-amd64
-# 选择默认网卡
-flannel_iface: true
 
 # calico mtu
 calico_veth_mtu: 1440
@@ -239,7 +243,7 @@ nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-c
 # traefik默认证书过期时间（天）
 traefik_certs_time: 3650
 # traefik-ingress-controller 镜像地址
-traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.11
+traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.12
 
 # ------------------------ #
 # kubernetes-dashboard 相关参数配置
