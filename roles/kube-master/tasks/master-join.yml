@@ -28,18 +28,15 @@
       mode: 0644
       backup: yes
 
-  - name: 其他 master 节点需要拉取的镜像列表
+  - name: master 节点需要拉取的镜像列表
     shell: >
       kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml | 
       grep {{ kube_image_repository }}
     register: kube_image_list
 
-  - name: 设置变量 KUBE_IMAGE_LIST
-    set_fact: KUBE_IMAGE_LIST="{{ kube_image_list.stdout_lines }}"
-
-  - name: 其他 master 节点拉取相关镜像
+  - name: master 节点拉取相关镜像
     shell: "docker pull {{ item }}"
-    with_items: "{{ KUBE_IMAGE_LIST }}"
+    with_items: "{{ kube_image_list.stdout_lines }}"
     when: install_mode == 'online'
   
   - name: 其他 master 节点加入集群
