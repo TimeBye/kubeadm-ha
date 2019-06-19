@@ -7,7 +7,6 @@ nodeRegistration:
   kubeletExtraArgs:
     network-plugin: cni
     root-dir: {{ kubelet_root_dir }}
-    cgroup-driver: {{ DOCKER_CGROUP_DRIVER }}
     hostname-override: {{ inventory_hostname }}
     pod-infra-container-image: {{ pod_infra_container_image }}
   criSocket: /var/run/dockershim.sock
