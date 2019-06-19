@@ -88,6 +88,12 @@ apiServer:
 {% for ip in kube_master_external_ip %}
   - {{ ip }}
 {% endfor %}
+controllerManager:
+  extraArgs:
+    bind-address: 0.0.0.0
+scheduler:
+  extraArgs:
+    bind-address: 0.0.0.0
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
