@@ -13,10 +13,3 @@
   apt_repository:
     repo: "{{ kubernetes_apt_repo }}"
     state: absent
-
-- name: 删除 ulimits 相关配置
-  file: 
-    name: "{{ item }} "
-    state: absent
-  with_items:
-  - /etc/security/limits.d/30-ulimits.conf

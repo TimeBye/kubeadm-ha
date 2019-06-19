@@ -83,6 +83,12 @@
   - /etc/openvswitch
   - /var/log/openvswitch
 
+- name: 删除 ulimits 相关配置
+  file: 
+    name: "{{ item }} "
+    state: absent
+  with_items:
+  - /etc/security/limits.d/30-ulimits.conf
 
 - name: 清理 iptables
   shell: "{{ item }} || true"
