@@ -5,4 +5,5 @@
   - kube-master
   - new-master
   roles:
-  - etcd
+  - etcd/certificates
+  - etcd/install

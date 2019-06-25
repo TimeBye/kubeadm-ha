@@ -1,0 +1,21 @@
+- name: 在 etcd 节点创建 etcd 相关目录
+  file: 
+    name: /etc/kubernetes/pki/etcd
+    state: directory
+  when: inventory_hostname in (groups['etcd'] + groups['new-etcd'])
+
+- name: 在 master 节点创建 etcd 证书相关目录
+  file: 
+    name: /etc/kubernetes/pki/etcd
+    state: directory
+  when: inventory_hostname in (groups['kube-master'] + groups['new-master'])
+
+- block:
+  # 获取密钥状态
+  - include_tasks: certs_stat.yml
+  # 生成证书
+  - include_tasks: generate.yml
+  when: inventory_hostname == groups['etcd']|first
+
+# 分发证书
+- include_tasks: distribute.yml

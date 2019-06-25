@@ -10,8 +10,9 @@
   - etcd
   - new-etcd
   roles:
-  - etcd
-
+  - etcd/certificates
+  - etcd/install
+  
 # 标记各节点角色
 - hosts: 
   - new-etcd

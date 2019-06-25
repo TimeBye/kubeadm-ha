@@ -22,7 +22,8 @@
   - kube-master
   - new-master
   roles:
-  - etcd
+  - etcd/certificates
+  - etcd/install
 
 # 生成master节点证书，初始化master节点
 - hosts: 
