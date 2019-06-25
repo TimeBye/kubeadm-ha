@@ -7,3 +7,18 @@
 
 # 公共系统参数设置
 - include_tasks: common.yml
+
+- block:
+  - name: 确认相关目录是否存在
+    file:
+      path: "{{ offline_images_dest|dirname }}"
+      state: directory
+      mode: 0755
+  - name: 分发所需的 Docker 镜像
+    copy: 
+      src: "{{ offline_images_src }}"
+      dest: "{{ offline_images_dest }}"
+      mode: 0755
+  - name: 加载所需的 Docker 镜像
+    shell: docker load -i "{{ offline_images_dest }}"
+  when: install_mode != 'online'
