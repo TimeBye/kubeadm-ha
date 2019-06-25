@@ -5,7 +5,7 @@ ansible_become: true
 wait_plugins_ready: true
 
 # 是否启用cert-manager
-cert_manager_enabled: true
+cert_manager_enabled: false
 
 # acme相关配置
 acme_server: https://acme-v02.api.letsencrypt.org/directory
