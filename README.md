@@ -33,6 +33,8 @@
   |network|flannel, calico, kube-ovn|
   |ingress-controller|traefik, nginx-ingress|
 
+[![asciicast](https://asciinema.org/a/253506.svg)](https://asciinema.org/a/253506)
+
 ## 1. 克隆本项目
 
 - 克隆本项目至任意节点中：
