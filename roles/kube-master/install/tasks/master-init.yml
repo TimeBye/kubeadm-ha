@@ -1,10 +1,3 @@
-# 获取密钥状态
-- include_tasks: certificate/certs_stat.yml
-# 生成公共证书
-- include_tasks: certificate/common.yml
-# 生成该节点 kubelet证书
-- include_tasks: certificate/respective.yml
-
 - name: 读取 kubelet.conf 文件 stat 信息
   stat: 
     path: /etc/kubernetes/kubelet.conf

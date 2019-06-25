@@ -1,0 +1,28 @@
+- name: 创建 kubernetes 相关目录
+  file: 
+    name: /etc/kubernetes/pki
+    state: directory
+
+- block:
+  # 获取密钥状态
+  - include_tasks: certs_stat.yml
+  # 生成公共证书
+  - include_tasks: common.yml
+  # 生成该节点 kubelet证书
+  - include_tasks: respective.yml
+  when: inventory_hostname == groups['kube-master']|first
+
+# 分发证书
+- include_tasks: distribute.yml
+
+# 初始化其他 master 节点
+- include_tasks: respective.yml
+  when: inventory_hostname != groups['kube-master']|first
+
+- name: 读取 kubelet.conf 文件 stat 信息
+  stat: 
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf_stat
+
+- include_tasks: kubeconfig.yml
+  when: kubelet_conf_stat.stat.exists

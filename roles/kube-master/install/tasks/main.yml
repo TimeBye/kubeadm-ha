@@ -12,9 +12,6 @@
 - include_tasks: master-init.yml
   when: inventory_hostname == groups['kube-master']|first
 
-# 分发证书
-- include_tasks: certificate/distribute.yml
-
 # 初始化其他 master 节点
 - include_tasks: master-join.yml
   when: inventory_hostname != groups['kube-master']|first

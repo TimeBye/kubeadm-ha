@@ -22,7 +22,8 @@
   - new-master
   roles:
   - etcd
-  - kube-master
+  - kube-master/certificates
+  - kube-master/install
   - kube-worker
 
 # 标记各节点角色
