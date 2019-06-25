@@ -103,6 +103,10 @@ metadata:
 spec:
   type: NodePort
   externalTrafficPolicy: Cluster
+{% if kube_proxy_mode == "iptables" %}
+  externalIPs:
+{{ INGRESS_EXTERNALIPS }}
+{% endif %}
   selector:
     app: traefik
   ports:

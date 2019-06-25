@@ -17,3 +17,15 @@ nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-c
 traefik_certs_time: 3650
 # traefik-ingress-controller 镜像地址
 traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.12
+
+# 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
+kube_proxy_mode: "iptables"
+
+INGRESS_EXTERNALIPS: |
+  {% for host in ((groups['kube-worker'] + groups['new-worker'])|unique) %}
+  {% if hostvars[host]['ansible_host'] is defined %}
+    - {{ hostvars[host]['ansible_host'] }}
+  {% else %}
+    - {{ host }}
+  {% endif %}
+  {% endfor %}
