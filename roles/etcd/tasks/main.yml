@@ -24,7 +24,7 @@
     - "{{ pod_infra_container_image }}"
     when: install_mode == 'online'
 
-  when: inventory_hostname in groups['etcd']
+  when: inventory_hostname in (groups['etcd'] + groups['new-etcd'])
 
 - name: 在 master 节点创建 etcd 证书相关目录
   file: 
@@ -48,17 +48,14 @@
       path: /etc/kubernetes/manifests/etcd-external.yaml
     register: etcd_static_pod_stat
 
-  - name: 设置变量 CLUSTER_STATE
-    set_fact: CLUSTER_STATE="existing"
-    when: etcd_static_pod_stat.stat.exists
-
   - name: 生成 etcd static pod 文件
     template: 
       src: etcd-external.yaml.j2
       dest: /etc/kubernetes/manifests/etcd-external.yaml
       owner: root
       mode: 0644
-  when: inventory_hostname in groups['etcd']
+    when: not etcd_static_pod_stat.stat.exists
+  when: inventory_hostname in (groups['etcd'] + groups['new-etcd'])
 
 - name: 读取 kubelet.conf 文件 stat 信息
   stat: 
@@ -91,8 +88,39 @@
       enabled: yes
 
   when: 
-  - inventory_hostname in groups['etcd']
+  - inventory_hostname in (groups['etcd'] + groups['new-etcd'])
   - not kubelet_conf_stat.stat.exists
+
+- name: 校验新添加的 etcd 节点是否已在 etcd 集群中
+  shell: >
+    docker run --name etcd-healthcheck --net host -e ETCDCTL_API=3 
+    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
+    --rm {{ etcd_image }}
+    etcdctl 
+    --endpoints=https://[127.0.0.1]:2379
+    --cacert=/etc/kubernetes/pki/etcd/ca.crt
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+    member list
+  register: etcd_member_list
+  delegate_to: "{{ groups['etcd']|first }}"
+  when: inventory_hostname in groups['new-etcd']
+
+- name: 将新添加的 etcd 节点添加到 etcd 集群中
+  shell: >
+    docker run --name etcd-healthcheck --net host -e ETCDCTL_API=3 
+    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
+    --rm {{ etcd_image }}
+    etcdctl 
+    --endpoints=https://[127.0.0.1]:2379
+    --cacert=/etc/kubernetes/pki/etcd/ca.crt
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+    member add {{ NEW_MEMBER }}
+  delegate_to: "{{ groups['etcd']|first }}"
+  when: 
+  - inventory_hostname in groups['new-etcd']
+  - inventory_hostname not in etcd_member_list.stdout
 
 - name: 以轮询的方式等待 etcd 运行完成
   shell: >
@@ -109,7 +137,7 @@
   until: '"is healthy" in etcd_status.stdout'
   retries: 12
   delay: 5
-  when: inventory_hostname in groups['etcd']
+  when: inventory_hostname in (groups['etcd'] + groups['new-etcd'])
   
 - block:
   - name: 移除临时 kubelet unit 文件

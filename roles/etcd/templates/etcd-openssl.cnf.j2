@@ -29,7 +29,7 @@ subjectAltName = @alt_names_etcd
 DNS.1 = localhost
 {% set dns_idx = 1 | int %}
 {% if hostvars[inventory_hostname]['ansible_host'] is defined %}
-{% for host in groups['etcd'] %}
+{% for host in ((groups['etcd'] + groups['new-etcd'])|unique) %}
 DNS.{{ dns_idx + loop.index }} = {% if hostvars[host]['ansible_host'] is defined %}{{ host }}{% endif %}
 
 {% endfor %}
@@ -37,7 +37,7 @@ DNS.{{ dns_idx + loop.index }} = {% if hostvars[host]['ansible_host'] is defined
 IP.1 = 127.0.0.1
 IP.2 = 0:0:0:0:0:0:0:1
 {% set ip_idx = 2 | int %}
-{% for host in groups['etcd'] %}
+{% for host in ((groups['etcd'] + groups['new-etcd'])|unique) %}
 IP.{{ ip_idx + loop.index }} = {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}
 
 {% endfor %}

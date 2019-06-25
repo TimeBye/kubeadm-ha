@@ -31,7 +31,7 @@ spec:
     - --data-dir={{ etcd_data_dir }}
     # 推荐一小时压缩一次数据这样可以极大的保证集群稳定
     - --auto-compaction-retention=1
-    # etcd Raft消息最大字节数，但是官方推荐的是10M
+    # Etcd Raft消息最大字节数，这里设置16M，官方推荐是10M
     - --max-request-bytes=16777216
     # ETCD db数据大小，默认是2G，官方推荐是8G
     - --quota-backend-bytes=8589934592

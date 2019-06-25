@@ -1,0 +1,19 @@
+# 校验节点软件系统及硬件系统、安装必要基础组件、docker、kubeadm、kubelet、kubectl
+- hosts: 
+  - new-etcd
+  roles:
+  - prepare/base
+  - prepare/docker
+  - prepare/kubernetes
+
+- hosts: 
+  - etcd
+  - new-etcd
+  roles:
+  - etcd
+
+# 标记各节点角色
+- hosts: 
+  - new-etcd
+  roles:
+  - post
