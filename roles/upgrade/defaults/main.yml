@@ -1,0 +1,12 @@
+# 提权操作
+ansible_become: true
+# kubernetes版本
+# apt-cache madison kubeadm
+# yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
+
+# CentOS
+kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+# Debian
+# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6A030B21BA07F4FB
+# kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt kubernetes-{{ ansible_distribution_release }} main
+kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main

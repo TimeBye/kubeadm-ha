@@ -1,0 +1,28 @@
+- name: 删除不需要的参数
+  lineinfile:
+    path: /etc/kubernetes/kubeadm-config.yaml
+    regexp: 'max:'
+    state: absent
+
+- name: 更新 kubeadm config 版本
+  lineinfile:
+    path: /etc/kubernetes/kubeadm-config.yaml
+    regexp: '^kubernetesVersion'
+    line: "kubernetesVersion: v{{ kube_upgrade_version }}"
+
+- name: "迁移 kubeadm config 至 v{{ kube_upgrade_version }} 版本"
+  shell: >
+    kubeadm config migrate
+    --old-config=/etc/kubernetes/kubeadm-config.yaml
+    --new-config=/etc/kubernetes/kubeadm-config.yaml
+
+- name: "升级集群至v{{ kube_upgrade_version }}"
+  shell: >
+    kubeadm upgrade apply --config=/etc/kubernetes/kubeadm-config.yaml
+    --certificate-renewal=false --force
+  when: inventory_hostname == groups['kube-master']|first
+
+- name: "升级集群至v{{ kube_upgrade_version }}"
+  shell: >
+    kubeadm upgrade node --certificate-renewal=false
+  when: inventory_hostname != groups['kube-master']|first

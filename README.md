@@ -20,7 +20,7 @@
 [![HitCount](http://hits.dwyl.io/timebye/kubeadm-ha.svg)](http://hits.dwyl.io/timebye/kubeadm-ha)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha?ref=badge_shield)
 
-- **集群特性：** 多Master高可用、`TLS` 双向认证、自定义 `TLS` 证书有效期、`RBAC` 授权、支持 `Network Policy`
+- **集群特性：** 不受国内网络限制、所有组件使用 kubelet 托管、多 Master 高可用、`TLS` 双向认证、自定义 `TLS` 证书有效期、`RBAC` 授权、支持 `Network Policy`
 
 - **相关组件及支持：**
 
@@ -102,6 +102,15 @@
 
     ```
     ansible-playbook -i example/hosts.m-master.ip.ini 99-reset-cluster.yml
+    ```
+
+## 6. 升级集群
+
+- 升级kubernetes版本,执行：
+
+    ```
+    # 请注意替换用下面命令中版本号x部分为实际版本
+    ansible-playbook -i example/hosts.m-master.ip.ini -e kube_upgrade_version=1.15.x 96-upgrade-cluster.yml
     ```
 
 ## License

@@ -1,0 +1,24 @@
+- name: 校验 kube_upgrade_version 是否设置
+  run_once: true
+  assert:
+    that: kube_upgrade_version is defined
+    msg: "请设置变量 kube_upgrade_version。"
+
+- include_tasks: centos.yml
+  when: ansible_distribution in [ 'CentOS','RedHat' ]
+
+- include_tasks: debian.yml
+  when: ansible_distribution in [ 'Ubuntu','Debian' ]
+
+- name: 重新加载 daemon
+  systemd:
+    daemon_reload: yes
+
+- name: 重新启动 kubelet
+  service:
+    name: kubelet
+    state: restarted
+    enabled: yes
+
+- name: 配置 kubectl 命令行自动补全
+  shell: kubectl completion bash > /usr/share/bash-completion/completions/kubectl

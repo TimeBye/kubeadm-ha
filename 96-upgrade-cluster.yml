@@ -1,0 +1,17 @@
+- hosts: 
+  - etcd[0]
+  - kube-master
+  - kube-worker
+  - new-master
+  - new-worker
+  roles:
+  - backup
+
+- hosts:
+  - kube-master
+  - kube-worker
+  - new-master
+  - new-worker
+  serial: 1
+  roles:
+  - upgrade
