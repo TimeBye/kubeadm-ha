@@ -36,9 +36,6 @@ KUBE_APISERVER_PORT: >-
     {{ lb_kube_apiserver_port }}
   {% endif %}
 
-# kubernetes证书过期时间（天）
-kube_certs_time: 3650
-
 # k8s 集群 master 节点证书配置，可以添加多个ip和域名（比如增加公网ip和域名）
 kube_master_external_ip:
 - "8.8.8.8"
