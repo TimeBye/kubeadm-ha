@@ -60,9 +60,9 @@ docker_max_concurrent_downloads: 10
 # load-balancer 相关参数配置
 # ------------------------ #
 # 负载均衡模式
-  # 有nginx和haproxy、slb三个选项，默认使用nginx；
-  # 选择slb时必须设置lb_kube_apiserver_ip变量，值为slb内网ip；
-  # 若选择nginx或haproxy模式且设置了lb_kube_apiserver_ip变量，则启用keepalive+对应反向代理
+#   有nginx、haproxy、envoy 和 slb 四个选项，默认使用nginx；
+#   选择 slb 时必须设置 lb_kube_apiserver_ip 变量，值为 slb 内网 ip；
+#   若选择 nginx、haproxy 或 envoy 模式且设置了 lb_kube_apiserver_ip 变量，则启用 keepalive + 对应负载均衡器
 lb_mode: nginx
 
 # 负载均衡器健康检查端口
@@ -270,11 +270,11 @@ metrics_server_image: gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.3
 # ------------------------ #
 
 # 是否启用cert-manager
-cert_manager_enabled: true
+cert_manager_enabled: false
 
 # acme相关配置
-acme_server: https://acme-v02.api.letsencrypt.org/directory
 acme_email: yourname@gmail.com
+acme_server: https://acme-v02.api.letsencrypt.org/directory
 
 # cert-manager 相关 image 地址
 cert_manager_cainjector_image: "quay.azk8s.cn/jetstack/cert-manager-cainjector:v0.8.0"

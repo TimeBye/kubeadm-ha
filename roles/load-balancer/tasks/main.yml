@@ -12,6 +12,9 @@
 - include_tasks: haproxy.yml
   when: lb_mode == "haproxy"
 
+- include_tasks: envoy.yml
+  when: lb_mode == "envoy"
+
 - block:
   - name: keepalived | 获取网卡名称
     shell: "ip a|grep '{{ CURRENT_HOST_IP }}/'|awk '{print $NF}'"
@@ -67,21 +70,12 @@
       enabled: yes
   when: not kubelet_conf_stat.stat.exists
 
-- name: 以轮询的方式等待 nginx 运行完成
+- name: 以轮询的方式等待 {{ lb_mode }} 运行完成
   shell: nc -z -w 3 127.0.0.1 {{ lb_kube_apiserver_port }}
-  register: nginx_status
-  until: nginx_status.rc == 0
+  register: lb_status
+  until: lb_status.rc == 0
   retries: 12
   delay: 5
-  when: lb_mode == "nginx"
-
-- name: 以轮询的方式等待 haproxy 运行完成
-  shell: nc -z -w 3 127.0.0.1 {{ lb_kube_apiserver_port }}
-  register: haproxy_status
-  until: haproxy_status.rc == 0
-  retries: 12
-  delay: 5
-  when: lb_mode == "haproxy"
 
 - name: 以轮询的方式等待 keepalived 运行完成
   shell: nc -z -w 3 {{ KUBE_APISERVER_IP | trim }} {{ lb_kube_apiserver_port }}
