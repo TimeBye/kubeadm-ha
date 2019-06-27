@@ -27,7 +27,7 @@
   |**组件**|**支持**|
   |:-|:-|
   |OS|Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7|
-  |k8s|v1.14.1, v1.14.3|
+  |k8s|v1.15.0|
   |etcd|v3.3.10|
   |docker|18.06.3, 18.09.3, 18.09.6|
   |network|flannel, calico, kube-ovn|
@@ -59,17 +59,17 @@
     - 样式一
         ```
         NAME             STATUS    ROLES                    AGE    VERSION
-        192.168.56.11    Ready     lb,etcd,master,worker    1d     v1.14.3
-        192.168.56.12    Ready     lb,etcd,master,worker    1d     v1.14.3
-        192.168.56.13    Ready     lb,etcd,master,worker    1d     v1.14.3
+        192.168.56.11    Ready     lb,etcd,master,worker    1d     v1.15.0
+        192.168.56.12    Ready     lb,etcd,master,worker    1d     v1.15.0
+        192.168.56.13    Ready     lb,etcd,master,worker    1d     v1.15.0
         ```
 
     - 样式二
         ```
         NAME     STATUS    ROLES                    AGE    VERSION
-        node1    Ready     lb,etcd,master,worker    1d     v1.14.3
-        node2    Ready     lb,etcd,master,worker    1d     v1.14.3
-        node3    Ready     lb,etcd,master,worker    1d     v1.14.3
+        node1    Ready     lb,etcd,master,worker    1d     v1.15.0
+        node2    Ready     lb,etcd,master,worker    1d     v1.15.0
+        node3    Ready     lb,etcd,master,worker    1d     v1.15.0
         ```
 
     - 对应的hosts配置文件事例如下：

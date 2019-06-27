@@ -1,4 +1,4 @@
-apiVersion: kubeadm.k8s.io/v1beta1
+apiVersion: kubeadm.k8s.io/v1beta2
 kind: JoinConfiguration
 discovery:
   bootstrapToken:
@@ -27,12 +27,14 @@ nodeRegistration:
   taints: []
 {% endif %}
 ---
-apiVersion: kubeadm.k8s.io/v1beta1
+apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
 kubernetesVersion: v{{ kube_version }}
 clusterName: kubernetes
 controlPlaneEndpoint: "{{ KUBE_APISERVER_IP | trim }}:{{ KUBE_APISERVER_PORT | trim }}"
 certificatesDir: /etc/kubernetes/pki
+dns:
+  type: CoreDNS
 etcd:
   external:
     endpoints:
@@ -153,6 +155,7 @@ makeIPTablesUtilChains: true
 maxOpenFiles: 1000000
 maxPods: {{ kube_max_pods }}
 nodeLeaseDurationSeconds: 40
+nodeStatusReportFrequency: 1m0s
 nodeStatusUpdateFrequency: 10s
 oomScoreAdj: -999
 podPidsLimit: -1

@@ -69,9 +69,9 @@ yumdownloader --destdir=/kubernetes --resolve \
 
 # 下载kubernetes
 yumdownloader --destdir=/kubernetes --resolve \
-    kubeadm-1.14.3-0.x86_64 \
-    kubectl-1.14.3-0.x86_64 \
-    kubelet-1.14.3-0.x86_64 \
+    kubeadm-1.15.0-0.x86_64 \
+    kubectl-1.15.0-0.x86_64 \
+    kubelet-1.15.0-0.x86_64 \
     kubernetes-cni-0.7.5
 
 # 下载需要的基础包
@@ -107,9 +107,9 @@ yum install -y \
 
 # 下载kubernetes
 yum install -y \
-    kubeadm-1.14.3-0.x86_64 \
-    kubectl-1.14.3-0.x86_64 \
-    kubelet-1.14.3-0.x86_64 \
+    kubeadm-1.15.0-0.x86_64 \
+    kubectl-1.15.0-0.x86_64 \
+    kubelet-1.15.0-0.x86_64 \
     kubernetes-cni-0.7.5
     
 yum update -y

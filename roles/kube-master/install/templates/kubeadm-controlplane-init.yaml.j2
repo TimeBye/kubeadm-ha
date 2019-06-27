@@ -1,4 +1,4 @@
-apiVersion: kubeadm.k8s.io/v1beta1
+apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 localAPIEndpoint:
   advertiseAddress: {{ CURRENT_HOST_IP }}
@@ -27,12 +27,14 @@ bootstrapTokens:
   - signing
   - authentication
 ---
-apiVersion: kubeadm.k8s.io/v1beta1
+apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
 kubernetesVersion: v{{ kube_version }}
 clusterName: kubernetes
 controlPlaneEndpoint: "{{ KUBE_APISERVER_IP | trim }}:{{ KUBE_APISERVER_PORT | trim }}"
 certificatesDir: /etc/kubernetes/pki
+dns:
+  type: CoreDNS
 etcd:
   external:
     endpoints:
@@ -153,6 +155,7 @@ makeIPTablesUtilChains: true
 maxOpenFiles: 1000000
 maxPods: {{ kube_max_pods }}
 nodeLeaseDurationSeconds: 40
+nodeStatusReportFrequency: 1m0s
 nodeStatusUpdateFrequency: 10s
 oomScoreAdj: -999
 podPidsLimit: -1
@@ -196,6 +199,7 @@ ipvs:
   excludeCIDRs: null
   minSyncPeriod: 0s
   scheduler: ""
+  strictARP: false
   syncPeriod: 30s
 metricsBindAddress: 127.0.0.1:10249
 mode: {{ kube_proxy_mode }}
@@ -204,3 +208,7 @@ oomScoreAdj: -999
 portRange: ""
 resourceContainer: /kube-proxy
 udpIdleTimeout: 250ms
+winkernel:
+  enableDSR: false
+  networkName: ""
+  sourceVip: ""
