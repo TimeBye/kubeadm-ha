@@ -1,12 +1,23 @@
+- name: 判断 Docker 是否早已安装
+  shell: >
+    systemctl list-unit-files --type service | grep docker || echo "NOT FOUND"
+  register: docker_already_installed
+
 # 系统基础软件环境
 - include_tasks: centos.yml
-  when: ansible_distribution in [ 'CentOS','RedHat' ]
+  when: 
+  - ansible_distribution in [ 'CentOS','RedHat' ]
+  - '"docker" not in docker_already_installed.stdout'
 
 - include_tasks: debian.yml
-  when: ansible_distribution in [ 'Ubuntu','Debian' ]
+  when: 
+  - ansible_distribution in [ 'Ubuntu','Debian' ]
+  - '"docker" not in docker_already_installed.stdout'
 
 # 公共系统参数设置
 - include_tasks: common.yml
+  when: 
+  - '"docker" not in docker_already_installed.stdout'
 
 - block:
   - name: 确认相关目录是否存在

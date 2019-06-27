@@ -38,6 +38,7 @@ docker_storage_dir: "/var/lib/docker"
 # 并行镜像下载数量
 docker_max_concurrent_downloads: 10
 
+install_mode: online
 # 离线模式时所需镜像源位置
 offline_images_src: /kubernetes/kubernetes-1.14.3.tar
 # 离线模式时分发镜像目的位置
