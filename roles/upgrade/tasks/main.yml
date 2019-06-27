@@ -1,9 +1,3 @@
-- name: 校验 kube_upgrade_version 是否设置
-  run_once: true
-  assert:
-    that: kube_upgrade_version is defined
-    msg: "请设置变量 kube_upgrade_version。"
-
 - include_tasks: centos.yml
   when: ansible_distribution in [ 'CentOS','RedHat' ]
 

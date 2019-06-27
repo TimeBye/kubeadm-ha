@@ -1,5 +1,14 @@
 - hosts: 
   - etcd[0]
+  tasks:
+  - name: 校验 kube_upgrade_version 是否设置
+    run_once: true
+    assert:
+      that: kube_upgrade_version is defined
+      msg: "请设置变量 kube_upgrade_version。"
+
+- hosts: 
+  - etcd[0]
   - kube-master
   - kube-worker
   - new-master
@@ -15,3 +24,12 @@
   serial: 1
   roles:
   - upgrade
+
+- hosts: 
+  - etcd
+  - new-etcd
+  - kube-master
+  - new-master
+  roles:
+  - etcd/certificates
+  - kube-master/certificates
