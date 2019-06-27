@@ -67,6 +67,7 @@
     path: "{{ item }}"
     state: absent
   with_items:
+  - /etc/envoy
   - /etc/nginx
   - /etc/haproxy
   - /var/lib/etcd
