@@ -12,8 +12,8 @@
 - name: 校验 lb 模式类型
   run_once: true
   assert:
-    that: lb_mode in ['nginx','haproxy','slb']
-    msg: "不支持当前 {{ lb_mode }} 负载均衡模式，请在 ['nginx','haproxy','slb'] 中进行选择。"
+    that: lb_mode in ['nginx','haproxy','envoy','slb']
+    msg: "不支持当前 {{ lb_mode }} 负载均衡模式，请在 ['nginx','haproxy','envoy','slb'] 中进行选择。"
 
 - name: 校验 lb_kube_apiserver_ip 是否合法
   run_once: true
