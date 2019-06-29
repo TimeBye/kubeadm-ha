@@ -1,31 +1,28 @@
-- block:
-  - name: 渲染 calico 配置文件
-    template:
-      src: calico/calico-typha.yaml.j2
-      dest: /etc/kubernetes/plugins/network-plugin/calico-typha.yaml
-    register: calico_typha_manifest
+- name: 渲染 calico 配置文件
+  template:
+    src: calico/calico-typha.yaml.j2
+    dest: /etc/kubernetes/plugins/network-plugin/calico-typha.yaml
+  register: calico_typha_manifest
 
-  - name: 渲染 calicoctl 配置文件
-    template:
-      src: calico/calicoctl-daemonset.yaml.j2
-      dest: /etc/kubernetes/plugins/network-plugin/calicoctl-daemonset.yaml
-    register: calicoctl_manifest
+- name: 渲染 calicoctl 配置文件
+  template:
+    src: calico/calicoctl-daemonset.yaml.j2
+    dest: /etc/kubernetes/plugins/network-plugin/calicoctl-daemonset.yaml
+  register: calicoctl_manifest
 
-  - name: 部署 calico
-    shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/calico-typha.yaml
-    when: calico_typha_manifest.changed
+- name: 部署 calico
+  shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/calico-typha.yaml
+  when: calico_typha_manifest.changed
 
-  - name: 部署 calicoctl
-    shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/calicoctl-daemonset.yaml
-    when: calicoctl_manifest.changed
+- name: 部署 calicoctl
+  shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/calicoctl-daemonset.yaml
+  when: calicoctl_manifest.changed
 
-  - name: 轮询等待 calico 运行
-    shell: kubectl get pod --all-namespaces -o wide | grep 'calico' | awk '{print $4}'
-    register: pod_status
-    until: "'Running' in pod_status.stdout"
-    retries: 12
-    delay: 5
-    ignore_errors: true
-    when: wait_plugins_ready|bool
-
-  when: inventory_hostname == groups['kube-master']|first
+- name: 轮询等待 calico 运行
+  shell: kubectl get pod --all-namespaces -o wide | grep 'calico' | awk '{print $4}'
+  register: pod_status
+  until: "'Running' in pod_status.stdout"
+  retries: 12
+  delay: 5
+  ignore_errors: true
+  when: wait_plugins_ready|bool

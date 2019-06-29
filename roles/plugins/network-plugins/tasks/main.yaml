@@ -1,11 +1,8 @@
 - block:
   - name: 创建 cni 相关目录
     file: 
-      name: "{{ item }}"
+      name: /etc/kubernetes/plugins/network-plugin
       state: directory
-    with_items:
-    - /etc/cni/net.d
-    - /etc/kubernetes/plugins/network-plugin
 
   - include_tasks: flannel.yaml
     when: network_plugin == 'flannel'
@@ -16,4 +13,6 @@
   - include_tasks: kube-ovn.yaml
     when: network_plugin == 'kube-ovn'
 
-  when: network_plugins_enabled|bool
+  when: 
+  - network_plugins_enabled|bool
+  - inventory_hostname == groups['kube-master']|first

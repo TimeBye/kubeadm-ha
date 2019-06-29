@@ -1,35 +1,32 @@
-- block:
-  - name: 渲染 ovn 配置文件
-    template:
-      src: kube-ovn/ovn.yaml.j2
-      dest: /etc/kubernetes/plugins/network-plugin/ovn.yaml
-    register: ovn_manifest
+- name: 渲染 ovn 配置文件
+  template:
+    src: kube-ovn/ovn.yaml.j2
+    dest: /etc/kubernetes/plugins/network-plugin/ovn.yaml
+  register: ovn_manifest
 
-  - name: 渲染 kube-ovn 配置文件
-    template:
-      src: kube-ovn/kube-ovn.yaml.j2
-      dest: /etc/kubernetes/plugins/network-plugin/kube-ovn.yaml
-    register: kube_ovn_manifest
+- name: 渲染 kube-ovn 配置文件
+  template:
+    src: kube-ovn/kube-ovn.yaml.j2
+    dest: /etc/kubernetes/plugins/network-plugin/kube-ovn.yaml
+  register: kube_ovn_manifest
 
-  - name: 部署 ovn
-    shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/ovn.yaml
-    when: ovn_manifest.changed
+- name: 部署 ovn
+  shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/ovn.yaml
+  when: ovn_manifest.changed
 
-  - name: 部署 kube-ovn
-    shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/kube-ovn.yaml
-    when: kube_ovn_manifest.changed
+- name: 部署 kube-ovn
+  shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/kube-ovn.yaml
+  when: kube_ovn_manifest.changed
 
-  - name: 标记 kube-ovn master 节点
-    shell: kubectl label node {{ item }} kube-ovn/role=master --overwrite
-    with_items: "{{ kube_ovn_master }}"
+- name: 标记 kube-ovn master 节点
+  shell: kubectl label node {{ item }} kube-ovn/role=master --overwrite
+  with_items: "{{ kube_ovn_master }}"
 
-  - name: 轮询等待 kube-ovn 运行
-    shell: kubectl get pod --all-namespaces -o wide | grep 'kube-ovn' | awk '{print $4}'
-    register: pod_status
-    until: "'Running' in pod_status.stdout"
-    retries: 12
-    delay: 5
-    ignore_errors: true
-    when: wait_plugins_ready|bool
-
-  when: inventory_hostname == groups['kube-master']|first
+- name: 轮询等待 kube-ovn 运行
+  shell: kubectl get pod --all-namespaces -o wide | grep 'kube-ovn' | awk '{print $4}'
+  register: pod_status
+  until: "'Running' in pod_status.stdout"
+  retries: 12
+  delay: 5
+  ignore_errors: true
+  when: wait_plugins_ready|bool
