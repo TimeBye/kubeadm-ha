@@ -13,7 +13,7 @@
     - "docker-ce-{{ docker_version }}.ce"
     state: present
     enablerepo: docker-ce
-  when: docker_version is version_compare('18.09', '<')
+  when: docker_version is version('18.09', '<')
 
 - name: 安装 Docker
   yum:
@@ -23,4 +23,4 @@
     - "containerd.io"
     state: present
     enablerepo: docker-ce
-  when: docker_version is version_compare('18.09', '>=')
+  when: docker_version is version('18.09', '>=')

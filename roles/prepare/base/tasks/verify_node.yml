@@ -11,7 +11,7 @@
 
 - name: 校验节点系统内核
   assert:
-    that: ansible_kernel is version_compare('3.10', '>=')
+    that: ansible_kernel is version('3.10', '>=')
     msg: "节点：{{ inventory_hostname }} 系统内核版本小于3.10，实际获取：{{ ansible_kernel }}，安装需求校验不通过。"
 
 - name: 校验节点系统架构
@@ -21,28 +21,28 @@
 
 - name: 校验节点系统版本
   assert:
-    that: ansible_distribution_version is version_compare('7.4', '>=')
+    that: ansible_distribution_version is version('7.4', '>=')
     msg: "节点：{{ inventory_hostname }} 系统版本期望不小于CentOS 7.4，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
   when:
     - ansible_distribution == "CentOS"
 
 - name: 校验节点系统版本
   assert:
-    that: ansible_distribution_version is version_compare('7', '>=')
+    that: ansible_distribution_version is version('7', '>=')
     msg: "节点：{{ inventory_hostname }} 系统版本期望不小于RedHat 7，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
   when:
     - ansible_distribution == "RedHat"
 
 - name: 校验节点系统版本
   assert:
-    that: ansible_distribution_version is version_compare('16.04', '>=')
+    that: ansible_distribution_version is version('16.04', '>=')
     msg: "Master节点：{{ inventory_hostname }} 系统版本期望不小于Ubuntu 16.04，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
   when:
     - ansible_distribution == "Ubuntu"
 
 - name: 校验节点系统版本
   assert:
-    that: ansible_distribution_version is version_compare('9', '>=')
+    that: ansible_distribution_version is version('9', '>=')
     msg: "Master节点：{{ inventory_hostname }} 系统版本期望不小于Debian 9，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
   when:
     - ansible_distribution == "Debian"
