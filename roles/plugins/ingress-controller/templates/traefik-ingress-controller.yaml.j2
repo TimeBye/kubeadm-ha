@@ -102,7 +102,7 @@ metadata:
     app: traefik
 spec:
   type: NodePort
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: Local
 {% if kube_proxy_mode == "iptables" %}
   externalIPs:
 {{ INGRESS_EXTERNALIPS }}
@@ -151,16 +151,14 @@ spec:
     spec:
       affinity:	
         podAntiAffinity:	
-          preferredDuringSchedulingIgnoredDuringExecution:	
-          - weight: 100	
-            podAffinityTerm:	
-              labelSelector:	
-                matchExpressions:	
-                - key: app
-                  operator: In	
-                  values:	
-                  - traefik
-              topologyKey: kubernetes.io/hostname
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - traefik
+            topologyKey: kubernetes.io/hostname
       serviceAccountName: traefik-ingress-controller
       terminationGracePeriodSeconds: 60
       containers:

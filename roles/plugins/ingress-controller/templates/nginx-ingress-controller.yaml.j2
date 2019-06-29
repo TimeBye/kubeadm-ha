@@ -209,16 +209,14 @@ spec:
     spec:
       affinity:	
         podAntiAffinity:	
-          preferredDuringSchedulingIgnoredDuringExecution:	
-          - weight: 100	
-            podAffinityTerm:	
-              labelSelector:	
-                matchExpressions:	
-                - key: app.kubernetes.io/name	
-                  operator: In	
-                  values:	
-                  - ingress-nginx	
-              topologyKey: kubernetes.io/hostname
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - ingress-nginx	
+            topologyKey: kubernetes.io/hostname
       serviceAccountName: nginx-ingress-serviceaccount
       containers:
         - name: nginx-ingress-controller
@@ -291,8 +289,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
 spec:
   type: NodePort
-  # 该参数主要是保护客户端IP，避免loadbalancer/nodeport的服务的第二跳。这样nodeport的服务路口只会去找本节点的pod服务。
-  externalTrafficPolicy: Cluster
+  externalTrafficPolicy: Local
 {% if kube_proxy_mode == "iptables" %}
   externalIPs:
 {{ INGRESS_EXTERNALIPS }}
