@@ -1,0 +1,31 @@
+- name: 确认 kubeadm 版本
+  command: "kubeadm version -o short"
+  register: kubeadm_version_output
+
+- name: 设置 kubeadm api version 为 v1beta1
+  set_fact:
+    kubeadmConfig_api_version: v1beta1
+  when: 
+  - kubeadm_version_output.stdout is version('v1.13.0', '>=')
+  - kubeadm_version_output.stdout is version('v1.15.0', '<')
+
+- name: 设置 kubeadm api version 为 v1beta2
+  set_fact:
+    kubeadmConfig_api_version: v1beta2
+  when: 
+  - kubeadm_version_output.stdout is version('v1.15.0', '>=')
+
+- name: 创建 kubeadm 的配置文件
+  template:
+    src: >-
+      {% if inventory_hostname == groups['kube-master']|first -%}
+      kubeadm-controlplane-init.{{ kubeadmConfig_api_version }}.yaml.j2
+      {%- elif inventory_hostname in (groups['kube-master'] + groups['new-master']) -%}
+      kubeadm-controlplane-join.{{ kubeadmConfig_api_version }}.yaml.j2
+      {%- else -%}
+      kubeadm-config.{{ kubeadmConfig_api_version }}.yaml.j2
+      {%- endif %}
+    dest: "/etc/kubernetes/kubeadm-config.yaml"
+    owner: root
+    mode: 0644
+    backup: yes

@@ -1,0 +1,206 @@
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: InitConfiguration
+localAPIEndpoint:
+  advertiseAddress: {{ CURRENT_HOST_IP }}
+  bindPort: 6443
+nodeRegistration:
+  kubeletExtraArgs:
+    network-plugin: cni
+    root-dir: {{ kubelet_root_dir }}
+    hostname-override: {{ inventory_hostname }}
+    pod-infra-container-image: {{ pod_infra_container_image }}
+  criSocket: /var/run/dockershim.sock
+  name: {{ inventory_hostname }}
+{% if inventory_hostname in (groups['kube-master'] + groups['new-master']) and inventory_hostname not in (groups['kube-worker'] + groups['new-worker']) %}
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+{% else %}
+  taints: []
+{% endif %}
+bootstrapTokens:
+- groups:
+  - system:bootstrappers:kubeadm:default-node-token
+  token: {{ kubeadm_token }}
+  ttl: 0s
+  usages:
+  - signing
+  - authentication
+---
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: ClusterConfiguration
+kubernetesVersion: v{{ kube_version }}
+clusterName: kubernetes
+controlPlaneEndpoint: "{{ KUBE_APISERVER_IP | trim }}:{{ KUBE_APISERVER_PORT | trim }}"
+certificatesDir: /etc/kubernetes/pki
+etcd:
+  external:
+    endpoints:
+{% for host in groups['etcd'] %}
+{% if hostvars[host]['ansible_host'] is defined %}
+    - https://{{ hostvars[host]['ansible_host'] }}:2379
+{% else %}
+    - https://{{ host }}:2379
+{% endif %}
+{% endfor %}
+    caFile: /etc/kubernetes/pki/etcd/ca.crt
+    certFile: /etc/kubernetes/pki/apiserver-etcd-client.crt
+    keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key
+imageRepository: "{{ kube_image_repository }}"
+networking:
+  dnsDomain: {{ kube_dns_domain }}
+  podSubnet: {{ kube_pod_subnet }}
+  serviceSubnet: {{ kube_service_subnet }}
+apiServer:
+  extraArgs:
+    enable-admission-plugins: NodeRestriction,DefaultStorageClass
+    allow-privileged: "true"
+    apiserver-count: "{{ groups['kube-master']|length + groups['new-master']|length }}"
+    service-node-port-range: {{ kube_service_node_port_range }}
+  certSANs:
+  - localhost
+  - kubernetes
+  - kubernetes.default
+  - kubernetes.default.svc
+{% for sub_domain in kube_dns_domain.split('.') %}
+{% set outer_loop = loop %}
+  - kubernetes.default.svc.{% for domain in kube_dns_domain.split('.') %}{% if loop.index <= outer_loop.index %}{{ domain }}{% if loop.index < outer_loop.index %}.{% endif %}{% endif %}{% endfor %}
+  
+{% endfor %}
+{% if hostvars[inventory_hostname]['ansible_host'] is defined %}
+{% for host in (groups['kube-master'] + groups['new-master']| default([])) | unique %}
+  - {{ host }}
+{% endfor %}
+{% endif %}
+{% for domain in kube_master_external_demain %}
+  - {{ domain }}
+{% endfor %}
+  - 127.0.0.1
+  - 0:0:0:0:0:0:0:1
+  - {{ KUBERNETES_SERVICE_IP }}
+{% if lb_kube_apiserver_ip is defined %}
+  - {{ lb_kube_apiserver_ip | trim }}
+{% endif %}
+{% for host in (groups['kube-master'] + groups['new-master'] | default([])) | unique %}
+  - {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}
+  
+{% endfor %}
+{% for ip in kube_master_external_ip %}
+  - {{ ip }}
+{% endfor %}
+controllerManager:
+  extraArgs:
+    bind-address: 0.0.0.0
+scheduler:
+  extraArgs:
+    bind-address: 0.0.0.0
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+address: 0.0.0.0
+authentication:
+  anonymous:
+    enabled: false
+  webhook:
+    cacheTTL: 2m0s
+    enabled: true
+  x509:
+    clientCAFile: /etc/kubernetes/pki/ca.crt
+authorization:
+  mode: Webhook
+  webhook:
+    cacheAuthorizedTTL: 5m0s
+    cacheUnauthorizedTTL: 30s
+cgroupDriver: {{ DOCKER_CGROUP_DRIVER }}
+cgroupsPerQOS: true
+clusterDNS:
+- {{ CLUSTER_DNS_SERVICE_IP }}
+clusterDomain: {{ kube_dns_domain }}
+configMapAndSecretChangeDetectionStrategy: Watch
+containerLogMaxFiles: 5
+containerLogMaxSize: 10Mi
+contentType: application/vnd.kubernetes.protobuf
+cpuCFSQuota: true
+cpuCFSQuotaPeriod: 100ms
+cpuManagerPolicy: none
+cpuManagerReconcilePeriod: 10s
+enableControllerAttachDetach: true
+enableDebuggingHandlers: true
+enforceNodeAllocatable:
+- pods
+eventBurst: 10
+eventRecordQPS: 5
+evictionHard:
+  imagefs.available: {{ eviction_hard_imagefs_available }}
+  memory.available: {{ eviction_hard_memory_available }}
+  nodefs.available: {{ eviction_hard_nodefs_available }}
+  nodefs.inodesFree: {{ eviction_hard_nodefs_inodes_free }}
+evictionPressureTransitionPeriod: 5m0s
+failSwapOn: true
+fileCheckFrequency: 20s
+hairpinMode: promiscuous-bridge
+healthzBindAddress: 127.0.0.1
+healthzPort: 10248
+httpCheckFrequency: 20s
+imageGCHighThresholdPercent: 85
+imageGCLowThresholdPercent: 80
+imageMinimumGCAge: 2m0s
+iptablesDropBit: 15
+iptablesMasqueradeBit: 14
+kubeAPIBurst: 10
+kubeAPIQPS: 5
+makeIPTablesUtilChains: true
+maxOpenFiles: 1000000
+maxPods: {{ kube_max_pods }}
+nodeLeaseDurationSeconds: 40
+nodeStatusUpdateFrequency: 10s
+oomScoreAdj: -999
+podPidsLimit: -1
+port: 10250
+registryBurst: 10
+registryPullQPS: 5
+resolvConf: /etc/resolv.conf
+rotateCertificates: true
+runtimeRequestTimeout: 2m0s
+serializeImagePulls: true
+staticPodPath: /etc/kubernetes/manifests
+streamingConnectionIdleTimeout: 4h0m0s
+syncFrequency: 1m0s
+volumeStatsAggPeriod: 1m0s
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+bindAddress: 0.0.0.0
+clientConnection:
+  acceptContentTypes: ""
+  burst: 10
+  contentType: application/vnd.kubernetes.protobuf
+  kubeconfig: /var/lib/kube-proxy/kubeconfig.conf
+  qps: 5
+clusterCIDR: {{ kube_pod_subnet }}
+configSyncPeriod: 15m0s
+conntrack:
+  maxPerCore: 32768
+  min: 131072
+  tcpCloseWaitTimeout: 1h0m0s
+  tcpEstablishedTimeout: 24h0m0s
+enableProfiling: false
+healthzBindAddress: 0.0.0.0:10256
+hostnameOverride: ""
+iptables:
+  masqueradeAll: false
+  masqueradeBit: 14
+  minSyncPeriod: 0s
+  syncPeriod: 30s
+ipvs:
+  excludeCIDRs: null
+  minSyncPeriod: 0s
+  scheduler: ""
+  syncPeriod: 30s
+metricsBindAddress: 127.0.0.1:10249
+mode: {{ kube_proxy_mode }}
+nodePortAddresses: null
+oomScoreAdj: -999
+portRange: ""
+resourceContainer: /kube-proxy
+udpIdleTimeout: 250ms

@@ -128,15 +128,15 @@
   systemd:
     daemon_reload: yes
 
-- name: 重启网络组件
-  shell: "{{ item }} || true"
-  with_items:
-  - systemctl restart network
-  - systemctl restart networking
-
 - name: 移除添加的 hosts 信息
   blockinfile:
     path: "/etc/hosts"
     state: absent
     follow: yes
     marker: "# Ansible inventory hosts {mark}"
+
+- name: 重启网络组件
+  shell: "{{ item }} || true"
+  with_items:
+  - systemctl restart network
+  - systemctl restart networking

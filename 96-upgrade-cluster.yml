@@ -1,11 +1,20 @@
-- hosts: 
-  - etcd[0]
+- hosts: kube-master[0]
   tasks:
   - name: 校验 kube_upgrade_version 是否设置
-    run_once: true
     assert:
       that: kube_upgrade_version is defined
       msg: "请设置变量 kube_upgrade_version。"
+
+  - name: 获取当前 kubernetes 实际版本
+    shell: "kubeadm version -o short"
+    register: kubeadm_version_output
+
+  - name: 校验 kube_upgrade_version 与当前 kubernetes 版本差异
+    assert:
+      that: 
+      - kubeadm_version_output.stdout is version('v{{ kube_upgrade_version }}', '<=')
+      - "{{ kube_upgrade_version.split('.')[1]|int - kubeadm_version_output.stdout.split('.')[1]|int }} <= 1"
+      msg: "请设置正确的升级版本号，次版本号只能升一个版本，不能跨版本升级（比如：1.13版本只能升级到1.14，不能直接升级1.15）。"
 
 - hosts: 
   - etcd[0]

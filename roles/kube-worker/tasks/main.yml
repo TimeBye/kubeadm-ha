@@ -25,13 +25,7 @@
   - name: 设置变量 DOCKER_CGROUP_DRIVER
     set_fact: DOCKER_CGROUP_DRIVER="{{ docker_cgroup_driver.stdout }}"
 
-  - name: 创建 kubeadm 的配置文件
-    template: 
-      src: kubeadm-config.yaml.j2
-      dest: /etc/kubernetes/kubeadm-config.yaml
-      owner: root
-      mode: 0644
-      backup: yes
+  - include_tasks: "{{ (role_path + '/../kube-master/install/tasks/kubeadm-config.yml') | realpath  }}"
 
   - name: Worker 节点加入集群
     shell: >

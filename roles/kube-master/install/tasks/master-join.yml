@@ -17,13 +17,7 @@
   - name: 设置变量 DOCKER_CGROUP_DRIVER
     set_fact: DOCKER_CGROUP_DRIVER="{{ docker_cgroup_driver.stdout }}"
 
-  - name: 创建 kubeadm 的配置文件
-    template: 
-      src: kubeadm-controlplane-join.yaml.j2
-      dest: /etc/kubernetes/kubeadm-config.yaml
-      owner: root
-      mode: 0644
-      backup: yes
+  - include_tasks: kubeadm-config.yml
 
   - name: master 节点需要拉取的镜像列表
     shell: >
@@ -41,12 +35,19 @@
       kubeadm join --config /etc/kubernetes/kubeadm-config.yaml 
       --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests
 
-  when: not kubelet_conf_stat.stat.exists
-  
-# 所有节点根据证书重新生成各组件配置文件
-- include_tasks: kubeconfig.yml
+  - include_tasks: "{{ (role_path + '/../certificates/tasks/kubeconfig.yml') | realpath  }}"
 
-- block:
+  # 监听所有网卡方便 prometheus 进行监控
+  - name: 更新 {{ item }} 监听地址
+    lineinfile:
+      backrefs: yes
+      path: "/etc/kubernetes/manifests/{{ item }}.yaml"
+      regexp: 'address\=127\.0\.0\.1'
+      line: "    - --address=0.0.0.0"
+    with_items:
+    - kube-scheduler
+    - kube-controller-manager
+
   - name: 重新加载 daemon
     systemd:
       daemon_reload: yes
@@ -85,12 +86,18 @@
 
 - name: 创建 kubeconfig 目录
   file: 
-    name: "{{ ansible_env.HOME }}/.kube"
+    name: "{{ item }}"
     state: directory
+  with_items:
+  - "{{ ansible_env.PWD }}/.kube"
+  - "{{ ansible_env.HOME }}/.kube"
 
 - name: 复制 kubeconfig 文件到 .kube 目录
   copy:
     src: /etc/kubernetes/admin.conf
-    dest: "{{ ansible_env.HOME }}/.kube/config"
+    dest: "{{ item }}/config"
     mode: 0644
     remote_src: yes
+  with_items:
+  - "{{ ansible_env.PWD }}/.kube"
+  - "{{ ansible_env.HOME }}/.kube"

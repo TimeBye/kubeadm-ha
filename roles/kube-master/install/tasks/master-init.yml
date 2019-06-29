@@ -17,21 +17,14 @@
   - name: 设置变量 DOCKER_CGROUP_DRIVER
     set_fact: DOCKER_CGROUP_DRIVER="{{ docker_cgroup_driver.stdout }}"
 
-  - name: 创建 kubeadm 的配置文件
-    template: 
-      src: kubeadm-controlplane-init.yaml.j2
-      dest: /etc/kubernetes/kubeadm-config.yaml
-      owner: root
-      mode: 0644
-      backup: yes
-      
-  when: not kubelet_conf_stat.stat.exists
+  - include_tasks: kubeadm-config.yml
 
-- name: 获取 master 节点需要拉取的镜像列表
-  shell: kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml
-  register: kube_image_list
+  - name: master 节点需要拉取的镜像列表
+    shell: >
+      kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml | 
+      grep {{ kube_image_repository }}
+    register: kube_image_list
 
-- block:
   - name: master 节点拉取相关镜像
     shell: "docker pull {{ item }}"
     with_items: "{{ kube_image_list.stdout_lines }}"
@@ -40,20 +33,19 @@
   - name: 初始化第一个 master 节点
     shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml
 
-  when: not kubelet_conf_stat.stat.exists
+  - include_tasks: "{{ (role_path + '/../certificates/tasks/kubeconfig.yml') | realpath  }}"
 
-# # openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
-# - name: 获取 kubeadm join 命令
-#   shell: kubeadm token create --print-join-command --config=/etc/kubernetes/kubeadm-config.yaml
-#   register: kubeadm_join_command
+  # 监听所有网卡方便 prometheus 进行监控
+  - name: 更新 {{ item }} 监听地址
+    lineinfile:
+      backrefs: yes
+      path: "/etc/kubernetes/manifests/{{ item }}.yaml"
+      regexp: 'address\=127\.0\.0\.1'
+      line: "    - --address=0.0.0.0"
+    with_items:
+    - kube-scheduler
+    - kube-controller-manager
 
-# - name: 设置变量 KUBEADM_JOIN_COMMAND
-#   set_fact: KUBEADM_JOIN_COMMAND="{{ kubeadm_join_command.stdout }}"
-
-# 所有节点根据证书重新生成各组件配置文件
-- include_tasks: kubeconfig.yml
-
-- block:
   - name: 重新加载 daemon
     systemd:
       daemon_reload: yes
@@ -93,12 +85,18 @@
 
 - name: 创建 kubeconfig 目录
   file: 
-    name: "{{ ansible_env.HOME }}/.kube"
+    name: "{{ item }}"
     state: directory
+  with_items:
+  - "{{ ansible_env.PWD }}/.kube"
+  - "{{ ansible_env.HOME }}/.kube"
 
 - name: 复制 kubeconfig 文件到 .kube 目录
   copy:
     src: /etc/kubernetes/admin.conf
-    dest: "{{ ansible_env.HOME }}/.kube/config"
+    dest: "{{ item }}/config"
     mode: 0644
     remote_src: yes
+  with_items:
+  - "{{ ansible_env.PWD }}/.kube"
+  - "{{ ansible_env.HOME }}/.kube"
