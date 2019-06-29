@@ -8,7 +8,7 @@
 
 # 进行apiserver负载均衡
 - hosts: 
-  - lb
+  - all
   roles:
   - role: load-balancer
     when: 

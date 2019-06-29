@@ -19,8 +19,15 @@
   run_once: true
   assert:
     that: lb_kube_apiserver_ip is regex("^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$")
-    msg: "请设置一个正确的 VIP 地址。"
+    msg: "请设置一个正确的 lb_kube_apiserver_ip。"
   when: lb_kube_apiserver_ip is defined
+
+- name: 校验 lb节点组是否合法
+  run_once: true
+  assert:
+    that: lb_kube_apiserver_ip is defined
+    msg: "lb节点组非空，请设置 lb_kube_apiserver_ip。"
+  when: groups['lb']|length > 0
 
 - name: 校验 slb 模式 lb_kube_apiserver_ip 是否赋值
   run_once: true
@@ -32,23 +39,17 @@
 - name: 校验 lb_kube_apiserver_ip 是否合法
   assert:
     that: lb_kube_apiserver_ip != CURRENT_HOST_IP
-    msg: "VIP 不能设置为集群节点的 IP。"
+    msg: "lb_kube_apiserver_ip 不能设置为集群节点的 IP。"
   when: lb_kube_apiserver_ip is defined
 
-- block:
-  - name: 校验 lb 模式节点设置
-    run_once: true
-    assert:
-      that: groups['lb']|unique|length == groups['all']|unique|length
-      msg: "master 节点数量大于 1，请将所有节点添加至 lb 节点组中。"
-  - name: 校验 lb 模式端口设置
-    run_once: true
-    assert:
-      that: lb_kube_apiserver_port != "6443"
-      msg: "lb 节点与 master 节点有复用情况，lb_kube_apiserver_port 请勿使用6443端口。"
+- name: 校验 lb 模式端口设置
+  assert:
+    that: lb_kube_apiserver_port|int != 6443
+    msg: "当前 {{ inventory_hostname }} 节点6443端口已使用，请更换端口。"
   when: 
-  - (groups['kube-master']|length + groups['new-master']|length) > 1
   - lb_kube_apiserver_ip is not defined
+  - (groups['kube-master']|length + groups['new-master']|length) > 1
+  - inventory_hostname in ((groups['kube-master'] + groups['new-master'])|unique) 
 
 - block:
   - name: 校验 lb 模式节点设置
@@ -58,15 +59,15 @@
       msg: "请将添加至少两个节点到 lb 节点组中。"
   - name: 校验 lb 模式端口设置
     assert:
-      that: lb_kube_apiserver_port != "6443"
+      that: lb_kube_apiserver_port|int != 6443
       msg: "lb 节点与 master 节点有复用情况，lb_kube_apiserver_port 请勿使用6443端口。"
     when:
-    - inventory_hostname in ((groups['kube-master'] + groups['new-master'])|unique) 
     - inventory_hostname in groups['lb']
+    - inventory_hostname in ((groups['kube-master'] + groups['new-master'])|unique) 
   when: 
-  - (groups['kube-master']|length + groups['new-master']|length) > 1
-  - lb_kube_apiserver_ip is defined
   - lb_mode != 'slb'
+  - lb_kube_apiserver_ip is defined
+  - (groups['kube-master']|length + groups['new-master']|length) > 1
 
 - name: 校验 etcd 节点数量
   run_once: true

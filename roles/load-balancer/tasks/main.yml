@@ -1,19 +1,21 @@
-- name: 创建 kubelet 相关目录
-  file: 
-    name: "{{ item }}"
-    state: directory
-  with_items:
-  - "{{ kubelet_root_dir }}"
-  - /etc/systemd/system/kubelet.service.d
+- block:
+  - name: 创建 kubelet 相关目录
+    file: 
+      name: "{{ item }}"
+      state: directory
+    with_items:
+    - "{{ kubelet_root_dir }}"
+    - /etc/systemd/system/kubelet.service.d
 
-- include_tasks: nginx.yml
-  when: lb_mode == "nginx"
+  - include_tasks: nginx.yml
+    when: lb_mode == "nginx"
 
-- include_tasks: haproxy.yml
-  when: lb_mode == "haproxy"
+  - include_tasks: haproxy.yml
+    when: lb_mode == "haproxy"
 
-- include_tasks: envoy.yml
-  when: lb_mode == "envoy"
+  - include_tasks: envoy.yml
+    when: lb_mode == "envoy"
+  when: (inventory_hostname in groups['lb']) or (groups['lb']|length == 0 and inventory_hostname in (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']))
 
 - block:
   - name: keepalived | 获取网卡名称
@@ -28,6 +30,7 @@
       dest: /etc/kubernetes/manifests/lb-keepalived.yaml
       owner: root
       mode: 0644
+
   - name: keepalived | 拉取相关镜像
     shell: docker pull {{ item }}
     with_items:
@@ -35,7 +38,9 @@
     - "{{ pod_infra_container_image }}"
     when: install_mode == 'online'
 
-  when: lb_kube_apiserver_ip is defined
+  when: 
+  - lb_kube_apiserver_ip is defined
+  - inventory_hostname in groups['lb']
 
 - name: 读取 kubelet.conf 文件 stat 信息
   stat: 
@@ -68,22 +73,27 @@
       name: kubelet
       state: restarted
       enabled: yes
-  when: not kubelet_conf_stat.stat.exists
+  when: 
+  - (inventory_hostname in groups['lb']) or (groups['lb']|length == 0 and inventory_hostname in (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']))
+  - not kubelet_conf_stat.stat.exists
 
-- name: 以轮询的方式等待 {{ lb_mode }} 运行完成
-  shell: nc -z -w 3 127.0.0.1 {{ lb_kube_apiserver_port }}
-  register: lb_status
-  until: lb_status.rc == 0
-  retries: 12
-  delay: 5
+- block:
+  - name: 以轮询的方式等待 {{ lb_mode }} 运行完成
+    shell: nc -z -w 3 127.0.0.1 {{ lb_kube_apiserver_port }}
+    register: lb_status
+    until: lb_status.rc == 0
+    retries: 12
+    delay: 5
 
-- name: 以轮询的方式等待 keepalived 运行完成
-  shell: nc -z -w 3 {{ KUBE_APISERVER_IP | trim }} {{ lb_kube_apiserver_port }}
-  register: keepalived_status
-  until: keepalived_status.rc == 0
-  retries: 12
-  delay: 5
-  when: lb_kube_apiserver_ip is defined
+  - name: 以轮询的方式等待 keepalived 运行完成
+    shell: nc -z -w 3 {{ KUBE_APISERVER_IP | trim }} {{ lb_kube_apiserver_port }}
+    register: keepalived_status
+    until: keepalived_status.rc == 0
+    retries: 12
+    delay: 5
+    when: 
+    - lb_kube_apiserver_ip is defined
+  when: (inventory_hostname in groups['lb']) or (groups['lb']|length == 0 and inventory_hostname in (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']))
 
 - block:
   - name: 移除临时 kubelet unit 文件

@@ -59,10 +59,25 @@ docker_max_concurrent_downloads: 10
 # ------------------------ #
 # load-balancer 相关参数配置
 # ------------------------ #
-# 负载均衡模式
-#   有nginx、haproxy、envoy 和 slb 四个选项，默认使用nginx；
-#   选择 slb 时必须设置 lb_kube_apiserver_ip 变量，值为 slb 内网 ip；
-#   若选择 nginx、haproxy 或 envoy 模式且设置了 lb_kube_apiserver_ip 变量，则启用 keepalive + 对应负载均衡器
+# 私有云：
+#    VIP 负载模式：
+#       也就是负载均衡器 + keepalive 模式，比如常用的 haproxy + keepalive。
+#       本脚本中负载均衡器有 nginx、haproxy、envoy 可供选择，设置 lb_mode 即可进行任意切换。
+#       设置 lb_kube_apiserver_ip 即表示启用 keepalive，请先与服务器提供部门协商保留一个IP作为 lb_kube_apiserver_ip，
+#       一般 lb 节点组中有两个节点就够了，lb节点组中第一个节点为 keepalived 的 master 节点，剩下的都为 backed 节点。
+#
+#    节点本地负载模式：
+#       只启动负载均衡器，不启用 keepalive（即不设置 lb_kube_apiserver_ip），
+#       此时 kubelet 链接 apiserver 地址为 127.0.0.1:lb_kube_apiserver_port。
+#       使用此模式时请将 lb 节点组置空。
+#
+# 公有云：
+#    不推荐使用 slb 模式，建议直接使用节点本地负载模式。
+#    若使用 slb 模式，请先使用节点本地负载模式进行部署，
+#    部署成功后再切换至 slb 模式：
+#       将 lb_mode 修改为 slb，将 lb_kube_apiserver_ip 设置为购买到的 slb 内网ip，
+#       修改 lb_kube_apiserver_port 为 slb 监听端口。
+#    再次运行初始化集群脚本即可切换至 slb 模式。
 lb_mode: nginx
 
 # 负载均衡器健康检查端口
