@@ -36,7 +36,7 @@ certificatesDir: /etc/kubernetes/pki
 etcd:
   external:
     endpoints:
-{% for host in groups['etcd'] %}
+{% for host in (groups['etcd'] + groups['new-etcd']) %}
 {% if hostvars[host]['ansible_host'] is defined %}
     - https://{{ hostvars[host]['ansible_host'] }}:2379
 {% else %}

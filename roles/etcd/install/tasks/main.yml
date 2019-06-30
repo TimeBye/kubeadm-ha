@@ -24,9 +24,6 @@
     - "{{ pod_infra_container_image }}"
     when: install_mode == 'online'
 
-  when: inventory_hostname in (groups['etcd'] + groups['new-etcd'])
-
-- block:
   - name: 读取 etcd static pod yaml 文件 stat 信息
     stat: 
       path: /etc/kubernetes/manifests/etcd-external.yaml
