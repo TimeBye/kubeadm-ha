@@ -54,7 +54,7 @@
   - name: 生成临时 kubelet unit 文件
     template: 
       src: 20-kubelet-override.conf.j2
-      dest: "/etc/systemd/system/kubelet.service.d/20-kubelet-override.conf"
+      dest: /etc/systemd/system/kubelet.service.d/20-kubelet-override.conf
       owner: root
       mode: 0644
 
@@ -140,10 +140,9 @@
 - block:
   - name: 移除临时 kubelet unit 文件
     file: 
-      name: "{{ item }}"
+      name: /etc/systemd/system/kubelet.service.d/20-kubelet-override.conf
       state: absent
-    with_items:
-    - /etc/systemd/system/kubelet.service.d/20-kubelet-override.conf
+
   - name: 重新加载 daemon
     systemd:
       daemon_reload: yes
