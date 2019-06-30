@@ -77,7 +77,7 @@
 
 - name: 以轮询的方式等待 etcd 运行完成
   shell: >
-    docker run --name etcd-healthcheck --net host -e ETCDCTL_API=3 
+    docker run --net host -e ETCDCTL_API=3 
     -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
     --rm {{ etcd_image }}
     etcdctl 
@@ -94,7 +94,7 @@
 
 - name: 校验新添加的 etcd 节点是否已在 etcd 集群中
   shell: >
-    docker run --name etcd-healthcheck --net host -e ETCDCTL_API=3 
+    docker run --net host -e ETCDCTL_API=3 
     -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
     --rm {{ etcd_image }}
     etcdctl 
@@ -109,7 +109,7 @@
 
 - name: 将新添加的 etcd 节点添加到 etcd 集群中
   shell: >
-    docker run --name etcd-healthcheck --net host -e ETCDCTL_API=3 
+    docker run --net host -e ETCDCTL_API=3 
     -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
     --rm {{ etcd_image }}
     etcdctl 
@@ -125,7 +125,7 @@
 
 - name: 以轮询的方式等待 new etcd 运行完成
   shell: >
-    docker run --name etcd-healthcheck --net host -e ETCDCTL_API=3 
+    docker run --net host -e ETCDCTL_API=3 
     -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
     --rm {{ etcd_image }}
     etcdctl 
@@ -166,7 +166,7 @@
       hour: "{{ etcd_backup_hour }}"
       name: Backup etcd databases
       job: >
-        docker run --name etcd-backup --net host -e ETCDCTL_API=3
+        docker run --net host -e ETCDCTL_API=3
         -v {{ etcd_backup_dir }}:/snapshot
         -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/
         --rm {{ etcd_image }}

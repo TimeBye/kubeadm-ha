@@ -8,7 +8,7 @@
 
   - name: 备份 etcd 数据库至 {{ etcd_backup_dir }}
     raw: >
-        docker run --name etcd-backup --net host -e ETCDCTL_API=3
+        docker run --net host -e ETCDCTL_API=3
         -v {{ etcd_backup_dir }}:/snapshot
         -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/
         --rm {{ etcd_image }}

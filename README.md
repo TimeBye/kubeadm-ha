@@ -26,14 +26,15 @@
 
   |**组件**|**支持**|
   |:-|:-|
-  |OS|Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7|
-  |k8s|v1.13, v1.14, **v1.15**|
-  |etcd|v3.3.10|
-  |docker|18.06.3, 18.09.3, **18.09.6**|
-  |network|**flannel**, calico, kube-ovn|
+  |系统|Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7|
+  |Etcd|v3.3.10|
+  |Docker|18.06.3, 18.09.3, **18.09.6**|
+  |Kubernetes|v1.13, v1.14, **v1.15**|
+  |网络插件|calico, kube-ovn, **flannel**|
+  |api-server 负载均衡器|haproxy, envoy, **nginx**|
   |ingress-controller|traefik, **nginx-ingress**|
 
-  Note: 表格中粗体标识出来的为默认安装
+  **Note:** 表格中粗体标识出来的为默认安装版本
 
 [![asciicast](https://asciinema.org/a/253506.svg)](https://asciinema.org/a/253506)
 
