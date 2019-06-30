@@ -21,12 +21,6 @@ kubeadm_token: "abcdef.0123456789abcdef"
 
 # 负载后的apiserver端口号
 lb_kube_apiserver_port: 8443
-KUBE_APISERVER_PORT: >-
-  {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
-    6443
-  {% else %}
-    {{ lb_kube_apiserver_port }}
-  {% endif %}
 
 # k8s 集群 master 节点证书配置，可以添加多个ip和域名（比如增加公网ip和域名）
 kube_master_external_ip:

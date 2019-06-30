@@ -2,7 +2,7 @@ apiVersion: kubeadm.k8s.io/v1beta1
 kind: JoinConfiguration
 discovery:
   bootstrapToken:
-    apiServerEndpoint: "{{ KUBE_APISERVER_IP | trim }}:{{ KUBE_APISERVER_PORT | trim }}"
+    apiServerEndpoint: "{{ KUBE_APISERVER_IP | trim }}:{{ lb_kube_apiserver_port | trim }}"
     token: {{ kubeadm_token }}
     unsafeSkipCAVerification: true
   timeout: 5m0s

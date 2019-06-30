@@ -19,12 +19,7 @@ kubeadm_token: "abcdef.0123456789abcdef"
 
 # 负载后的apiserver端口号
 lb_kube_apiserver_port: 8443
-KUBE_APISERVER_PORT: >-
-  {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
-    6443
-  {% else %}
-    {{ lb_kube_apiserver_port }}
-  {% endif %}
+
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
 # Pod根容器
