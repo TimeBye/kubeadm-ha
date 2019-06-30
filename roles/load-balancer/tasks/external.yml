@@ -1,0 +1,8 @@
+- name: 确认没有运行其他负载均衡器
+  file: 
+    name: "{{ item }}"
+    state: absent
+  with_items:
+  - /etc/kubernetes/plugins/lb-config
+  - /etc/kubernetes/manifests/lb-keepalived.yaml
+  - /etc/kubernetes/manifests/lb-kube-apiserver.yaml

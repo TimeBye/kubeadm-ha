@@ -1,15 +1,7 @@
-- name: Nginx lb | 创建 lb 相关目录
-  file: 
-    name: "{{ item }}"
-    state: directory
-  with_items:
-  - /etc/nginx
-  - /etc/kubernetes/manifests
-  
 - name: Nginx lb | 生成 nginx lb 配置文件
   template:
     src: nginx/nginx.conf.j2
-    dest: /etc/nginx/nginx.conf
+    dest: /etc/kubernetes/plugins/lb-config/nginx.conf
     owner: root
     mode: 0644
   register: lb_configuration_result
@@ -26,6 +18,6 @@
 - name: Nginx lb | 拉取相关镜像
   shell: docker pull {{ item }}
   with_items:
-  - "{{ kube_nginx_image }}"
+  - "{{ lb_nginx_image }}"
   - "{{ pod_infra_container_image }}"
   when: install_mode == 'online'

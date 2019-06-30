@@ -1,5 +1,5 @@
 # 安装基础插件
 - hosts: 
-  - all
+  - kube-master[0]
   roles:
   - plugins/network-plugins

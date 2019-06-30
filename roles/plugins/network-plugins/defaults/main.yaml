@@ -12,31 +12,6 @@ network_plugin: "flannel"
 # 集群pod ip段
 kube_pod_subnet: 10.244.0.0/18
 
-# 负载后的apiserver端口号
-lb_kube_apiserver_port: 8443
-KUBE_APISERVER_PORT: >-
-  {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
-    6443
-  {% else %}
-    {{ lb_kube_apiserver_port }}
-  {% endif %}
-
-# apiserver ip
-KUBE_APISERVER_IP: >-
-  {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
-    {% if hostvars[groups['kube-master']|first]['ansible_host'] is defined %}
-      {{ hostvars[groups['kube-master']|first]['ansible_host'] }}
-    {% else %}
-      {{ groups['kube-master']|first }}
-    {% endif %}
-  {% else %}
-    {% if lb_kube_apiserver_ip is not defined %}
-      127.0.0.1
-    {% else %}
-      {{ lb_kube_apiserver_ip }}
-    {% endif %}
-  {% endif %}
-
 # 设置 flannel 后端
 # flannel_backend: "host-gw"
 flannel_backend: "vxlan"

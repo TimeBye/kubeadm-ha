@@ -4,6 +4,3 @@
   - all
   roles:
   - role: load-balancer
-    when: 
-    - (groups['kube-master']|length + groups['new-master']|length) > 1 
-    - lb_mode != 'slb'

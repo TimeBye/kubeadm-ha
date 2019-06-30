@@ -27,11 +27,13 @@
   |**组件**|**支持**|
   |:-|:-|
   |OS|Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7|
-  |k8s|v1.13, v1.14, v1.15|
+  |k8s|v1.13, v1.14, **v1.15**|
   |etcd|v3.3.10|
-  |docker|18.06.3, 18.09.3, 18.09.6|
-  |network|flannel, calico, kube-ovn|
-  |ingress-controller|traefik, nginx-ingress|
+  |docker|18.06.3, 18.09.3, **18.09.6**|
+  |network|**flannel**, calico, kube-ovn|
+  |ingress-controller|traefik, **nginx-ingress**|
+
+  Note: 表格中粗体标识出来的为默认安装
 
 [![asciicast](https://asciinema.org/a/253506.svg)](https://asciinema.org/a/253506)
 
@@ -58,18 +60,20 @@
 - 搭建集群后有以下两种“样式”显示，请自行选择：
     - 样式一
         ```
-        NAME             STATUS    ROLES                    AGE    VERSION
-        192.168.56.11    Ready     lb,etcd,master,worker    1d     v1.15.0
-        192.168.56.12    Ready     lb,etcd,master,worker    1d     v1.15.0
-        192.168.56.13    Ready     lb,etcd,master,worker    1d     v1.15.0
+        NAME            STATUS   ROLES                AGE     VERSION
+        192.168.56.11   Ready    etcd,master,worker   7m25s   v1.15.0
+        192.168.56.12   Ready    etcd,master,worker   5m18s   v1.15.0
+        192.168.56.13   Ready    etcd,master,worker   5m18s   v1.15.0
+        192.168.56.14   Ready    worker               4m37s   v1.15.0
         ```
 
     - 样式二
         ```
-        NAME     STATUS    ROLES                    AGE    VERSION
-        node1    Ready     lb,etcd,master,worker    1d     v1.15.0
-        node2    Ready     lb,etcd,master,worker    1d     v1.15.0
-        node3    Ready     lb,etcd,master,worker    1d     v1.15.0
+        NAME    STATUS   ROLES                AGE     VERSION
+        node1   Ready    etcd,master,worker   7m25s   v1.15.0
+        node2   Ready    etcd,master,worker   5m18s   v1.15.0
+        node3   Ready    etcd,master,worker   5m18s   v1.15.0
+        node4   Ready    worker               4m37s   v1.15.0
         ```
 
     - 对应的hosts配置文件事例如下：

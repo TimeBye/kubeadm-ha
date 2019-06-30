@@ -11,9 +11,6 @@
   - all
   roles:
   - role: load-balancer
-    when: 
-    - (groups['kube-master']|length + groups['new-master']|length) > 1 
-    - lb_mode != 'slb'
 
 # 安装etcd，并分发etcd证书到master节点
 - hosts: 
@@ -52,7 +49,7 @@
 
 # 安装基础插件
 - hosts: 
-  - all
+  - kube-master[0]
   roles:
   - plugins/network-plugins
   - plugins/ingress-controller

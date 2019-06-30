@@ -1,14 +1,15 @@
-{% if lb_kube_apiserver_healthcheck_port is defined -%}
+{% if lb_kube_apiserver_healthcheck_port is defined %}
 admin:
-  access_log_path: /dev/stdout
+  access_log_path: "/dev/null"
   address:
     socket_address:
       address: 0.0.0.0
-      port_value: {{ lb_kube_apiserver_healthcheck_port }}
+      port_value: {{ lb_envoy_admin_address_port }}
 {% endif %}
 static_resources:
   listeners:
-  - address:
+  - name: lb_kube_apiserver
+    address:
       socket_address:
         address: 0.0.0.0
         port_value: {{ lb_kube_apiserver_port }}
@@ -21,8 +22,47 @@ static_resources:
           access_log:
             - name: envoy.file_access_log
               config:
-                path: /dev/stdout
+                path: "/dev/stdout"
+{% if lb_kube_apiserver_healthcheck_port is defined %}
+  - name: healthz
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: {{ lb_kube_apiserver_healthcheck_port }}
+    filter_chains:
+    - filters:
+      - name: envoy.http_connection_manager
+        config:
+          access_log:
+          - name: envoy.file_access_log
+            config:
+              path: "/dev/null"
+          stat_prefix: ingress_http
+          route_config:
+            name: local_route
+            virtual_hosts:
+            - name: local_service
+              domains: ["*"]
+              routes:
+              - match:
+                  prefix: "/healthz"
+                route:
+                  prefix_rewrite: /
+                  cluster: admin
+          http_filters:
+          - name: envoy.router
+{% endif %}
   clusters:
+{% if lb_kube_apiserver_healthcheck_port is defined %}
+  - name: admin
+    connect_timeout: 0.5s
+    type: strict_dns
+    lb_policy: LEAST_REQUEST
+    hosts:
+    - socket_address: 
+        address: 127.0.0.1
+        port_value: {{ lb_envoy_admin_address_port }}
+{% endif %}
   - name: kube_apiserver
     connect_timeout: 0.5s
     type: strict_dns

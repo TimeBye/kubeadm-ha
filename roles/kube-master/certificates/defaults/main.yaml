@@ -3,18 +3,10 @@ ansible_become: true
 
 # apiserver ip
 KUBE_APISERVER_IP: >-
-  {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
-    {% if hostvars[groups['kube-master']|first]['ansible_host'] is defined %}
-      {{ hostvars[groups['kube-master']|first]['ansible_host'] }}
-    {% else %}
-      {{ groups['kube-master']|first }}
-    {% endif %}
+  {% if lb_kube_apiserver_ip is not defined %}
+    127.0.0.1
   {% else %}
-    {% if lb_kube_apiserver_ip is not defined %}
-      127.0.0.1
-    {% else %}
-      {{ lb_kube_apiserver_ip }}
-    {% endif %}
+    {{ lb_kube_apiserver_ip }}
   {% endif %}
 
 # 负载后的apiserver端口号

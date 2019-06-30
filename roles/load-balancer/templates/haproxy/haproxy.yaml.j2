@@ -14,8 +14,8 @@ spec:
   containers:
   - name: lb-nginx
     # image: haproxy:1.9.8
-    image: {{ kube_haproxy_image }}
-    {% if lb_kube_apiserver_healthcheck_port is defined -%}
+    image: {{ lb_haproxy_image }}
+{% if lb_kube_apiserver_healthcheck_port is defined %}
     # 检测当前节点haproxy是否存活，若不存活则重启
     livenessProbe:
       httpGet:
@@ -25,7 +25,7 @@ spec:
       httpGet:
         path: /healthz
         port: {{ lb_kube_apiserver_healthcheck_port }}
-    {% endif -%}
+{% endif %}
     resources: {}
     volumeMounts:
     - name: haproxy-cfg
@@ -34,5 +34,5 @@ spec:
   volumes:
   - name: haproxy-cfg
     hostPath:
-      path: /etc/haproxy
+      path: /etc/kubernetes/plugins/lb-config
       type: DirectoryOrCreate

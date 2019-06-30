@@ -1,15 +1,7 @@
-- name: Envoy lb | 创建 lb 相关目录
-  file: 
-    name: "{{ item }}"
-    state: directory
-  with_items:
-  - /etc/envoy
-  - /etc/kubernetes/manifests
-  
 - name: Envoy lb | 生成 envoy lb 配置文件
   template:
     src: envoy/envoy.conf.yaml.j2
-    dest: /etc/envoy/envoy.yaml
+    dest: /etc/kubernetes/plugins/lb-config/envoy.yaml
     owner: root
     mode: 0644
   register: lb_configuration_result
@@ -26,6 +18,6 @@
 - name: Envoy lb | 拉取相关镜像
   shell: docker pull {{ item }}
   with_items:
-  - "{{ kube_envoy_image }}"
+  - "{{ lb_envoy_image }}"
   - "{{ pod_infra_container_image }}"
   when: install_mode == 'online'

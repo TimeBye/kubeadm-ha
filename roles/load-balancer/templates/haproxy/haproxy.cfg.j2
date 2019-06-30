@@ -1,5 +1,5 @@
 global
-    maxconn                 4000
+    maxconn                 {{ 10000 * ansible_processor_vcpus|int }}
     log                     127.0.0.1 local0
 
 defaults
@@ -20,13 +20,13 @@ defaults
     maxconn                 {{ 10000 * ansible_processor_vcpus|int }}
 
 listen stats
-    bind :{{ haproxy_stats_bind_address }}
+    bind :{{ lb_haproxy_stats_bind_address }}
     mode http
-    balance {{ haproxy_balance_alg }}
+    balance {{ lb_haproxy_balance_alg }}
     stats enable
-    stats refresh {{ haproxy_stats_refresh }}s
-    stats uri {{ haproxy_stats_uri }}
-    stats auth {{ haproxy_stats_user }}:{{ haproxy_stats_password }}
+    stats refresh {{ lb_haproxy_stats_refresh }}s
+    stats uri {{ lb_haproxy_stats_uri }}
+    stats auth {{ lb_haproxy_stats_user }}:{{ lb_haproxy_stats_password }}
     stats admin if TRUE
 
 {% if lb_kube_apiserver_healthcheck_port is defined -%}
@@ -44,7 +44,7 @@ frontend kube_api_frontend
 
 backend kube_api_backend
     mode tcp
-    balance {{ haproxy_balance_alg }}
+    balance {{ lb_haproxy_balance_alg }}
     default-server inter 15s downinter 15s rise 2 fall 2 slowstart 60s maxconn 1000 maxqueue 256 weight 100
     option httpchk GET /healthz
     http-check expect status 200
@@ -57,7 +57,7 @@ listen ingress-node
     bind :80
     mode tcp
     option tcplog
-    balance {{ haproxy_balance_alg }}
+    balance {{ lb_haproxy_balance_alg }}
 {% for host in (groups['kube-worker'] + groups['new-worker']) %}
     server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30080 check inter 2000 fall 2 rise 2 weight 1
 {% endfor %}
@@ -68,7 +68,7 @@ listen ingress-node-tls
     bind :443
     mode tcp
     option tcplog
-    balance {{ haproxy_balance_alg }}
+    balance {{ lb_haproxy_balance_alg }}
 {% for host in (groups['kube-worker'] + groups['new-worker']) %}
     server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30443 check inter 2000 fall 2 rise 2 weight 1
 {% endfor %}

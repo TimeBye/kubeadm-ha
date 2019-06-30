@@ -10,18 +10,10 @@ CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined 
 lb_mode: nginx
 # apiserver ip
 KUBE_APISERVER_IP: >-
-  {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
-    {% if hostvars[groups['kube-master']|first]['ansible_host'] is defined %}
-      {{ hostvars[groups['kube-master']|first]['ansible_host'] }}
-    {% else %}
-      {{ groups['kube-master']|first }}
-    {% endif %}
+  {% if lb_kube_apiserver_ip is not defined %}
+    127.0.0.1
   {% else %}
-    {% if lb_kube_apiserver_ip is not defined %}
-      127.0.0.1
-    {% else %}
-      {{ lb_kube_apiserver_ip }}
-    {% endif %}
+    {{ lb_kube_apiserver_ip }}
   {% endif %}
 
 # 加入集群token

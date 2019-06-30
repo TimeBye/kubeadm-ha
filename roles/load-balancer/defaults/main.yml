@@ -5,12 +5,16 @@ install_mode: online
 #----------------------------------------------- 基础参数 -------------------------------------------------#
 # 当前节点ip
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
-# 负载均衡模式(有nginx和haproxy两个选项。默认使用nginx，也可以选择haproxy时必须设置VIP)
+# 负载均衡模式(nginx haproxy envoy slb)
 lb_mode: nginx
 # 经过负载后的apiserver端口号
 lb_kube_apiserver_port: 8443
 # 负载均衡器健康检查端口
 lb_kube_apiserver_healthcheck_port: 8081
+# 启用 ingress NodePort服务的负载均衡 (true/false)
+enabel_ingress_nodeport_lb: false
+# 启用 ingress tls NodePort服务的负载均衡 (true/false)
+enabel_ingress_tls_nodeport_lb: false
 # Pod根容器
 pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
 # Kubelet 根目录
@@ -18,59 +22,48 @@ kubelet_root_dir: "/var/lib/kubelet"
 
 #---------------------------------------------- Nginx 相关参数 --------------------------------------------#
 # 使用nginx进行apiserver负载时使用的nginx镜像
-kube_nginx_image: dockerhub.azk8s.cn/library/nginx:1.15.12-alpine
+lb_nginx_image: dockerhub.azk8s.cn/library/nginx:1.15.12-alpine
 
 #--------------------------------------------- Haproxy 相关参数 --------------------------------------------#
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-kube_haproxy_image: dockerhub.azk8s.cn/library/haproxy:1.9.8-alpine
+lb_haproxy_image: dockerhub.azk8s.cn/library/haproxy:1.9.8-alpine
 # haproxy监控绑定端口
-haproxy_stats_bind_address: 9090
+lb_haproxy_stats_bind_address: 9090
 # haproxy监控访问路径
-haproxy_stats_uri: "/stats"
+lb_haproxy_stats_uri: "/stats"
 # haproxy监控自动刷新时间（秒）
-haproxy_stats_refresh: 10
+lb_haproxy_stats_refresh: 10
 # haproxy监控用户名
-haproxy_stats_user: "admin"
+lb_haproxy_stats_user: "admin"
 # haproxy监控用户密码
-haproxy_stats_password: "admin"
+lb_haproxy_stats_password: "admin"
 # haproxy负载均衡算法，常见如下：
 # "roundrobin": 基于服务器权重的轮询
 # "leastconn": 基于服务器最小连接数
 # "source": 基于请求源IP地址
 # "uri": 基于请求的URI
-haproxy_balance_alg: "leastconn"
-# 启用 ingress NodePort服务的负载均衡 (true/false)
-enabel_ingress_nodeport_lb: false
-# 启用 ingress tls NodePort服务的负载均衡 (true/false)
-enabel_ingress_tls_nodeport_lb: false
+lb_haproxy_balance_alg: "leastconn"
 
 #--------------------------------------------- Envoy 相关参数 --------------------------------------------#
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-kube_envoy_image: dockerhub.azk8s.cn/envoyproxy/envoy-alpine:v1.10.0
+lb_envoy_image: dockerhub.azk8s.cn/envoyproxy/envoy-alpine:v1.10.0
+lb_envoy_admin_address_port: 9090
 
 #---------------------------------------------- Keepalived 相关参数 ---------------------------------------#
 # Keepalived 提供的 VIPs
 KUBE_APISERVER_IP: >-
-  {% if (groups['kube-master']|length + groups['new-master']|length) == 1 %}
-    {% if hostvars[groups['kube-master']|first]['ansible_host'] is defined %}
-      {{ hostvars[groups['kube-master']|first]['ansible_host'] }}
-    {% else %}
-      {{ groups['kube-master']|first }}
-    {% endif %}
+  {% if lb_kube_apiserver_ip is not defined %}
+    127.0.0.1
   {% else %}
-    {% if lb_kube_apiserver_ip is not defined %}
-      127.0.0.1
-    {% else %}
-      {{ lb_kube_apiserver_ip }}
-    {% endif %}
+    {{ lb_kube_apiserver_ip }}
   {% endif %}
 
-kube_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.15
+lb_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.15
 # 其他 Keepalived 节点的单点传播 IP
-KEEPALIVED_UNICAST_PEERS: "{% for host in groups['lb'] %}{% if hostvars[host]['ansible_host'] is defined %}'{{ hostvars[host]['ansible_host'] }}'{% else %}'{{ host }}'{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
+LB_KEEPALIVED_UNICAST_PEERS: "{% for host in groups['lb'] %}{% if hostvars[host]['ansible_host'] is defined %}'{{ hostvars[host]['ansible_host'] }}'{% else %}'{{ host }}'{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
 # Keepalived auth_type 的 Password
-keepalived_password: "d0cker"
+lb_keepalived_password: "d0cker"
 # 主备设置，數字越小，优先级越高。这里第一个lb节点为110，其余为120
-KEEPALIVED_PRIORITY: "{% if inventory_hostname == groups['lb']|first %}110{% else %}120{% endif %}"
+LB_KEEPALIVED_PRIORITY: "{% if inventory_hostname == groups['lb']|first %}110{% else %}120{% endif %}"
 # 区分多个instance的VRRP组播，同网段不能重复，取值在0-255之间
-keepalived_router_id: 111
+lb_keepalived_router_id: 111

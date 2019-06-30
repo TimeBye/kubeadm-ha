@@ -14,9 +14,9 @@ spec:
   containers:
   - name: lb-nginx
     # image: nginx:1.15.12
-    image: {{ kube_nginx_image }}
+    image: {{ lb_nginx_image }}
     imagePullPolicy: IfNotPresent
-    {% if lb_kube_apiserver_healthcheck_port is defined -%}
+{% if lb_kube_apiserver_healthcheck_port is defined %}
     # 检测当前节点nginx是否存活，若不存活则重启
     livenessProbe:
       httpGet:
@@ -26,7 +26,7 @@ spec:
       httpGet:
         path: /healthz
         port: {{ lb_kube_apiserver_healthcheck_port }}
-    {% endif -%}
+{% endif %}
     resources: {}
     volumeMounts:
     - mountPath: /etc/nginx
@@ -35,5 +35,5 @@ spec:
   volumes:
   - name: nginx-lb-conf
     hostPath:
-      path: /etc/nginx
+      path: /etc/kubernetes/plugins/lb-config
       type: DirectoryOrCreate
