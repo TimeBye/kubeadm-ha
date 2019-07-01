@@ -9,6 +9,17 @@
     that: groups['kube-master']|length >= 1
     msg: "请将添加至少一个节点到 kube-master 节点组中。"
 
+- name: 校验 new-etcd 节点组数量
+  assert:
+    that: groups['new-etcd']|length <= 1
+    msg: "同时只能添加一个 etcd 节点。"
+
+- name: 校验 etcd 节点数量
+  run_once: true
+  assert:
+    that: (groups['etcd']|length is odd) or ((groups['etcd']|length + groups['new-etcd']|length) is odd)
+    msg: "初始化集群时 etcd 节点只能为奇数个，当前 {{ groups['etcd']|length }} 个，请添加或减少 etcd 节点数量至奇数个。"
+
 - name: 校验 lb 模式类型
   run_once: true
   assert:
@@ -67,9 +78,3 @@
   when: 
   - lb_mode != 'slb'
   - lb_kube_apiserver_ip is defined
-
-- name: 校验 etcd 节点数量
-  run_once: true
-  assert:
-    that: groups['etcd']|length is odd
-    msg: "etcd 节点数量必须为奇数，请添加或减少 etcd 节点数量至奇数个。"

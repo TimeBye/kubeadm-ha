@@ -1,4 +1,10 @@
-# 校验节点软件系统及硬件系统、安装必要基础组件、docker、kubeadm、kubelet、kubectl
+- hosts: new-etcd[0]
+  tasks:
+  - name: 校验 new-etcd 节点组数量
+    assert:
+      that: groups['new-etcd']|length <= 1
+      msg: "同时只能添加一个 etcd 节点。"
+
 - hosts: 
   - new-etcd
   roles:
@@ -12,7 +18,7 @@
   roles:
   - etcd/certificates
   - etcd/install
-  
+
 # 标记各节点角色
 - hosts: 
   - new-etcd
