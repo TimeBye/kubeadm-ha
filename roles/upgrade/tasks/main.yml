@@ -14,5 +14,5 @@
     state: restarted
     enabled: yes
 
-- name: 配置 kubectl 命令行自动补全
+- name: 更新 kubectl 命令行自动补全
   shell: kubectl completion bash > /usr/share/bash-completion/completions/kubectl

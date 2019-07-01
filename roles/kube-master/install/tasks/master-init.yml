@@ -19,13 +19,13 @@
 
   - include_tasks: kubeadm-config.yml
 
-  - name: master 节点需要拉取的镜像列表
+  - name: 获取 master 节点需要拉取的镜像列表
     shell: >
       kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml | 
       grep {{ kube_image_repository }}
     register: kube_image_list
 
-  - name: master 节点拉取相关镜像
+  - name: 开始拉取 master 节点相关镜像
     shell: "docker pull {{ item }}"
     with_items: "{{ kube_image_list.stdout_lines }}"
     when: install_mode == 'online'

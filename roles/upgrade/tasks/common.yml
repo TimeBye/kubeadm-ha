@@ -16,23 +16,27 @@
     --old-config=/etc/kubernetes/kubeadm-config.yaml
     --new-config=/etc/kubernetes/kubeadm-config.yaml
 
-- name: "升级第一个 master 节点 {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
+- name: "升级第一个 master 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
   shell: >
     kubeadm upgrade apply --config=/etc/kubernetes/kubeadm-config.yaml --force
   when: inventory_hostname == groups['kube-master']|first
 
-- name: "升级 master 节点 {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
+- name: "升级剩余 master 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
   shell: >
     kubeadm upgrade node
-    {% if kube_upgrade_version.split('.')[1]|int == 14 %}experimental-control-plane{% endif %}
+    {% if kube_upgrade_version.split('.')[1]|int == 14 %}
+    experimental-control-plane
+    {% endif %}
   when: 
   - inventory_hostname != groups['kube-master']|first
   - inventory_hostname in (groups['kube-master'] + groups['new-master'])
 
-- name: "升级 worker 节点 {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
+- name: "升级 worker 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
   shell: >
     kubeadm upgrade node
-    {% if kube_upgrade_version.split('.')[1]|int == 14 %}config --kubelet-version v{{ kube_upgrade_version }}{% endif %}
+    {% if kube_upgrade_version.split('.')[1]|int == 14 %}
+    config --kubelet-version v{{ kube_upgrade_version }}
+    {% endif %}
   when: 
-  - inventory_hostname not in (groups['kube-master'] + groups['new-master'])
   - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
+  - inventory_hostname not in (groups['kube-master'] + groups['new-master'])
