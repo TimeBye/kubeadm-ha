@@ -36,7 +36,7 @@
 
   **Note:** 表格中粗体标识出来的为默认安装版本
 
-[![asciicast](https://asciinema.org/a/253506.svg)](https://asciinema.org/a/253506)
+[![asciicast](https://asciinema.org/a/254490.svg)](https://asciinema.org/a/254490)
 
 ## 1. 克隆本项目
 
