@@ -20,7 +20,7 @@ data:
   cni_network_config: |-
     {
       "name": "k8s-pod-network",
-      "cniVersion": "0.3.0",
+      "cniVersion": "0.3.1",
       "plugins": [
         {
           "type": "calico",
@@ -260,7 +260,7 @@ spec:
 # Include a clusterrole for the kube-controllers component,
 # and bind it to the calico-kube-controllers serviceaccount.
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: calico-kube-controllers
 rules:
@@ -305,7 +305,7 @@ rules:
       - update
 ---
 kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: calico-kube-controllers
 roleRef:
@@ -320,7 +320,7 @@ subjects:
 # Include a clusterrole for the calico-node DaemonSet,
 # and bind it to the calico-node serviceaccount.
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: calico-node
 rules:
@@ -449,7 +449,7 @@ rules:
     verbs:
       - get
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: calico-node
@@ -487,7 +487,7 @@ spec:
 
 # This manifest creates a Deployment of Typha to back the above service.
 
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: calico-typha
@@ -504,6 +504,9 @@ spec:
   replicas: {% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length > 1 %}2{% else %}1{% endif %}
 
   revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      k8s-app: calico-typha
   template:
     metadata:
       labels:
@@ -527,10 +530,10 @@ spec:
       # Since Calico can't network a pod until Typha is up, we need to run Typha itself
       # as a host-networked pod.
       serviceAccountName: calico-node
+      priorityClassName: system-cluster-critical
       containers:
-      - name: calico-typha
-        # image: calico/typha:v3.7.3
-        image: {{ calico_typha_image }}
+      - image: {{ calico_typha_image }}
+        name: calico-typha
         ports:
         - containerPort: 5473
           name: calico-typha
@@ -557,9 +560,9 @@ spec:
             value: "true"
           # Uncomment these lines to enable prometheus metrics.  Since Typha is host-networked,
           # this opens a port on the host, which may need to be secured.
-          # - name: TYPHA_PROMETHEUSMETRICSENABLED
+          #- name: TYPHA_PROMETHEUSMETRICSENABLED
           #  value: "true"
-          # - name: TYPHA_PROMETHEUSMETRICSPORT
+          #- name: TYPHA_PROMETHEUSMETRICSPORT
           #  value: "9093"
         livenessProbe:
           httpGet:
@@ -597,7 +600,7 @@ spec:
 # as the CNI plugins and network config on
 # each master and worker node in a Kubernetes cluster.
 kind: DaemonSet
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: calico-node
   namespace: kube-system
@@ -640,12 +643,12 @@ spec:
       # Minimize downtime during a rolling upgrade or deletion; tell Kubernetes to do a "force
       # deletion": https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods.
       terminationGracePeriodSeconds: 0
+      priorityClassName: system-node-critical
       initContainers:
         # This container performs upgrade from host-local IPAM to calico-ipam.
         # It can be deleted if this is a fresh installation, or if you have already
         # upgraded to use calico-ipam.
         - name: upgrade-ipam
-          # image: calico/cni:v3.7.3
           image: {{ calico_cni_image }}
           command: ["/opt/cni/bin/calico-ipam", "-upgrade"]
           env:
@@ -666,7 +669,6 @@ spec:
         # This container installs the CNI binaries
         # and CNI network config file on each node.
         - name: install-cni
-          # image: calico/cni:v3.7.3
           image: {{ calico_cni_image }}
           command: ["/install-cni.sh"]
           env:
@@ -698,12 +700,18 @@ spec:
               name: cni-bin-dir
             - mountPath: /host/etc/cni/net.d
               name: cni-net-dir
+        # Adds a Flex Volume Driver that creates a per-pod Unix Domain Socket to allow Dikastes
+        # to communicate with Felix over the Policy Sync API.
+        - name: flexvol-driver
+          image: calico/pod2daemon-flexvol:v3.8.0
+          volumeMounts:
+          - name: flexvol-driver-host
+            mountPath: /host/driver
       containers:
         # Runs calico-node container on each Kubernetes node.  This
         # container programs network policy and routes on each
         # host.
         - name: calico-node
-          # image: calico/node:v3.7.3
           image: {{ calico_node_image }}
           env:
             # Use Kubernetes API as the backing datastore.
@@ -803,6 +811,8 @@ spec:
             - mountPath: /var/lib/calico
               name: var-lib-calico
               readOnly: false
+            - name: policysync
+              mountPath: /var/run/nodeagent
       volumes:
         # Used by calico-node.
         - name: lib-modules
@@ -831,6 +841,16 @@ spec:
         - name: host-local-net-dir
           hostPath:
             path: /var/lib/cni/networks
+        # Used to create per-pod Unix Domain Sockets
+        - name: policysync
+          hostPath:
+            type: DirectoryOrCreate
+            path: /var/run/nodeagent
+        # Used to install Flex Volume Driver
+        - name: flexvol-driver-host
+          hostPath:
+            type: DirectoryOrCreate
+            path: /usr/libexec/kubernetes/kubelet-plugins/volume/exec/nodeagent~uds
 ---
 
 apiVersion: v1
@@ -841,19 +861,21 @@ metadata:
 
 ---
 # Source: calico/templates/calico-kube-controllers.yaml
+
 # See https://github.com/projectcalico/kube-controllers
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: calico-kube-controllers
   namespace: kube-system
   labels:
     k8s-app: calico-kube-controllers
-  annotations:
-    scheduler.alpha.kubernetes.io/critical-pod: ''
 spec:
-  # The controller can only have a single active instance.
+  # The controllers can only have a single active instance.
   replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: calico-kube-controllers
   strategy:
     type: Recreate
   template:
@@ -862,6 +884,8 @@ spec:
       namespace: kube-system
       labels:
         k8s-app: calico-kube-controllers
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
       nodeSelector:
         beta.kubernetes.io/os: linux
@@ -872,9 +896,9 @@ spec:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
       serviceAccountName: calico-kube-controllers
+      priorityClassName: system-cluster-critical
       containers:
         - name: calico-kube-controllers
-          # image: calico/kube-controllers:v3.7.3
           image: {{ calico_kube_controllers_image }}
           env:
             # Choose which controllers to run.
