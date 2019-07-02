@@ -20,9 +20,9 @@
 - block:
   - name: keepalived | 获取网卡名称
     shell: "ip a|grep '{{ CURRENT_HOST_IP }}/'|awk '{print $NF}'"
-    register: KEEPALIVED_INTERFACE_TMP
-  - name: Haproxy | 设置变量 KEEPALIVED_INTERFACE
-    set_fact: KEEPALIVED_INTERFACE="{{ KEEPALIVED_INTERFACE_TMP.stdout }}"
+    register: LB_KEEPALIVED_INTERFACE_TMP
+  - name: Haproxy | 设置变量 LB_KEEPALIVED_INTERFACE
+    set_fact: LB_KEEPALIVED_INTERFACE="{{ LB_KEEPALIVED_INTERFACE_TMP.stdout }}"
 
   - name: keepalived | 生成 static pod 文件
     template: 

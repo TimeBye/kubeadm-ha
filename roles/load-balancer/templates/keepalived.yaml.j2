@@ -11,20 +11,20 @@ spec:
   priorityClassName: system-cluster-critical
   containers:
   - name: lb-keepalived
-    # image: osixia/keepalived:2.0.15
+    # image: osixia/keepalived:2.0.16
     image: {{ lb_keepalived_image }}
     env:
     - name: KEEPALIVED_VIRTUAL_IPS
       value: {{ KUBE_APISERVER_IP | trim }}
     - name: KEEPALIVED_INTERFACE
-      value: {{ KEEPALIVED_INTERFACE }}
-    - name: LB_KEEPALIVED_UNICAST_PEERS
+      value: {{ LB_KEEPALIVED_INTERFACE }}
+    - name: KEEPALIVED_UNICAST_PEERS
       value: "#PYTHON2BASH:[{{ LB_KEEPALIVED_UNICAST_PEERS }}]"
-    - name: lb_keepalived_password
+    - name: KEEPALIVED_PASSWORD
       value: {{ lb_keepalived_password }}
-    - name: LB_KEEPALIVED_PRIORITY
+    - name: KEEPALIVED_PRIORITY
       value: "{{ LB_KEEPALIVED_PRIORITY }}"
-    - name: lb_keepalived_router_id
+    - name: KEEPALIVED_ROUTER_ID
       value: "{{ lb_keepalived_router_id }}"
 {% if lb_kube_apiserver_healthcheck_port is defined %}
     # 检测当前节点 lb 是否存活，若不存活则重启
