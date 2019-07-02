@@ -22,6 +22,8 @@ spec:
       value: "#PYTHON2BASH:[{{ LB_KEEPALIVED_UNICAST_PEERS }}]"
     - name: KEEPALIVED_PASSWORD
       value: {{ lb_keepalived_password }}
+    - name: KEEPALIVED_STATE
+      value: "{{ LB_KEEPALIVED_STATE }}"
     - name: KEEPALIVED_PRIORITY
       value: "{{ LB_KEEPALIVED_PRIORITY }}"
     - name: KEEPALIVED_ROUTER_ID

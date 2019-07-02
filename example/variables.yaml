@@ -116,12 +116,12 @@ enabel_ingress_nodeport_lb: false
 # 启用 ingress tls NodePort服务的负载均衡 (true/false)
 enabel_ingress_tls_nodeport_lb: false
 
-# 使用 vip 负载时使用的keepalived镜像
+# 使用 vip 负载时使用的 keepalived 镜像
 lb_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.16
-# Keepalived auth_type 的 Password
+# keepalived auth_type 的 password
 lb_keepalived_password: "d0cker"
-# 区分多个instance的VRRP组播，同网段不能重复，取值在0-255之间
-lb_keepalived_router_id: 111
+# 区分多个 instance 的 VRRP 组播，同网段不能重复，取值在0-255之间
+lb_keepalived_router_id: 51
 
 # ------------------------ #
 # Etcd 相关参数配置

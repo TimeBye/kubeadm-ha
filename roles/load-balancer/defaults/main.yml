@@ -58,12 +58,15 @@ KUBE_APISERVER_IP: >-
     {{ lb_kube_apiserver_ip }}
   {% endif %}
 
+# 使用 vip 负载时使用的 keepalived 镜像
 lb_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.16
+# keepalived auth_type 的 password
+lb_keepalived_password: "d0cker"
+# 区分多个 instance 的 VRRP 组播，同网段不能重复，取值在0-255之间
+lb_keepalived_router_id: 51
+# 主备设置，數字越大，优先级越高。这里第一个lb节点为120，其余为110
+LB_KEEPALIVED_PRIORITY: "{% if inventory_hostname == groups['lb']|first %}120{% else %}110{% endif %}"
+# 节点初始主备状态
+LB_KEEPALIVED_STATE: "{% if inventory_hostname == groups['lb']|first %}MASTER{% else %}BACKUP{% endif %}"
 # 其他 Keepalived 节点的单点传播 IP
 LB_KEEPALIVED_UNICAST_PEERS: "{% for host in groups['lb'] %}{% if hostvars[host]['ansible_host'] is defined %}'{{ hostvars[host]['ansible_host'] }}'{% else %}'{{ host }}'{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
-# Keepalived auth_type 的 Password
-lb_keepalived_password: "d0cker"
-# 主备设置，數字越小，优先级越高。这里第一个lb节点为110，其余为120
-LB_KEEPALIVED_PRIORITY: "{% if inventory_hostname == groups['lb']|first %}110{% else %}120{% endif %}"
-# 区分多个instance的VRRP组播，同网段不能重复，取值在0-255之间
-lb_keepalived_router_id: 111
