@@ -7,29 +7,3 @@
 
 - name: 配置 kubectl 命令行自动补全
   shell: kubectl completion bash > /usr/share/bash-completion/completions/kubectl
-
-- name: 读取 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf 文件 stat 信息
-  stat: 
-    path: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-  register: etc_kubelet_conf_stat
-
-- name: 读取 /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf 文件 stat 信息
-  stat: 
-    path: /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
-  register: usr_kubelet_conf_stat
-
-- block:
-  - name: 创建 kubelet.service.d 目录
-    file: 
-      name: /etc/systemd/system/kubelet.service.d
-      state: directory
-
-  - name: 生成 10-kubeadm.conf 文件
-    copy:
-      src: 10-kubeadm.conf
-      dest: /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-      owner: root
-      mode: 0644
-  when: 
-  - not etc_kubelet_conf_stat.stat.exists 
-  - not usr_kubelet_conf_stat.stat.exists

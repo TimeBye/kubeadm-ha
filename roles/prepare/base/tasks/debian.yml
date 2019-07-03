@@ -45,7 +45,7 @@
     state: present
     allow_unauthenticated: true
 
-- name: 重新启动 cron 避免应修改时区而导致的作业错乱问题
+- name: 重新启动 cron 避免因修改时区而导致的作业错乱问题
   service:
     name: cron
     state: restarted

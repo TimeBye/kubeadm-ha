@@ -59,8 +59,8 @@
   - /etc/kubernetes
   - /var/lib/kubelet
   - /var/run/kubelet
-  - /etc/systemd/system/kubelet.service.d
   - /usr/share/bash-completion/completions/kubectl
+  - /etc/systemd/system/kubelet.service.d/20-kubelet-override.conf
 
 - name: 移除其他相关文件或目录
   file:
