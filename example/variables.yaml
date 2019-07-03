@@ -128,7 +128,9 @@ lb_keepalived_router_id: 51
 # ------------------------ #
 
 # Etcd证书过期时间（天）
-etcd_certs_time: 3650
+etcd_certs_expired: 3650
+# Etcd根证书过期时间（天）
+etcd_ca_certs_expired: 36500
 # Etcd使用的镜像
 etcd_image: gcr.azk8s.cn/google_containers/etcd:3.3.10
 # Etcd 数据根目录
@@ -145,7 +147,9 @@ etcd_backup_dir: "/etc/kubernetes/backup/etcd"
 # ------------------------ #
 
 # kubernetes证书过期时间（天）
-kube_certs_time: 3650
+kube_certs_expired: 3650
+# kubernetes根证书过期时间（天）
+kube_ca_certs_expired: 36500
 
 # 加入集群token
 kubeadm_token: "abcdef.0123456789abcdef"
@@ -256,7 +260,7 @@ ingress_controller: nginx
 nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.24.1
 
 # traefik默认证书过期时间（天）
-traefik_certs_time: 3650
+traefik_certs_expired: 3650
 # traefik-ingress-controller 镜像地址
 traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.12
 

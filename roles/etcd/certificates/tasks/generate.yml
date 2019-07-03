@@ -17,7 +17,7 @@
     -config /etc/kubernetes/pki/etcd/etcd-openssl.cnf
     -key /etc/kubernetes/pki/etcd/ca.key
     -out /etc/kubernetes/pki/etcd/ca.crt
-    -days {{ etcd_certs_time }}
+    -days {{ etcd_ca_certs_expired }}
   when: etcd_ca_crt_stat.stat.isreg is not defined
 
 - name: 创建 etcd-server 证书私钥
@@ -40,7 +40,7 @@
     -CAkey /etc/kubernetes/pki/etcd/ca.key 
     -in /etc/kubernetes/pki/etcd/server.csr 
     -out /etc/kubernetes/pki/etcd/server.crt
-    -days {{ etcd_certs_time }} 
+    -days {{ etcd_certs_expired }} 
 
 - name: 创建 etcd-peer 证书私钥
   shell: openssl genrsa -out /etc/kubernetes/pki/etcd/peer.key 2048
@@ -62,7 +62,7 @@
     -CAkey /etc/kubernetes/pki/etcd/ca.key 
     -in /etc/kubernetes/pki/etcd/peer.csr 
     -out /etc/kubernetes/pki/etcd/peer.crt
-    -days {{ etcd_certs_time }} 
+    -days {{ etcd_certs_expired }} 
 
 - name: 创建 apiserver-etcd-client 证书私钥
   shell: openssl genrsa -out /etc/kubernetes/pki/apiserver-etcd-client.key 2048
@@ -84,7 +84,7 @@
     -CAkey /etc/kubernetes/pki/etcd/ca.key 
     -in /etc/kubernetes/pki/apiserver-etcd-client.csr
     -out /etc/kubernetes/pki/apiserver-etcd-client.crt
-    -days {{ etcd_certs_time }} 
+    -days {{ etcd_certs_expired }} 
 
 - name: 创建 etcd-healthcheck-client 证书私钥
   shell: openssl genrsa -out /etc/kubernetes/pki/etcd/healthcheck-client.key 2048
@@ -106,4 +106,4 @@
     -CAkey /etc/kubernetes/pki/etcd/ca.key 
     -in /etc/kubernetes/pki/etcd/healthcheck-client.csr 
     -out /etc/kubernetes/pki/etcd/healthcheck-client.crt
-    -days {{ etcd_certs_time }} 
+    -days {{ etcd_certs_expired }} 

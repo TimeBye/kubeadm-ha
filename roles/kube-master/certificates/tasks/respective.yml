@@ -15,4 +15,4 @@
     -CAkey /etc/kubernetes/pki/ca.key
     -in /etc/kubernetes/pki/kubelet.csr
     -out /etc/kubernetes/pki/kubelet.crt
-    -days {{ kube_certs_time }} 
+    -days {{ kube_certs_expired }} 

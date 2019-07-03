@@ -12,7 +12,7 @@
 
   - name: 创建 traefik-ingress-controller 默认证书
     shell: >
-      openssl req -x509 -nodes -days {{ traefik_certs_time }} \
+      openssl req -x509 -nodes -days {{ traefik_certs_expired }} \
       -newkey rsa:2048 \
       -keyout /etc/kubernetes/plugins/ingress-controller/tls.key \
       -out /etc/kubernetes/plugins/ingress-controller/tls.crt \
