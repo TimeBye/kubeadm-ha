@@ -17,3 +17,5 @@ kube_dns_domain: cluster.local
 lb_kube_apiserver_port: 8443
 # 当前节点ip
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
+# 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
+kube_proxy_mode: "iptables"
