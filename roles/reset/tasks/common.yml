@@ -102,7 +102,15 @@
   - iptables -X -t raw
   - iptables -F -t mangle
   - iptables -X -t mangle
-  
+
+- name: 刷新 iptables
+  iptables:
+    table: "{{ item }}"
+    flush: yes
+  with_items:
+    - filter
+    - nat
+
 - name: 清理 ipvsadm
   shell: "{{ item }} || true"
   with_items:
@@ -135,8 +143,14 @@
     follow: yes
     marker: "# Ansible inventory hosts {mark}"
 
-- name: 重启网络组件
-  shell: "{{ item }} || true"
-  with_items:
-  - systemctl restart network
-  - systemctl restart networking
+- name: 重启网络
+  systemd:
+    name: >-
+      {% if ansible_os_family == "RedHat" -%}
+      network
+      {%- elif ansible_distribution == "Ubuntu" and ansible_distribution_release == "bionic" -%}
+      systemd-networkd
+      {%- elif ansible_os_family == "Debian" -%}
+      networking
+      {%- endif %}
+    state: restarted
