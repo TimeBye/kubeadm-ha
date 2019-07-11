@@ -20,19 +20,19 @@
 [![HitCount](http://hits.dwyl.io/timebye/kubeadm-ha.svg)](http://hits.dwyl.io/timebye/kubeadm-ha)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha?ref=badge_shield)
 
-- **集群特性：** 不受国内网络限制、所有组件使用 kubelet 托管、多 Master 高可用、`TLS` 双向认证、自定义 `TLS` 证书有效期、`RBAC` 授权、支持 `Network Policy`
+- **项目特性：** 不受国内网络限制、所有组件使用 `kubelet` 托管、多 `master` 高可用、`tls` 双向认证、自定义 `lts` 证书有效期、`RBAC` 授权、支持 `Network Policy`
 
 - **相关组件及支持：**
 
-  |**组件**|**支持**|
-  |:-|:-|
-  |系统|Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7|
-  |Etcd|v3.3.10|
-  |Docker|18.06.3, 18.09.3, **18.09.6**|
-  |Kubernetes|v1.13, v1.14, **v1.15**|
-  |网络插件|calico, kube-ovn, **flannel**|
-  |api-server 负载均衡器|haproxy, envoy, **nginx**|
-  |ingress-controller|traefik, **nginx-ingress**|
+  | **组件**           | **支持**                                       |
+  | :----------------- | :--------------------------------------------- |
+  | Dist               | Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7 |
+  | Etcd               | v3.3.10                                        |
+  | Docker             | 18.06.3, 18.09.3, **18.09.6**                  |
+  | Kubernetes         | v1.13, v1.14, **v1.15**                        |
+  | Kube-apiserver lb  | haproxy, envoy, **nginx**                      |
+  | Network plugin     | calico, kube-ovn, **flannel**                  |
+  | Ingress controller | traefik, **nginx-ingress**                     |
 
   **Note:** 表格中粗体标识出来的为默认安装版本
 
@@ -54,9 +54,9 @@
     sudo ./install-ansible.sh
     ```
 
-## 3. 修改 hosts 文件
+## 3. 集群规划，修改 hosts 文件
 
-编辑项目`example`文件夹下的主机清单文件，修改各机器的访问地址、用户名、密码，并维护好各节点与角色的关系。文件中配置的用户必须是具有 **root** 权限的用户。项目预定义了6个例子，请修改后完成适合你的集群规划，生产环境建议一个节点只是一个角色。
+编辑项目`example`文件夹下的主机清单文件，修改各机器的访问地址、用户名、密码，并维护好各节点与角色的关系。文件中配置的用户必须是具有 **root** 权限的用户。项目预定义了6个例子，请完成集群规划后进行修改，生产环境建议一个节点只是一个角色。
 
 - 搭建集群后有以下两种“样式”显示，请自行选择：
     - 样式一
@@ -79,11 +79,11 @@
 
     - 对应的hosts配置文件事例如下：
 
-        |节点分配|样式一|样式二|
-        |:-|:-|:-|
-        |单节点|[hosts.allinone.ip](example/hosts.allinone.ip.ini)|[hosts.allinone.hostname](example/hosts.allinone.hostname.ini)|
-        |单主多节点|[hosts.s-master.ip](example/hosts.s-master.ip.ini)|[hosts.s-master.hostname](example/hosts.s-master.hostname.ini)|
-        |多主多节点|[hosts.m-master.ip](example/hosts.m-master.ip.ini)|[hosts.m-master.hostname](example/hosts.m-master.hostname.ini)|
+        | 节点分配   | 样式一                                             | 样式二                                                         |
+        | :--------- | :------------------------------------------------- | :------------------------------------------------------------- |
+        | 单节点     | [hosts.allinone.ip](example/hosts.allinone.ip.ini) | [hosts.allinone.hostname](example/hosts.allinone.hostname.ini) |
+        | 单主多节点 | [hosts.s-master.ip](example/hosts.s-master.ip.ini) | [hosts.s-master.hostname](example/hosts.s-master.hostname.ini) |
+        | 多主多节点 | [hosts.m-master.ip](example/hosts.m-master.ip.ini) | [hosts.m-master.hostname](example/hosts.m-master.hostname.ini) |
 
 ## 4. 部署
 
@@ -99,11 +99,11 @@
     ansible-playbook -i example/hosts.m-master.ip.ini -e @example/variables.yaml 90-init-cluster.yml
     ```
 
-> 若`example/hosts.m-master.ip.ini`文件中与`example/variables.yaml`参数冲突，则以`example/variables.yaml`文件为准。
+    > 若 `example/hosts.m-master.ip.ini` 文件中与 `example/variables.yaml` 参数冲突，则以 `example/variables.yaml` 文件为准。
 
 ## 5. 重置集群
 
-- 如果部署失败，想要重置集群(所有数据),执行：
+- 如果部署失败，想要重置集群(所有数据)，执行：
 
     ```
     ansible-playbook -i example/hosts.m-master.ip.ini 99-reset-cluster.yml
@@ -111,7 +111,7 @@
 
 ## 6. 升级集群
 
-- 升级kubernetes版本,执行：
+- 升级kubernetes版本，执行：
 
     ```
     # 请注意替换用下面命令中版本号x部分为实际版本

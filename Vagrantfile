@@ -32,6 +32,8 @@ Vagrant.configure(2) do |config|
         s.vm.box_url = "http://files.saas.hand-china.com/vagrant/bento_centos-7.4.box"
         s.vm.hostname = "node1"
         s.vm.network "private_network", ip: "192.168.56.11"
+        # s.vm.network "forwarded_port", guest: 6443, host: 6443
+        # s.vm.network "forwarded_port", guest: 8443, host: 8443
         s.vm.provision "shell", inline: $centos_script
         s.vm.provider "virtualbox" do |v|
             v.memory = 4096
