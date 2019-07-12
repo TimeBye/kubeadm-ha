@@ -61,13 +61,13 @@ docker_max_concurrent_downloads: 10
 # ------------------------ #
 # 私有云：
 #    VIP 负载模式：
-#       也就是负载均衡器 + keepalive 模式，比如常用的 haproxy + keepalive。
+#       也就是负载均衡器 + keepalived 模式，比如常用的 haproxy + keepalived。
 #       本脚本中负载均衡器有 nginx、haproxy、envoy 可供选择，设置 lb_mode 即可进行任意切换。
-#       设置 lb_kube_apiserver_ip 即表示启用 keepalive，请先与服务器提供部门协商保留一个IP作为 lb_kube_apiserver_ip，
+#       设置 lb_kube_apiserver_ip 即表示启用 keepalived，请先与服务器提供部门协商保留一个IP作为 lb_kube_apiserver_ip，
 #       一般 lb 节点组中有两个节点就够了，lb节点组中第一个节点为 keepalived 的 master 节点，剩下的都为 backed 节点。
 #
 #    节点本地负载模式：
-#       只启动负载均衡器，不启用 keepalive（即不设置 lb_kube_apiserver_ip），
+#       只启动负载均衡器，不启用 keepalived（即不设置 lb_kube_apiserver_ip），
 #       此时 kubelet 链接 apiserver 地址为 127.0.0.1:lb_kube_apiserver_port。
 #       使用此模式时请将 lb 节点组置空。
 #
@@ -269,10 +269,11 @@ traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.12
 # ------------------------ #
 
 # 是否启用kubernetes-dashboard 
-kubernetes_dashboard_enabled: true
+kubernetesui_dashboard_enabled: true
 
 # kubernetes-dashboard 镜像地址
-kubernetes_dashboard_image: gcr.azk8s.cn/google_containers/kubernetes-dashboard-amd64:v1.10.1
+kubernetesui_dashboard_image: dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta1
+kubernetesui_metrics_scraper_image: dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.0
 
 # ------------------------ #
 # metrics-server 相关参数配置 
