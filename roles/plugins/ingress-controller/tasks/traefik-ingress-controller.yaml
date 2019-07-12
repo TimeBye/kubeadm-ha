@@ -5,11 +5,6 @@
       dest: /etc/kubernetes/plugins/ingress-controller/traefik-ingress-controller.yaml
     register: ingress_nginx_manifest
 
-  - name: 读取 traefik-ingress-controller 默认证书 stat 信息
-    stat: 
-      path: /etc/kubernetes/plugins/ingress-controller/tls.crt
-    register: tls_cert_stat
-
   - name: 创建 traefik-ingress-controller 默认证书
     shell: >
       openssl req -x509 -nodes -days {{ traefik_certs_expired }} \
@@ -17,7 +12,6 @@
       -keyout /etc/kubernetes/plugins/ingress-controller/tls.key \
       -out /etc/kubernetes/plugins/ingress-controller/tls.crt \
       -subj "/CN=traefik.io"
-    when: tls_cert_stat.stat.isreg is not defined
 
   - name: 应用 traefik-ingress-controller 默认证书
     shell: >

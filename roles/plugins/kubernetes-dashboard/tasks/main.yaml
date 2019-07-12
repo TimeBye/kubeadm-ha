@@ -4,6 +4,22 @@
       path: /etc/kubernetes/plugins/kubernetes-dashboard
       state: directory
 
+  - name: 创建 kubernetes-dashboard 默认证书
+    shell: >
+      openssl req -x509 -nodes -days {{ kubernetes_dashboard_certs_expired }} \
+      -newkey rsa:2048 \
+      -keyout /etc/kubernetes/plugins/kubernetes-dashboard/dashboard.key \
+      -out /etc/kubernetes/plugins/kubernetes-dashboard/dashboard.crt \
+      -subj "/CN=kubernetes.io"
+
+  - name: 获取 kubernetes-dashboard 默认证书
+    slurp:
+      src: /etc/kubernetes/plugins/kubernetes-dashboard/{{ item }}
+    with_items:
+    - dashboard.key
+    - dashboard.crt
+    register: dashboard_certs
+
   - name: 渲染 kubernetes-dashboard 配置文件
     template:
       src: kubernetes-dashboard.yaml.j2

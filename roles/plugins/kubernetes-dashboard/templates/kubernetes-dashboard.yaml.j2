@@ -53,6 +53,10 @@ metadata:
   name: kubernetes-dashboard-certs
   namespace: kubernetes-dashboard
 type: Opaque
+data:
+{% for result in dashboard_certs.results %}
+  {{ result.item }}: {{ result.content }}
+{% endfor %}
 
 ---
 
