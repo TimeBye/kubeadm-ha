@@ -5,7 +5,8 @@ ansible_become: true
 wait_plugins_ready: true
 
 # 是否启用kubernetes-dashboard 
-kubernetes_dashboard_enabled: true
+kubernetesui_dashboard_enabled: true
 
 # kubernetes-dashboard 镜像地址
-kubernetes_dashboard_image: gcr.azk8s.cn/google_containers/kubernetes-dashboard-amd64:v1.10.1
+kubernetesui_dashboard_image: dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta1
+kubernetesui_metrics_scraper_image: dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.0
