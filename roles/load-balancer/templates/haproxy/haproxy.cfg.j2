@@ -20,7 +20,7 @@ defaults
     maxconn                 {{ 10000 * ansible_processor_vcpus|int }}
 
 listen stats
-    bind :{{ lb_haproxy_stats_bind_address }}
+    bind 0.0.0.0:{{ lb_haproxy_stats_bind_address }}
     mode http
     balance {{ lb_haproxy_balance_alg }}
     stats enable
@@ -37,7 +37,7 @@ frontend healthz
 {% endif %}
 
 frontend kube_api_frontend
-    bind :{{ lb_kube_apiserver_port }}
+    bind 0.0.0.0:{{ lb_kube_apiserver_port }}
     mode tcp
     option tcplog
     default_backend kube_api_backend
@@ -53,8 +53,8 @@ backend kube_api_backend
 {% endfor %}
 
 {% if enabel_ingress_nodeport_lb | bool %}
-listen ingress-node
-    bind :80
+listen ingress_http
+    bind 0.0.0.0:80
     mode tcp
     option tcplog
     balance {{ lb_haproxy_balance_alg }}
@@ -64,8 +64,8 @@ listen ingress-node
 {% endif %}
 
 {% if enabel_ingress_tls_nodeport_lb | bool %}
-listen ingress-node-tls
-    bind :443
+listen ingress_https
+    bind 0.0.0.0:443
     mode tcp
     option tcplog
     balance {{ lb_haproxy_balance_alg }}

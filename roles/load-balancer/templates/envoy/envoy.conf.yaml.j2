@@ -23,6 +23,40 @@ static_resources:
             - name: envoy.file_access_log
               config:
                 path: "/dev/stdout"
+{% if enabel_ingress_nodeport_lb | bool %}
+  - name: ingress_http
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 80
+    filter_chains:
+    - filters:
+      - name: envoy.tcp_proxy
+        config:
+          stat_prefix: ingress_tcp
+          cluster: ingress_http
+          access_log:
+            - name: envoy.file_access_log
+              config:
+                path: "/dev/stdout"
+{% endif %}
+{% if enabel_ingress_nodeport_lb | bool %}
+  - name: ingress_https
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 443
+    filter_chains:
+    - filters:
+      - name: envoy.tcp_proxy
+        config:
+          stat_prefix: ingress_tcp
+          cluster: ingress_https
+          access_log:
+            - name: envoy.file_access_log
+              config:
+                path: "/dev/stdout"
+{% endif %}
 {% if lb_kube_apiserver_healthcheck_port is defined %}
   - name: healthz
     address:
@@ -74,3 +108,29 @@ static_resources:
 
         port_value: 6443
 {% endfor %}
+{% if enabel_ingress_nodeport_lb | bool %}
+  - name: ingress_http
+    connect_timeout: 0.5s
+    type: strict_dns
+    lb_policy: LEAST_REQUEST
+    hosts:
+{% for host in (groups['kube-worker'] + groups['new-worker']) %}
+    - socket_address:
+        address: {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}
+
+        port_value: 30080
+{% endfor %}
+{% endif %}
+{% if enabel_ingress_tls_nodeport_lb | bool %}
+  - name: ingress_https
+    connect_timeout: 0.5s
+    type: strict_dns
+    lb_policy: LEAST_REQUEST
+    hosts:
+{% for host in (groups['kube-worker'] + groups['new-worker']) %}
+    - socket_address:
+        address: {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}
+
+        port_value: 30443
+{% endfor %}
+{% endif %}
