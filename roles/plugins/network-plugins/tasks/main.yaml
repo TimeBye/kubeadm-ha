@@ -15,4 +15,4 @@
 
   when: 
   - network_plugins_enabled|bool
-  - inventory_hostname == groups['kube-master']|first
+  - inventory_hostname == groups['kube-master'][0]

@@ -39,4 +39,4 @@
     ignore_errors: true
     when: wait_plugins_ready|bool
 
-  when: inventory_hostname == groups['kube-master']|first and kubernetesui_dashboard_enabled|bool
+  when: inventory_hostname == groups['kube-master'][0] and kubernetesui_dashboard_enabled|bool

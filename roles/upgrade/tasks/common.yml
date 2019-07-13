@@ -19,7 +19,7 @@
 - name: "升级第一个 master 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
   shell: >
     kubeadm upgrade apply --config=/etc/kubernetes/kubeadm-config.yaml --force
-  when: inventory_hostname == groups['kube-master']|first
+  when: inventory_hostname == groups['kube-master'][0]
 
 - name: "升级剩余 master 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
   shell: >
@@ -28,7 +28,7 @@
     experimental-control-plane
     {% endif %}
   when: 
-  - inventory_hostname != groups['kube-master']|first
+  - inventory_hostname != groups['kube-master'][0]
   - inventory_hostname in (groups['kube-master'] + groups['new-master'])
 
 - name: "升级 worker 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"

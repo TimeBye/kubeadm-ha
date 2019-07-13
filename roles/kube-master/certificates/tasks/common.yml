@@ -136,7 +136,7 @@
     dest: /etc/kubernetes/pki/kube-controller-manager.key
     state: link
   run_once: true
-  delegate_to: "{{ groups['kube-master']|first }}"
+  delegate_to: "{{ groups['kube-master'][0] }}"
 
 - name: 创建 kube-controller-manager 证书请求
   shell: >

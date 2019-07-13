@@ -15,7 +15,7 @@
   - include_tasks: certs_stat.yml
   # 生成证书
   - include_tasks: generate.yml
-  when: inventory_hostname == groups['etcd']|first
+  when: inventory_hostname == groups['etcd'][0]
 
 # 分发证书
 - include_tasks: distribute.yml

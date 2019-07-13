@@ -23,4 +23,4 @@
     ignore_errors: true
     when: wait_plugins_ready|bool
 
-  when: inventory_hostname == groups['kube-master']|first and metrics_server_enabled|bool
+  when: inventory_hostname == groups['kube-master'][0] and metrics_server_enabled|bool

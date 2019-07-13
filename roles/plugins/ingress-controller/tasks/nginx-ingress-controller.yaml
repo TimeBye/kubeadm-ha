@@ -18,4 +18,4 @@
     ignore_errors: true
     when: wait_plugins_ready|bool
 
-  when: inventory_hostname == groups['kube-master']|first
+  when: inventory_hostname == groups['kube-master'][0]

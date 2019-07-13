@@ -11,4 +11,4 @@
   - include_tasks: traefik-ingress-controller.yaml
     when: ingress_controller == 'traefik'
 
-  when: inventory_hostname == groups['kube-master']|first and ingress_controller_enabled|bool
+  when: inventory_hostname == groups['kube-master'][0] and ingress_controller_enabled|bool

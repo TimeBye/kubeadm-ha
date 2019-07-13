@@ -12,7 +12,7 @@
   - server.crt
   - server.key
   register: etcd_certs
-  delegate_to: "{{ groups['etcd']|first }}"
+  delegate_to: "{{ groups['etcd'][0] }}"
   run_once: true
 
 - name: 分发 etcd 相关证书到 etcd 节点
@@ -25,7 +25,7 @@
   no_log: true
   with_items: "{{ etcd_certs.results }}"
   when: 
-  - inventory_hostname != groups['etcd']|first 
+  - inventory_hostname != groups['etcd'][0] 
   - inventory_hostname in (groups['etcd'] + groups['new-etcd'])
 
 - name: 获取 apiserver etcd client 证书
@@ -36,7 +36,7 @@
   - apiserver-etcd-client.crt
   - apiserver-etcd-client.key
   register: etcd_client_certs
-  delegate_to: "{{ groups['etcd']|first }}"
+  delegate_to: "{{ groups['etcd'][0] }}"
   run_once: true
 
 - name: 分发 apiserver etcd client 证书到 master 节点
@@ -49,5 +49,5 @@
   no_log: true
   with_items: "{{ etcd_client_certs.results }}"
   when: 
-  - inventory_hostname != groups['etcd']|first 
+  - inventory_hostname != groups['etcd'][0] 
   - inventory_hostname in (groups['kube-master'] + groups['new-master'])

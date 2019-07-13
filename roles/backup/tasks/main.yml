@@ -17,7 +17,7 @@
         --cacert=/etc/kubernetes/pki/etcd/ca.crt 
         --key=/etc/kubernetes/pki/etcd/healthcheck-client.key 
         --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
-  when: inventory_hostname == groups['etcd']|first
+  when: inventory_hostname == groups['etcd'][0]
 
 - name: 备份 /etc/kubernetes 目录
   raw: cp -rf /etc/kubernetes /etc/kubernetes.orig.$(date -Iseconds)

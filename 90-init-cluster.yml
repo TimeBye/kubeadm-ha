@@ -32,7 +32,6 @@
 
 # 初始化worker节点
 - hosts: 
-  - kube-master
   - kube-worker
   - new-worker
   roles:

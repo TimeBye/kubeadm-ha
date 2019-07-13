@@ -101,7 +101,7 @@
     --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
     member list
   register: etcd_member_list
-  delegate_to: "{{ groups['etcd']|first }}"
+  delegate_to: "{{ groups['etcd'][0] }}"
   when: inventory_hostname in groups['new-etcd']
 
 - name: 将新添加的 etcd 节点添加到 etcd 集群中
@@ -115,7 +115,7 @@
     --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
     --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
     member add {{ NEW_MEMBER }}
-  delegate_to: "{{ groups['etcd']|first }}"
+  delegate_to: "{{ groups['etcd'][0] }}"
   when: 
   - inventory_hostname in groups['new-etcd']
   - inventory_hostname not in etcd_member_list.stdout
@@ -178,4 +178,4 @@
       name: Clean etcd databases backup file
       job: >
         find {{ etcd_backup_dir }} -ctime +{{ etcd_backup_expiry }} -name 'etcd-snapshot*.db' | xargs rm -rf
-  when: inventory_hostname == groups['etcd']|first
+  when: inventory_hostname == groups['etcd'][0]
