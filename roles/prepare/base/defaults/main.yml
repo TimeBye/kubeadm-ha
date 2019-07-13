@@ -19,3 +19,13 @@ lb_kube_apiserver_port: 8443
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
 # 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
 kube_proxy_mode: "iptables"
+# NodePort端口范围
+kube_service_node_port_range: 30000-32767
+# 启用 ingress NodePort服务的负载均衡 (true/false)
+enabel_ingress_nodeport_lb: false
+# 启用 ingress tls NodePort服务的负载均衡 (true/false)
+enabel_ingress_tls_nodeport_lb: false
+# NodePort svc 监听http协议端口(注意需在NodePort端口范围)
+ingress_controller_http_nodeport: 30080
+# NodePort svc 监听https协议端口(注意需在NodePort端口范围)
+ingress_controller_https_nodeport: 30443

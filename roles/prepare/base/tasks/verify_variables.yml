@@ -84,3 +84,21 @@
   assert:
     that: kube_proxy_mode in ['iptables','ipvs']
     msg: "kube-proxy 不支持当前 {{ lb_mode }} 模式，请在 ['iptables','ipvs'] 中进行选择。"
+
+- name: 校验 ingress controller node port 端口设置
+  run_once: true
+  assert:
+    that: ingress_controller_http_nodeport != ingress_controller_https_nodeport
+    msg: "ingress controller http 与 https node port 监听端口不能相同。"
+
+- name: 校验 ingress controller http node port 端口设置
+  run_once: true
+  assert:
+    that: "{{ kube_service_node_port_range.split('-')[0]|int <= ingress_controller_http_nodeport|int }}"
+    msg: "ingress controller http 监听端口需要在 {{ kube_service_node_port_range }} 范围内。"
+
+- name: 校验 ingress controller https node port 端口设置
+  run_once: true
+  assert:
+    that: "{{ kube_service_node_port_range.split('-')[1]|int >= ingress_controller_https_nodeport|int }}"
+    msg: "ingress controller https 监听端口需要在 {{ kube_service_node_port_range }} 范围内。"

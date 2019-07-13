@@ -104,7 +104,7 @@ metadata:
     app: traefik
 spec:
   type: NodePort
-  externalTrafficPolicy: Local
+  # externalTrafficPolicy: Local
 {% if kube_proxy_mode == "iptables" %}
   externalIPs:
 {{ INGRESS_EXTERNALIPS }}
