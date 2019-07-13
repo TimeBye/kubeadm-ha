@@ -8,7 +8,6 @@ metadata:
     app: traefik
 data:
   traefik.toml: |
-    # traefik.toml
     logLevel = "INFO"
     # 设置insecureSkipVerify = true，可以配置backend为443(比如dashboard)的ingress规则
     insecureSkipVerify = true
@@ -74,6 +73,9 @@ rules:
       - watch
   - apiGroups:
       - extensions
+{% if kubeadm_version_output.stdout is version('v1.14.0', '>=') %}
+      - "networking.k8s.io"
+{% endif %}
     resources:
       - ingresses/status
     verbs:
@@ -136,8 +138,7 @@ metadata:
   labels:
     app: traefik
 spec:
-  replicas: {% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length > 1 %}2{% else %}1{% endif %}
-
+  replicas: {{ INGRESS_MIN_REPLICAS }}
   selector:
     matchLabels:
       app: traefik
@@ -225,9 +226,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: traefik-ingress-controller
-  minReplicas: {% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length > 1 %}2{% else %}1{% endif %}
-
-  maxReplicas: {{ (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length }}
+  minReplicas: {{ INGRESS_MIN_REPLICAS }}
+  maxReplicas: {{ INGRESS_MAX_REPLICAS }}
   metrics:
     - resource:
         name: cpu

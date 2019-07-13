@@ -11,7 +11,7 @@ ingress_controller_enabled: true
 ingress_controller: nginx
 
 # nginx-ingress-controller 镜像地址
-nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.24.1
+nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.25.0
 
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
@@ -29,3 +29,13 @@ INGRESS_EXTERNALIPS: |
     - {{ host }}
   {% endif %}
   {% endfor %}
+
+INGRESS_MIN_REPLICAS: >-
+  {%- if (groups['kube-worker'] + groups['new-worker']) | unique | length > 1 -%}
+  2
+  {%- else -%}
+  1
+  {%- endif -%}
+
+INGRESS_MAX_REPLICAS: >-
+  {{ (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length }}

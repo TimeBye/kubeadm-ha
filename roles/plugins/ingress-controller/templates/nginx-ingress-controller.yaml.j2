@@ -81,14 +81,6 @@ rules:
       - list
       - watch
   - apiGroups:
-      - "extensions"
-    resources:
-      - ingresses
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
       - ""
     resources:
       - events
@@ -97,6 +89,20 @@ rules:
       - patch
   - apiGroups:
       - "extensions"
+{% if kubeadm_version_output.stdout is version('v1.14.0', '>=') %}
+      - "networking.k8s.io"
+{% endif %}
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - "extensions"
+{% if kubeadm_version_output.stdout is version('v1.14.0', '>=') %}
+      - "networking.k8s.io"
+{% endif %}
     resources:
       - ingresses/status
     verbs:
@@ -192,8 +198,7 @@ metadata:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx
 spec:
-  replicas: {% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length > 1 %}2{% else %}1{% endif %}
-
+  replicas: {{ INGRESS_MIN_REPLICAS }}
   selector:
     matchLabels:
       app.kubernetes.io/name: ingress-nginx
@@ -220,7 +225,7 @@ spec:
       serviceAccountName: nginx-ingress-serviceaccount
       containers:
         - name: nginx-ingress-controller
-          # image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.24.1
+          # image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.25.0
           image: {{ nginx_ingress_image }}
           args:
             - /nginx-ingress-controller
@@ -326,9 +331,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: nginx-ingress-controller
-  minReplicas: {% if (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length > 1 %}2{% else %}1{% endif %}
-  
-  maxReplicas: {{ (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker']) | unique | length }}
+  minReplicas: {{ INGRESS_MIN_REPLICAS }}
+  maxReplicas: {{ INGRESS_MAX_REPLICAS }}
   metrics:
     - resource:
         name: cpu

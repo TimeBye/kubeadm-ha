@@ -6,11 +6,11 @@
 
   - name: 创建 kubernetes-dashboard 默认证书
     shell: >
-      openssl req -x509 -nodes -days {{ kubernetes_dashboard_certs_expired }} \
+      openssl req -x509 -nodes -days {{ kubernetesui_dashboard_certs_expired }} \
       -newkey rsa:2048 \
       -keyout /etc/kubernetes/plugins/kubernetes-dashboard/dashboard.key \
       -out /etc/kubernetes/plugins/kubernetes-dashboard/dashboard.crt \
-      -subj "/CN=kubernetes.io"
+      -subj "/CN=timebye.github.io"
 
   - name: 获取 kubernetes-dashboard 默认证书
     slurp:

@@ -8,7 +8,7 @@ wait_plugins_ready: true
 kubernetesui_dashboard_enabled: true
 
 # dashboard默认证书有效期
-kubernetes_dashboard_certs_expired: 3650
+kubernetesui_dashboard_certs_expired: 3650
 
 # kubernetes-dashboard 镜像地址
 kubernetesui_dashboard_image: dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta1

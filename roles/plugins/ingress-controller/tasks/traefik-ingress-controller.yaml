@@ -11,7 +11,7 @@
       -newkey rsa:2048 \
       -keyout /etc/kubernetes/plugins/ingress-controller/tls.key \
       -out /etc/kubernetes/plugins/ingress-controller/tls.crt \
-      -subj "/CN=traefik.io"
+      -subj "/CN=timebye.github.io"
 
   - name: 应用 traefik-ingress-controller 默认证书
     shell: >

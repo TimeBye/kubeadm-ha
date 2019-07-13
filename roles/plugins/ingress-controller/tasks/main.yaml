@@ -3,6 +3,9 @@
     file:
       path: /etc/kubernetes/plugins/ingress-controller
       state: directory
+  - name: 获取当前 kubernetes 版本
+    shell: "kubeadm version -o short"
+    register: kubeadm_version_output
   - include_tasks: nginx-ingress-controller.yaml
     when: ingress_controller == 'nginx'
   - include_tasks: traefik-ingress-controller.yaml

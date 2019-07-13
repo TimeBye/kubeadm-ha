@@ -257,7 +257,7 @@ ingress_controller_enabled: true
 ingress_controller: nginx
 
 # nginx-ingress 镜像地址
-nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.24.1
+nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.25.0
 
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
@@ -272,7 +272,7 @@ traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.12
 kubernetesui_dashboard_enabled: true
 
 # kubernetes-dashboard默认证书有效期
-kubernetes_dashboard_certs_expired: 3650
+kubernetesui_dashboard_certs_expired: 3650
 
 # kubernetes-dashboard 镜像地址
 kubernetesui_dashboard_image: dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta1
