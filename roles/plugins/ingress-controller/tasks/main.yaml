@@ -7,8 +7,8 @@
     shell: "kubeadm version -o short"
     register: kubeadm_version_output
   - include_tasks: nginx-ingress-controller.yaml
-    when: ingress_controller == 'nginx'
+    when: ingress_controller_tpye == 'nginx'
   - include_tasks: traefik-ingress-controller.yaml
-    when: ingress_controller == 'traefik'
+    when: ingress_controller_tpye == 'traefik'
 
   when: inventory_hostname == groups['kube-master'][0] and ingress_controller_enabled|bool

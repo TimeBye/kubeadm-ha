@@ -59,7 +59,7 @@ listen ingress_http
     option tcplog
     balance {{ lb_haproxy_balance_alg }}
 {% for host in (groups['kube-worker'] + groups['new-worker']) %}
-    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30080 check inter 2000 fall 2 rise 2 weight 1
+    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:{{ ingress_controller_http_nodeport }} check inter 2000 fall 2 rise 2 weight 1
 {% endfor %}
 {% endif %}
 
@@ -70,6 +70,6 @@ listen ingress_https
     option tcplog
     balance {{ lb_haproxy_balance_alg }}
 {% for host in (groups['kube-worker'] + groups['new-worker']) %}
-    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:30443 check inter 2000 fall 2 rise 2 weight 1
+    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:{{ ingress_controller_https_nodeport }} check inter 2000 fall 2 rise 2 weight 1
 {% endfor %}
 {% endif %}

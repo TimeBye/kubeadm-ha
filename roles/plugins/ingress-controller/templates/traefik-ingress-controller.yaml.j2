@@ -116,16 +116,12 @@ spec:
     port: 80
     targetPort: http
     protocol: TCP
-    # 集群hosts文件中设置的 NODE_PORT_RANGE 作为 NodePort 的可用范围
-    # 从默认30000-32767之间选一个可用端口，让ingress-controller暴露给外部的访问
-    nodePort: 30080
+    nodePort: {{ ingress_controller_http_nodeport }}
   - name: https
     port: 443
     targetPort: https
     protocol: TCP
-    # 集群hosts文件中设置的 NODE_PORT_RANGE 作为 NodePort 的可用范围
-    # 从默认30000-32767之间选一个可用端口，让ingress-controller暴露https
-    nodePort: 30443
+    nodePort: {{ ingress_controller_https_nodeport }}
   - name: dash
     port: 8080
     targetPort: dash

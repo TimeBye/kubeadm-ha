@@ -15,6 +15,10 @@ lb_kube_apiserver_healthcheck_port: 8081
 enabel_ingress_nodeport_lb: false
 # 启用 ingress tls NodePort服务的负载均衡 (true/false)
 enabel_ingress_tls_nodeport_lb: false
+# NodePort svc 监听http协议端口(注意需在NodePort端口范围)
+ingress_controller_http_nodeport: 30080
+# NodePort svc 监听https协议端口(注意需在NodePort端口范围)
+ingress_controller_https_nodeport: 30443
 # Pod根容器
 pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
 # Kubelet 根目录

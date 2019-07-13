@@ -8,7 +8,12 @@ wait_plugins_ready: true
 ingress_controller_enabled: true
 
 # ingress-controller类型(nginx,traefik)
-ingress_controller: nginx
+ingress_controller_tpye: nginx
+
+# NodePort svc 监听http协议端口(注意需在NodePort端口范围)
+ingress_controller_http_nodeport: 30080
+# NodePort svc 监听https协议端口(注意需在NodePort端口范围)
+ingress_controller_https_nodeport: 30443
 
 # nginx-ingress-controller 镜像地址
 nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.25.0

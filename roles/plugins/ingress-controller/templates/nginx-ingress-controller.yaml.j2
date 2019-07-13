@@ -304,16 +304,12 @@ spec:
       port: 80
       targetPort: 80
       protocol: TCP
-      # 集群hosts文件中设置的 NODE_PORT_RANGE 作为 NodePort 的可用范围
-      # 从默认30000-32767之间选一个可用端口，让ingress-controller暴露给外部的访问
-      nodePort: 30080
+      nodePort: {{ ingress_controller_http_nodeport }}
     - name: https
       port: 443
       targetPort: 443
       protocol: TCP
-      # 集群hosts文件中设置的 NODE_PORT_RANGE 作为 NodePort 的可用范围
-      # 从默认30000-32767之间选一个可用端口，让ingress-controller暴露https
-      nodePort: 30443
+      nodePort: {{ ingress_controller_https_nodeport }}
   selector:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/part-of: ingress-nginx

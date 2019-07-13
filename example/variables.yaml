@@ -180,7 +180,7 @@ kube_pod_subnet: 10.244.0.0/18
 # 集群service ip段（不要与node和pod网段冲突）
 kube_service_subnet: 10.244.64.0/18
 
-# NodePort端口范围（因为ingress-nginx使用了 NodePort svc占用了30080 30443这两个端口故，端口范围不能小于30080-30443）
+# NodePort端口范围
 kube_service_node_port_range: 30000-32767
 
 # 资源保留相关配置
@@ -254,7 +254,11 @@ kube_ovn_node_switch_cidr: 100.64.0.0/16
 ingress_controller_enabled: true
 
 # ingress-controller类型(nginx,traefik)
-ingress_controller: nginx
+ingress_controller_tpye: nginx
+# NodePort svc 监听http协议端口(注意需在NodePort端口范围)
+ingress_controller_http_nodeport: 30080
+# NodePort svc 监听https协议端口(注意需在NodePort端口范围)
+ingress_controller_https_nodeport: 30443
 
 # nginx-ingress 镜像地址
 nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.25.0
