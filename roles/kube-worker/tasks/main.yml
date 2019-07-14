@@ -22,9 +22,6 @@
     shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
     register: docker_cgroup_driver
 
-  - name: 设置变量 DOCKER_CGROUP_DRIVER
-    set_fact: DOCKER_CGROUP_DRIVER="{{ docker_cgroup_driver.stdout }}"
-
   - include_tasks: "{{ (role_path + '/../kube-master/install/tasks/kubeadm-config.yml') | realpath  }}"
 
   - name: Worker 节点加入集群

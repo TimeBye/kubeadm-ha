@@ -17,7 +17,7 @@ spec:
     - name: KEEPALIVED_VIRTUAL_IPS
       value: {{ KUBE_APISERVER_IP | trim }}
     - name: KEEPALIVED_INTERFACE
-      value: {{ LB_KEEPALIVED_INTERFACE }}
+      value: {{ lb_keepalived_interface.stdout }}
     - name: KEEPALIVED_UNICAST_PEERS
       value: "#PYTHON2BASH:[{{ LB_KEEPALIVED_UNICAST_PEERS }}]"
     - name: KEEPALIVED_PASSWORD

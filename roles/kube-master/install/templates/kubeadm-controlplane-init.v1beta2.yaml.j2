@@ -113,7 +113,7 @@ authorization:
   webhook:
     cacheAuthorizedTTL: 5m0s
     cacheUnauthorizedTTL: 30s
-cgroupDriver: {{ DOCKER_CGROUP_DRIVER }}
+cgroupDriver: {{ docker_cgroup_driver.stdout }}
 cgroupsPerQOS: true
 clusterDNS:
 - {{ CLUSTER_DNS_SERVICE_IP }}

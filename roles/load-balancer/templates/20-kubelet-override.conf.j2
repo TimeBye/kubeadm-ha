@@ -1,4 +1,4 @@
 [Service]
 ExecStart=
-ExecStart=/usr/bin/kubelet --address=127.0.0.1 --pod-manifest-path=/etc/kubernetes/manifests --cgroup-driver={{ DOCKER_CGROUP_DRIVER }} --root-dir={{ kubelet_root_dir }} --pod-infra-container-image={{ pod_infra_container_image }} --hostname-override={{ inventory_hostname }}
+ExecStart=/usr/bin/kubelet --address=127.0.0.1 --pod-manifest-path=/etc/kubernetes/manifests --cgroup-driver={{ docker_cgroup_driver.stdout }} --root-dir={{ kubelet_root_dir }} --pod-infra-container-image={{ pod_infra_container_image }} --hostname-override={{ inventory_hostname }}
 Restart=always

@@ -20,9 +20,7 @@
 - block:
   - name: keepalived | 获取网卡名称
     shell: "ip a|grep '{{ CURRENT_HOST_IP }}/'|awk '{print $NF}'"
-    register: LB_KEEPALIVED_INTERFACE_TMP
-  - name: Haproxy | 设置变量 LB_KEEPALIVED_INTERFACE
-    set_fact: LB_KEEPALIVED_INTERFACE="{{ LB_KEEPALIVED_INTERFACE_TMP.stdout }}"
+    register: lb_keepalived_interface
 
   - name: keepalived | 生成 static pod 文件
     template: 
@@ -48,9 +46,6 @@
   - name: 获取 Docker Cgroup Driver 值
     shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
     register: docker_cgroup_driver
-
-  - name: 设置变量 DOCKER_CGROUP_DRIVER
-    set_fact: DOCKER_CGROUP_DRIVER="{{ docker_cgroup_driver.stdout }}"
 
   - name: 生成临时 kubelet unit 文件
     template: 
