@@ -171,7 +171,7 @@ spec:
       containers:
         - name: ovn-central
           image: "{{ kube_ovn_db_image }}"
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           env:
             - name: POD_IP
               valueFrom:
@@ -262,7 +262,7 @@ spec:
       containers:
         - name: openvswitch
           image: "{{ kube_ovn_node_image }}"
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 0
             privileged: true
