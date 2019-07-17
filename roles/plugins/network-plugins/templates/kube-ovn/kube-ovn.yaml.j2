@@ -39,7 +39,7 @@ spec:
       containers:
         - name: kube-ovn-controller
           image: "{{ kube_ovn_controller_image }}"
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           command:
           - /kube-ovn/start-controller.sh
           args:
@@ -109,7 +109,7 @@ spec:
       initContainers:
       - name: install-cni
         image: "{{ kube_ovn_cni_image }}"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         command: ["/kube-ovn/install-cni.sh"]
         volumeMounts:
           - mountPath: /etc/cni/net.d
@@ -119,7 +119,7 @@ spec:
       containers:
       - name: cni-server
         image: "{{ kube_ovn_cni_image }}"
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         securityContext:
           runAsUser: 0
           privileged: true
