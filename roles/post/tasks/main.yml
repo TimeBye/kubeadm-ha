@@ -1,11 +1,11 @@
-- name: 取消原有角色标签
-  shell: >
-    kubectl label node node-role.kubernetes.io/worker- --all &&
-    kubectl label node node-role.kubernetes.io/lb- --all &&
-    kubectl label node node-role.kubernetes.io/etcd- --all
-  delegate_to: "{{ groups['kube-master'][0] }}"
-  ignore_errors: true
-  run_once: true
+# - name: 取消原有角色标签
+#   shell: >
+#     kubectl label node node-role.kubernetes.io/worker- --all &&
+#     kubectl label node node-role.kubernetes.io/lb- --all &&
+#     kubectl label node node-role.kubernetes.io/etcd- --all
+#   delegate_to: "{{ groups['kube-master'][0] }}"
+#   ignore_errors: true
+#   run_once: true
 
 - name: 设置 worker 节点 role
   shell: >
