@@ -1,99 +1,67 @@
-- name: 读取 kubelet.conf 文件 stat 信息
-  stat: 
-    path: /etc/kubernetes/kubelet.conf
-  register: kubelet_conf_stat
+- name: 确认 kubelet 已停止运行
+  service:
+    name: kubelet
+    state: stopped
+    enabled: yes
 
-- block:
-  - name: 确认 kubelet 已停止运行
-    service:
-      name: kubelet
-      state: stopped
-      enabled: yes
-      
-  - name: 获取 Docker Cgroup Driver 值
-    shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
-    register: docker_cgroup_driver
+- name: 获取 master 节点需要拉取的镜像列表
+  shell: >
+    kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml | 
+    grep {{ kube_image_repository }}
+  register: kube_image_list
 
-  - include_tasks: kubeadm-config.yml
+- name: 开始拉取 master 节点相关镜像
+  shell: "docker pull {{ item }}"
+  with_items: "{{ kube_image_list.stdout_lines }}"
+  when: install_mode == 'online'
 
-  - name: 获取 master 节点需要拉取的镜像列表
-    shell: >
-      kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml | 
-      grep {{ kube_image_repository }}
-    register: kube_image_list
+- name: 初始化第一个 master 节点
+  shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml
 
-  - name: 开始拉取 master 节点相关镜像
-    shell: "docker pull {{ item }}"
-    with_items: "{{ kube_image_list.stdout_lines }}"
-    when: install_mode == 'online'
+- include_tasks: "{{ (role_path + '/../certificates/tasks/kubeconfig.yml') | realpath  }}"
 
-  - name: 初始化第一个 master 节点
-    shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml
-
-  - include_tasks: "{{ (role_path + '/../certificates/tasks/kubeconfig.yml') | realpath  }}"
-
-  # 监听所有网卡方便 prometheus 进行监控
-  - name: 更新 kube-scheduler kube-controller-manager 监听地址
-    lineinfile:
-      backrefs: yes
-      path: "/etc/kubernetes/manifests/{{ item }}.yaml"
-      regexp: 'address\=127\.0\.0\.1'
-      line: "    - --address=0.0.0.0"
-    with_items:
-    - kube-scheduler
-    - kube-controller-manager
-
-  - name: 重新加载 daemon
-    systemd:
-      daemon_reload: yes
-
-  - name: 重新启动 kubelet
-    service:
-      name: kubelet
-      state: restarted
-      enabled: yes
-
-  - name: 等待 apiserver 运行
-    uri:
-      url: "https://{{ CURRENT_HOST_IP }}:6443/healthz"
-      validate_certs: no
-    register: apiserver_result
-    until: apiserver_result.status == 200
-    retries: 60
-    delay: 5
-
-  - name: 等待 kube-scheduler 运行
-    uri:
-      url: "http://{{ CURRENT_HOST_IP }}:10251/healthz"
-    register: scheduler_result
-    until: scheduler_result.status == 200
-    retries: 60
-    delay: 5
-
-  - name: 等待 kube-controller-manager 运行
-    uri:
-      url: "http://{{ CURRENT_HOST_IP }}:10252/healthz"
-    register: controller_manager_result
-    until: controller_manager_result.status == 200
-    retries: 60
-    delay: 5
-    
-  when: not kubelet_conf_stat.stat.exists
-
-- name: 创建 kubeconfig 目录
-  file: 
-    name: "{{ item }}"
-    state: directory
+# 监听所有网卡方便 prometheus 进行监控
+- name: 更新 kube-scheduler kube-controller-manager 监听地址
+  lineinfile:
+    backrefs: yes
+    path: "/etc/kubernetes/manifests/{{ item }}.yaml"
+    regexp: 'address\=127\.0\.0\.1'
+    line: "    - --address=0.0.0.0"
   with_items:
-  - "{{ ansible_env.PWD }}/.kube"
-  - "{{ ansible_env.HOME }}/.kube"
+  - kube-scheduler
+  - kube-controller-manager
 
-- name: 复制 kubeconfig 文件到 .kube 目录
-  copy:
-    src: /etc/kubernetes/admin.conf
-    dest: "{{ item }}/config"
-    mode: 0644
-    remote_src: yes
-  with_items:
-  - "{{ ansible_env.PWD }}/.kube"
-  - "{{ ansible_env.HOME }}/.kube"
+- name: 重新加载 daemon
+  systemd:
+    daemon_reload: yes
+
+- name: 重新启动 kubelet
+  service:
+    name: kubelet
+    state: restarted
+    enabled: yes
+
+- name: 等待 apiserver 运行
+  uri:
+    url: "https://{{ CURRENT_HOST_IP }}:6443/healthz"
+    validate_certs: no
+  register: apiserver_result
+  until: apiserver_result.status == 200
+  retries: 60
+  delay: 5
+
+- name: 等待 kube-scheduler 运行
+  uri:
+    url: "http://{{ CURRENT_HOST_IP }}:10251/healthz"
+  register: scheduler_result
+  until: scheduler_result.status == 200
+  retries: 60
+  delay: 5
+
+- name: 等待 kube-controller-manager 运行
+  uri:
+    url: "http://{{ CURRENT_HOST_IP }}:10252/healthz"
+  register: controller_manager_result
+  until: controller_manager_result.status == 200
+  retries: 60
+  delay: 5

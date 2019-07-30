@@ -15,6 +15,10 @@
   when: 
   - kubeadm_version_output.stdout is version('v1.15.0', '>=')
 
+- name: 获取 Docker Cgroup Driver 值
+  shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
+  register: docker_cgroup_driver
+
 - name: 创建 kubeadm 的配置文件
   template:
     src: >-

@@ -8,10 +8,40 @@
   - /etc/kubernetes/manifests
   - /usr/share/bash-completion/completions
 
+- name: 读取 kubelet.conf 文件 stat 信息
+  stat: 
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf_stat
+
+# 生成 kubeadm 配置
+- include_tasks: kubeadm-config.yml
+
 # 初始化第一个 master 节点
 - include_tasks: master-init.yml
-  when: inventory_hostname == groups['kube-master'][0]
+  when: 
+  - inventory_hostname == groups['kube-master'][0]
+  - not kubelet_conf_stat.stat.exists
 
 # 初始化其他 master 节点
 - include_tasks: master-join.yml
-  when: inventory_hostname != groups['kube-master'][0]
+  when: 
+  - inventory_hostname != groups['kube-master'][0]
+  - not kubelet_conf_stat.stat.exists
+
+- name: 创建 kubeconfig 目录
+  file: 
+    name: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ ansible_env.PWD }}/.kube"
+  - "{{ ansible_env.HOME }}/.kube"
+
+- name: 复制 kubeconfig 文件到 .kube 目录
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ item }}/config"
+    mode: 0644
+    remote_src: yes
+  with_items:
+  - "{{ ansible_env.PWD }}/.kube"
+  - "{{ ansible_env.HOME }}/.kube"

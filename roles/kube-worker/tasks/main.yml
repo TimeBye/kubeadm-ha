@@ -1,28 +1,28 @@
+- name: 创建 kubernetes 相关目录
+  file: 
+    name: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ kubelet_root_dir }}"
+  - /etc/kubernetes
+  - /usr/share/bash-completion/completions
+
 - name: 读取 kubelet.conf 文件 stat 信息
   stat:
     path: /etc/kubernetes/kubelet.conf
   register: kubelet_conf_stat
 
-- block:
-  - name: 创建 kubernetes 相关目录
-    file: 
-      name: "{{ item }}"
-      state: directory
-    with_items:
-    - "{{ kubelet_root_dir }}"
-    - /usr/share/bash-completion/completions
+- include_tasks: "{{ (role_path + '/../kube-master/install/tasks/kubeadm-config.yml') | realpath  }}"
+  when: 
+  - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
+  - inventory_hostname not in (groups['kube-master'] + groups['new-master'])
 
+- block:
   - name: 确认 kubelet 已停止运行
     service:
       name: kubelet
       state: stopped
       enabled: yes
-
-  - name: 获取 Docker Cgroup Driver 值
-    shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
-    register: docker_cgroup_driver
-
-  - include_tasks: "{{ (role_path + '/../kube-master/install/tasks/kubeadm-config.yml') | realpath  }}"
 
   - name: Worker 节点加入集群
     shell: >
