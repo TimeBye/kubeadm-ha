@@ -6,7 +6,7 @@
       msg: "同时只能添加一个 etcd 节点。"
 
 - hosts: 
-  - new-etcd
+  - all
   roles:
   - prepare/base
   - prepare/docker

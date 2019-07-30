@@ -1,29 +1,39 @@
-# - name: 取消原有角色标签
-#   shell: >
-#     kubectl label node node-role.kubernetes.io/worker- --all &&
-#     kubectl label node node-role.kubernetes.io/lb- --all &&
-#     kubectl label node node-role.kubernetes.io/etcd- --all
-#   delegate_to: "{{ groups['kube-master'][0] }}"
-#   ignore_errors: true
-#   run_once: true
-
-- name: 设置 worker 节点 role
-  shell: >
-    kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker='' --overwrite
+- name: 获取当前集群节点信息
+  shell: kubectl get node -o name
   delegate_to: "{{ groups['kube-master'][0] }}"
   ignore_errors: true
-  when: inventory_hostname in (groups['kube-worker'] + groups['new-worker']) 
+  run_once: true
+  register: kubectl_get_node_output
 
-- name: 设置 load balancer 节点 role
-  shell: >
-    kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/lb='' --overwrite
-  delegate_to: "{{ groups['kube-master'][0] }}"
-  ignore_errors: true
-  when: inventory_hostname in groups['lb']
+- block:
+  - name: 取消节点原有角色标签
+    shell: >
+      kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker- &&
+      kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/lb- &&
+      kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/etcd-
+    delegate_to: "{{ groups['kube-master'][0] }}"
+    ignore_errors: true
+    run_once: true
 
-- name: 设置 etcd 节点 role
-  shell: >
-    kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/etcd='' --overwrite
-  delegate_to: "{{ groups['kube-master'][0] }}"
-  ignore_errors: true
-  when: inventory_hostname in groups['etcd']
+  - name: 设置 worker 节点 role
+    shell: >
+      kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker='' --overwrite
+    delegate_to: "{{ groups['kube-master'][0] }}"
+    ignore_errors: true
+    when: inventory_hostname in (groups['kube-worker'] + groups['new-worker']) 
+
+  - name: 设置 load balancer 节点 role
+    shell: >
+      kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/lb='' --overwrite
+    delegate_to: "{{ groups['kube-master'][0] }}"
+    ignore_errors: true
+    when: inventory_hostname in groups['lb']
+
+  - name: 设置 etcd 节点 role
+    shell: >
+      kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/etcd='' --overwrite
+    delegate_to: "{{ groups['kube-master'][0] }}"
+    ignore_errors: true
+    when: inventory_hostname in (groups['etcd'] + groups['new-etcd'])
+
+  when: inventory_hostname in kubectl_get_node_output.stdout

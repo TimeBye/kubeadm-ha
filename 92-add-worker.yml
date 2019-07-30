@@ -1,6 +1,6 @@
 # 校验节点软件系统及硬件系统、安装必要基础组件、docker、kubeadm、kubelet、kubectl
 - hosts: 
-  - new-worker
+  - all
   roles:
   - prepare/base
   - prepare/docker
@@ -8,9 +8,9 @@
 
 # 进行apiserver负载均衡
 - hosts: 
-  - all
+  - new-worker
   roles:
-  - role: load-balancer
+  - load-balancer
 
 # 初始化worker节点
 - hosts: 
