@@ -1,15 +1,10 @@
-- name: 移除基础 Apt 仓库
-  apt_repository:
-    repo: "{{ base_apt_repo }}"
-    state: absent
-  when: base_apt_repo is defined and base_apt_repo != None
-
-- name: 移除 docker-ce apt 仓库
-  apt_repository:
-    repo: "{{ docker_apt_repo }}"
-    state: absent
-
-- name: 移除 kubernetes apt 仓库
-  apt_repository:
-    repo: "{{ kubernetes_apt_repo }}"
+- name: 卸载相关软件
+  apt: 
+    name:
+    - kubectl
+    - kubelet
+    - kubeadm
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
     state: absent

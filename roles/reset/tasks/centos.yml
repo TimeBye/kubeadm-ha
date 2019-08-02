@@ -1,14 +1,10 @@
-- name: 移除 epel yum 仓库
-  yum_repository:
-    name: epel
-    state: absent
-
-- name: 移除 kubernetes yum 仓库
-  yum_repository:
-    name: kubernetes
-    state: absent
-
-- name: 移除 docker-ce yum 仓库
-  yum_repository:
-    name: docker-ce
+- name: 卸载相关软件
+  yum:
+    name:
+    - kubeadm
+    - kubectl
+    - kubelet
+    - docker-ce
+    - docker-ce-cli
+    - containerd.io
     state: absent
