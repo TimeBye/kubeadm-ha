@@ -1,24 +1,21 @@
-FROM nginx:1.15.1-alpine
+FROM nginx:1.17.2-alpine
 ENV LANG=C.UTF-8
 
-# install ansible
 RUN apk add --no-cache \
         git \
         bash \
         rsync \
-        python \
-        py-pip \
         openssl \
         sshpass \
+        python3 \
         openssh-client \
-        ca-certificates && \
-    apk add --no-cache --virtual \
-        build-dependencies \
-        python-dev \
+        ca-certificates \
+    && apk add --no-cache --virtual .build-deps \
+        build-base \
         libffi-dev \
         openssl-dev \
-        build-base && \
-    pip install --no-cache-dir --upgrade pip cffi && \
-    pip install --no-cache-dir ansible==2.7.5 netaddr && \
-    pip install --no-cache-dir --upgrade pycrypto pywinrm && \
-    apk del build-dependencies
+        python3-dev \
+    && pip3 install --no-cache-dir --upgrade pip cffi -i https://mirrors.aliyun.com/pypi/simple/ \
+    && pip3 install --no-cache-dir --upgrade pycrypto pywinrm -i https://mirrors.aliyun.com/pypi/simple/ \
+    && pip3 install --no-cache-dir ansible==2.7.8 netaddr==0.7.19 -i https://mirrors.aliyun.com/pypi/simple/ \
+    && apk del .build-deps
