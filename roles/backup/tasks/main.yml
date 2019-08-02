@@ -1,24 +1,73 @@
 - block:
-  - name: 创建 etcd 备份目录
+  - name: 第一个 etcd 节点创建 etcd 备份目录
     file: 
-      name: "{{ item }}"
+      name: /etc/kubernetes/backup/etcd
       state: directory
-    with_items:
-    - "{{ etcd_backup_dir }}"
 
-  - name: 备份 etcd 数据库至 {{ etcd_backup_dir }}
+  - name: 第一个 etcd 节点备份 etcd 数据库
     raw: >
-        docker run --net host -e ETCDCTL_API=3
-        -v {{ etcd_backup_dir }}:/snapshot
-        -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/
-        --rm {{ etcd_image }}
-        etcdctl snapshot save 
-        /snapshot/etcd-snapshot-$(date -Iseconds).db 
-        --cacert=/etc/kubernetes/pki/etcd/ca.crt 
-        --key=/etc/kubernetes/pki/etcd/healthcheck-client.key 
-        --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+      docker run --net host -e ETCDCTL_API=3
+      -v /etc/kubernetes/backup/etcd:/snapshot
+      -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/
+      --rm {{ etcd_image }}
+      etcdctl snapshot save 
+      /snapshot/etcd-snapshot-$(date '+%Y%m%dT%H%M%S').db 
+      --cacert=/etc/kubernetes/pki/etcd/ca.crt 
+      --key=/etc/kubernetes/pki/etcd/healthcheck-client.key 
+      --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
   when: inventory_hostname == groups['etcd'][0]
 
-- name: 备份 /etc/kubernetes 目录
-  raw: cp -rf /etc/kubernetes /etc/kubernetes.orig.$(date -Iseconds)
+- name: 所有节点创建 kubelet 备份目录
+  file: 
+    name: /etc/kubernetes/backup/kubelet
+    state: directory
+
+- name: 集群外节点备份 kubelet 配置文件
+  copy:
+    src: /etc/systemd/system/kubelet.service.d/20-kubelet-override.conf
+    dest: /etc/kubernetes/backup/kubelet
+    mode: 0644
+    remote_src: yes
+  when: inventory_hostname not in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
+
+- name: 集群内节点备份 kubelet 配置文件
+  copy:
+    src: "{{ item }}"
+    dest: /etc/kubernetes/backup/kubelet
+    mode: 0644
+    remote_src: yes
+  with_items:
+  - /var/lib/kubelet/config.yaml
+  - /var/lib/kubelet/kubeadm-flags.env
   when: inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
+
+- name: 所有节点备份 /etc/kubernetes 目录
+  copy:
+    src: /etc/kubernetes/
+    dest: /tmp/kubernetes.orig.{{ ansible_date_time.iso8601_basic_short }}
+    mode: 0644
+    remote_src: yes
+
+- name: 读取所有备份目录
+  find:
+    paths: /tmp 
+    file_type: directory
+    patterns: kubernetes.orig.* 
+  register: kubernetes_back_dirs
+
+- name: 获取最新备份目录
+  set_fact:
+    kubernetes_latest_back_dir: "{{ kubernetes_back_dirs.files | sort(attribute='ctime',reverse=true) | first }}"
+
+- name: 压缩备份文件
+  archive:
+    path: "{{ kubernetes_latest_back_dir.path }}/*"
+    dest: "{{ kubernetes_latest_back_dir.path }}.tar.gz"
+    format: gz
+    force_archive: true
+
+- name: 拉取备份至本地
+  fetch:
+    src: "{{ kubernetes_latest_back_dir.path }}.tar.gz"
+    dest: "{{ (playbook_dir + '/cluster-backup/' + inventory_hostname + '-' + kubernetes_latest_back_dir.path|basename + '.tar.gz') | realpath }}"
+    flat: yes

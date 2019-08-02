@@ -4,7 +4,6 @@
     dest: /etc/kubernetes/pki/etcd/etcd-openssl.cnf
     owner: root
     mode: 0644
-    backup: yes
 
 - name: 创建 etcd-ca 根证书私钥
   shell: openssl genrsa -out /etc/kubernetes/pki/etcd/ca.key 2048

@@ -2,5 +2,3 @@
 ansible_become: true
 # Etcd使用的镜像
 etcd_image: gcr.azk8s.cn/google_containers/etcd:3.3.10
-# Etcd 数据备份目录
-etcd_backup_dir: "/etc/kubernetes/backup/etcd"

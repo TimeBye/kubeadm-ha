@@ -27,7 +27,7 @@
 
 - block:
   - name: 备份原有 yum 源
-    raw: mv /etc/yum.repos.d /etc/yum.repos.d.orig.$(date -Iseconds)
+    raw: mv /etc/yum.repos.d /etc/yum.repos.d.orig.$(date '+%Y%m%dT%H%M%S')
 
   - name: 创建相关目录
     file:

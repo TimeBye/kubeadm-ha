@@ -5,7 +5,6 @@
     dest: /etc/kubernetes/pki/kube-openssl.cnf
     owner: root
     mode: 0644
-    backup: yes
 
 - name: 创建 kubernetes-ca 根证书私钥
   shell: openssl genrsa -out /etc/kubernetes/pki/ca.key 2048

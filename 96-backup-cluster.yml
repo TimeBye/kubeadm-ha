@@ -1,0 +1,5 @@
+# 备份各节点相关数据及文件
+- hosts: 
+  - all
+  roles:
+  - backup

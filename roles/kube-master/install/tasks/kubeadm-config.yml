@@ -32,4 +32,3 @@
     dest: "/etc/kubernetes/kubeadm-config.yaml"
     owner: root
     mode: 0644
-    backup: yes

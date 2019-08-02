@@ -11,7 +11,7 @@
     path: /etc/fstab
     regexp: 'swap'
     state: absent
-    backup: 'yes'
+    backup: yes
 
 - name: 加载内核模块
   modprobe: 
@@ -79,7 +79,6 @@
     line: "127.0.0.1 localhost localhost.localdomain"
     regexp: '^127.0.0.1.*$'
     state: present
-    backup: yes
 
 - name: 确认 hosts 文件中 localhost ipv6 配置正确
   lineinfile:
@@ -87,7 +86,6 @@
     line: "::1 localhost6 localhost6.localdomain"
     regexp: '^::1.*$'
     state: present
-    backup: yes
 
 - name: 设置 ulimits
   lineinfile:

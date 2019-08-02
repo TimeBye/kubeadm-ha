@@ -11,7 +11,7 @@ CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined 
 # etcd 集群
 INITIAL_CLUSTER: "{% for host in ((groups['etcd'] + groups['new-etcd'])|unique) %}{% if hostvars[host]['ansible_host'] is defined %}etcd-{{ host }}=https://{{ hostvars[host]['ansible_host'] }}:2380{% else %}etcd-{{ host }}=https://{{ host }}:2380{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
 # etcd 集群初始状态 new/existing
-CLUSTER_STATE: "{% if inventory_hostname in (groups['new-etcd']) %}existing{% else %}new{% endif %}"
+CLUSTER_STATE: "{% if etcd_static_pod_stat.stat.exists or (inventory_hostname in (groups['new-etcd'])) %}existing{% else %}new{% endif %}"
 # 新增 etcd 节点添加信息
 NEW_MEMBER: "etcd-{{ inventory_hostname }} {% if hostvars[inventory_hostname]['ansible_host'] is defined %}--peer-urls=https://{{ hostvars[inventory_hostname]['ansible_host'] }}:2380{% else %}--peer-urls=https://{{ inventory_hostname }}:2380{% endif %}"
 # Kubelet 根目录
@@ -19,8 +19,6 @@ kubelet_root_dir: "/var/lib/kubelet"
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
 # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
-etcd_backup_hour: 3
+etcd_backup_hour: "3"
 # Etcd 每日备份文件保留时长，默认7天
-etcd_backup_expiry: 7
-# Etcd 数据备份目录
-etcd_backup_dir: "/etc/kubernetes/backup/etcd"
+etcd_backup_expiry: "7"
