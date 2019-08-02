@@ -1,5 +1,15 @@
 # 所有节点卸载安装
 - hosts: 
   - all
+  vars_prompt:
+    name: "reset_confirmation"
+    prompt: "确实要重置群集吗? 输入“yes”确认重置群集。"
+    default: "no"
+    private: no
+  pre_tasks:
+    - name: 重置确认
+      fail:
+        msg: "重置确认失败，取消重置集群操作。"
+      when: reset_confirmation != "yes"
   roles:
   - reset

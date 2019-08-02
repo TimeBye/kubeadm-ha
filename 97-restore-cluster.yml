@@ -1,6 +1,16 @@
 # 安装docker、kubernetes
 - hosts: 
   - all
+  vars_prompt:
+    name: "reset_confirmation"
+    prompt: "确实要恢复群集吗? 输入“yes”确认恢复群集。"
+    default: "no"
+    private: no
+  pre_tasks:
+    - name: 恢复确认
+      fail:
+        msg: "恢复确认失败，取消恢复集群操作。"
+      when: reset_confirmation != "yes"
   roles:
   - prepare/base
   - prepare/docker

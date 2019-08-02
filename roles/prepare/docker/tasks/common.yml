@@ -39,6 +39,12 @@
   - configuration_result.changed
   - '"active" not in docker_already_running.stdout'
 
+- debug:
+    msg: "节点：{{ inventory_hostname }} Docker 处于运行中，但配置文件已更新，请在集群安装完成后手动重启该节点 Docker。"
+  when: 
+  - configuration_result.changed
+  - '"active" in docker_already_running.stdout'
+
 - name: 设置 Docker 开机自启
   service:
     name: docker
