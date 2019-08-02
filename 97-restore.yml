@@ -1,0 +1,13 @@
+# 安装docker、kubernetes
+- hosts: 
+  - all
+  roles:
+  - prepare/base
+  - prepare/docker
+  - prepare/kubernetes
+
+# 恢复
+- hosts: 
+  - all
+  roles:
+  - restore

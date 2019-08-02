@@ -1,0 +1,149 @@
+- name: 确认 kubelet 已停止运行
+  service:
+    name: kubelet
+    state: stopped
+    enabled: yes
+
+- name: 读取所有备份
+  find:
+    paths: "{{ (playbook_dir + '/cluster-backup') | realpath  }}"
+    patterns: "{{ inventory_hostname }}-kubernetes.orig.*"
+  register: kubernetes_back_dirs
+  delegate_to: localhost
+
+- name: 校验备份文件是否存在
+  assert:
+    that: kubernetes_back_dirs.files|length >= 1
+    msg: "未获取到节点：{{ inventory_hostname }} 的任何备份文件，请检查目录：{{ (playbook_dir + '/cluster-backup') | realpath  }} 中是否有该节点备份文件。"
+
+- name: 获取最新备份目录
+  set_fact:
+    kubernetes_latest_back_dir: "{{ kubernetes_back_dirs.files | sort(attribute='ctime',reverse=true) | first }}"
+
+- name: 清理相关目录
+  file: 
+    name: "{{ item }}"
+    state: absent
+  with_items:
+  - /etc/kubernetes
+  - "{{ etcd_data_dir }}"
+  - "{{ kubelet_root_dir }}"
+
+- name: 确认 kubernetes 相关目录存在
+  file: 
+    name: "{{ item }}"
+    state: directory
+  with_items:
+  - /etc/kubernetes
+  - "{{ kubelet_root_dir }}"
+  - /etc/systemd/system/kubelet.service.d
+
+- name: 分发备份文件到对应节点
+  copy:
+    src: "{{ kubernetes_latest_back_dir.path }}"
+    dest: /tmp
+    mode: 0644
+
+- name: 还原备份文件
+  unarchive:
+    src: "/tmp/{{ kubernetes_latest_back_dir.path|basename }}"
+    dest: /etc/kubernetes
+    remote_src: yes
+
+- name: 恢复集群外节点 kubelet 配置文件
+  copy:
+    src: /etc/kubernetes/backup/kubelet/20-kubelet-override.conf
+    dest: /etc/systemd/system/kubelet.service.d/20-kubelet-override.conf
+    mode: 0644
+    remote_src: yes
+  when: inventory_hostname not in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
+
+- name: 恢复集群内节点 kubelet 配置文件
+  copy:
+    src: "/etc/kubernetes/backup/{{ item }}"
+    dest: "/var/lib/{{ item }}"
+    mode: 0644
+    remote_src: yes
+  with_items:
+  - kubelet/config.yaml
+  - kubelet/kubeadm-flags.env
+  when: inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
+
+- block:
+  - name: 读取所有 etcd 数据库备份
+    find:
+      paths: /etc/kubernetes/backup/etcd
+      patterns: etcd-snapshot*.db
+    register: etcd_back_paths
+
+  - name: 获取最新 etcd 数据库备份
+    set_fact:
+      etcd_latest_back_path: "{{ etcd_back_paths.files | sort(attribute='ctime',reverse=true) | first }}"
+
+  - name: 拉取 etcd 数据库备份至本地
+    fetch:
+      src: "{{ etcd_latest_back_path.path }}"
+      dest: "{{ playbook_dir }}/cluster-backup/etcd-snapshot-latest.db"
+      flat: yes
+
+  when: inventory_hostname == groups['etcd'][0]
+
+- block:
+  - name: 确认 etcd 数据相关目录存在
+    file: 
+      name: "{{ item }}"
+      state: directory
+    with_items:
+    - "{{ etcd_data_dir|dirname }}"
+    - /etc/kubernetes/backup/etcd
+
+  - name: 分发 etcd 数据库备份至所有 etcd 节点
+    copy:
+      src: "{{ playbook_dir }}/cluster-backup/etcd-snapshot-latest.db"
+      dest: /etc/kubernetes/backup/etcd/etcd-snapshot-latest.db
+      mode: 0644
+
+  - name: 恢复 etcd 数据库
+    shell: >
+      docker run --net host -e ETCDCTL_API=3
+      -v /etc/kubernetes/backup/etcd:/snapshot
+      -v {{ etcd_data_dir|dirname }}:{{ etcd_data_dir|dirname }}
+      --rm {{ etcd_image }}
+      etcdctl snapshot restore 
+      /snapshot/etcd-snapshot-latest.db
+      --data-dir={{ etcd_data_dir }}
+      --name=etcd-{{ inventory_hostname }}
+      --initial-cluster={{ INITIAL_CLUSTER }}
+      --initial-cluster-token=etcd-cluster-token
+      --initial-advertise-peer-urls=https://{{ CURRENT_HOST_IP }}:2380
+  when: inventory_hostname in (groups['etcd'] + groups['new-etcd'])
+
+- block:
+  - name: 创建 kubeconfig 目录
+    file: 
+      name: "{{ item }}"
+      state: directory
+    with_items:
+    - "{{ ansible_env.PWD }}/.kube"
+    - "{{ ansible_env.HOME }}/.kube"
+
+  - name: 复制 kubeconfig 文件到 .kube 目录
+    copy:
+      src: /etc/kubernetes/admin.conf
+      dest: "{{ item }}/config"
+      mode: 0644
+      remote_src: yes
+    with_items:
+    - "{{ ansible_env.PWD }}/.kube"
+    - "{{ ansible_env.HOME }}/.kube"
+  when: inventory_hostname in (groups['kube-master'] + groups['new-master'])
+
+- name: 重新加载 daemon
+  systemd:
+    daemon_reload: yes
+
+- name: 启动 kubelet
+  service:
+    name: kubelet
+    state: restarted
+    enabled: yes
