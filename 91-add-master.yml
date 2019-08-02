@@ -12,13 +12,19 @@
   roles:
   - role: load-balancer
 
-# 初始化master节点
+# 分发 etcd client 证书
 - hosts: 
   - etcd
   - kube-master
   - new-master
   roles:
   - etcd/certificates
+
+# 初始化master节点
+- hosts: 
+  - kube-master
+  - new-master
+  roles:
   - kube-master/certificates
   - kube-master/install
   - kube-worker
