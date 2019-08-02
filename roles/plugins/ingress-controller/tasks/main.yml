@@ -6,9 +6,9 @@
   - name: 获取当前 kubernetes 版本
     shell: "kubeadm version -o short"
     register: kubeadm_version_output
-  - include_tasks: nginx-ingress-controller.yaml
+  - include_tasks: nginx-ingress-controller.yml
     when: ingress_controller_tpye == 'nginx'
-  - include_tasks: traefik-ingress-controller.yaml
+  - include_tasks: traefik-ingress-controller.yml
     when: ingress_controller_tpye == 'traefik'
 
   when: inventory_hostname == groups['kube-master'][0] and ingress_controller_enabled|bool
