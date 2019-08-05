@@ -1,6 +1,10 @@
 FROM nginx:1.17.2-alpine
 ENV LANG=C.UTF-8
 
+# Add mirror source
+RUN cp /etc/apk/repositories /etc/apk/repositories.bak && \
+    sed -i 's dl-cdn.alpinelinux.org mirrors.aliyun.com g' /etc/apk/repositories
+
 RUN apk add --no-cache \
         git \
         bash \

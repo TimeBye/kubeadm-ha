@@ -235,14 +235,15 @@ calicoctl_image: dockerhub.azk8s.cn/calico/ctl:v3.8.0
 kube_ovn_master:
 - "{{ groups['kube-master'][0] }}"
 # kube-ovn 相关镜像
-kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v0.5.0
-kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v0.5.0
-kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v0.5.0
-kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v0.5.0
+kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v0.6.0
+kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v0.6.0
+kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v0.6.0
+kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v0.6.0
 # 默认网段设置
 kube_ovn_default_cidr: "{{ kube_pod_subnet }}"
 kube_ovn_default_gateway: "{{ kube_pod_subnet | ipaddr(1) | ipaddr('address') }}"
 kube_ovn_node_switch_cidr: 100.64.0.0/16
+kube_ovn_enable_mirror: false
 
 # ------------------------ #
 # ingress-controller 相关参数配置

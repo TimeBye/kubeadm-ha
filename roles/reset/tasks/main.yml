@@ -80,6 +80,7 @@
   - /etc/origin/openvswitch
   - /etc/openvswitch
   - /var/log/openvswitch
+  - /etc/cni/net.d/00-kube-ovn.conflist
 
 - name: 删除 ulimits 相关配置
   file: 

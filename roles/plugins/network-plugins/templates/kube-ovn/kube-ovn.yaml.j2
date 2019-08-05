@@ -55,6 +55,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
+            - name: KUBE_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
           readinessProbe:
             exec:
               command:
@@ -120,6 +124,12 @@ spec:
       - name: cni-server
         image: "{{ kube_ovn_cni_image }}"
         imagePullPolicy: IfNotPresent
+        command:
+          - sh
+          - /kube-ovn/start-cniserver.sh
+        args:
+          - --enable-mirror={{ kube_ovn_enable_mirror|string|lower }}
+          - --service-cluster-ip-range={{ kube_service_subnet }}
         securityContext:
           runAsUser: 0
           privileged: true

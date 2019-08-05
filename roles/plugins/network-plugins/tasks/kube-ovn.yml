@@ -1,3 +1,9 @@
+- name: 渲染 ovn crd 配置文件
+  template:
+    src: kube-ovn/crd.yaml.j2
+    dest: /etc/kubernetes/plugins/network-plugin/rcd.yaml
+  register: ovn_crd_manifest
+
 - name: 渲染 ovn 配置文件
   template:
     src: kube-ovn/ovn.yaml.j2
@@ -13,6 +19,10 @@
 - name: 标记 kube-ovn master 节点
   shell: kubectl label node {{ item }} kube-ovn/role=master --overwrite
   with_items: "{{ kube_ovn_master }}"
+
+- name: 部署 ovn crd
+  shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/rcd.yaml && sleep 5
+  when: ovn_crd_manifest.changed
 
 - name: 部署 ovn
   shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/ovn.yaml
