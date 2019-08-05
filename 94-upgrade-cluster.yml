@@ -17,19 +17,12 @@
       msg: "请设置正确的升级版本号，次版本号只能升一个版本，不能跨版本升级（比如：1.13版本只能升级到1.14，不能直接升级1.15）。"
 
 - hosts: 
-  - etcd[0]
-  - kube-master
-  - kube-worker
-  - new-master
-  - new-worker
+  - all
   roles:
   - backup
 
 - hosts:
-  - kube-master
-  - kube-worker
-  - new-master
-  - new-worker
+  - all
   serial: 1
   roles:
   - upgrade

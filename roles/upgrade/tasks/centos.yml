@@ -15,6 +15,7 @@
     enablerepo: kubernetes
 
 - include_tasks: common.yml
+  when: inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
 
 - name: "安装 kubelet-{{ kube_upgrade_version }} kubectl-{{ kube_upgrade_version }}"
   yum:
