@@ -1,4 +1,4 @@
-FROM setzero/ansible:2.7.8-nginx-1.17.2-alpine
+FROM setzero/ansible:2.8.3-nginx-1.17.2-alpine
 RUN git clone https://github.com/TimeBye/kubeadm-ha /etc/ansible && \
     cd /etc/ansible
 COPY default.conf /etc/nginx/conf.d/default.conf
