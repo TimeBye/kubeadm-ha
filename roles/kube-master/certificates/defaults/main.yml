@@ -29,5 +29,5 @@ kube_dns_domain: cluster.local
 
 # 集群service ip段
 kube_service_subnet: 10.244.64.0/18
-KUBERNETES_SERVICE_IP: "{{ kube_service_subnet | ipaddr(1) | ipaddr('address') }}"
-CLUSTER_DNS_SERVICE_IP: "{{ kube_service_subnet | ipaddr(10) | ipaddr('address') }}"
+KUBERNETES_SERVICE_IP: "{{ kube_service_subnet | ipaddr('net') | ipaddr(1) | ipaddr('address') }}"
+CLUSTER_DNS_SERVICE_IP: "{{ kube_service_subnet | ipaddr('net') | ipaddr(10) | ipaddr('address') }}"
