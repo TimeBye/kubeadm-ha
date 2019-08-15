@@ -45,6 +45,7 @@
     - libseccomp-dev
     - curl                        # 基础工具
     - apt-transport-https         # 添加https协议的apt源会用到
+    - lvm2                        # docker会用到
     - ca-certificates             # docker会用到
     - software-properties-common  # docker会用到
     - nfs-common                  # 挂载nfs 共享文件需要 (创建基于 nfs的PV 需要)
