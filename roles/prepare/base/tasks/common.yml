@@ -87,13 +87,7 @@
     regexp: '^::1.*$'
     state: present
 
-- name: 设置 ulimits
-  lineinfile:
-    dest: /etc/profile
-    regexp: "ulimit -SHn"
-    line: "ulimit -SHn 3000000"
-
-- name: 设置 ulimits 永久配置
+- name: 设置系统 ulimits
   template: 
-    src: 30-ulimits.conf.j2 
-    dest: /etc/security/limits.d/30-ulimits.conf
+    src: 30-k8s-ulimits.conf.j2
+    dest: /etc/systemd/system.conf.d/30-k8s-ulimits.conf
