@@ -6,7 +6,7 @@ net.ipv4.tcp_keepalive_intvl = 30
 net.ipv4.tcp_keepalive_probes = 10
 net.ipv4.ip_forward = 1
 net.ipv4.tcp_tw_reuse = 0
-{% if ansible_distribution in ["CentOS","RedHat"] %}
+{% if ansible_distribution in ["CentOS","RedHat"] and ansible_kernel is version('4.12', '<') %}
 net.ipv4.tcp_tw_recycle = 0
 {% endif %}
 # 要求iptables不对bridge的数据进行处理

@@ -87,6 +87,11 @@
     regexp: '^::1.*$'
     state: present
 
+- name: 创建 systemd 配置目录
+  file: 
+    name: /etc/systemd/system.conf.d 
+    state: directory 
+
 - name: 设置系统 ulimits
   template: 
     src: 30-k8s-ulimits.conf.j2
