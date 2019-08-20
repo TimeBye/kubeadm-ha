@@ -1,8 +1,18 @@
-# 安装docker、kubernetes
+- hosts: localhost
+  become: no
+  tasks:
+  - name: "校验 Ansible 版本"
+    assert:
+      msg: "Ansible 版本最低要求 2.8.0，当前版本为 {{ ansible_version.string }}，请升级 Ansible 版本。"
+      that:
+      - ansible_version.string is version("2.8.0", ">=")
+  vars:
+    ansible_connection: local
+
 - hosts: 
   - all
   vars_prompt:
-    name: "reset_confirmation"
+    name: "restore_confirmation"
     prompt: "确实要恢复群集吗? 输入“yes”确认恢复群集。"
     default: "no"
     private: no
@@ -10,14 +20,9 @@
     - name: 恢复确认
       fail:
         msg: "恢复确认失败，取消恢复集群操作。"
-      when: reset_confirmation != "yes"
+      when: restore_confirmation != "yes"
   roles:
   - prepare/base
   - prepare/docker
   - prepare/kubernetes
-
-# 恢复
-- hosts: 
-  - all
-  roles:
   - restore
