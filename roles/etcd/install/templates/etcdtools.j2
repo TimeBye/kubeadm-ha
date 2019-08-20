@@ -1,0 +1,25 @@
+#!/bin/bash
+function etcd_backup(){
+  docker run --rm --net host -e ETCDCTL_API=3 \
+    -v /etc/kubernetes/backup/etcd:/snapshot \
+    -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/ \
+    {{ etcd_image }} \
+    etcdctl snapshot \
+    save /snapshot/etcd-snapshot-$(date '+%Y%m%dT%H%M%S').db \
+    --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key \
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+}
+
+function etcd_cleanup(){
+  find /etc/kubernetes/backup/etcd -ctime +{{ etcd_backup_expiry }} -name 'etcd-snapshot*.db' | xargs rm -rf
+}
+
+case ${1} in
+  backup)
+    etcd_backup
+    ;;
+  cleanup)
+    etcd_cleanup
+    ;;
+esac

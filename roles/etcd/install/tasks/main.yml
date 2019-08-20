@@ -149,26 +149,24 @@
   - not kubelet_conf_stat.stat.exists
 
 - block:
+  - name: 第一个 etcd 节点创建 etcd 备份工具
+    template: 
+      src: etcdtools.j2
+      dest: /etc/kubernetes/backup/etcd/etcdtools
+      owner: root
+      mode: 0755
   - name: 第一个 etcd 节点创建 etcd 定时备份 crontab
     cron: 
       minute: "0"
       hour: "{{ etcd_backup_hour }}"
       name: Backup etcd databases
       job: >
-        docker run --net host -e ETCDCTL_API=3
-        -v /etc/kubernetes/backup/etcd:/snapshot
-        -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/
-        --rm {{ etcd_image }}
-        etcdctl snapshot save 
-        /snapshot/etcd-snapshot-$(date '+%Y%m%dT%H%M%S').db 
-        --cacert=/etc/kubernetes/pki/etcd/ca.crt 
-        --key=/etc/kubernetes/pki/etcd/healthcheck-client.key 
-        --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+        /etc/kubernetes/backup/etcd/etcdtools backup
   - name: 第一个 etcd 节点创建清理 etcd 定时备份文件 crontab
     cron: 
       minute: "30"
       hour: "{{ etcd_backup_hour }}"
       name: Clean etcd databases backup file
       job: >
-        find /etc/kubernetes/backup/etcd -ctime +{{ etcd_backup_expiry }} -name 'etcd-snapshot*.db' | xargs rm -rf
+        /etc/kubernetes/backup/etcd/etcdtools cleanup
   when: inventory_hostname == groups['etcd'][0]
