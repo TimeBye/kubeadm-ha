@@ -64,9 +64,6 @@
     path: "{{ item }}"
     state: absent
   with_items:
-  - /etc/envoy
-  - /etc/nginx
-  - /etc/haproxy
   - /var/lib/etcd
   - /etc/cni/net.d
   - /etc/sysctl.d/95-k8s-sysctl.conf
@@ -87,7 +84,7 @@
     name: "{{ item }} "
     state: absent
   with_items:
-  - /etc/security/limits.d/30-ulimits.conf
+  - /etc/systemd/system.conf.d/30-k8s-ulimits.conf
 
 - name: 清理 iptables
   shell: "{{ item }} || true"

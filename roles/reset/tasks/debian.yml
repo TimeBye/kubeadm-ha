@@ -1,9 +1,9 @@
 - name: 卸载相关软件
   apt: 
     name:
+    - kubeadm
     - kubectl
     - kubelet
-    - kubeadm
     - docker-ce
     - docker-ce-cli
     - containerd.io
