@@ -116,6 +116,12 @@
       --initial-cluster={{ INITIAL_CLUSTER }}
       --initial-cluster-token=etcd-cluster-token
       --initial-advertise-peer-urls=https://{{ CURRENT_HOST_IP }}:2380
+  
+  - name: 移除各节点临时 etcd 备份文件
+    file: 
+      name: /etc/kubernetes/backup/etcd/etcd-snapshot-latest.db
+      state: absent
+
   when: inventory_hostname in (groups['etcd'] + groups['new-etcd'])
 
 - block:
