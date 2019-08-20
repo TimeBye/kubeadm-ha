@@ -167,7 +167,7 @@ pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
 kube_image_repository: gcr.azk8s.cn/google_containers
 
 # kubernetes版本
-kube_version: 1.15.1
+kube_version: 1.15.2
 
 # 集群内部dns域名
 kube_dns_domain: cluster.local
