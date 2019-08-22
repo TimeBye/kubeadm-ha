@@ -8,16 +8,13 @@
   - include_tasks: certs_stat.yml
   # 生成公共证书
   - include_tasks: common.yml
-  # 生成该节点 kubelet证书
-  - include_tasks: respective.yml
   when: inventory_hostname == groups['kube-master'][0]
 
 # 分发证书
 - include_tasks: distribute.yml
 
-# 初始化其他 master 节点
+# 各节点分别生成 kubelet 证书
 - include_tasks: respective.yml
-  when: inventory_hostname != groups['kube-master'][0]
 
 - name: 读取 kubelet.conf 文件 stat 信息
   stat: 
