@@ -6,7 +6,7 @@
 # 系统基础软件环境
 - include_tasks: centos.yml
   when: 
-  - ansible_distribution in [ 'CentOS','RedHat' ]
+  - ansible_distribution in [ 'CentOS','OracleLinux','RedHat' ]
   - '"active" not in docker_already_running.stdout'
 
 - include_tasks: debian.yml
