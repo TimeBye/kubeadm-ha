@@ -35,7 +35,7 @@ kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt 
 # Docker 相关参数配置
 # ------------------------ #
 # Docker版本
-docker_version: 18.09.6
+docker_version: 19.03.1
 
 # 国内镜像加速(若不需要加速，请将值删去，键保留)
 docker_mirror: 
@@ -167,7 +167,7 @@ pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
 kube_image_repository: gcr.azk8s.cn/google_containers
 
 # kubernetes版本
-kube_version: 1.15.2
+kube_version: 1.15.3
 
 # 集群内部dns域名
 kube_dns_domain: cluster.local
