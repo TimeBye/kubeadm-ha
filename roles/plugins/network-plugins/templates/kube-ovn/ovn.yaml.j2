@@ -29,6 +29,7 @@ rules:
       - "kubeovn.io"
     resources:
       - subnets
+      - subnets/status
       - ips
     verbs:
       - "*"
@@ -49,10 +50,12 @@ rules:
   - apiGroups:
       - ""
       - networking.k8s.io
+      - apps
     resources:
       - networkpolicies
       - services
       - endpoints
+      - statefulsets
     verbs:
       - get
       - list
