@@ -192,7 +192,6 @@ spec:
     spec:
       containers:
         - name: kubernetes-dashboard
-          # image: kubernetesui/dashboard:v2.0.0-beta1
           image: {{ kubernetesui_dashboard_image }}
           imagePullPolicy: IfNotPresent
           ports:
@@ -236,7 +235,7 @@ kind: Service
 apiVersion: v1
 metadata:
   labels:
-    k8s-app: kubernetes-metrics-scraper
+    k8s-app: dashboard-metrics-scraper
   name: dashboard-metrics-scraper
   namespace: kubernetes-dashboard
 spec:
@@ -244,7 +243,7 @@ spec:
     - port: 8000
       targetPort: 8000
   selector:
-    k8s-app: kubernetes-metrics-scraper
+    k8s-app: dashboard-metrics-scraper
 
 ---
 
@@ -252,23 +251,22 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   labels:
-    k8s-app: kubernetes-metrics-scraper
-  name: kubernetes-metrics-scraper
+    k8s-app: dashboard-metrics-scraper
+  name: dashboard-metrics-scraper
   namespace: kubernetes-dashboard
 spec:
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      k8s-app: kubernetes-metrics-scraper
+      k8s-app: dashboard-metrics-scraper
   template:
     metadata:
       labels:
-        k8s-app: kubernetes-metrics-scraper
+        k8s-app: dashboard-metrics-scraper
     spec:
       containers:
-        - name: kubernetes-metrics-scraper
-          # image: kubernetesui/metrics-scraper:v1.0.0
+        - name: dashboard-metrics-scraper
           image: {{ kubernetesui_metrics_scraper_image }}
           ports:
             - containerPort: 8000
@@ -280,8 +278,14 @@ spec:
               port: 8000
             initialDelaySeconds: 30
             timeoutSeconds: 30
+          volumeMounts:
+          - mountPath: /tmp
+            name: tmp-volume
       serviceAccountName: kubernetes-dashboard
       # Comment the following tolerations if Dashboard must not be deployed on master
       tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
