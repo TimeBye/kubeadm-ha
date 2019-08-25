@@ -240,7 +240,6 @@ spec:
       serviceAccountName: nginx-ingress-serviceaccount
       containers:
         - name: nginx-ingress-controller
-          # image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.25.0
           image: {{ nginx_ingress_image }}
           args:
             - /nginx-ingress-controller
