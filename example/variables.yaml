@@ -222,23 +222,24 @@ flannel_image: quay.azk8s.cn/coreos/flannel:v0.11.0-amd64
 # calico mtu
 calico_veth_mtu: 1440
 # calico 相关镜像
-calico_typha_image: dockerhub.azk8s.cn/calico/typha:v3.8.0
-calico_cni_image: dockerhub.azk8s.cn/calico/cni:v3.8.0
-calico_node_image: dockerhub.azk8s.cn/calico/node:v3.8.0
-calico_kube_controllers_image: dockerhub.azk8s.cn/calico/kube-controllers:v3.8.0
+calico_typha_image: dockerhub.azk8s.cn/calico/typha:v3.8.2
+calico_cni_image: dockerhub.azk8s.cn/calico/cni:v3.8.2
+calico_node_image: dockerhub.azk8s.cn/calico/node:v3.8.2
+calico_kube_controllers_image: dockerhub.azk8s.cn/calico/kube-controllers:v3.8.2
+calico_pod2daemon_flexvol_image: dockerhub.azk8s.cn/calico/pod2daemon-flexvol:v3.8.2
 # 设置 Felix 日志级别(debug, info, warning, error)
 calico_felix_log_level: "warning"
 # calicoctl image 地址
-calicoctl_image: dockerhub.azk8s.cn/calico/ctl:v3.8.0
+calicoctl_image: dockerhub.azk8s.cn/calico/ctl:v3.8.2
 
 # kube-ovn master 节点
 kube_ovn_master:
 - "{{ groups['kube-master'][0] }}"
 # kube-ovn 相关镜像
-kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v0.6.0
-kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v0.6.0
-kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v0.6.0
-kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v0.6.0
+kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v0.7.0
+kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v0.7.0
+kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v0.7.0
+kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v0.7.0
 # 默认网段设置
 kube_ovn_default_cidr: "{{ kube_pod_subnet }}"
 kube_ovn_default_gateway: "{{ kube_pod_subnet | ipaddr('net') | ipaddr(1) | ipaddr('address') }}"
@@ -260,12 +261,12 @@ ingress_controller_http_nodeport: 30080
 ingress_controller_https_nodeport: 30443
 
 # nginx-ingress 镜像地址
-nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.25.0
+nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.25.1
 
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
 # traefik-ingress-controller 镜像地址
-traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.12
+traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.14
 
 # ------------------------ #
 # kubernetes-dashboard 相关参数配置
@@ -278,8 +279,8 @@ kubernetesui_dashboard_enabled: true
 kubernetesui_dashboard_certs_expired: 3650
 
 # kubernetes-dashboard 镜像地址
-kubernetesui_dashboard_image: dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta1
-kubernetesui_metrics_scraper_image: dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.0
+kubernetesui_dashboard_image: dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta3
+kubernetesui_metrics_scraper_image: dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.1
 
 # ------------------------ #
 # metrics-server 相关参数配置 
@@ -303,6 +304,6 @@ acme_email: yourname@gmail.com
 acme_server: https://acme-v02.api.letsencrypt.org/directory
 
 # cert-manager 相关 image 地址
-cert_manager_cainjector_image: "quay.azk8s.cn/jetstack/cert-manager-cainjector:v0.8.0"
-cert_manager_webhook_image: "quay.azk8s.cn/jetstack/cert-manager-webhook:v0.8.0"
-cert_manager_controller_image: "quay.azk8s.cn/jetstack/cert-manager-controller:v0.8.0"
+cert_manager_cainjector_image: "quay.azk8s.cn/jetstack/cert-manager-cainjector:v0.9.1"
+cert_manager_webhook_image: "quay.azk8s.cn/jetstack/cert-manager-webhook:v0.9.1"
+cert_manager_controller_image: "quay.azk8s.cn/jetstack/cert-manager-controller:v0.9.1"
