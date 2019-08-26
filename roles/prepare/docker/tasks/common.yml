@@ -55,7 +55,7 @@
             vi /var/lib/kubelet/config.yaml
             vi /var/lib/kubelet/kubeadm-flags.env
         在 /var/lib/kubelet/config.yaml 文件中参数名为：cgroupDriver；
-        在 /var/lib/kubelet/kubeadm-flags.env 文件中参数名为：--cgroup-driver，若参数不存在请忽略。        
+        在 /var/lib/kubelet/kubeadm-flags.env 文件中参数名为：--cgroup-driver，若参数不存在请忽略。
 
     debug: 
       msg: "{{ msg.split('\n') }}"

@@ -10,13 +10,14 @@ metadata:
     checksum/config: {{ lb_configuration_result.checksum }}
 spec:
   hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
+  nodeSelector:
+    beta.kubernetes.io/os: linux
   priorityClassName: system-cluster-critical
   containers:
   - name: lb-nginx
-    # image: haproxy:1.9.8
     image: {{ lb_haproxy_image }}
 {% if lb_kube_apiserver_healthcheck_port is defined %}
-    # 检测当前节点haproxy是否存活，若不存活则重启
     livenessProbe:
       httpGet:
         path: /healthz
@@ -27,6 +28,8 @@ spec:
         port: {{ lb_kube_apiserver_healthcheck_port }}
 {% endif %}
     resources: {}
+    securityContext:
+      privileged: true
     volumeMounts:
     - name: haproxy-cfg
       readOnly: true

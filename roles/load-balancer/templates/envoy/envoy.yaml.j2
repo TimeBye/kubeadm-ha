@@ -10,14 +10,15 @@ metadata:
     checksum/config: {{ lb_configuration_result.checksum }}
 spec:
   hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
+  nodeSelector:
+    beta.kubernetes.io/os: linux
   priorityClassName: system-cluster-critical
   containers:
   - name: lb-envoy
-    # image: envoyproxy/envoy-alpine:v1.10.0
     image: {{ lb_envoy_image }}
     imagePullPolicy: IfNotPresent
 {% if lb_kube_apiserver_healthcheck_port is defined %}
-    # 检测当前节点envoy是否存活，若不存活则重启
     livenessProbe:
       httpGet:
         path: /healthz
@@ -28,6 +29,8 @@ spec:
         port: {{ lb_kube_apiserver_healthcheck_port }}
 {% endif %}
     resources: {}
+    securityContext:
+      privileged: true
     volumeMounts:
     - mountPath: /etc/envoy
       name: envoy-lb-conf
