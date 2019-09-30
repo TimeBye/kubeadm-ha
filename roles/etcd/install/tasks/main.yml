@@ -80,7 +80,7 @@
     --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
     --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
   register: etcd_status
-  until: '"is healthy" in etcd_status.stdout'
+  until: etcd_status.rc == 0
   retries: 12
   delay: 5
   when: inventory_hostname in groups['etcd']
@@ -125,7 +125,7 @@
     --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
     --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
   register: etcd_status
-  until: '"is healthy" in etcd_status.stdout'
+  until: etcd_status.rc == 0
   retries: 12
   delay: 5
   when: inventory_hostname in groups['new-etcd']
