@@ -14,7 +14,7 @@ metadata:
     rbac.authorization.k8s.io/aggregate-to-admin: "true"
 rules:
 - apiGroups: ["metrics.k8s.io"]
-  resources: ["pods"]
+  resources: ["pods", "nodes"]
   verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -55,6 +55,7 @@ rules:
   - pods
   - nodes
   - nodes/stats
+  - namespaces
   verbs:
   - get
   - list
@@ -87,7 +88,7 @@ spec:
   groupPriorityMinimum: 100
   versionPriority: 100
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: metrics-server
@@ -111,7 +112,6 @@ spec:
         emptyDir: {}
       containers:
       - name: metrics-server
-        # image: k8s.gcr.io/metrics-server-amd64:v0.3.3
         image: {{ metrics_server_image }}
         args: 
         - --logtostderr
@@ -129,6 +129,7 @@ metadata:
   namespace: kube-system
   labels:
     kubernetes.io/name: "Metrics-server"
+    kubernetes.io/cluster-service: "true"
 spec:
   selector:
     k8s-app: metrics-server
