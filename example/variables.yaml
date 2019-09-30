@@ -132,7 +132,7 @@ etcd_certs_expired: 3650
 # Etcd根证书过期时间（天）
 etcd_ca_certs_expired: 36500
 # Etcd使用的镜像
-etcd_image: gcr.azk8s.cn/google_containers/etcd:3.3.10
+etcd_image: gcr.azk8s.cn/google_containers/etcd:3.3.15-0
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
 # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
