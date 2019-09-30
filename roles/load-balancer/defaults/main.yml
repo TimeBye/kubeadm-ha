@@ -26,7 +26,7 @@ kubelet_root_dir: "/var/lib/kubelet"
 
 #---------------------------------------------- Nginx 相关参数 --------------------------------------------#
 # 使用nginx进行apiserver负载时使用的nginx镜像
-lb_nginx_image: dockerhub.azk8s.cn/library/nginx:1.15.12-alpine
+lb_nginx_image: dockerhub.azk8s.cn/library/nginx:1.17.4-alpine
 
 #--------------------------------------------- Haproxy 相关参数 --------------------------------------------#
 # 使用haproxy进行apiserver负载时使用的haproxy镜像

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-docker pull dockerhub.azk8s.cn/library/nginx:1.15.12-alpine 
+docker pull dockerhub.azk8s.cn/library/nginx:1.17.4-alpine 
 docker pull dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta3 
 docker pull dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.1
 docker pull gcr.azk8s.cn/google_containers/kube-proxy:v1.15.4 
@@ -16,7 +16,7 @@ docker pull quay.azk8s.cn/coreos/flannel:v0.11.0-amd64
 docker pull quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.25.1 
 
 docker save \
-    dockerhub.azk8s.cn/library/nginx:1.15.12-alpine \
+    dockerhub.azk8s.cn/library/nginx:1.17.4-alpine \
     dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta3 \
     dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.1 \
     gcr.azk8s.cn/google_containers/kube-proxy:v1.15.4 \
