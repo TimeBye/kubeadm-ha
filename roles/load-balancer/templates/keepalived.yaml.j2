@@ -11,7 +11,6 @@ spec:
   priorityClassName: system-cluster-critical
   containers:
   - name: lb-keepalived
-    # image: osixia/keepalived:2.0.16
     image: {{ lb_keepalived_image }}
     env:
     - name: KEEPALIVED_VIRTUAL_IPS
