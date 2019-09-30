@@ -116,6 +116,10 @@ enabel_ingress_nodeport_lb: false
 # 启用 ingress tls NodePort服务的负载均衡 (true/false)
 enabel_ingress_tls_nodeport_lb: false
 
+# 使用haproxy进行apiserver负载时使用的haproxy镜像
+lb_envoy_image: dockerhub.azk8s.cn/envoyproxy/envoy-alpine:v1.11.1
+lb_envoy_admin_address_port: 9090
+
 # 使用 vip 负载时使用的 keepalived 镜像
 lb_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.16
 # keepalived auth_type 的 password
