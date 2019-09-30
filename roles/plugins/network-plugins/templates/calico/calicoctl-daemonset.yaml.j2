@@ -1,7 +1,7 @@
-# Calico Version v3.8.2
-# https://docs.projectcalico.org/v3.8/releases#v3.8.2
+# Calico Version v3.9.1
+# https://docs.projectcalico.org/v3.9/releases#v3.9.1
 # This manifest includes the following component versions:
-#   calico/ctl:v3.8.2
+#   calico/ctl:v3.9.1
 
 apiVersion: v1
 kind: ServiceAccount
@@ -12,7 +12,7 @@ metadata:
 ---
 
 kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: calicoctl
 rules:
@@ -62,10 +62,16 @@ rules:
       - list
       - update
       - delete
+  - apiGroups: ["networking.k8s.io"]
+    resources:
+      - networkpolicies
+    verbs:
+      - get
+      - list
 
 ---
 
-apiVersion: rbac.authorization.k8s.io/v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
   name: calicoctl
