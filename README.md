@@ -27,7 +27,7 @@
   | **组件**           | **支持**                                       |
   | :----------------- | :--------------------------------------------- |
   | Dist               | Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7 |
-  | Etcd               | v3.3.10                                        |
+  | Etcd               | v3.3.15-0                                      |
   | Docker             | 18.06, 18.09, **19.03**                        |
   | Kubernetes         | v1.13, v1.14, **v1.15**                        |
   | Kube-apiserver lb  | haproxy, envoy, **nginx**                      |
