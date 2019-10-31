@@ -17,11 +17,13 @@ systemctl restart sshd
 SCRIPT
 
 $debian_script = <<-SCRIPT
-sed -i 's security.debian.org mirrors.aliyun.com g;s httpredir.debian.org mirrors.aliyun.com g' /etc/apt/sources.list
+cp /etc/apt/sources.list /etc/apt/sources.list.orig.$(date -Iseconds)
+sed -i 's http://.*.debian.org http://mirrors.aliyun.com g' /etc/apt/sources.list
 SCRIPT
 
 $ubuntu_script = <<-SCRIPT
-sed -i 's security.ubuntu.com mirrors.aliyun.com g;s archive.ubuntu.com mirrors.aliyun.com g' /etc/apt/sources.list
+cp /etc/apt/sources.list /etc/apt/sources.list.orig.$(date -Iseconds)
+sed -i 's http://.*.debian.org http://mirrors.aliyun.com g' /etc/apt/sources.list
 SCRIPT
 
 Vagrant.configure(2) do |config|
