@@ -92,6 +92,9 @@ metadata:
   name: calicoctl
   namespace: kube-system
 spec:
+  selector:
+    matchLabels:
+      k8s-app: calicoctl
   template:
     metadata:
       labels:
