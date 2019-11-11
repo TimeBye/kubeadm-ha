@@ -32,6 +32,7 @@
     -key /etc/kubernetes/pki/front-proxy-ca.key
     -out /etc/kubernetes/pki/front-proxy-ca.crt
     -days {{ kube_ca_certs_expired }}
+  when: front_proxy_ca_crt_stat.stat.isreg is not defined
 
 - name: 创建 apiserver 证书私钥
   shell: openssl genrsa -out /etc/kubernetes/pki/apiserver.key 2048
