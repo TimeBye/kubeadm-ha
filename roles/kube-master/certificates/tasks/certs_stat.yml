@@ -15,6 +15,11 @@
     path: /etc/kubernetes/pki/front-proxy-ca.key
   register: front_proxy_ca_key_stat
 
+- name: 读取 front-proxy-ca 根证书 stat 信息
+  stat: 
+    path: /etc/kubernetes/pki/front-proxy-ca.crt
+  register: front_proxy_ca_crt_stat
+
 - name: 读取 apiserver 证书私钥 stat 信息
   stat: 
     path: /etc/kubernetes/pki/apiserver.key
