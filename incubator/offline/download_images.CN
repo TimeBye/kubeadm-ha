@@ -2,7 +2,7 @@
 
 docker pull dockerhub.azk8s.cn/library/nginx:1.17.4-alpine 
 docker pull dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta6 
-docker pull dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.1
+docker pull dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.2
 docker pull gcr.azk8s.cn/google_containers/kube-proxy:v1.15.5 
 docker pull gcr.azk8s.cn/google_containers/kube-apiserver:v1.15.5 
 docker pull gcr.azk8s.cn/google_containers/kube-scheduler:v1.15.5 
@@ -18,7 +18,7 @@ docker pull quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller
 docker save \
     dockerhub.azk8s.cn/library/nginx:1.17.4-alpine \
     dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta6 \
-    dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.1 \
+    dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.2 \
     gcr.azk8s.cn/google_containers/kube-proxy:v1.15.5 \
     gcr.azk8s.cn/google_containers/kube-apiserver:v1.15.5 \
     gcr.azk8s.cn/google_containers/kube-scheduler:v1.15.5 \
