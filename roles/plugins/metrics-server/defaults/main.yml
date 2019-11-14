@@ -8,4 +8,4 @@ wait_plugins_ready: true
 metrics_server_enabled: true
 
 # metrics-server image地址
-metrics_server_image: gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.5
+metrics_server_image: gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.6
