@@ -63,8 +63,8 @@ yumdownloader --destdir=/kubernetes --resolve \
 
 # 下载docker
 yumdownloader --destdir=/kubernetes --resolve \
-    docker-ce-19.03.1 \
-    docker-ce-cli-19.03.1 \
+    docker-ce-19.03.4 \
+    docker-ce-cli-19.03.4 \
     containerd.io
 
 # 下载kubernetes
@@ -101,8 +101,8 @@ yum install -y \
 
 # 下载docker
 yum install -y \
-    docker-ce-19.03.1 \
-    docker-ce-cli-19.03.1 \
+    docker-ce-19.03.4 \
+    docker-ce-cli-19.03.4 \
     containerd.io
 
 # 下载kubernetes
