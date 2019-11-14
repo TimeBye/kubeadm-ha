@@ -259,6 +259,11 @@ ingress_controller_enabled: true
 
 # ingress-controller类型(nginx,traefik)
 ingress_controller_tpye: nginx
+# NodePort svc 保留客户端的源 IP 地址，可选值：Cluster、Local
+#   Cluster：不保留客户端的源 IP 地址；
+#   Local：保留客户端的源 IP 地址，当设置为 Local 时仅 ingress-controller pod 运行的节点才能提供服务器，其余节点不提供服务
+# 相关文档：https://kubernetes.io/docs/tutorials/services/source-ip/
+ingress_controller_external_traffic_policy: Cluster
 # NodePort svc 监听http协议端口(注意需在NodePort端口范围)
 ingress_controller_http_nodeport: 30080
 # NodePort svc 监听https协议端口(注意需在NodePort端口范围)

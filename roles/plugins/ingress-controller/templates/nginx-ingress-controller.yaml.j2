@@ -314,7 +314,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
 spec:
   type: NodePort
-  # externalTrafficPolicy: Local
+  externalTrafficPolicy: {{ ingress_controller_external_traffic_policy }}
 {% if kube_proxy_mode == "iptables" %}
   externalIPs:
 {{ INGRESS_EXTERNALIPS }}
