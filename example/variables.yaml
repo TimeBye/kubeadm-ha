@@ -93,7 +93,7 @@ lb_kube_apiserver_port: 8443
 lb_nginx_image: dockerhub.azk8s.cn/library/nginx:1.17.5-alpine
 
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-lb_haproxy_image: dockerhub.azk8s.cn/library/haproxy:2.0.7-alpine
+lb_haproxy_image: dockerhub.azk8s.cn/library/haproxy:2.0.8-alpine
 # haproxy监控绑定端口
 lb_haproxy_stats_bind_address: 9090
 # haproxy监控访问路径
