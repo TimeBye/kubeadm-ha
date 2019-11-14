@@ -32,6 +32,12 @@
   shell: kubectl apply -f /etc/kubernetes/plugins/network-plugin/kube-ovn.yaml
   when: kube_ovn_manifest.changed
 
+- name: 配置 kube-ovn kubectl plugin
+  template: 
+    src: kubectl-ko.j2 
+    dest: /usr/local/bin/kubectl-ko 
+    mode: 0755
+
 - name: 轮询等待 kube-ovn 运行
   shell: kubectl get pod --all-namespaces -o wide | grep 'kube-ovn' | awk '{print $4}'
   register: pod_status
