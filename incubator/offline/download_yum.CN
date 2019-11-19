@@ -84,9 +84,9 @@ yumdownloader --destdir=/kubernetes --resolve \
 
 # 下载kubernetes
 yumdownloader --destdir=/kubernetes --resolve \
-    kubeadm-1.15.5-0.x86_64 \
-    kubectl-1.15.5-0.x86_64 \
-    kubelet-1.15.5-0.x86_64 \
+    kubeadm-1.15.6-0.x86_64 \
+    kubectl-1.15.6-0.x86_64 \
+    kubelet-1.15.6-0.x86_64 \
     kubernetes-cni-0.7.5
 
 # 下载需要的基础包
@@ -122,12 +122,12 @@ yum install -y \
 
 # 下载kubernetes
 yum install -y \
-    kubeadm-1.15.5-0.x86_64 \
-    kubectl-1.15.5-0.x86_64 \
-    kubelet-1.15.5-0.x86_64 \
+    kubeadm-1.15.6-0.x86_64 \
+    kubectl-1.15.6-0.x86_64 \
+    kubelet-1.15.6-0.x86_64 \
     kubernetes-cni-0.7.5
 
 cp -n $(find /var/cache/yum -name "*.rpm") /kubernetes
 cd /kubernetes
 createrepo --update ./
-tar -czvf kubernetes-1.15.5.tar.gz *.rpm repodata
+tar -czvf kubernetes-1.15.6.tar.gz *.rpm repodata
