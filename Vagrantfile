@@ -5,12 +5,14 @@ $centos_script = <<-SCRIPT
 mv /etc/yum.repos.d /etc/yum.repos.d.orig.$(date -Iseconds)
 mkdir -p /etc/yum.repos.d/
 wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo
 SCRIPT
 
 $rhel7_script = <<-SCRIPT
 mv /etc/yum.repos.d /etc/yum.repos.d.orig.$(date -Iseconds)
 mkdir -p /etc/yum.repos.d/
 wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo
 sed -i 's/$releasever/7/g' /etc/yum.repos.d/CentOS-Base.repo
 sed -i 's/PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 systemctl restart sshd
