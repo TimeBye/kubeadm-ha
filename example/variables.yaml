@@ -35,7 +35,7 @@ kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt 
 # Docker 相关参数配置
 # ------------------------ #
 # Docker版本
-docker_version: 19.03.1
+docker_version: 19.03.5
 
 # 国内镜像加速(若不需要加速，请将值删去，键保留)
 docker_mirror: 
@@ -90,10 +90,10 @@ lb_kube_apiserver_healthcheck_port: 8081
 lb_kube_apiserver_port: 8443
 
 # 使用nginx进行apiserver负载时使用的nginx镜像
-lb_nginx_image: dockerhub.azk8s.cn/library/nginx:1.17.4-alpine
+lb_nginx_image: dockerhub.azk8s.cn/library/nginx:1.17.5-alpine
 
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-lb_haproxy_image: dockerhub.azk8s.cn/library/haproxy:2.0.7-alpine
+lb_haproxy_image: dockerhub.azk8s.cn/library/haproxy:2.0.8-alpine
 # haproxy监控绑定端口
 lb_haproxy_stats_bind_address: 9090
 # haproxy监控访问路径
@@ -117,7 +117,7 @@ enabel_ingress_nodeport_lb: false
 enabel_ingress_tls_nodeport_lb: false
 
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-lb_envoy_image: dockerhub.azk8s.cn/envoyproxy/envoy-alpine:v1.11.1
+lb_envoy_image: dockerhub.azk8s.cn/envoyproxy/envoy-alpine:v1.12.1
 lb_envoy_admin_address_port: 9090
 
 # 使用 vip 负载时使用的 keepalived 镜像
@@ -171,7 +171,7 @@ pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
 kube_image_repository: gcr.azk8s.cn/google_containers
 
 # kubernetes版本
-kube_version: 1.15.5
+kube_version: 1.15.7
 
 # 集群内部dns域名
 kube_dns_domain: cluster.local
@@ -226,24 +226,25 @@ flannel_image: quay.azk8s.cn/coreos/flannel:v0.11.0-amd64
 # calico mtu
 calico_veth_mtu: 1440
 # calico 相关镜像
-calico_typha_image: dockerhub.azk8s.cn/calico/typha:v3.9.1
-calico_cni_image: dockerhub.azk8s.cn/calico/cni:v3.9.1
-calico_node_image: dockerhub.azk8s.cn/calico/node:v3.9.1
-calico_kube_controllers_image: dockerhub.azk8s.cn/calico/kube-controllers:v3.9.1
-calico_pod2daemon_flexvol_image: dockerhub.azk8s.cn/calico/pod2daemon-flexvol:v3.9.1
+calico_typha_image: dockerhub.azk8s.cn/calico/typha:v3.9.3
+calico_cni_image: dockerhub.azk8s.cn/calico/cni:v3.9.3
+calico_node_image: dockerhub.azk8s.cn/calico/node:v3.9.3
+calico_kube_controllers_image: dockerhub.azk8s.cn/calico/kube-controllers:v3.9.3
+calico_pod2daemon_flexvol_image: dockerhub.azk8s.cn/calico/pod2daemon-flexvol:v3.9.3
 # 设置 Felix 日志级别(debug, info, warning, error)
 calico_felix_log_level: "warning"
 # calicoctl image 地址
-calicoctl_image: dockerhub.azk8s.cn/calico/ctl:v3.9.1
+calicoctl_image: dockerhub.azk8s.cn/calico/ctl:v3.9.3
 
 # kube-ovn master 节点
 kube_ovn_master:
 - "{{ groups['kube-master'][0] }}"
 # kube-ovn 相关镜像
-kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v0.7.0
-kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v0.7.0
-kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v0.7.0
-kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v0.7.0
+kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v0.10.0
+kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v0.10.0
+kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v0.10.0
+kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v0.10.0
+kube_ovn_pinger_image: index.alauda.cn/alaudak8s/kube-ovn-pinger:v0.10.0
 # 默认网段设置
 kube_ovn_default_cidr: "{{ kube_pod_subnet }}"
 kube_ovn_default_gateway: "{{ kube_pod_subnet | ipaddr('net') | ipaddr(1) | ipaddr('address') }}"
@@ -259,6 +260,11 @@ ingress_controller_enabled: true
 
 # ingress-controller类型(nginx,traefik)
 ingress_controller_tpye: nginx
+# NodePort svc 保留客户端的源 IP 地址，可选值：Cluster、Local
+#   Cluster：不保留客户端的源 IP 地址；
+#   Local：保留客户端的源 IP 地址，当设置为 Local 时仅 ingress-controller pod 运行的节点才能提供服务器，其余节点不提供服务
+# 相关文档：https://kubernetes.io/docs/tutorials/services/source-ip/
+ingress_controller_external_traffic_policy: Cluster
 # NodePort svc 监听http协议端口(注意需在NodePort端口范围)
 ingress_controller_http_nodeport: 30080
 # NodePort svc 监听https协议端口(注意需在NodePort端口范围)
@@ -270,7 +276,7 @@ nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-c
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
 # traefik-ingress-controller 镜像地址
-traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.14
+traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.19
 
 # ------------------------ #
 # kubernetes-dashboard 相关参数配置
@@ -283,8 +289,8 @@ kubernetesui_dashboard_enabled: true
 kubernetesui_dashboard_certs_expired: 3650
 
 # kubernetes-dashboard 镜像地址
-kubernetesui_dashboard_image: dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta4
-kubernetesui_metrics_scraper_image: dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.1
+kubernetesui_dashboard_image: dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta8
+kubernetesui_metrics_scraper_image: dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.2
 
 # ------------------------ #
 # metrics-server 相关参数配置 
@@ -294,7 +300,7 @@ kubernetesui_metrics_scraper_image: dockerhub.azk8s.cn/kubernetesui/metrics-scra
 metrics_server_enabled: true
 
 # metrics-server image地址
-metrics_server_image: gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.5
+metrics_server_image: gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.6
 
 # ------------------------ #
 # cert-manager 相关配置

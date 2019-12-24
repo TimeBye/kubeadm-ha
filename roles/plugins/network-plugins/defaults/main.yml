@@ -22,25 +22,26 @@ flannel_image: quay.azk8s.cn/coreos/flannel:v0.11.0-amd64
 # calico mtu
 calico_veth_mtu: 1440
 # calico 相关镜像
-calico_typha_image: dockerhub.azk8s.cn/calico/typha:v3.9.1
-calico_cni_image: dockerhub.azk8s.cn/calico/cni:v3.9.1
-calico_node_image: dockerhub.azk8s.cn/calico/node:v3.9.1
-calico_kube_controllers_image: dockerhub.azk8s.cn/calico/kube-controllers:v3.9.1
-calico_pod2daemon_flexvol_image: dockerhub.azk8s.cn/calico/pod2daemon-flexvol:v3.9.1
+calico_typha_image: dockerhub.azk8s.cn/calico/typha:v3.9.3
+calico_cni_image: dockerhub.azk8s.cn/calico/cni:v3.9.3
+calico_node_image: dockerhub.azk8s.cn/calico/node:v3.9.3
+calico_kube_controllers_image: dockerhub.azk8s.cn/calico/kube-controllers:v3.9.3
+calico_pod2daemon_flexvol_image: dockerhub.azk8s.cn/calico/pod2daemon-flexvol:v3.9.3
 # 设置 Felix 日志级别(debug, info, warning, error)
 calico_felix_log_level: "warning"
 # calicoctl image 地址
-calicoctl_image: dockerhub.azk8s.cn/calico/ctl:v3.9.1
+calicoctl_image: dockerhub.azk8s.cn/calico/ctl:v3.9.3
 
 # kube-ovn master 节点
 kube_ovn_master:
 - "{{ groups['kube-master'][0] }}"
 KUBE_OVN_NODE_IPS: "{% for host in kube_ovn_master %}{% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}"
 # kube-ovn 相关镜像
-kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v0.7.0
-kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v0.7.0
-kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v0.7.0
-kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v0.7.0
+kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v0.10.0
+kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v0.10.0
+kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v0.10.0
+kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v0.10.0
+kube_ovn_pinger_image: index.alauda.cn/alaudak8s/kube-ovn-pinger:v0.10.0
 # 默认网段设置
 kube_ovn_default_cidr: "{{ kube_pod_subnet }}"
 kube_ovn_default_gateway: "{{ kube_pod_subnet | ipaddr('net') | ipaddr(1) | ipaddr('address') }}"

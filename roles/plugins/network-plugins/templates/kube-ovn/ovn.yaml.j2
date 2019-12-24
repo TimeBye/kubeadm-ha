@@ -56,6 +56,7 @@ rules:
       - services
       - endpoints
       - statefulsets
+      - daemonsets
     verbs:
       - get
       - list
@@ -98,6 +99,7 @@ spec:
   type: ClusterIP
   selector:
     app: ovn-central
+    ovn-nb-leader: "true"
   sessionAffinity: None
 
 ---
@@ -115,6 +117,7 @@ spec:
   type: ClusterIP
   selector:
     app: ovn-central
+    ovn-sb-leader: "true"
   sessionAffinity: None
 
 ---
@@ -159,6 +162,9 @@ spec:
         - name: ovn-central
           image: "{{ kube_ovn_db_image }}"
           imagePullPolicy: IfNotPresent
+          securityContext:
+            capabilities:
+              add: ["SYS_NICE"]
           env:
             - name: POD_IP
               valueFrom:
@@ -168,13 +174,18 @@ spec:
             - name: NODE_IPS
               value: "{{ KUBE_OVN_NODE_IPS }}"
 {% endif %}
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
           resources:
             requests:
-              cpu: 200m
+              cpu: 500m
               memory: 300Mi
-            limits:
-              cpu: 400m
-              memory: 800Mi
           volumeMounts:
             - mountPath: /run/openvswitch
               name: host-run-ovs
@@ -232,7 +243,7 @@ spec:
     matchLabels:
       app: ovs
   updateStrategy:
-    type: RollingUpdate
+    type: OnDelete
   template:
     metadata:
       labels:
@@ -289,11 +300,11 @@ spec:
             failureThreshold: 5
           resources:
             requests:
-              cpu: 100m
+              cpu: 200m
               memory: 300Mi
             limits:
-              cpu: 200m
-              memory: 400Mi
+              cpu: 1000m
+              memory: 800Mi
       nodeSelector:
         beta.kubernetes.io/os: "linux"
       volumes:
