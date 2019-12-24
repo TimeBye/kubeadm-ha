@@ -18,6 +18,7 @@
     name: "{{ item }}"
     state: present
   with_items:
+  - sunrpc
   - ip_vs
   - ip_vs_rr
   - ip_vs_sh
@@ -57,6 +58,15 @@
 
 - name: 生效系统参数
   shell: "sysctl -p /etc/sysctl.d/95-k8s-sysctl.conf"
+  ignore_errors: true
+
+- name: 优化 nfs clinet 配置
+  template: 
+    src: sunrpc.conf.j2
+    dest: /etc/modprobe.d/sunrpc.conf
+
+- name: 生效 nfs clinet 配置
+  shell: "sysctl -w sunrpc.tcp_slot_table_entries=128"
   ignore_errors: true
 
 - name: 添加集群节点 hostname 信息到 hosts 文件中
