@@ -96,7 +96,7 @@ spec:
     matchLabels:
       app: kube-ovn-cni
   updateStrategy:
-    type: RollingUpdate
+    type: OnDelete
   template:
     metadata:
       labels:
@@ -115,6 +115,9 @@ spec:
         image: "{{ kube_ovn_cni_image }}"
         imagePullPolicy: IfNotPresent
         command: ["/kube-ovn/install-cni.sh"]
+        securityContext:
+          runAsUser: 0
+          privileged: true
         volumeMounts:
           - mountPath: /etc/cni/net.d
             name: cni-conf
@@ -131,8 +134,8 @@ spec:
           - --enable-mirror={{ kube_ovn_enable_mirror|string|lower }}
           - --service-cluster-ip-range={{ kube_service_subnet }}
         securityContext:
-          runAsUser: 0
-          privileged: true
+          capabilities:
+            add: ["NET_ADMIN", "SYS_ADMIN", "SYS_PTRACE"]
         env:
           - name: POD_IP
             valueFrom:
@@ -145,6 +148,9 @@ spec:
         volumeMounts:
           - mountPath: /run/openvswitch
             name: host-run-ovs
+          - mountPath: /var/run/netns
+            name: host-ns
+            mountPropagation: HostToContainer
         readinessProbe:
           exec:
             command:
@@ -177,6 +183,9 @@ spec:
         - name: cni-bin
           hostPath:
             path: /opt/cni/bin
+        - name: host-ns
+          hostPath:
+            path: /var/run/netns
 
 ---
 kind: DaemonSet
@@ -282,4 +291,18 @@ spec:
     app: kube-ovn-pinger
   ports:
     - port: 8080
-      name: http
+      name: metrics
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kube-ovn-controller
+  namespace: kube-ovn
+  labels:
+    app: kube-ovn-controller
+spec:
+  selector:
+    app: kube-ovn-controller
+  ports:
+    - port: 10660
+      name: metrics
