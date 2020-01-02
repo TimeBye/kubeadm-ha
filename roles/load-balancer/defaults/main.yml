@@ -30,7 +30,7 @@ lb_nginx_image: dockerhub.azk8s.cn/library/nginx:1.17.6-alpine
 
 #--------------------------------------------- Haproxy 相关参数 --------------------------------------------#
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-lb_haproxy_image: dockerhub.azk8s.cn/library/haproxy:2.0.8-alpine
+lb_haproxy_image: dockerhub.azk8s.cn/library/haproxy:2.1.2-alpine
 # haproxy监控绑定端口
 lb_haproxy_stats_bind_address: 9090
 # haproxy监控访问路径
