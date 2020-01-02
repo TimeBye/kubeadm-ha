@@ -63,7 +63,7 @@ KUBE_APISERVER_IP: >-
   {% endif %}
 
 # 使用 vip 负载时使用的 keepalived 镜像
-lb_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.17
+lb_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.19
 # keepalived auth_type 的 password
 lb_keepalived_password: "d0cker"
 # 区分多个 instance 的 VRRP 组播，同网段不能重复，取值在0-255之间
