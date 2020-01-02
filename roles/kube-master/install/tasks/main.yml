@@ -28,3 +28,18 @@
   - not kubelet_conf_stat.stat.exists
   - inventory_hostname != groups['kube-master'][0]
   - inventory_hostname in (groups['kube-master'] + groups['new-master'])
+
+- name: 确认 kubelet 配置是否有修改
+  template:
+    src: kubelet-config.v1beta1.yaml.j2
+    dest: /var/lib/kubelet/config.yaml
+    owner: root
+    mode: 0644
+  register: configuration_result
+
+- name: 启动/重启 kubelet
+  service:
+    name: kubelet
+    state: restarted
+    enabled: yes
+  when: configuration_result.changed
