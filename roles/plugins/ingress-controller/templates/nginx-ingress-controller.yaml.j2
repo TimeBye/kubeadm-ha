@@ -7,6 +7,7 @@ metadata:
     app.kubernetes.io/part-of: ingress-nginx
 
 ---
+
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -205,6 +206,7 @@ subjects:
     namespace: ingress-controller
 
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -228,6 +230,8 @@ spec:
         prometheus.io/port: "10254"
         prometheus.io/scrape: "true"
     spec:
+      # wait up to five minutes for the drain of connections
+      terminationGracePeriodSeconds: 300
       affinity:	
         podAntiAffinity:	
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -239,6 +243,8 @@ spec:
                 - ingress-nginx	
             topologyKey: kubernetes.io/hostname
       serviceAccountName: nginx-ingress-serviceaccount
+      nodeSelector:
+        kubernetes.io/os: linux
       containers:
         - name: nginx-ingress-controller
           image: {{ nginx_ingress_image }}
@@ -270,8 +276,10 @@ spec:
           ports:
             - name: http
               containerPort: 80
+              protocol: TCP
             - name: https
               containerPort: 443
+              protocol: TCP
           livenessProbe:
             failureThreshold: 3
             httpGet:
@@ -304,6 +312,7 @@ spec:
               cpu: 500m
               memory: 512Mi
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
