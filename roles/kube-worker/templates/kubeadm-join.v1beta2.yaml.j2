@@ -56,6 +56,15 @@ evictionHard:
   memory.available: {{ eviction_hard_memory_available }}
   nodefs.available: {{ eviction_hard_nodefs_available }}
   nodefs.inodesFree: {{ eviction_hard_nodefs_inodes_free }}
+kubeReserved:
+  cpu: {{ kube_cpu_reserved }}
+  memory: {{ kube_memory_reserved|regex_replace('Mi', 'M') }}
+{% if system_reserved_enabled is defined and system_reserved_enabled %}
+systemReserved:
+  cpu: {{ system_cpu_reserved|default('500m') }}
+  memory: {{ system_memory_reserved|default('512M')|regex_replace('Mi', 'M') }}
+  ephemeral-storage: {{ system_ephemeral_storage_reserved|default('10Gi')|regex_replace('Gi', 'G') }}
+{% endif %}
 evictionPressureTransitionPeriod: 5m0s
 failSwapOn: true
 fileCheckFrequency: 20s
