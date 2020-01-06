@@ -44,12 +44,14 @@
         <td><a target="_blank" href="docs/01-集群安装.md">01-集群安装</a></td>
         <td><a target="_blank" href="docs/02-添加节点.md">02-添加节点</a></td>
         <td><a target="_blank" href="docs/03-证书轮换.md">03-证书轮换</a></td>
+        <td><a target="_blank" href="docs/04-集群升级.md">04-集群升级</a></td>
     </tr>
     <tr>
-        <td><a target="_blank" href="docs/04-集群升级.md">04-集群升级</a></td>
         <td><a target="_blank" href="docs/05-集群备份.md">05-集群备份</a></td>
         <td><a target="_blank" href="docs/06-集群恢复.md">06-集群恢复</a></td>
         <td><a target="_blank" href="docs/07-集群重置.md">07-集群重置</a></td>
+        <td><a target="_blank" href="docs/08-离线安装.md">08-离线安装</a></td>
+        <td><a target="_blank" href="#">-</a></td>
     </tr>
 </table>
 

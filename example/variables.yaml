@@ -194,13 +194,14 @@ eviction_hard_nodefs_inodes_free: 5%
 # kubernetes组件预留资源
 kube_cpu_reserved: 100m
 kube_memory_reserved: 256M
+kube_ephemeral_storage_reserved: 1G
 
 # # 操作系统守护进程预留资源
 # system_reserved_enabled: true
 # # 取消注释以覆盖默认值
 # system_cpu_reserved: 500m
 # system_memory_reserved: 512M
-# system_ephemeral_storage_reserved: 10Gi
+# system_ephemeral_storage_reserved: 10G
 
 # 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式
 kube_proxy_mode: iptables

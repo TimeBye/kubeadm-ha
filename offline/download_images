@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
+docker pull dockerhub.azk8s.cn/setzero/ansible:2.8.5-nginx-1.17.6-alpine
 docker pull dockerhub.azk8s.cn/library/nginx:1.17.6-alpine 
 docker pull dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta8 
 docker pull dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.2
@@ -11,11 +12,12 @@ docker pull gcr.azk8s.cn/google_containers/coredns:1.3.1
 docker pull gcr.azk8s.cn/google_containers/etcd:3.4.3-0 
 docker pull gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.6 
 docker pull gcr.azk8s.cn/google_containers/pause:3.1 
-docker pull gcr.azk8s.cn/kubernetes-helm/tiller:v2.13.1 
+docker pull gcr.azk8s.cn/kubernetes-helm/tiller:v2.14.3 
 docker pull quay.azk8s.cn/coreos/flannel:v0.11.0-amd64
 docker pull quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.26.2 
 
 docker save \
+    dockerhub.azk8s.cn/setzero/ansible:2.8.5-nginx-1.17.6-alpine \
     dockerhub.azk8s.cn/library/nginx:1.17.6-alpine \
     dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-beta8 \
     dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.2 \
@@ -27,6 +29,6 @@ docker save \
     gcr.azk8s.cn/google_containers/etcd:3.4.3-0 \
     gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.6 \
     gcr.azk8s.cn/google_containers/pause:3.1 \
-    gcr.azk8s.cn/kubernetes-helm/tiller:v2.13.1 \
+    gcr.azk8s.cn/kubernetes-helm/tiller:v2.14.3 \
     quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.26.2 \
-    quay.azk8s.cn/coreos/flannel:v0.11.0-amd64 | gzip -1 > kubernetes-1.15.7.tar
+    quay.azk8s.cn/coreos/flannel:v0.11.0-amd64 | gzip -1 > /kubernetes/kubernetes-1.15.7.tar
