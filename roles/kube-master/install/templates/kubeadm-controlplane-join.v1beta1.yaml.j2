@@ -109,6 +109,7 @@ scheduler:
   extraArgs:
     bind-address: 127.0.0.1
     profiling: "false"
+    terminated-pod-gc-threshold: "10"
   extraVolumes:
     - hostPath: /etc/localtime
       mountPath: /etc/localtime
