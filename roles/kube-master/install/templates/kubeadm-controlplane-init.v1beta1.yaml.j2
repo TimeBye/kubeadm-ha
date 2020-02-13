@@ -58,6 +58,12 @@ apiServer:
     enable-admission-plugins: NodeRestriction,DefaultStorageClass
     profiling: "false"
     service-node-port-range: {{ kube_service_node_port_range }}
+  extraVolumes:
+    - hostPath: /etc/localtime
+      mountPath: /etc/localtime
+      pathType: File
+      readOnly: true
+      name: localtime
   certSANs:
   - localhost
   - kubernetes
@@ -93,10 +99,22 @@ controllerManager:
   extraArgs:
     bind-address: 127.0.0.1
     profiling: "false"
+  extraVolumes:
+    - hostPath: /etc/localtime
+      mountPath: /etc/localtime
+      pathType: File
+      readOnly: true
+      name: localtime
 scheduler:
   extraArgs:
     bind-address: 127.0.0.1
     profiling: "false"
+  extraVolumes:
+    - hostPath: /etc/localtime
+      mountPath: /etc/localtime
+      pathType: File
+      readOnly: true
+      name: localtime
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
