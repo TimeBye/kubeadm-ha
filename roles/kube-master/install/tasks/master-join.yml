@@ -22,16 +22,16 @@
 
 - include_tasks: "{{ (role_path + '/../certificates/tasks/kubeconfig.yml') | realpath  }}"
 
-# 监听所有网卡方便 prometheus 进行监控
-- name: 更新 kube-scheduler kube-controller-manager 监听地址
-  lineinfile:
-    backrefs: yes
-    path: "/etc/kubernetes/manifests/{{ item }}.yaml"
-    regexp: 'address\=127\.0\.0\.1'
-    line: "    - --address=0.0.0.0"
-  with_items:
-  - kube-scheduler
-  - kube-controller-manager
+# # 监听所有网卡方便 prometheus 进行监控
+# - name: 更新 kube-scheduler kube-controller-manager 监听地址
+#   lineinfile:
+#     backrefs: yes
+#     path: "/etc/kubernetes/manifests/{{ item }}.yaml"
+#     regexp: 'address\=127\.0\.0\.1'
+#     line: "    - --address=0.0.0.0"
+#   with_items:
+#   - kube-scheduler
+#   - kube-controller-manager
 
 - name: 重新加载 daemon
   systemd:

@@ -93,11 +93,11 @@ apiServer:
 {% endfor %}
 controllerManager:
   extraArgs:
-    bind-address: 0.0.0.0
+    bind-address: 127.0.0.1
     profiling: "false"
 scheduler:
   extraArgs:
-    bind-address: 0.0.0.0
+    bind-address: 127.0.0.1
     profiling: "false"
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
