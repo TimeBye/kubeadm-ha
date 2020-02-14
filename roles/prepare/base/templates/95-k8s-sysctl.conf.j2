@@ -18,3 +18,8 @@ fs.file-max = 52706963
 fs.nr_open = 52706963
 vm.swappiness = 0
 vm.max_map_count = 3000000
+# refer to https://github.com/andyzhangx/aks-engine/blob/d6f4929a659241ea33d8fd4d9fc86d0e27b0cb07/parts/k8s/cloud-init/artifacts/sysctl-d-60-CIS.conf
+# refer to https://github.com/kubernetes/kubernetes/blob/75d45bdfc9eeda15fb550e00da662c12d7d37985/pkg/kubelet/cm/container_manager_linux.go#L359-L397
+vm.overcommit_memory = 1
+kernel.panic = 10
+kernel.panic_on_oops = 1
