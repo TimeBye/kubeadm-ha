@@ -4,8 +4,10 @@
     state: directory
   with_items:
   - "{{ kubelet_root_dir }}"
+  - "{{ audit_policy_file | dirname }}"
   - /etc/kubernetes/pki
   - /etc/kubernetes/manifests
+  - /var/log/kubernetes/audit
   - /usr/share/bash-completion/completions
 
 - name: 读取 kubelet.conf 文件 stat 信息
@@ -22,6 +24,11 @@
     dest: /etc/kubernetes/pki/secrets_encryption.yaml
     owner: root
     mode: 0644
+
+- name: 创建 apiserver 审计日志策略配置文件
+  template:
+    src: apiserver-audit-policy.yaml.j2
+    dest: "{{ audit_policy_file }}"
 
 # 初始化第一个 master 节点
 - include_tasks: master-init.yml
