@@ -71,3 +71,9 @@ kubelet_root_dir: "/var/lib/kubelet"
 
 # node节点最大pod 数
 kube_max_pods: 110
+
+## 存入 Etcd 时的 Secret 进行静态加密 
+# 仅支持: aescbc, secretbox 或 aesgcm
+kube_encryption_algorithm: "aescbc"
+# 将Secret数据加密存储到etcd中的配置文件，下面加密码由 head -c 32 /dev/urandom | base64 生成
+kube_encrypt_token: "GPG4RC0Vyk7+Mz/niQPttxLIeL4HF96oRCcBRyKNpfM="

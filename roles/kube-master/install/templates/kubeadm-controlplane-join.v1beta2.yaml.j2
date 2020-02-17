@@ -58,6 +58,8 @@ apiServer:
     allow-privileged: "true"
     apiserver-count: "{{ groups['kube-master']|length + groups['new-master']|length }}"
     enable-admission-plugins: NodeRestriction,DefaultStorageClass
+    encryption-provider-config: /etc/kubernetes/pki/secrets_encryption.yaml
+    kubelet-certificate-authority: /etc/kubernetes/pki/ca.crt
     profiling: "false"
     service-node-port-range: {{ kube_service_node_port_range }}
   extraVolumes:

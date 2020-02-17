@@ -16,6 +16,13 @@
 # 生成 kubeadm 配置
 - include_tasks: kubeadm-config.yml
 
+- name: 创建 EncryptionConfiguration 配置文件
+  template:
+    src: secrets_encryption.yaml.j2
+    dest: /etc/kubernetes/pki/secrets_encryption.yaml
+    owner: root
+    mode: 0644
+
 # 初始化第一个 master 节点
 - include_tasks: master-init.yml
   when: 
