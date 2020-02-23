@@ -67,6 +67,8 @@ systemReserved:
 {% endif %}
 evictionPressureTransitionPeriod: 5m0s
 failSwapOn: true
+featureGates: 
+  RotateKubeletServerCertificate: true
 fileCheckFrequency: 20s
 hairpinMode: promiscuous-bridge
 healthzBindAddress: 127.0.0.1
@@ -99,4 +101,6 @@ serializeImagePulls: true
 staticPodPath: /etc/kubernetes/manifests
 streamingConnectionIdleTimeout: 4h0m0s
 syncFrequency: 1m0s
+tlsCertFile: /var/lib/kubelet/pki/kubelet.crt
+tlsPrivateKeyFile: /var/lib/kubelet/pki/kubelet.key
 volumeStatsAggPeriod: 1m0s

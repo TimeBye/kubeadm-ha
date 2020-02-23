@@ -1,7 +1,0 @@
-# 生成master节点证书，初始化master节点
-- hosts: 
-  - kube-master
-  - new-master
-  roles:
-  - kube-master/certificates
-  - kube-master/install

@@ -1,0 +1,61 @@
+# 分发证书
+- name: 获取 kubernetes master 节点相关证书
+  slurp:
+    src: /etc/kubernetes/pki/{{ item }}
+  with_items:
+  - admin.crt
+  - admin.key
+  - apiserver.crt
+  - apiserver.key
+  - apiserver-kubelet-client.crt
+  - apiserver-kubelet-client.key
+  - ca.crt
+  - ca.key
+  - front-proxy-ca.crt
+  - front-proxy-ca.key
+  - front-proxy-client.crt
+  - front-proxy-client.key
+  - kube-controller-manager.crt
+  - kube-scheduler.crt
+  - kube-scheduler.key
+  - sa.key
+  - sa.pub
+  register: kubernetes_master_certs
+  run_once: true
+  delegate_to: "{{ groups['kube-master'][0] }}"
+
+- name: 分发 kubernetes master相关证书到 master 节点
+  copy:
+    dest: "{{ item.source }}"
+    content: "{{ item.content | b64decode }}"
+    owner: root
+    group: root
+    mode: 0644
+  no_log: true
+  with_items: "{{ kubernetes_master_certs.results }}"
+  when: 
+  - inventory_hostname != groups['kube-master'][0]
+  - inventory_hostname in (groups['kube-master'] + groups['new-master'])
+
+- name: 获取 kubelet 服务证书
+  slurp:
+    src: /var/lib/kubelet/pki/{{ item }}
+  with_items:
+  - kubelet.crt
+  - kubelet.key
+  register: kubelet_certs
+  run_once: true
+  delegate_to: "{{ groups['kube-master'][0] }}"
+
+- name: 分发 kubelet 服务证书到所有节点
+  copy:
+    dest: "{{ item.source }}"
+    content: "{{ item.content | b64decode }}"
+    owner: root
+    group: root
+    mode: 0644
+  no_log: true
+  with_items: "{{ kubelet_certs.results }}"
+  when: 
+  - inventory_hostname != groups['kube-master'][0]
+  - inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])

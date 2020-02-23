@@ -16,6 +16,9 @@ KUBE_APISERVER_IP: >-
     {{ lb_kube_apiserver_ip }}
   {% endif %}
 
+# kubernetes证书过期时间（天）
+kube_certs_expired: 3650
+
 # 加入集群token
 kubeadm_token: "abcdef.0123456789abcdef"
 

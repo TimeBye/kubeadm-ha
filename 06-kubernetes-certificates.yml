@@ -1,8 +1,8 @@
+# 生成kubernetes属性证书
 - hosts: 
-  - etcd
-  - new-etcd
   - kube-master
   - new-master
+  - kube-worker
+  - new-worker
   roles:
-  - etcd/certificates
   - kube-certificates

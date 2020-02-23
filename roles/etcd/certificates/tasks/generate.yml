@@ -106,3 +106,16 @@
     -in /etc/kubernetes/pki/etcd/healthcheck-client.csr 
     -out /etc/kubernetes/pki/etcd/healthcheck-client.crt
     -days {{ etcd_certs_expired }} 
+
+- name: 检索需要清理的 etcd 证书请求文件
+  find:
+    paths: /etc/kubernetes/pki/etcd
+    patterns: '*.csr'
+  register: files_to_purge_for_csr
+
+- name: 清理 etcd 节点证书请求文件
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  no_log: true
+  with_items: "{{ files_to_purge_for_csr.files }}"

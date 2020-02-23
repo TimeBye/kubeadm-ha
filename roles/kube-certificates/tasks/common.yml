@@ -179,5 +179,41 @@
     -days {{ kube_certs_expired }} 
 
 - name: 创建 kubelet 证书私钥
-  shell: openssl genrsa -out /etc/kubernetes/pki/kubelet.key 2048
+  shell: openssl genrsa -out /var/lib/kubelet/pki/kubelet.key 2048
   when: kubelet_key_stat.stat.isreg is not defined
+
+- name: 创建 kubelet 证书请求
+  shell: >
+    openssl req -new 
+    -subj "/CN=kubelet" 
+    -key /var/lib/kubelet/pki/kubelet.key
+    -out /var/lib/kubelet/pki/kubelet.csr
+  
+- name: 创建 kubelet 服务端证书
+  shell: >
+    openssl x509 -req -CAcreateserial 
+    -extensions v3_req_kubelet 
+    -extfile /etc/kubernetes/pki/kube-openssl.cnf 
+    -CA /etc/kubernetes/pki/ca.crt 
+    -CAkey /etc/kubernetes/pki/ca.key 
+    -in /var/lib/kubelet/pki/kubelet.csr
+    -out /var/lib/kubelet/pki/kubelet.crt
+    -days {{ kube_certs_expired }}
+
+- name: 检索需要清理的控制节点证书请求文件
+  find:
+    paths: /etc/kubernetes/pki/
+    patterns: '*.csr'
+  register: files_to_purge_for_csr
+
+- name: 清理控制节点证书请求文件
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  no_log: true
+  with_items: "{{ files_to_purge_for_csr.files }}"
+
+- name: 清理 kubelet 证书请求文件
+  file:
+    path: /var/lib/kubelet/pki/kubelet.csr
+    state: absent
