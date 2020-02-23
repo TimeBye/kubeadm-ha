@@ -14,7 +14,7 @@ docker pull gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.6
 docker pull gcr.azk8s.cn/google_containers/pause:3.1 
 docker pull gcr.azk8s.cn/kubernetes-helm/tiller:v2.14.3 
 docker pull quay.azk8s.cn/coreos/flannel:v0.11.0-amd64
-docker pull quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.26.2 
+docker pull quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.29.0 
 
 docker save \
     dockerhub.azk8s.cn/setzero/ansible:2.8.5-nginx-1.17.6-alpine \
@@ -30,5 +30,5 @@ docker save \
     gcr.azk8s.cn/google_containers/metrics-server-amd64:v0.3.6 \
     gcr.azk8s.cn/google_containers/pause:3.1 \
     gcr.azk8s.cn/kubernetes-helm/tiller:v2.14.3 \
-    quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.26.2 \
+    quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.29.0 \
     quay.azk8s.cn/coreos/flannel:v0.11.0-amd64 | gzip -1 > /kubernetes/kubernetes-1.16.7.tar
