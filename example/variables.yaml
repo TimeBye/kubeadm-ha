@@ -117,7 +117,7 @@ enabel_ingress_nodeport_lb: false
 enabel_ingress_tls_nodeport_lb: false
 
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-lb_envoy_image: dockerhub.azk8s.cn/envoyproxy/envoy-alpine:v1.12.2
+lb_envoy_image: dockerhub.azk8s.cn/envoyproxy/envoy-alpine:v1.13.0
 lb_envoy_admin_address_port: 9090
 
 # 使用 vip 负载时使用的 keepalived 镜像
