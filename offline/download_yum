@@ -68,8 +68,8 @@ yum install -y \
 
 # 下载docker
 yum install -y \
-    docker-ce-19.03.5 \
-    docker-ce-cli-19.03.5 \
+    docker-ce-19.03.6 \
+    docker-ce-cli-19.03.6 \
     containerd.io
 
 # 下载kubernetes
