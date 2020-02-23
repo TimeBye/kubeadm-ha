@@ -244,7 +244,7 @@ spec:
             topologyKey: kubernetes.io/hostname
       serviceAccountName: nginx-ingress-serviceaccount
       nodeSelector:
-        kubernetes.io/os: linux
+        beta.kubernetes.io/os: linux
       containers:
         - name: nginx-ingress-controller
           image: {{ nginx_ingress_image }}
