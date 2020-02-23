@@ -3,7 +3,7 @@ ansible_become: true
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.15.7
+kube_version: 1.16.7
 kube_cni_version: 0.7.5
 # CentOS
 kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
