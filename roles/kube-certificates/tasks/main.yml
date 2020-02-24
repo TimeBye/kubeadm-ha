@@ -1,7 +1,10 @@
-- name: 创建 kubernetes 相关目录
+- name: 创建 kubernetes 证书存放目录
   file: 
-    name: /etc/kubernetes/pki
+    name: "{{ item }}"
     state: directory
+  with_items:
+  - /etc/kubernetes/pki
+  - /var/lib/kubelet/pki
 
 - block:
   # 获取密钥状态
@@ -12,9 +15,6 @@
 
 # 分发证书
 - include_tasks: distribute.yml
-
-# 各节点分别生成 kubelet 证书
-- include_tasks: respective.yml
 
 - name: 读取 kubelet.conf 文件 stat 信息
   stat: 

@@ -90,7 +90,7 @@ spec:
           - --logtostderr
           - --kubelet-insecure-tls
           - --metric-resolution=30s
-          - --kubelet-preferred-address-types=InternalIP,,ExternalIP,Hostname
+          - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
         ports:
         - name: main-port
           containerPort: 4443
@@ -99,7 +99,7 @@ spec:
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 1000
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: tmp-dir
           mountPath: /tmp

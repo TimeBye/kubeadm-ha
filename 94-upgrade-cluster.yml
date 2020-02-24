@@ -34,4 +34,4 @@
   - new-master
   roles:
   - etcd/certificates
-  - kube-master/certificates
+  - kube-certificates

@@ -6,13 +6,13 @@
   - prepare/docker
   - prepare/kubernetes
 
-# 进行apiserver负载均衡
+# 进行 apiserver 负载均衡
 - hosts: 
   - all
   roles:
   - role: load-balancer
 
-# 安装etcd，并分发etcd证书到master节点
+# 安装 etcd，并分发etcd证书到master节点
 - hosts: 
   - etcd
   - new-etcd
@@ -22,13 +22,21 @@
   - etcd/certificates
   - etcd/install
 
-# 生成master节点证书，初始化master节点
+# 生成 kubernetes 所需证书证书
+- hosts: 
+  - kube-master
+  - new-master
+  - kube-worker
+  - new-worker
+  roles:
+  - kube-certificates
+
+# 初始化master节点
 - hosts: 
   - kube-master
   - new-master
   roles:
-  - kube-master/certificates
-  - kube-master/install
+  - kube-master
 
 # 初始化worker节点
 - hosts: 

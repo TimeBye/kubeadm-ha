@@ -1,0 +1,85 @@
+#!/bin/bash
+# https://rdc.hand-china.com/gitlab/DevOps/issue/issues/170
+
+# 缓存yum包
+sed "s/keepcache=0/keepcache=1/" -i /etc/yum.conf
+
+# 安装基础工具
+yum install -y yum-utils createrepo
+
+# 移除原有源
+sudo rm -rf /etc/yum.repos.d/*
+# 添加基础源
+sudo yum-config-manager \
+    --add-repo \
+    http://mirrors.aliyun.com/repo/Centos-7.repo
+
+# 添加epel源
+yum-config-manager \
+    --add-repo \
+    http://mirrors.aliyun.com/repo/epel-7.repo
+
+# 添加docker源
+yum-config-manager \
+    --add-repo \
+    http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+# 添加kubernetes源
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+
+# 创建缓存目录
+mkdir -p /kubernetes
+
+# 缓存元数据
+yum makecache fast
+
+# 下载需要的基础包
+yum install -y \
+    nc \
+    jq \
+    git \
+    perl \
+    nss \
+    nss-pem \
+    lvm2 \
+    curl \
+    htop \
+    iotop \
+    socat \
+    ipset \
+    sysstat \
+    ipvsadm \
+    nfs-utils \
+    yum-utils \
+    net-tools \
+    conntrack \
+    libseccomp \
+    conntrack-tools \
+    bash-completion \
+    device-mapper-persistent-data
+
+# 下载docker
+yum install -y \
+    docker-ce-19.03.6 \
+    docker-ce-cli-19.03.6 \
+    containerd.io
+
+# 下载kubernetes
+yum install -y \
+    kubeadm-1.16.7-0.x86_64 \
+    kubectl-1.16.7-0.x86_64 \
+    kubelet-1.16.7-0.x86_64 \
+    kubernetes-cni-0.7.5
+
+cp -n $(find /var/cache/yum -name "*.rpm") /kubernetes
+cd /kubernetes
+createrepo --update ./
+tar -czvf kubernetes-1.16.7.tar.gz *.rpm repodata

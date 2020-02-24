@@ -1,21 +1,3 @@
-apiVersion: kubeadm.k8s.io/v1beta2
-kind: JoinConfiguration
-discovery:
-  bootstrapToken:
-    apiServerEndpoint: "{{ KUBE_APISERVER_IP | trim }}:{{ lb_kube_apiserver_port | trim }}"
-    token: {{ kubeadm_token }}
-    unsafeSkipCAVerification: true
-  timeout: 5m0s
-  tlsBootstrapToken: {{ kubeadm_token }}
-nodeRegistration:
-  kubeletExtraArgs:
-    network-plugin: cni
-    root-dir: {{ kubelet_root_dir }}
-    hostname-override: {{ inventory_hostname }}
-    pod-infra-container-image: {{ pod_infra_container_image }}
-  criSocket: /var/run/dockershim.sock
-  name: {{ inventory_hostname }}
----
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 address: 0.0.0.0

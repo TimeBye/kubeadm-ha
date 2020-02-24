@@ -27,9 +27,9 @@
   | **组件**           | **支持**                                       |
   | :----------------- | :--------------------------------------------- |
   | Dist               | Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7 |
-  | Etcd               | v3.3.15-0                                      |
+  | Etcd               | v3.4.3-0                                       |
   | Docker             | 18.06, 18.09, **19.03**                        |
-  | Kubernetes         | v1.13, v1.14, **v1.15**, v1.16                 |
+  | Kubernetes         | v1.13, v1.14, v1.15, **v1.16**, v1.17          |
   | Kube-apiserver lb  | haproxy, envoy, **nginx**                      |
   | Network plugin     | calico, kube-ovn, **flannel**                  |
   | Ingress controller | traefik, **nginx-ingress**                     |
@@ -44,12 +44,14 @@
         <td><a target="_blank" href="docs/01-集群安装.md">01-集群安装</a></td>
         <td><a target="_blank" href="docs/02-添加节点.md">02-添加节点</a></td>
         <td><a target="_blank" href="docs/03-证书轮换.md">03-证书轮换</a></td>
+        <td><a target="_blank" href="docs/04-集群升级.md">04-集群升级</a></td>
     </tr>
     <tr>
-        <td><a target="_blank" href="docs/04-集群升级.md">04-集群升级</a></td>
         <td><a target="_blank" href="docs/05-集群备份.md">05-集群备份</a></td>
         <td><a target="_blank" href="docs/06-集群恢复.md">06-集群恢复</a></td>
         <td><a target="_blank" href="docs/07-集群重置.md">07-集群重置</a></td>
+        <td><a target="_blank" href="docs/08-离线安装.md">08-离线安装</a></td>
+        <td><a target="_blank" href="#">-</a></td>
     </tr>
 </table>
 

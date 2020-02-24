@@ -1,8 +1,16 @@
-apiVersion: kubeadm.k8s.io/v1beta1
-kind: InitConfiguration
-localAPIEndpoint:
-  advertiseAddress: {{ CURRENT_HOST_IP }}
-  bindPort: 6443
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: JoinConfiguration
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "{{ KUBE_APISERVER_IP | trim }}:{{ lb_kube_apiserver_port | trim }}"
+    token: {{ kubeadm_token }}
+    unsafeSkipCAVerification: true
+  timeout: 5m0s
+  tlsBootstrapToken: {{ kubeadm_token }}
+controlPlane:
+  localAPIEndpoint:
+    advertiseAddress: {{ CURRENT_HOST_IP }}
+    bindPort: 6443
 nodeRegistration:
   kubeletExtraArgs:
     network-plugin: cni
@@ -18,21 +26,15 @@ nodeRegistration:
 {% else %}
   taints: []
 {% endif %}
-bootstrapTokens:
-- groups:
-  - system:bootstrappers:kubeadm:default-node-token
-  token: {{ kubeadm_token }}
-  ttl: 0s
-  usages:
-  - signing
-  - authentication
 ---
-apiVersion: kubeadm.k8s.io/v1beta1
+apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
 kubernetesVersion: v{{ kube_version }}
 clusterName: kubernetes
 controlPlaneEndpoint: "{{ KUBE_APISERVER_IP | trim }}:{{ lb_kube_apiserver_port | trim }}"
 certificatesDir: /etc/kubernetes/pki
+dns:
+  type: CoreDNS
 etcd:
   external:
     endpoints:
@@ -53,10 +55,37 @@ networking:
   serviceSubnet: {{ kube_service_subnet }}
 apiServer:
   extraArgs:
-    enable-admission-plugins: NodeRestriction,DefaultStorageClass
     allow-privileged: "true"
     apiserver-count: "{{ groups['kube-master']|length + groups['new-master']|length }}"
+    audit-log-path: "{{ audit_log_path }}"
+    audit-log-maxage: "{{ audit_log_maxage }}"
+    audit-log-maxbackup: "{{ audit_log_maxbackups }}"
+    audit-log-maxsize: "{{ audit_log_maxsize }}"
+    audit-log-truncate-enabled: "true"
+    audit-policy-file: {{ audit_policy_file }}
+    enable-admission-plugins: ServiceAccount,NodeRestriction,DefaultStorageClass
+    encryption-provider-config: /etc/kubernetes/pki/secrets-encryption.yaml
+    kubelet-certificate-authority: /etc/kubernetes/pki/ca.crt
+    kubelet-client-certificate: /etc/kubernetes/pki/apiserver-kubelet-client.crt
+    kubelet-client-key: /etc/kubernetes/pki/apiserver-kubelet-client.key
+    kubelet-https: "true"
+    profiling: "false"
     service-node-port-range: {{ kube_service_node_port_range }}
+  extraVolumes:
+    - hostPath: /etc/localtime
+      mountPath: /etc/localtime
+      pathType: File
+      readOnly: true
+      name: localtime
+    - hostPath: "{{ audit_policy_file | dirname }}"
+      mountPath: "{{ audit_policy_file | dirname }}"
+      pathType: DirectoryOrCreate
+      readOnly: true
+      name: audit-policy
+    - hostPath: /var/log/kubernetes/audit
+      mountPath: "{{ audit_log_path | dirname }}"
+      pathType: DirectoryOrCreate
+      name: audit-logs
   certSANs:
   - localhost
   - kubernetes
@@ -90,10 +119,27 @@ apiServer:
 {% endfor %}
 controllerManager:
   extraArgs:
-    bind-address: 0.0.0.0
+    bind-address: 127.0.0.1
+    experimental-cluster-signing-duration: "{{kube_certs_expired|int * 24}}h0m0s"
+    feature-gates: "RotateKubeletServerCertificate=true"
+    profiling: "false"
+    terminated-pod-gc-threshold: "10"
+  extraVolumes:
+    - hostPath: /etc/localtime
+      mountPath: /etc/localtime
+      pathType: File
+      readOnly: true
+      name: localtime
 scheduler:
   extraArgs:
-    bind-address: 0.0.0.0
+    bind-address: 127.0.0.1
+    profiling: "false"
+  extraVolumes:
+    - hostPath: /etc/localtime
+      mountPath: /etc/localtime
+      pathType: File
+      readOnly: true
+      name: localtime
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
@@ -135,8 +181,19 @@ evictionHard:
   memory.available: {{ eviction_hard_memory_available }}
   nodefs.available: {{ eviction_hard_nodefs_available }}
   nodefs.inodesFree: {{ eviction_hard_nodefs_inodes_free }}
+kubeReserved:
+  cpu: {{ kube_cpu_reserved }}
+  memory: {{ kube_memory_reserved|regex_replace('Mi', 'M') }}
+{% if system_reserved_enabled is defined and system_reserved_enabled %}
+systemReserved:
+  cpu: {{ system_cpu_reserved|default('500m') }}
+  memory: {{ system_memory_reserved|default('512M')|regex_replace('Mi', 'M') }}
+  ephemeral-storage: {{ system_ephemeral_storage_reserved|default('10Gi')|regex_replace('Gi', 'G') }}
+{% endif %}
 evictionPressureTransitionPeriod: 5m0s
 failSwapOn: true
+featureGates: 
+  RotateKubeletServerCertificate: true
 fileCheckFrequency: 20s
 hairpinMode: promiscuous-bridge
 healthzBindAddress: 127.0.0.1
@@ -153,10 +210,13 @@ makeIPTablesUtilChains: true
 maxOpenFiles: 1000000
 maxPods: {{ kube_max_pods }}
 nodeLeaseDurationSeconds: 40
+nodeStatusReportFrequency: 1m0s
 nodeStatusUpdateFrequency: 10s
 oomScoreAdj: -999
 podPidsLimit: -1
 port: 10250
+protectKernelDefaults: true
+readOnlyPort: 0
 registryBurst: 10
 registryPullQPS: 5
 resolvConf: /etc/resolv.conf
@@ -166,41 +226,6 @@ serializeImagePulls: true
 staticPodPath: /etc/kubernetes/manifests
 streamingConnectionIdleTimeout: 4h0m0s
 syncFrequency: 1m0s
+tlsCertFile: /var/lib/kubelet/pki/kubelet.crt
+tlsPrivateKeyFile: /var/lib/kubelet/pki/kubelet.key
 volumeStatsAggPeriod: 1m0s
----
-apiVersion: kubeproxy.config.k8s.io/v1alpha1
-kind: KubeProxyConfiguration
-bindAddress: 0.0.0.0
-clientConnection:
-  acceptContentTypes: ""
-  burst: 10
-  contentType: application/vnd.kubernetes.protobuf
-  kubeconfig: /var/lib/kube-proxy/kubeconfig.conf
-  qps: 5
-clusterCIDR: {{ kube_pod_subnet }}
-configSyncPeriod: 15m0s
-conntrack:
-  maxPerCore: 32768
-  min: 131072
-  tcpCloseWaitTimeout: 1h0m0s
-  tcpEstablishedTimeout: 24h0m0s
-enableProfiling: false
-healthzBindAddress: 0.0.0.0:10256
-hostnameOverride: ""
-iptables:
-  masqueradeAll: false
-  masqueradeBit: 14
-  minSyncPeriod: 0s
-  syncPeriod: 30s
-ipvs:
-  excludeCIDRs: null
-  minSyncPeriod: 0s
-  scheduler: ""
-  syncPeriod: 30s
-metricsBindAddress: 0.0.0.0:10249
-mode: {{ kube_proxy_mode }}
-nodePortAddresses: null
-oomScoreAdj: -999
-portRange: ""
-resourceContainer: /kube-proxy
-udpIdleTimeout: 250ms

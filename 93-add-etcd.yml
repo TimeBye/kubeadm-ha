@@ -6,7 +6,7 @@
       msg: "同时只能添加一个 etcd 节点。"
 
 - hosts: 
-  - all
+  - new-etcd
   roles:
   - prepare/base
   - prepare/docker
@@ -23,7 +23,7 @@
 - hosts: 
   - kube-master
   roles:
-  - kube-master/install
+  - kube-master
 
 # 标记各节点角色
 - hosts: 

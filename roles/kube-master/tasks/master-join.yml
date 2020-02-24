@@ -15,21 +15,12 @@
   with_items: "{{ kube_image_list.stdout_lines }}"
   when: install_mode == 'online'
 
-- name: 初始化第一个 master 节点
-  shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml
+- name: 其他 master 节点加入集群
+  shell: >
+    kubeadm join --config /etc/kubernetes/kubeadm-config.yaml 
+    --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests
 
-- include_tasks: "{{ (role_path + '/../certificates/tasks/kubeconfig.yml') | realpath  }}"
-
-# 监听所有网卡方便 prometheus 进行监控
-- name: 更新 kube-scheduler kube-controller-manager 监听地址
-  lineinfile:
-    backrefs: yes
-    path: "/etc/kubernetes/manifests/{{ item }}.yaml"
-    regexp: 'address\=127\.0\.0\.1'
-    line: "    - --address=0.0.0.0"
-  with_items:
-  - kube-scheduler
-  - kube-controller-manager
+- include_tasks: "{{ (role_path + '/../kube-certificates/tasks/kubeconfig.yml') | realpath  }}"
 
 - name: 重新加载 daemon
   systemd:
@@ -52,7 +43,7 @@
 
 - name: 等待 kube-scheduler 运行
   uri:
-    url: "http://{{ CURRENT_HOST_IP }}:10251/healthz"
+    url: "http://127.0.0.1:10251/healthz"
   register: scheduler_result
   until: scheduler_result.status == 200
   retries: 60
@@ -60,7 +51,7 @@
 
 - name: 等待 kube-controller-manager 运行
   uri:
-    url: "http://{{ CURRENT_HOST_IP }}:10252/healthz"
+    url: "http://127.0.0.1:10252/healthz"
   register: controller_manager_result
   until: controller_manager_result.status == 200
   retries: 60

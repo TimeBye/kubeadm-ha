@@ -1,0 +1,64 @@
+- name: 创建 kubernetes 相关目录
+  file: 
+    name: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ kubelet_root_dir }}"
+  - "{{ audit_policy_file | dirname }}"
+  - /etc/kubernetes/pki
+  - /etc/kubernetes/config
+  - /etc/kubernetes/manifests
+  - /var/log/kubernetes/audit
+  - /usr/share/bash-completion/completions
+
+- name: 读取 kubelet.conf 文件 stat 信息
+  stat: 
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf_stat
+
+# 生成 kubeadm 配置
+- include_tasks: kubeadm-config.yml
+
+- name: 创建 EncryptionConfiguration 配置文件
+  template:
+    src: secrets-encryption.yaml.j2
+    dest: /etc/kubernetes/pki/secrets-encryption.yaml
+    owner: root
+    group: root
+    mode: 0644
+
+- name: 创建 apiserver 审计日志策略配置文件
+  template:
+    src: apiserver-audit-policy.yaml.j2
+    dest: "{{ audit_policy_file }}"
+    owner: root
+    group: root
+    mode: 0644
+
+# 初始化第一个 master 节点
+- include_tasks: master-init.yml
+  when: 
+  - not kubelet_conf_stat.stat.exists
+  - inventory_hostname == groups['kube-master'][0]
+
+# 初始化其他 master 节点
+- include_tasks: master-join.yml
+  when: 
+  - not kubelet_conf_stat.stat.exists
+  - inventory_hostname != groups['kube-master'][0]
+  - inventory_hostname in (groups['kube-master'] + groups['new-master'])
+
+- name: 确认 kubelet 配置是否有修改
+  template:
+    src: kubelet-config.v1beta1.yaml.j2
+    dest: /var/lib/kubelet/config.yaml
+    owner: root
+    mode: 0644
+  register: configuration_result
+
+- name: 启动/重启 kubelet
+  service:
+    name: kubelet
+    state: restarted
+    enabled: yes
+  when: configuration_result.changed

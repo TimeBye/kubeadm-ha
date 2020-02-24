@@ -13,14 +13,20 @@ keyUsage = critical, digitalSignature, keyEncipherment, keyCertSign
 basicConstraints = CA:FALSE
 keyUsage = critical, digitalSignature, keyEncipherment
 extendedKeyUsage = serverAuth
-subjectAltName = @alt_names_cluster
+subjectAltName = @alt_kube_apiserver
+
+[ v3_req_kubelet ]
+basicConstraints = CA:FALSE
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_kubelet
 
 [ v3_req_client ]
 basicConstraints = CA:FALSE
 keyUsage = critical, digitalSignature, keyEncipherment
 extendedKeyUsage = clientAuth
 
-[ alt_names_cluster ]
+[ alt_kube_apiserver ]
 DNS.1 = localhost
 DNS.2 = kubernetes
 DNS.3 = kubernetes.default
@@ -56,3 +62,19 @@ IP.{{ ip_idx + loop.index }} = {{ ip }}
 {% if lb_kube_apiserver_ip is defined %}
 IP.{{4 + (groups['kube-master']|length + groups['new-master']|length + kube_master_external_ip|length) | int }} = {{ lb_kube_apiserver_ip | trim }}
 {% endif %}
+
+[ alt_kubelet ]
+DNS.1 = localhost
+{% if hostvars[inventory_hostname]['ansible_host'] is defined %}
+{% set dns_idx = 1 | int %}
+{% for host in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'] | default([])) | unique %}
+DNS.{{ dns_idx + loop.index }} = {{ host }}
+{% endfor %}
+{% endif %}
+IP.1 = 127.0.0.1
+IP.2 = 0:0:0:0:0:0:0:1
+{% set ip_idx = 2 | int %}
+{% for host in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'] | default([])) | unique %}
+IP.{{ ip_idx + loop.index }} = {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}
+
+{% endfor %}

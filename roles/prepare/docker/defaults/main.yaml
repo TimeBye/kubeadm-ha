@@ -8,7 +8,7 @@ kube_service_subnet: 10.244.64.0/18
 # Docker版本
 # apt-cache madison docker-ce
 # yum list docker-ce --showduplicates --enablerepo=docker-ce | sort -r
-docker_version: 19.03.5
+docker_version: 19.03.6
 # CentOS
 docker_yum_repo: https://mirrors.aliyun.com/docker-ce/linux/centos/7/$basearch/stable
 # Debian
@@ -40,6 +40,6 @@ docker_max_concurrent_downloads: 10
 
 install_mode: online
 # 离线模式时所需镜像源位置
-offline_images_src: /kubernetes/kubernetes-1.15.7.tar
+offline_images_src: /kubernetes/kubernetes-1.16.7.tar
 # 离线模式时分发镜像目的位置
-offline_images_dest: /etc/kubernetes/kubernetes-1.15.7.tar
+offline_images_dest: /etc/kubernetes/kubernetes-1.16.7.tar

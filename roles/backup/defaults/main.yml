@@ -1,4 +1,4 @@
 # 提权操作
 ansible_become: true
 # Etcd使用的镜像
-etcd_image: gcr.azk8s.cn/google_containers/etcd:3.3.15-0
+etcd_image: gcr.azk8s.cn/google_containers/etcd:3.4.3-0

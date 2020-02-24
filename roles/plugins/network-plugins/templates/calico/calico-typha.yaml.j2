@@ -42,6 +42,10 @@ data:
           "type": "portmap",
           "snat": true,
           "capabilities": {"portMappings": true}
+        },
+        {
+          "type": "bandwidth",
+          "capabilities": {"bandwidth": true}
         }
       ]
     }
@@ -51,7 +55,7 @@ data:
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
 metadata:
-   name: felixconfigurations.crd.projectcalico.org
+  name: felixconfigurations.crd.projectcalico.org
 spec:
   scope: Cluster
   group: crd.projectcalico.org
@@ -532,6 +536,9 @@ spec:
       # as a host-networked pod.
       serviceAccountName: calico-node
       priorityClassName: system-cluster-critical
+      # fsGroup allows using projected serviceaccount tokens as described here kubernetes/kubernetes#82573 
+      securityContext:
+        fsGroup: 65534
       containers:
       - image: {{ calico_typha_image }}
         name: calico-typha
@@ -572,6 +579,9 @@ spec:
             host: localhost
           periodSeconds: 30
           initialDelaySeconds: 30
+        securityContext:
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
         readinessProbe:
           httpGet:
             path: /readiness
@@ -667,6 +677,8 @@ spec:
               name: host-local-net-dir
             - mountPath: /host/opt/cni/bin
               name: cni-bin-dir
+          securityContext:
+            privileged: true
         # This container installs the CNI binaries
         # and CNI network config file on each node.
         - name: install-cni
@@ -701,6 +713,8 @@ spec:
               name: cni-bin-dir
             - mountPath: /host/etc/cni/net.d
               name: cni-net-dir
+          securityContext:
+            privileged: true
         # Adds a Flex Volume Driver that creates a per-pod Unix Domain Socket to allow Dikastes
         # to communicate with Felix over the Policy Sync API.
         - name: flexvol-driver
@@ -708,6 +722,8 @@ spec:
           volumeMounts:
           - name: flexvol-driver-host
             mountPath: /host/driver
+          securityContext:
+            privileged: true
       containers:
         # Runs calico-node container on each Kubernetes node.  This
         # container programs network policy and routes on each
@@ -789,6 +805,7 @@ spec:
               command:
               - /bin/calico-node
               - -felix-live
+              - -bird-live
             periodSeconds: 10
             initialDelaySeconds: 10
             failureThreshold: 6

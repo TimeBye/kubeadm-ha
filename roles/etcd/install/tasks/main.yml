@@ -11,6 +11,9 @@
     file: 
       name: "{{ item }}"
       state: directory
+      owner: root
+      group: root
+      mode: 0700
     with_items:
     - "{{ etcd_data_dir }}"
     - /etc/kubernetes/backup/etcd

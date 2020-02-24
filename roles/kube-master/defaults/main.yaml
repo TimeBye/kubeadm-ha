@@ -16,6 +16,9 @@ KUBE_APISERVER_IP: >-
     {{ lb_kube_apiserver_ip }}
   {% endif %}
 
+# kubernetes证书过期时间（天）
+kube_certs_expired: 3650
+
 # 加入集群token
 kubeadm_token: "abcdef.0123456789abcdef"
 
@@ -34,7 +37,7 @@ pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
 # kubernetes各组件镜像仓库前缀
 kube_image_repository: gcr.azk8s.cn/google_containers
 # kubernetes版本
-kube_version: 1.15.7
+kube_version: 1.16.7
 # 集群内部dns域名
 kube_dns_domain: cluster.local
 # 集群pod ip段
@@ -50,6 +53,19 @@ eviction_hard_imagefs_available: 15%
 eviction_hard_memory_available: 100Mi
 eviction_hard_nodefs_available: 10%
 eviction_hard_nodefs_inodes_free: 5%
+
+# kubernetes组件预留资源
+kube_cpu_reserved: 100m
+kube_memory_reserved: 256M
+kube_ephemeral_storage_reserved: 1G
+
+# # 操作系统守护进程预留资源
+# system_reserved_enabled: true
+# # 取消注释以覆盖默认值
+# system_cpu_reserved: 500m
+# system_memory_reserved: 512M
+# system_ephemeral_storage_reserved: 10G
+
 # 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
 kube_proxy_mode: "iptables"
 
@@ -58,3 +74,27 @@ kubelet_root_dir: "/var/lib/kubelet"
 
 # node节点最大pod 数
 kube_max_pods: 110
+
+## 存入 Etcd 时的 Secret 进行静态加密 
+# 仅支持: aescbc, secretbox 或 aesgcm
+kube_encryption_algorithm: "aescbc"
+# 将Secret数据加密存储到etcd中的配置文件，下面加密码由 head -c 32 /dev/urandom | base64 生成
+kube_encrypt_token: "GPG4RC0Vyk7+Mz/niQPttxLIeL4HF96oRCcBRyKNpfM="
+
+## 审计相关配置
+# 审计日志文件目录
+audit_log_path: /var/log/audit/kube-apiserver-audit.log
+# 保留审计日志最大天数
+audit_log_maxage: 30
+# 保留审计日志最大个数
+audit_log_maxbackups: 10
+# 保留审计日志最大容量（MB）
+audit_log_maxsize: 100
+# 审计策略配置文件路径
+audit_policy_file: "/etc/kubernetes/audit-policy/apiserver-audit-policy.yaml"
+# 自定义审计日志规则 (替换默认的审计规则)
+# audit_policy_custom_rules: |
+#   - level: None
+#     users: []
+#     verbs: []
+#     resources: []

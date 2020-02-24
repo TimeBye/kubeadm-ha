@@ -12,7 +12,7 @@
     path: /etc/kubernetes/kubelet.conf
   register: kubelet_conf_stat
 
-- include_tasks: "{{ (role_path + '/../kube-master/install/tasks/kubeadm-config.yml') | realpath  }}"
+- include_tasks: "{{ (role_path + '/../kube-master/tasks/kubeadm-config.yml') | realpath  }}"
   when: 
   - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
   - inventory_hostname not in (groups['kube-master'] + groups['new-master'])
@@ -33,6 +33,25 @@
   - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
   - inventory_hostname not in (groups['kube-master'] + groups['new-master'])
   - not kubelet_conf_stat.stat.exists
+
+- block:
+  - name: 确认 kubelet 配置是否有修改
+    template:
+      src: kubelet-config.v1beta1.yaml.j2
+      dest: /var/lib/kubelet/config.yaml
+      owner: root
+      mode: 0644
+    register: configuration_result
+  
+  - name: 启动/重启 kubelet
+    service:
+      name: kubelet
+      state: restarted
+      enabled: yes
+    when: configuration_result.changed
+  when: 
+  - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
+  - inventory_hostname not in (groups['kube-master'] + groups['new-master'])
 
 - name: 取消在 worker 组的 master 节点 taint，使 master 节点可以调度
   shell: >
