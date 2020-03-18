@@ -21,7 +21,7 @@ ingress_controller_http_nodeport: 30080
 ingress_controller_https_nodeport: 30443
 
 # nginx-ingress-controller 镜像地址
-nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.29.0
+nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0
 
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
