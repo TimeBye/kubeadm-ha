@@ -1,6 +1,5 @@
 .DS_Store
 .vagrant
-Vagrantfile
 *.retry
 debug/
 dev/
