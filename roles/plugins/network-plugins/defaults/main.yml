@@ -17,7 +17,7 @@ kube_service_subnet: 10.244.64.0/18
 # flannel_backend: "host-gw"
 flannel_backend: "vxlan"
 # flannel 镜像地址
-flannel_image: quay.azk8s.cn/coreos/flannel:v0.11.0-amd64
+flannel_image: quay.azk8s.cn/coreos/flannel:v0.12.0-amd64
 
 # calico mtu
 calico_veth_mtu: 1440
