@@ -11,5 +11,5 @@ kubernetesui_dashboard_enabled: true
 kubernetesui_dashboard_certs_expired: 3650
 
 # kubernetes-dashboard 镜像地址
-kubernetesui_dashboard_image: dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-rc5
+kubernetesui_dashboard_image: dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-rc6
 kubernetesui_metrics_scraper_image: dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.3
