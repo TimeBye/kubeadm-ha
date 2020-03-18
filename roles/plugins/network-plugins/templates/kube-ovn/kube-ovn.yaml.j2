@@ -3,7 +3,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: kube-ovn-controller
-  namespace: kube-ovn
+  namespace: kube-system
   annotations:
     kubernetes.io/description: |
       kube-ovn controller
@@ -34,6 +34,7 @@ spec:
                 matchLabels:
                   app: kube-ovn-controller
               topologyKey: kubernetes.io/hostname
+      priorityClassName: system-cluster-critical
       serviceAccountName: ovn
       hostNetwork: true
       containers:
@@ -70,7 +71,7 @@ spec:
               command:
                 - sh
                 - /kube-ovn/kube-ovn-controller-healthcheck.sh
-            initialDelaySeconds: 30
+            initialDelaySeconds: 300
             periodSeconds: 7
             failureThreshold: 5
       nodeSelector:
@@ -81,7 +82,7 @@ kind: DaemonSet
 apiVersion: apps/v1
 metadata:
   name: kube-ovn-cni
-  namespace: kube-ovn
+  namespace: kube-system
   annotations:
     kubernetes.io/description: |
       This daemon set launches the kube-ovn cni daemon.
@@ -101,6 +102,7 @@ spec:
       tolerations:
       - operator: Exists
         effect: NoSchedule
+      priorityClassName: system-cluster-critical
       serviceAccountName: ovn
       hostNetwork: true
       hostPID: true
@@ -186,7 +188,7 @@ kind: DaemonSet
 apiVersion: apps/v1
 metadata:
   name: kube-ovn-pinger
-  namespace: kube-ovn
+  namespace: kube-system
   annotations:
     kubernetes.io/description: |
       This daemon set launches the openvswitch daemon.
@@ -211,6 +213,7 @@ spec:
       containers:
         - name: pinger
           image: "{{ kube_ovn_pinger_image }}"
+          # command: ["/kube-ovn/kube-ovn-pinger", "--external-address=114.114.114.114"]
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 0
@@ -277,7 +280,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: kube-ovn-pinger
-  namespace: kube-ovn
+  namespace: kube-system
   labels:
     app: kube-ovn-pinger
 spec:
@@ -291,7 +294,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: kube-ovn-controller
-  namespace: kube-ovn
+  namespace: kube-system
   labels:
     app: kube-ovn-controller
 spec:
@@ -299,4 +302,18 @@ spec:
     app: kube-ovn-controller
   ports:
     - port: 10660
+      name: metrics
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kube-ovn-cni
+  namespace: kube-system
+  labels:
+    app: kube-ovn-cni
+spec:
+  selector:
+    app: kube-ovn-cni
+  ports:
+    - port: 10665
       name: metrics
