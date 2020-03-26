@@ -28,7 +28,7 @@ spec:
     - --initial-cluster-token=etcd-cluster-token
     - --client-cert-auth=true
     - --snapshot-count=10000
-    - --data-dir={{ etcd_data_dir }}
+    - --data-dir=/var/lib/etcd
     # 推荐一小时压缩一次数据这样可以极大的保证集群稳定
     - --auto-compaction-retention=1
     # Etcd Raft消息最大字节数，这里设置16M，官方推荐是10M
