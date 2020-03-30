@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lb-openresty
+  namespace: kube-system
+  labels:
+    addonmanager.kubernetes.io/mode: Reconcile
+    k8s-app: lb-openresty
+  annotations:
+    checksum/config: {{ lb_configuration_result.checksum }}
+spec:
+  hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
+  nodeSelector:
+    beta.kubernetes.io/os: linux
+  priorityClassName: system-cluster-critical
+  containers:
+  - name: lb-openresty
+    image: {{ lb_openresty_image }}
+    imagePullPolicy: IfNotPresent
+{% if lb_kube_apiserver_healthcheck_port is defined %}
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: {{ lb_kube_apiserver_healthcheck_port }}
+    readinessProbe:
+      httpGet:
+        path: /healthz
+        port: {{ lb_kube_apiserver_healthcheck_port }}
+{% endif %}
+    resources: {}
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - mountPath: /usr/local/openresty/nginx/conf
+      name: openresty-lb-conf
+      readOnly: true
+  volumes:
+  - name: openresty-lb-conf
+    hostPath:
+      path: /etc/kubernetes/plugins/lb-config
+      type: DirectoryOrCreate

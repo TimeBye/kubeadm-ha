@@ -8,6 +8,9 @@
   - /etc/kubernetes/plugins/lb-config
   - /etc/systemd/system/kubelet.service.d
 
+- include_tasks: openresty.yml
+  when: lb_mode == "openresty"
+
 - include_tasks: nginx.yml
   when: lb_mode == "nginx"
 

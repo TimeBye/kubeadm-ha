@@ -1,0 +1,21 @@
+- name: Openresty lb | 生成 openresty lb 配置文件
+  template:
+    src: openresty/openresty.conf.j2
+    dest: /etc/kubernetes/plugins/lb-config/nginx.conf
+    owner: root
+    mode: 0644
+  register: lb_configuration_result
+
+- name: Openresty lb | 生成 openresty lb static pod 文件
+  template:
+    src: openresty/openresty.yaml.j2
+    dest: /etc/kubernetes/manifests/lb-kube-apiserver.yaml
+    owner: root
+    mode: 0644
+
+- name: Openresty lb | 拉取相关镜像
+  shell: docker pull {{ item }}
+  with_items:
+  - "{{ lb_openresty_image }}"
+  - "{{ pod_infra_container_image }}"
+  when: install_mode == 'online'

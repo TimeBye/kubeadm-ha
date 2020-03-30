@@ -5,8 +5,8 @@ install_mode: online
 #----------------------------------------------- 基础参数 -------------------------------------------------#
 # 当前节点ip
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
-# 负载均衡模式(nginx haproxy envoy slb)
-lb_mode: nginx
+# 负载均衡模式(openresty nginx haproxy envoy slb)
+lb_mode: openresty
 # 经过负载后的apiserver端口号
 lb_kube_apiserver_port: 8443
 # 负载均衡器健康检查端口
@@ -23,6 +23,10 @@ ingress_controller_https_nodeport: 30443
 pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
+
+#---------------------------------------------- Openresty 相关参数 --------------------------------------------#
+# 使用openresty进行apiserver负载时使用的nginx镜像
+lb_openresty_image: dockerhub.azk8s.cn/openresty/openresty:1.15.8.3-alpine
 
 #---------------------------------------------- Nginx 相关参数 --------------------------------------------#
 # 使用nginx进行apiserver负载时使用的nginx镜像
