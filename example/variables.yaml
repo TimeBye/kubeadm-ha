@@ -62,7 +62,7 @@ docker_max_concurrent_downloads: 10
 # 私有云：
 #    VIP 负载模式：
 #       也就是负载均衡器 + keepalived 模式，比如常用的 haproxy + keepalived。
-#       本脚本中负载均衡器有 nginx、haproxy、envoy 可供选择，设置 lb_mode 即可进行任意切换。
+#       本脚本中负载均衡器有 openresty、nginx、haproxy、envoy 可供选择，设置 lb_mode 即可进行任意切换。
 #       设置 lb_kube_apiserver_ip 即表示启用 keepalived，请先与服务器提供部门协商保留一个IP作为 lb_kube_apiserver_ip，
 #       一般 lb 节点组中有两个节点就够了，lb节点组中第一个节点为 keepalived 的 master 节点，剩下的都为 backed 节点。
 #
@@ -78,7 +78,7 @@ docker_max_concurrent_downloads: 10
 #       将 lb_mode 修改为 slb，将 lb_kube_apiserver_ip 设置为购买到的 slb 内网ip，
 #       修改 lb_kube_apiserver_port 为 slb 监听端口。
 #    再次运行初始化集群脚本即可切换至 slb 模式。
-lb_mode: nginx
+lb_mode: openresty
 
 # 负载均衡器健康检查端口
 lb_kube_apiserver_healthcheck_port: 8081
@@ -88,6 +88,9 @@ lb_kube_apiserver_healthcheck_port: 8081
 
 # 使用负载均衡后集群 apiserver port
 lb_kube_apiserver_port: 8443
+
+# 使用openresty进行apiserver负载时使用的nginx镜像
+lb_openresty_image: dockerhub.azk8s.cn/openresty/openresty:1.15.8.3-alpine
 
 # 使用nginx进行apiserver负载时使用的nginx镜像
 lb_nginx_image: dockerhub.azk8s.cn/library/nginx:1.17.9-alpine

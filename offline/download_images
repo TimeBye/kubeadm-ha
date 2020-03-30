@@ -1,7 +1,7 @@
 #!/bin/bash
 
 docker pull dockerhub.azk8s.cn/setzero/ansible:2.8.5-nginx-1.17.6-alpine
-docker pull dockerhub.azk8s.cn/library/nginx:1.17.9-alpine 
+docker pull dockerhub.azk8s.cn/openresty/openresty:1.15.8.3-alpine
 docker pull dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-rc6 
 docker pull dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.3
 docker pull gcr.azk8s.cn/google_containers/kube-proxy:v1.16.8 
@@ -18,7 +18,7 @@ docker pull quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller
 
 docker save \
     dockerhub.azk8s.cn/setzero/ansible:2.8.5-nginx-1.17.6-alpine \
-    dockerhub.azk8s.cn/library/nginx:1.17.9-alpine \
+    dockerhub.azk8s.cn/openresty/openresty:1.15.8.3-alpine \
     dockerhub.azk8s.cn/kubernetesui/dashboard:v2.0.0-rc6 \
     dockerhub.azk8s.cn/kubernetesui/metrics-scraper:v1.0.3 \
     gcr.azk8s.cn/google_containers/kube-proxy:v1.16.8 \
