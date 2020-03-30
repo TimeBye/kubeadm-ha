@@ -98,3 +98,19 @@ audit_policy_file: "/etc/kubernetes/audit-policy/apiserver-audit-policy.yaml"
 #     users: []
 #     verbs: []
 #     resources: []
+
+## Extra args for k8s components passing by kubeadm
+kube_kubeadm_apiserver_extra_args: {}
+kube_kubeadm_controller_extra_args: {}
+kube_kubeadm_scheduler_extra_args: {}
+
+## Extra control plane host volume mounts
+## Example:
+# apiserver_extra_volumes:
+#  - name: name
+#    hostPath: /host/path
+#    mountPath: /mount/path
+#    readOnly: true
+apiserver_extra_volumes: {}
+controller_manager_extra_volumes: {}
+scheduler_extra_volumes: {}
