@@ -21,6 +21,7 @@ spec:
     - --peer-key-file=/etc/kubernetes/pki/etcd/peer.key
     - --peer-client-cert-auth=true
     - --listen-peer-urls=https://{{ CURRENT_HOST_IP }}:2380
+    - --listen-metrics-urls=http://127.0.0.1:2381
     - --listen-client-urls=https://127.0.0.1:2379,https://{{ CURRENT_HOST_IP }}:2379
     - --initial-cluster-state={{ CLUSTER_STATE }}
     - --initial-advertise-peer-urls=https://{{ CURRENT_HOST_IP }}:2380
@@ -31,20 +32,18 @@ spec:
     - --data-dir={{ etcd_data_dir }}
     # 推荐一小时压缩一次数据这样可以极大的保证集群稳定
     - --auto-compaction-retention=1
-    # Etcd Raft消息最大字节数，这里设置16M，官方推荐是10M
-    - --max-request-bytes=16777216
+    # Etcd Raft消息最大字节数，官方推荐是10M
+    - --max-request-bytes=10485760
     # ETCD db数据大小，默认是2G，官方推荐是8G
     - --quota-backend-bytes=8589934592
     image: {{ etcd_image }}
     imagePullPolicy: IfNotPresent
     livenessProbe:
-      exec:
-        command:
-        - /bin/sh
-        - -ec
-        - ETCDCTL_API=3 etcdctl --endpoints=https://[127.0.0.1]:2379 --cacert=/etc/kubernetes/pki/etcd/ca.crt
-          --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
-          get foo
+      httpGet:
+        host: 127.0.0.1
+        path: /health
+        port: 2381
+        scheme: HTTP
       failureThreshold: 8
       initialDelaySeconds: 15
       timeoutSeconds: 15
