@@ -255,11 +255,11 @@ calicoctl_image: dockerhub.azk8s.cn/calico/ctl:v3.13.1
 kube_ovn_master:
 - "{{ groups['kube-master'][0] }}"
 # kube-ovn 相关镜像
-kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v1.0.0
-kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v1.0.0
-kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v1.0.0
-kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v1.0.0
-kube_ovn_pinger_image: index.alauda.cn/alaudak8s/kube-ovn-pinger:v1.0.0
+kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v1.0.1
+kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v1.0.1
+kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v1.0.1
+kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v1.0.1
+kube_ovn_pinger_image: index.alauda.cn/alaudak8s/kube-ovn-pinger:v1.0.1
 # 默认网段设置
 kube_ovn_default_cidr: "{{ kube_pod_subnet }}"
 kube_ovn_default_gateway: "{{ kube_pod_subnet | ipaddr('net') | ipaddr(1) | ipaddr('address') }}"
