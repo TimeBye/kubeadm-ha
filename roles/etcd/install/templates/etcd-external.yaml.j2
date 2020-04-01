@@ -54,6 +54,9 @@ spec:
       name: etcd-data
     - mountPath: /etc/kubernetes/pki/etcd
       name: etcd-certs
+    - mountPath: /etc/localtime
+      name: localtime
+      readOnly: true
   hostNetwork: true
   priorityClassName: system-cluster-critical
   volumes:
@@ -65,4 +68,8 @@ spec:
       path: /etc/kubernetes/pki/etcd
       type: DirectoryOrCreate
     name: etcd-certs
+  - hostPath:
+      path: /etc/localtime
+      type: File
+    name: localtime
 status: {}
