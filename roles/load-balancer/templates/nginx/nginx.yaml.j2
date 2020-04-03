@@ -29,14 +29,19 @@ spec:
         port: {{ lb_kube_apiserver_healthcheck_port }}
 {% endif %}
     resources: {}
-    securityContext:
-      privileged: true
     volumeMounts:
     - mountPath: /etc/nginx
       name: nginx-lb-conf
+      readOnly: true
+    - mountPath: /etc/localtime
+      name: localtime
       readOnly: true
   volumes:
   - name: nginx-lb-conf
     hostPath:
       path: /etc/kubernetes/plugins/lb-config
       type: DirectoryOrCreate
+  - hostPath:
+      path: /etc/localtime
+      type: File
+    name: localtime
