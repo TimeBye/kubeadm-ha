@@ -17,10 +17,7 @@ docker_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/{{ 
 
 # 国内镜像加速
 docker_mirror: 
-  - "https://dockerhub.azk8s.cn"
-  - "https://quay.azk8s.cn"
   # - "https://docker.mirrors.ustc.edu.cn"
-  # - "https://quay.mirrors.ustc.edu.cn"
 
 docker_insecure_registries:
   - "{{ kube_pod_subnet }}"

@@ -21,12 +21,12 @@ ingress_controller_http_nodeport: 30080
 ingress_controller_https_nodeport: 30443
 
 # nginx-ingress-controller 镜像地址
-nginx_ingress_image: quay.azk8s.cn/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0
+nginx_ingress_image: quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0
 
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
 # traefik-ingress-controller 镜像地址
-traefik_ingress_image: dockerhub.azk8s.cn/library/traefik:1.7.19
+traefik_ingress_image: library/traefik:1.7.19
 
 # 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
 kube_proxy_mode: "iptables"

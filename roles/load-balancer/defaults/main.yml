@@ -20,21 +20,21 @@ ingress_controller_http_nodeport: 30080
 # NodePort svc 监听https协议端口(注意需在NodePort端口范围)
 ingress_controller_https_nodeport: 30443
 # Pod根容器
-pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
+pod_infra_container_image: registry.aliyuncs.com/google_containers/pause:3.2
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
 
 #---------------------------------------------- Openresty 相关参数 --------------------------------------------#
 # 使用openresty进行apiserver负载时使用的nginx镜像
-lb_openresty_image: dockerhub.azk8s.cn/openresty/openresty:1.15.8.3-alpine
+lb_openresty_image: openresty/openresty:1.15.8.3-alpine
 
 #---------------------------------------------- Nginx 相关参数 --------------------------------------------#
 # 使用nginx进行apiserver负载时使用的nginx镜像
-lb_nginx_image: dockerhub.azk8s.cn/library/nginx:1.17.9-alpine
+lb_nginx_image: library/nginx:1.17.9-alpine
 
 #--------------------------------------------- Haproxy 相关参数 --------------------------------------------#
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-lb_haproxy_image: dockerhub.azk8s.cn/library/haproxy:2.1.3-alpine
+lb_haproxy_image: library/haproxy:2.1.3-alpine
 # haproxy监控绑定端口
 lb_haproxy_stats_bind_address: 9090
 # haproxy监控访问路径
@@ -54,7 +54,7 @@ lb_haproxy_balance_alg: "leastconn"
 
 #--------------------------------------------- Envoy 相关参数 --------------------------------------------#
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-lb_envoy_image: dockerhub.azk8s.cn/envoyproxy/envoy-alpine:v1.13.1
+lb_envoy_image: envoyproxy/envoy-alpine:v1.13.1
 lb_envoy_admin_address_port: 9090
 
 #---------------------------------------------- Keepalived 相关参数 ---------------------------------------#
@@ -67,7 +67,7 @@ KUBE_APISERVER_IP: >-
   {% endif %}
 
 # 使用 vip 负载时使用的 keepalived 镜像
-lb_keepalived_image: dockerhub.azk8s.cn/osixia/keepalived:2.0.20
+lb_keepalived_image: osixia/keepalived:2.0.20
 # keepalived auth_type 的 password
 lb_keepalived_password: "d0cker"
 # 区分多个 instance 的 VRRP 组播，同网段不能重复，取值在0-255之间

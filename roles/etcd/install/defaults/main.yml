@@ -3,9 +3,9 @@ ansible_become: true
 # 安装模式
 install_mode: online
 # Etcd使用的镜像
-etcd_image: gcr.azk8s.cn/google_containers/etcd:3.4.3-0
+etcd_image: registry.aliyuncs.com/google_containers/etcd:3.4.3-0
 # Pod根容器
-pod_infra_container_image: gcr.azk8s.cn/google_containers/pause:3.1
+pod_infra_container_image: registry.aliyuncs.com/google_containers/pause:3.2
 # 当前节点ip
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
 # etcd 集群
