@@ -30,10 +30,10 @@ spec:
 {% if lb_kube_apiserver_healthcheck_port is defined %}
     # 检测当前节点 lb 是否存活，若不存活则重启
     livenessProbe:
-      httpGet:
-        path: /healthz
-        port: {{ lb_kube_apiserver_healthcheck_port }}
-    readinessProbe:
+      periodSeconds: 3
+      timeoutSeconds: 15
+      failureThreshold: 2
+      initialDelaySeconds: 3
       httpGet:
         path: /healthz
         port: {{ lb_kube_apiserver_healthcheck_port }}

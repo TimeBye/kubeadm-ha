@@ -20,10 +20,10 @@ spec:
     imagePullPolicy: IfNotPresent
 {% if lb_kube_apiserver_healthcheck_port is defined %}
     livenessProbe:
-      httpGet:
-        path: /healthz
-        port: {{ lb_kube_apiserver_healthcheck_port }}
-    readinessProbe:
+      periodSeconds: 3
+      timeoutSeconds: 5
+      failureThreshold: 2
+      initialDelaySeconds: 3
       httpGet:
         path: /healthz
         port: {{ lb_kube_apiserver_healthcheck_port }}
