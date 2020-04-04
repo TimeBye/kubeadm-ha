@@ -23,7 +23,7 @@
 - name: 校验 lb 模式类型
   run_once: true
   assert:
-    that: lb_mode in ['nginx','haproxy','envoy','slb']
+    that: lb_mode in ['openresty','nginx','haproxy','envoy','slb']
     msg: "不支持当前 {{ lb_mode }} 负载均衡模式，请在 ['nginx','haproxy','envoy','slb'] 中进行选择。"
 
 - name: 校验 lb 节点组非空时 lb_kube_apiserver_ip 是否赋值

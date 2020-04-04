@@ -39,8 +39,16 @@ spec:
         port: {{ lb_kube_apiserver_healthcheck_port }}
 {% endif %}
     resources: {}
+    volumeMounts:
+    - mountPath: /etc/localtime
+      name: localtime
+      readOnly: true
     securityContext:
-      privileged: true
       capabilities:
         add:
         - NET_ADMIN
+  volumes:
+  - hostPath:
+      path: /etc/localtime
+      type: File
+    name: localtime

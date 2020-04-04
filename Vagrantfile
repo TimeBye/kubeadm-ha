@@ -25,7 +25,7 @@ SCRIPT
 
 $ubuntu_script = <<-SCRIPT
 cp /etc/apt/sources.list /etc/apt/sources.list.orig.$(date -Iseconds)
-sed -i 's http://.*.debian.org http://mirrors.aliyun.com g' /etc/apt/sources.list
+sed -i 's http://.*.ubuntu.com http://mirrors.aliyun.com g' /etc/apt/sources.list
 SCRIPT
 
 Vagrant.configure(2) do |config|

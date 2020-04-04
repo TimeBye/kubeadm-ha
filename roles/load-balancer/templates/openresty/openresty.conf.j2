@@ -1,0 +1,86 @@
+error_log stderr notice;
+
+worker_processes 2;
+worker_rlimit_nofile 130048;
+worker_shutdown_timeout 10s;
+
+events {
+    multi_accept on;
+    use epoll;
+    worker_connections 16384;
+}
+
+stream {
+    upstream kube_apiserver {
+        least_conn;
+{% for host in (groups['kube-master'] + groups['new-master']) %}
+        server {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:6443;
+{% endfor %}
+    }
+
+    server {
+        listen 0.0.0.0:{{ lb_kube_apiserver_port }};
+        proxy_pass    kube_apiserver;
+        proxy_timeout 10m;
+        proxy_connect_timeout 1s;
+    }
+
+{% if enabel_ingress_nodeport_lb | bool %}
+    upstream ingress_http {
+        least_conn;
+{% for host in (groups['kube-worker'] + groups['new-worker']) %}
+        server {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:{{ ingress_controller_http_nodeport }};
+{% endfor %}
+    }
+
+    server {
+        listen 0.0.0.0:80;
+        proxy_pass    ingress_http;
+        proxy_timeout 10m;
+        proxy_connect_timeout 1s;
+    }
+{% endif %}
+
+{% if enabel_ingress_tls_nodeport_lb | bool %}
+    upstream ingress_https {
+        least_conn;
+{% for host in (groups['kube-worker'] + groups['new-worker']) %}
+        server {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:{{ ingress_controller_https_nodeport }};
+{% endfor %}
+    }
+
+    server {
+        listen 0.0.0.0:443;
+        proxy_pass    ingress_https;
+        proxy_timeout 10m;
+        proxy_connect_timeout 1s;
+    }
+{% endif %}
+}
+
+http {
+    aio threads;
+    aio_write on;
+    tcp_nopush on;
+    tcp_nodelay on;
+
+    keepalive_timeout 75s;
+    keepalive_requests 100;
+    reset_timedout_connection on;
+    server_tokens off;
+    autoindex off;
+
+{% if lb_kube_apiserver_healthcheck_port is defined %}
+    server {
+        listen 0.0.0.0:{{ lb_kube_apiserver_healthcheck_port }};
+        location /healthz {
+            access_log off;
+            return 200;
+        }
+        location /stub_status {
+            stub_status on;
+            access_log off;
+        }
+    }
+{% endif %}
+}

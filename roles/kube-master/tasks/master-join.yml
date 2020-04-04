@@ -43,7 +43,8 @@
 
 - name: 等待 kube-scheduler 运行
   uri:
-    url: "http://127.0.0.1:10251/healthz"
+    url: "https://127.0.0.1:10259/healthz"
+    validate_certs: no
   register: scheduler_result
   until: scheduler_result.status == 200
   retries: 60
@@ -51,7 +52,8 @@
 
 - name: 等待 kube-controller-manager 运行
   uri:
-    url: "http://127.0.0.1:10252/healthz"
+    url: "https://127.0.0.1:10257/healthz"
+    validate_certs: no
   register: controller_manager_result
   until: controller_manager_result.status == 200
   retries: 60

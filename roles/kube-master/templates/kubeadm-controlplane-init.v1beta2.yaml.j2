@@ -71,6 +71,11 @@ apiServer:
     kubelet-https: "true"
     profiling: "false"
     service-node-port-range: {{ kube_service_node_port_range }}
+{% if kube_kubeadm_apiserver_extra_args|length > 0 %}
+{% for key in kube_kubeadm_apiserver_extra_args %}
+    {{ key }}: "{{ kube_kubeadm_apiserver_extra_args[key] }}"
+{% endfor %}
+{% endif %}
   extraVolumes:
     - hostPath: /etc/localtime
       mountPath: /etc/localtime
@@ -86,6 +91,12 @@ apiServer:
       mountPath: "{{ audit_log_path | dirname }}"
       pathType: DirectoryOrCreate
       name: audit-logs
+{% for volume in apiserver_extra_volumes %}
+    - name: {{ volume.name }}
+      hostPath: {{ volume.hostPath }}
+      mountPath: {{ volume.mountPath }}
+      readOnly: {{ volume.readOnly | d(not (volume.writable | d(false))) }}
+{% endfor %}
   certSANs:
   - localhost
   - kubernetes
@@ -124,22 +135,44 @@ controllerManager:
     feature-gates: "RotateKubeletServerCertificate=true"
     profiling: "false"
     terminated-pod-gc-threshold: "10"
+{% if kube_kubeadm_controller_extra_args|length > 0 %}
+{% for key in kube_kubeadm_controller_extra_args %}
+    {{ key }}: "{{ kube_kubeadm_controller_extra_args[key] }}"
+{% endfor %}
+{% endif %}
   extraVolumes:
     - hostPath: /etc/localtime
       mountPath: /etc/localtime
       pathType: File
       readOnly: true
       name: localtime
+{% for volume in controller_manager_extra_volumes %}
+    - name: {{ volume.name }}
+      hostPath: {{ volume.hostPath }}
+      mountPath: {{ volume.mountPath }}
+      readOnly: {{ volume.readOnly | d(not (volume.writable | d(false))) }}
+{% endfor %}
 scheduler:
   extraArgs:
     bind-address: 127.0.0.1
     profiling: "false"
+{% if kube_kubeadm_scheduler_extra_args|length > 0 %}
+{% for key in kube_kubeadm_scheduler_extra_args %}
+    {{ key }}: "{{ kube_kubeadm_scheduler_extra_args[key] }}"
+{% endfor %}
+{% endif %}
   extraVolumes:
     - hostPath: /etc/localtime
       mountPath: /etc/localtime
       pathType: File
       readOnly: true
       name: localtime
+{% for volume in scheduler_extra_volumes %}
+    - name: {{ volume.name }}
+      hostPath: {{ volume.hostPath }}
+      mountPath: {{ volume.mountPath }}
+      readOnly: {{ volume.readOnly | d(not (volume.writable | d(false))) }}
+{% endfor %}
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration

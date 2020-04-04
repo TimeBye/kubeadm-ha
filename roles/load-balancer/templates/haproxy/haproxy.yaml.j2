@@ -28,14 +28,19 @@ spec:
         port: {{ lb_kube_apiserver_healthcheck_port }}
 {% endif %}
     resources: {}
-    securityContext:
-      privileged: true
     volumeMounts:
     - name: haproxy-cfg
       readOnly: true
       mountPath: /usr/local/etc/haproxy
+    - mountPath: /etc/localtime
+      name: localtime
+      readOnly: true
   volumes:
   - name: haproxy-cfg
     hostPath:
       path: /etc/kubernetes/plugins/lb-config
       type: DirectoryOrCreate
+  - hostPath:
+      path: /etc/localtime
+      type: File
+    name: localtime

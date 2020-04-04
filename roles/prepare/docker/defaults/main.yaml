@@ -17,10 +17,7 @@ docker_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/{{ 
 
 # 国内镜像加速
 docker_mirror: 
-  - "https://dockerhub.azk8s.cn"
-  - "https://quay.azk8s.cn"
   # - "https://docker.mirrors.ustc.edu.cn"
-  # - "https://quay.mirrors.ustc.edu.cn"
 
 docker_insecure_registries:
   - "{{ kube_pod_subnet }}"
@@ -40,6 +37,6 @@ docker_max_concurrent_downloads: 10
 
 install_mode: online
 # 离线模式时所需镜像源位置
-offline_images_src: /kubernetes/kubernetes-1.16.7.tar
+offline_images_src: /kubernetes/kubernetes-1.16.8.tar
 # 离线模式时分发镜像目的位置
-offline_images_dest: /etc/kubernetes/kubernetes-1.16.7.tar
+offline_images_dest: /etc/kubernetes/kubernetes-1.16.8.tar
