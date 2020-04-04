@@ -17,20 +17,20 @@ kube_service_subnet: 10.244.64.0/18
 # flannel_backend: "host-gw"
 flannel_backend: "vxlan"
 # flannel 镜像地址
-flannel_image: quay.io/coreos/flannel:v0.12.0-amd64
+flannel_image: registry.cn-shanghai.aliyuncs.com/c7n/flannel:v0.12.0-amd64
 
 # calico mtu
 calico_veth_mtu: 1440
 # calico 相关镜像
-calico_typha_image: calico/typha:v3.13.1
-calico_cni_image: calico/cni:v3.13.1
-calico_node_image: calico/node:v3.13.1
-calico_kube_controllers_image: calico/kube-controllers:v3.13.1
-calico_pod2daemon_flexvol_image: calico/pod2daemon-flexvol:v3.13.1
+calico_typha_image: registry.cn-shanghai.aliyuncs.com/c7n/typha:v3.13.1
+calico_cni_image: registry.cn-shanghai.aliyuncs.com/c7n/cni:v3.13.1
+calico_node_image: registry.cn-shanghai.aliyuncs.com/c7n/node:v3.13.1
+calico_kube_controllers_image: registry.cn-shanghai.aliyuncs.com/c7n/kube-controllers:v3.13.1
+calico_pod2daemon_flexvol_image: registry.cn-shanghai.aliyuncs.com/c7n/pod2daemon-flexvol:v3.13.1
 # 设置 Felix 日志级别(debug, info, warning, error)
 calico_felix_log_level: "warning"
 # calicoctl image 地址
-calicoctl_image: calico/ctl:v3.13.1
+calicoctl_image: registry.cn-shanghai.aliyuncs.com/c7n/ctl:v3.13.1
 
 # kube-ovn master 节点
 kube_ovn_master:

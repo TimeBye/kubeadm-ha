@@ -1,9 +1,9 @@
 #!/bin/bash
 
 docker pull setzero/ansible:2.8.5-nginx-1.17.6-alpine
-docker pull openresty/openresty:1.15.8.3-alpine
-docker pull kubernetesui/dashboard:v2.0.0-rc6 
-docker pull kubernetesui/metrics-scraper:v1.0.3
+docker pull registry.cn-shanghai.aliyuncs.com/c7n/openresty:1.15.8.3-alpine
+docker pull registry.cn-shanghai.aliyuncs.com/c7n/dashboard:v2.0.0-rc6 
+docker pull registry.cn-shanghai.aliyuncs.com/c7n/metrics-scraper:v1.0.3
 docker pull registry.aliyuncs.com/google_containers/kube-proxy:v1.16.8 
 docker pull registry.aliyuncs.com/google_containers/kube-apiserver:v1.16.8 
 docker pull registry.aliyuncs.com/google_containers/kube-scheduler:v1.16.8 
@@ -13,14 +13,14 @@ docker pull registry.aliyuncs.com/google_containers/etcd:3.4.3-0
 docker pull registry.aliyuncs.com/google_containers/metrics-server-amd64:v0.3.6 
 docker pull registry.aliyuncs.com/google_containers/pause:3.2 
 docker pull registry.aliyuncs.com/google_containers/tiller:v2.16.3 
-docker pull quay.io/coreos/flannel:v0.12.0-amd64
-docker pull quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0 
+docker pull registry.cn-shanghai.aliyuncs.com/c7n/flannel:v0.12.0-amd64
+docker pull registry.cn-shanghai.aliyuncs.com/c7n/nginx-ingress-controller:0.30.0 
 
 docker save \
     setzero/ansible:2.8.5-nginx-1.17.6-alpine \
-    openresty/openresty:1.15.8.3-alpine \
-    kubernetesui/dashboard:v2.0.0-rc6 \
-    kubernetesui/metrics-scraper:v1.0.3 \
+    registry.cn-shanghai.aliyuncs.com/c7n/openresty:1.15.8.3-alpine \
+    registry.cn-shanghai.aliyuncs.com/c7n/dashboard:v2.0.0-rc6 \
+    registry.cn-shanghai.aliyuncs.com/c7n/metrics-scraper:v1.0.3 \
     registry.aliyuncs.com/google_containers/kube-proxy:v1.16.8 \
     registry.aliyuncs.com/google_containers/kube-apiserver:v1.16.8 \
     registry.aliyuncs.com/google_containers/kube-scheduler:v1.16.8 \
@@ -30,5 +30,5 @@ docker save \
     registry.aliyuncs.com/google_containers/metrics-server-amd64:v0.3.6 \
     registry.aliyuncs.com/google_containers/pause:3.2 \
     registry.aliyuncs.com/google_containers/tiller:v2.16.3 \
-    quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0 \
-    quay.io/coreos/flannel:v0.12.0-amd64 | gzip -1 > /kubernetes/kubernetes-1.16.8.tar
+    registry.cn-shanghai.aliyuncs.com/c7n/nginx-ingress-controller:0.30.0 \
+    registry.cn-shanghai.aliyuncs.com/c7n/flannel:v0.12.0-amd64 | gzip -1 > /kubernetes/kubernetes-1.16.8.tar
