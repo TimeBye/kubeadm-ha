@@ -12,6 +12,6 @@ acme_server: https://acme-v02.api.letsencrypt.org/directory
 acme_email: yourname@gmail.com
 
 # cert-manager 相关 image 地址
-cert_manager_cainjector_image: "registry.cn-shanghai.aliyuncs.com/c7n/cert-manager-cainjector:v0.9.1"
-cert_manager_webhook_image: "registry.cn-shanghai.aliyuncs.com/c7n/cert-manager-webhook:v0.9.1"
-cert_manager_controller_image: "registry.cn-shanghai.aliyuncs.com/c7n/cert-manager-controller:v0.9.1"
+cert_manager_cainjector_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-cainjector:v0.9.1
+cert_manager_webhook_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-webhook:v0.9.1
+cert_manager_controller_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-controller:v0.9.1

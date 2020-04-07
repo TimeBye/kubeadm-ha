@@ -1,4 +1,4 @@
-FROM registry.cn-shanghai.aliyuncs.com/c7n/nginx:1.17.9-alpine
+FROM registry.cn-shanghai.aliyuncs.com/kubeadm-ha/nginx:1.17.9-alpine
 ENV LANG=C.UTF-8
 
 # Add mirror source

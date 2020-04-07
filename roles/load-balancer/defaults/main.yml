@@ -26,15 +26,15 @@ kubelet_root_dir: "/var/lib/kubelet"
 
 #---------------------------------------------- Openresty 相关参数 --------------------------------------------#
 # 使用openresty进行apiserver负载时使用的nginx镜像
-lb_openresty_image: registry.cn-shanghai.aliyuncs.com/c7n/openresty:1.15.8.3-alpine
+lb_openresty_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/openresty_openresty:1.15.8.3-alpine
 
 #---------------------------------------------- Nginx 相关参数 --------------------------------------------#
 # 使用nginx进行apiserver负载时使用的nginx镜像
-lb_nginx_image: registry.cn-shanghai.aliyuncs.com/c7n/nginx:1.17.9-alpine
+lb_nginx_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/nginx:1.17.9-alpine
 
 #--------------------------------------------- Haproxy 相关参数 --------------------------------------------#
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-lb_haproxy_image: registry.cn-shanghai.aliyuncs.com/c7n/haproxy:2.1.3-alpine
+lb_haproxy_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/haproxy:2.1.3-alpine
 # haproxy监控绑定端口
 lb_haproxy_stats_bind_address: 9090
 # haproxy监控访问路径
@@ -54,7 +54,7 @@ lb_haproxy_balance_alg: "leastconn"
 
 #--------------------------------------------- Envoy 相关参数 --------------------------------------------#
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-lb_envoy_image: registry.cn-shanghai.aliyuncs.com/c7n/envoy-alpine:v1.13.1
+lb_envoy_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/envoyproxy_envoy-alpine:v1.13.1
 lb_envoy_admin_address_port: 9090
 
 #---------------------------------------------- Keepalived 相关参数 ---------------------------------------#
@@ -67,7 +67,7 @@ KUBE_APISERVER_IP: >-
   {% endif %}
 
 # 使用 vip 负载时使用的 keepalived 镜像
-lb_keepalived_image: registry.cn-shanghai.aliyuncs.com/c7n/keepalived:2.0.20
+lb_keepalived_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/osixia_keepalived:2.0.20
 # keepalived auth_type 的 password
 lb_keepalived_password: "d0cker"
 # 区分多个 instance 的 VRRP 组播，同网段不能重复，取值在0-255之间
