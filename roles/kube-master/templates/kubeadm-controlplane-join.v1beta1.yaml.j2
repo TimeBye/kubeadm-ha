@@ -55,13 +55,20 @@ apiServer:
   extraArgs:
     allow-privileged: "true"
     apiserver-count: "{{ groups['kube-master']|length + groups['new-master']|length }}"
-    audit-log-path: "{{ audit_log_path }}"
+{% if kubernetes_audit %}
+    audit-log-path: /var/log/audit/kube-apiserver-audit.log
     audit-log-maxage: "{{ audit_log_maxage }}"
     audit-log-maxbackup: "{{ audit_log_maxbackups }}"
     audit-log-maxsize: "{{ audit_log_maxsize }}"
     audit-log-truncate-enabled: "true"
     audit-policy-file: {{ audit_policy_file }}
-    enable-admission-plugins: ServiceAccount,NodeRestriction,DefaultStorageClass
+{% endif %}
+{% if kube_apiserver_enable_admission_plugins|length > 0 %}
+    enable-admission-plugins: {{ kube_apiserver_enable_admission_plugins | join(',') }}
+{% endif %}
+{% if kube_apiserver_disable_admission_plugins|length > 0 %}
+    disable-admission-plugins: {{ kube_apiserver_disable_admission_plugins | join(',') }}
+{% endif %}
     encryption-provider-config: /etc/kubernetes/pki/secrets-encryption.yaml
     kubelet-certificate-authority: /etc/kubernetes/pki/ca.crt
     kubelet-client-certificate: /etc/kubernetes/pki/apiserver-kubelet-client.crt
@@ -80,15 +87,17 @@ apiServer:
       pathType: File
       readOnly: true
       name: localtime
+{% if kubernetes_audit %}
     - hostPath: "{{ audit_policy_file | dirname }}"
       mountPath: "{{ audit_policy_file | dirname }}"
       pathType: DirectoryOrCreate
       readOnly: true
       name: audit-policy
-    - hostPath: /var/log/kubernetes/audit
-      mountPath: "{{ audit_log_path | dirname }}"
+    - hostPath: "{{ audit_log_hostpath }}"
+      mountPath: /var/log/audit/
       pathType: DirectoryOrCreate
       name: audit-logs
+{% endif %}
 {% for volume in apiserver_extra_volumes %}
     - name: {{ volume.name }}
       hostPath: {{ volume.hostPath }}

@@ -259,6 +259,17 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: calico-kube-controllers
 rules:
+{% if "PodSecurityPolicy" in kube_apiserver_enable_admission_plugins %}
+  # Cluster role which grants access to the privileged pod security policy
+  - apiGroups:
+    - extensions
+    resourceNames:
+    - privileged
+    resources:
+    - podsecuritypolicies
+    verbs:
+    - use
+{% endif %}
   # Nodes are watched to monitor for deletions.
   - apiGroups: [""]
     resources:
@@ -319,6 +330,17 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: calico-node
 rules:
+{% if "PodSecurityPolicy" in kube_apiserver_enable_admission_plugins %}
+  # Cluster role which grants access to the privileged pod security policy
+  - apiGroups:
+    - extensions
+    resourceNames:
+    - privileged
+    resources:
+    - podsecuritypolicies
+    verbs:
+    - use
+{% endif %}
   # The CNI plugin needs to get pods, nodes, and namespaces.
   - apiGroups: [""]
     resources:

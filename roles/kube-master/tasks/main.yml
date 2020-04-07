@@ -34,6 +34,7 @@
     owner: root
     group: root
     mode: 0644
+  when: kubernetes_audit|default(false)
 
 # 初始化第一个 master 节点
 - include_tasks: master-init.yml

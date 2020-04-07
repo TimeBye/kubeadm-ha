@@ -82,22 +82,33 @@ kube_encryption_algorithm: "aescbc"
 kube_encrypt_token: "GPG4RC0Vyk7+Mz/niQPttxLIeL4HF96oRCcBRyKNpfM="
 
 ## 审计相关配置
-# 审计日志文件目录
-audit_log_path: /var/log/audit/kube-apiserver-audit.log
+# 是否启用审计
+kubernetes_audit: false
 # 保留审计日志最大天数
 audit_log_maxage: 30
 # 保留审计日志最大个数
 audit_log_maxbackups: 10
 # 保留审计日志最大容量（MB）
 audit_log_maxsize: 100
+# 审计日志文件挂载在主机上的目录
+audit_log_hostpath: /var/log/kubernetes/audit
 # 审计策略配置文件路径
-audit_policy_file: "/etc/kubernetes/audit-policy/apiserver-audit-policy.yaml"
+audit_policy_file: /etc/kubernetes/config/apiserver-audit-policy.yaml
 # 自定义审计日志规则 (替换默认的审计规则)
 # audit_policy_custom_rules: |
 #   - level: None
 #     users: []
 #     verbs: []
 #     resources: []
+
+# 1.10+ admission plugins
+kube_apiserver_enable_admission_plugins: 
+- NodeRestriction
+# - AlwaysPullImages
+# - PodSecurityPolicy
+
+# 1.10+ list of disabled admission plugins
+kube_apiserver_disable_admission_plugins: []
 
 ## Extra args for k8s components passing by kubeadm
 kube_kubeadm_apiserver_extra_args: {}

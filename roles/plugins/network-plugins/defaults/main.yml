@@ -7,6 +7,12 @@ wait_plugins_ready: true
 # 是否启用网络组建
 network_plugins_enabled: true
 
+# 1.10+ admission plugins
+kube_apiserver_enable_admission_plugins: 
+- NodeRestriction
+# - AlwaysPullImages
+# - PodSecurityPolicy
+
 # 集群网络插件，目前支持flannel, calico, kube-ovn
 network_plugin: "flannel"
 # 集群pod ip段
