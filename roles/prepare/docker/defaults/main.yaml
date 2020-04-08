@@ -17,11 +17,14 @@ docker_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/{{ 
 
 # 国内镜像加速
 docker_mirror: 
-  # - "https://docker.mirrors.ustc.edu.cn"
+# - "https://reg-mirror.qiniu.com"
+# - "https://hub-mirror.c.163.com"
+# - "https://docker.mirrors.ustc.edu.cn"
 
+# 信任的不安全镜像库地址，默认为 Pod 和 Service 网段
 docker_insecure_registries:
-  - "{{ kube_pod_subnet }}"
-  - "{{ kube_service_subnet }}"
+- "{{ kube_pod_subnet }}"
+- "{{ kube_service_subnet }}"
 
 # docker日志相关
 docker_log_driver: "json-file"

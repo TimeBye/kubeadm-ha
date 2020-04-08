@@ -5,7 +5,6 @@ install_mode: online
 
 # 当前节点ip
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
-lb_mode: "nginx"
 # apiserver ip
 KUBE_APISERVER_IP: >-
   {% if lb_kube_apiserver_ip is not defined %}

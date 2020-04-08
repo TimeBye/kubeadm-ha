@@ -6,8 +6,6 @@ install_mode: online
 #----------------------------------------------- 基础参数 -------------------------------------------------#
 # 当前节点ip
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
-# 负载均衡模式(有nginx和haproxy,slb三个选项。默认使用nginx，也可以选择haproxy时必须设置VIP)
-lb_mode: nginx
 # apiserver ip
 KUBE_APISERVER_IP: >-
   {% if lb_kube_apiserver_ip is not defined %}
