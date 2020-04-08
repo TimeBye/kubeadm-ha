@@ -33,7 +33,7 @@ spec:
       periodSeconds: 3
       timeoutSeconds: 15
       failureThreshold: 2
-      initialDelaySeconds: 3
+      initialDelaySeconds: 10
       httpGet:
         path: /healthz
         port: {{ lb_kube_apiserver_healthcheck_port }}

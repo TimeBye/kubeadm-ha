@@ -6,16 +6,16 @@
     mode: 0644
   register: lb_configuration_result
 
-- name: Envoy lb | 生成 envoy lb static pod 文件
-  template:
-    src: envoy/envoy.yaml.j2
-    dest: /etc/kubernetes/manifests/lb-kube-apiserver.yaml
-    owner: root
-    mode: 0644
-
 - name: Envoy lb | 拉取相关镜像
   shell: docker pull {{ item }}
   with_items:
   - "{{ lb_envoy_image }}"
   - "{{ pod_infra_container_image }}"
   when: install_mode == 'online'
+
+- name: Envoy lb | 生成 envoy lb static pod 文件
+  template:
+    src: envoy/envoy.yaml.j2
+    dest: /etc/kubernetes/manifests/lb-kube-apiserver.yaml
+    owner: root
+    mode: 0644

@@ -24,20 +24,17 @@
   - name: keepalived | 获取网卡名称
     shell: "ip a|grep '{{ CURRENT_HOST_IP }}/'|awk '{print $NF}'"
     register: lb_keepalived_interface
-
+  - name: keepalived | 拉取相关镜像
+    shell: docker pull {{ item }}
+    with_items:
+    - "{{ lb_keepalived_image }}"
+    when: install_mode == 'online'
   - name: keepalived | 生成 static pod 文件
     template: 
       src: keepalived.yaml.j2
       dest: /etc/kubernetes/manifests/lb-keepalived.yaml
       owner: root
       mode: 0644
-
-  - name: keepalived | 拉取相关镜像
-    shell: docker pull {{ item }}
-    with_items:
-    - "{{ lb_keepalived_image }}"
-    when: install_mode == 'online'
-
   when: inventory_hostname in groups['lb']
 
 - name: 读取 kubelet.conf 文件 stat 信息
