@@ -46,7 +46,9 @@ spec:
     securityContext:
       capabilities:
         add:
+        - NET_RAW
         - NET_ADMIN
+        - NET_BROADCAST
   volumes:
   - hostPath:
       path: /etc/localtime
