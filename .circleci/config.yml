@@ -21,12 +21,12 @@ jobs:
           osixia/keepalived:2.0.20
           registry.access.redhat.com/rhel7/pod-infrastructure:latest
           quay.io/coreos/flannel:v0.12.0-amd64
-          calico/typha:v3.13.1
-          calico/cni:v3.13.1
-          calico/node:v3.13.1
-          calico/kube-controllers:v3.13.1
-          calico/pod2daemon-flexvol:v3.13.1
-          calico/ctl:v3.13.1
+          calico/typha:v3.13.2
+          calico/cni:v3.13.2
+          calico/node:v3.13.2
+          calico/kube-controllers:v3.13.2
+          calico/pod2daemon-flexvol:v3.13.2
+          calico/ctl:v3.13.2
           quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0
           traefik:1.7.19
           kubernetesui/dashboard:v2.0.0-rc6
