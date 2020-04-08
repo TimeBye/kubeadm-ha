@@ -32,7 +32,7 @@ spec:
     livenessProbe:
       periodSeconds: 3
       timeoutSeconds: 15
-      failureThreshold: 2
+      failureThreshold: 5
       initialDelaySeconds: 10
       httpGet:
         path: /healthz
