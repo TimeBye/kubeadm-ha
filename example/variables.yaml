@@ -181,11 +181,27 @@ kube_version: 1.16.8
 # 集群内部dns域名
 kube_dns_domain: cluster.local
 
-# 集群pod ip段（不要与node和service网段冲突）
+# 网段选择：pod 和 service 的网段不能与服务器网段重叠，
+# 若有重叠请配置 `kube_pod_subnet` 和 `kube_service_subnet` 变量设置 pod 和 service 的网段，示例参考：
+#    如果服务器网段为：10.0.0.1/8
+#       pod 网段可设置为：192.168.0.0/18
+#       service 网段可设置为 192.168.64.0/18
+#    如果服务器网段为：172.16.0.1/12
+#       pod 网段可设置为：10.244.0.0/18
+#       service 网段可设置为 10.244.64.0/18
+#    如果服务器网段为：192.168.0.1/16
+#       pod 网段可设置为：10.244.0.0/18
+#       service 网段可设置为 10.244.64.0/18
+# 集群pod ip段，默认掩码位 18 即 16384 个ip
 kube_pod_subnet: 10.244.0.0/18
-
-# 集群service ip段（不要与node和pod网段冲突）
+# 集群service ip段
 kube_service_subnet: 10.244.64.0/18
+# 分配给节点的 pod 子网掩码位，默认为 24 即 256 个ip，故使用这些默认值可以纳管 16384/256=64 个节点。
+kube_network_node_prefix: 24
+
+# node节点最大 pod 数。数量与分配给节点的 pod 子网有关，ip 数应大于 pod 数。
+# https://cloud.google.com/kubernetes-engine/docs/how-to/flexible-pod-cidr
+kube_max_pods: 110
 
 # NodePort端口范围
 kube_service_node_port_range: 30000-32767
@@ -213,9 +229,6 @@ kube_proxy_mode: iptables
 
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
-
-# node节点最大pod 数
-kube_max_pods: 110
 
 ## 存入 Etcd 时的 Secret 进行静态加密 
 # 仅支持: aescbc, secretbox 或 aesgcm
@@ -251,6 +264,15 @@ kube_apiserver_enable_admission_plugins:
 
 # 1.10+ list of disabled admission plugins
 kube_apiserver_disable_admission_plugins: []
+
+# kube-controller-manager 标记 kubelet(node) 为不健康的周期
+kube_controller_node_monitor_grace_period: 40s
+# kube-controller-manager 定期检查 kubelet(node) 状态周期
+kube_controller_node_monitor_period: 5s
+# kube-controller-manager 判定节点故障，重建 Pod 的超时时间，默认值 5m0s，这里改为了 2m0s
+kube_controller_pod_eviction_timeout: 2m0s
+# exit 状态的 pod 超过多少会触发 gc，默认值 12500，这里改为了 10
+kube_controller_terminated_pod_gc_threshold: 10
 
 ## Extra args for k8s components passing by kubeadm
 kube_kubeadm_apiserver_extra_args: {}
