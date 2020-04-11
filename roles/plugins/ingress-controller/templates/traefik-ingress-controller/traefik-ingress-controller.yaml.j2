@@ -1,0 +1,225 @@
+---
+# Source: traefik/templates/rbac/serviceaccount.yaml
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  namespace: ingress-controller
+  name: traefik
+  labels:
+    app.kubernetes.io/name: traefik
+---
+# Source: traefik/templates/rbac/clusterrole.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: traefik
+  labels:
+    app.kubernetes.io/name: traefik
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - services
+      - endpoints
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+    resources:
+      - ingresses
+{% if kubeadm_version_output.stdout is version('v1.14.0', '>=') %}
+      - "networking.k8s.io"
+{% endif %}
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+{% if kubeadm_version_output.stdout is version('v1.14.0', '>=') %}
+      - "networking.k8s.io"
+{% endif %}
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  - apiGroups:
+      - traefik.containo.us
+    resources:
+      - ingressroutes
+      - ingressroutetcps
+      - ingressrouteudps
+      - middlewares
+      - tlsoptions
+      - tlsstores
+      - traefikservices
+    verbs:
+      - get
+      - list
+      - watch
+---
+# Source: traefik/templates/rbac/clusterrolebinding.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: traefik
+  labels:
+    app.kubernetes.io/name: traefik
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: traefik
+subjects:
+  - kind: ServiceAccount
+    name: traefik
+    namespace: ingress-controller
+---
+# Source: traefik/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ingress-controller
+  name: traefik
+  labels:
+    app.kubernetes.io/name: traefik
+spec:
+  type: NodePort
+  externalTrafficPolicy: {{ ingress_controller_external_traffic_policy }}
+{% if kube_proxy_mode == "iptables" %}
+  externalIPs:
+{{ INGRESS_EXTERNALIPS }}
+{% endif %}
+  selector:
+    app.kubernetes.io/name: traefik
+  ports:
+  # - port: 9000
+  #   name: traefik
+  #   targetPort: "traefik"
+  - port: 80
+    name: web
+    targetPort: "web"
+    protocol: TCP
+    nodePort: {{ ingress_controller_http_nodeport }}
+  - port: 443
+    name: websecure
+    targetPort: "websecure"
+    protocol: TCP
+    nodePort: {{ ingress_controller_https_nodeport }}
+---
+# Source: traefik/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ingress-controller
+  name: traefik
+  labels:
+    app.kubernetes.io/name: traefik
+spec:
+  replicas: {{ INGRESS_MIN_REPLICAS }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: traefik
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  template:
+    metadata:
+      annotations:
+      labels:
+        app.kubernetes.io/name: traefik
+    spec:
+      serviceAccountName: traefik
+      terminationGracePeriodSeconds: 60
+      hostNetwork: false
+      containers:
+      - image: {{ traefik_ingress_image }}
+        name: traefik
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 512Mi
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 9000
+          failureThreshold: 1
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 9000
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        ports:
+        - name: "traefik"
+          containerPort: 9000
+          protocol: TCP
+        - name: "web"
+          containerPort: 8000
+          protocol: TCP
+        - name: "websecure"
+          containerPort: 8443
+          protocol: TCP
+        args:
+          - "--global.checknewversion"
+          - "--global.sendanonymoususage"
+          - "--entryPoints.traefik.address=:9000"
+          - "--entryPoints.web.address=:8000"
+          - "--entryPoints.websecure.address=:8443"
+          - "--api.insecure=true"
+          - "--api.dashboard=true"
+          - "--ping=true"
+          - "--providers.kubernetescrd"
+          - "--providers.kubernetesingress"
+        securityContext:
+          # nobody -> 65534
+          runAsUser: 65534
+      affinity:
+        podAntiAffinity:	
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - traefik
+            topologyKey: kubernetes.io/hostname
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  namespace: ingress-controller
+  name: traefik
+  labels:
+    app.kubernetes.io/name: traefik
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: traefik
+  minReplicas: {{ INGRESS_MIN_REPLICAS }}
+  maxReplicas: {{ INGRESS_MAX_REPLICAS }}
+  metrics:
+    - resource:
+        name: cpu
+        targetAverageUtilization: 60
+      type: Resource
+    - resource:
+        name: memory
+        targetAverageUtilization: 60
+      type: Resource

@@ -28,7 +28,7 @@ jobs:
           calico/pod2daemon-flexvol:v3.13.2
           calico/ctl:v3.13.2
           quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0
-          traefik:1.7.19
+          traefik:2.2.0
           kubernetesui/dashboard:v2.0.0-rc6
           kubernetesui/metrics-scraper:v1.0.3
           quay.io/jetstack/cert-manager-cainjector:v0.9.1

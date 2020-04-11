@@ -26,7 +26,7 @@ nginx_ingress_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetes-ing
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
 # traefik-ingress-controller 镜像地址
-traefik_ingress_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/traefik:1.7.19
+traefik_ingress_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/traefik:2.2.0
 
 # 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
 kube_proxy_mode: "iptables"
