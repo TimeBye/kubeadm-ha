@@ -166,7 +166,7 @@ kubeadm_token: "abcdef.0123456789abcdef"
 # k8s 集群 master 节点证书配置，可以添加多个ip和域名（比如增加公网ip和域名）
 kube_master_external_ip:
 - "8.8.8.8"
-kube_master_external_demain:
+kube_master_external_domain:
 - "kubernetes.io"
 
 # Pod根容器

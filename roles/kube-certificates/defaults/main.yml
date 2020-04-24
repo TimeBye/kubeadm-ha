@@ -21,7 +21,7 @@ kube_ca_certs_expired: 36500
 kube_master_external_ip:
 - "8.8.8.8"
 
-kube_master_external_demain:
+kube_master_external_domain:
 - "kubernetes.io"
 
 # 集群内部dns域名

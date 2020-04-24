@@ -38,11 +38,11 @@ DNS.{{ dns_idx + loop.index }} = kubernetes.default.svc.{% for domain in kube_dn
 
 {% endfor %}
 {% set dns_idx = 4 + (kube_dns_domain.split('.')|length) | int %}
-{% for domain in kube_master_external_demain %}
+{% for domain in kube_master_external_domain %}
 DNS.{{ dns_idx + loop.index }} = {{ domain }}
 {% endfor %}
 {% if hostvars[inventory_hostname]['ansible_host'] is defined %}
-{% set dns_idx = 4 + (kube_dns_domain.split('.')|length + kube_master_external_demain|length) | int %}
+{% set dns_idx = 4 + (kube_dns_domain.split('.')|length + kube_master_external_domain|length) | int %}
 {% for host in (groups['kube-master'] + groups['new-master'] | default([])) | unique %}
 DNS.{{ dns_idx + loop.index }} = {{ host }}
 {% endfor %}

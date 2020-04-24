@@ -27,7 +27,7 @@ lb_kube_apiserver_port: 8443
 kube_master_external_ip:
 - "8.8.8.8"
 
-kube_master_external_demain:
+kube_master_external_domain:
 - "kubernetes.io"
 
 # Pod根容器

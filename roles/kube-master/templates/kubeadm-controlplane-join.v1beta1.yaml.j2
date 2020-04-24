@@ -119,7 +119,7 @@ apiServer:
   - {{ host }}
 {% endfor %}
 {% endif %}
-{% for domain in kube_master_external_demain %}
+{% for domain in kube_master_external_domain %}
   - {{ domain }}
 {% endfor %}
   - 127.0.0.1
