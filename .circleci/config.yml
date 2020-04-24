@@ -29,8 +29,8 @@ jobs:
           calico/ctl:v3.13.2
           quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0
           traefik:2.2.0
-          kubernetesui/dashboard:v2.0.0-rc6
-          kubernetesui/metrics-scraper:v1.0.3
+          kubernetesui/dashboard:v2.0.0
+          kubernetesui/metrics-scraper:v1.0.4
           quay.io/jetstack/cert-manager-cainjector:v0.9.1
           quay.io/jetstack/cert-manager-webhook:v0.9.1
           quay.io/jetstack/cert-manager-controller:v0.9.1

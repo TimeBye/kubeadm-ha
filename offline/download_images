@@ -2,8 +2,8 @@
 
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/setzero_ansible:2.8.5-nginx-1.17.6-alpine
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/openresty_openresty:1.15.8.3-alpine
-docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.0-rc6 
-docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.3
+docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.0 
+docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4
 docker pull registry.aliyuncs.com/google_containers/kube-proxy:v1.16.8 
 docker pull registry.aliyuncs.com/google_containers/kube-apiserver:v1.16.8 
 docker pull registry.aliyuncs.com/google_containers/kube-scheduler:v1.16.8 
@@ -24,8 +24,8 @@ docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetes-ingress-cont
 docker save \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/setzero_ansible:2.8.5-nginx-1.17.6-alpine \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/openresty_openresty:1.15.8.3-alpine \
-    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.0-rc6 \
-    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.3 \
+    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.0 \
+    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4 \
     registry.aliyuncs.com/google_containers/kube-proxy:v1.16.8 \
     registry.aliyuncs.com/google_containers/kube-apiserver:v1.16.8 \
     registry.aliyuncs.com/google_containers/kube-scheduler:v1.16.8 \
