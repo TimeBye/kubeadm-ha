@@ -176,7 +176,7 @@ pod_infra_container_image: registry.aliyuncs.com/google_containers/pause:3.2
 kube_image_repository: registry.aliyuncs.com/google_containers
 
 # kubernetes版本
-kube_version: 1.16.8
+kube_version: 1.16.9
 
 # 集群内部dns域名
 kube_dns_domain: cluster.local
