@@ -25,12 +25,13 @@ spec:
       failureThreshold: 5
       initialDelaySeconds: 10
       httpGet:
+        host: 127.0.0.1
         path: /healthz
         port: {{ lb_kube_apiserver_healthcheck_port }}
 {% endif %}
     resources: {}
     volumeMounts:
-    - mountPath: /usr/local/openresty/nginx/conf
+    - mountPath: /usr/local/openresty/nginx/conf/nginx.conf
       name: openresty-lb-conf
       readOnly: true
     - mountPath: /etc/localtime
@@ -39,8 +40,8 @@ spec:
   volumes:
   - name: openresty-lb-conf
     hostPath:
-      path: /etc/kubernetes/plugins/lb-config
-      type: DirectoryOrCreate
+      path: /etc/kubernetes/plugins/lb-config/nginx.conf
+      type: File
   - hostPath:
       path: /etc/localtime
       type: File

@@ -31,13 +31,13 @@ listen stats
 
 {% if lb_kube_apiserver_healthcheck_port is defined -%}
 frontend healthz
-    bind *:{{ lb_kube_apiserver_healthcheck_port }}
+    bind 127.0.0.1:{{ lb_kube_apiserver_healthcheck_port }}
     mode http
     monitor-uri /healthz
 {% endif %}
 
 frontend kube_api_frontend
-    bind 0.0.0.0:{{ lb_kube_apiserver_port }}
+    bind 127.0.0.1:{{ lb_kube_apiserver_port }}
     mode tcp
     option tcplog
     default_backend kube_api_backend
