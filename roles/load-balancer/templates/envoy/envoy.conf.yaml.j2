@@ -11,7 +11,8 @@ static_resources:
   - name: lb_kube_apiserver
     address:
       socket_address:
-        address: 127.0.0.1
+        address: {% if inventory_hostname in groups['lb'] %}0.0.0.0{% else %}127.0.0.1{% endif %}
+
         port_value: {{ lb_kube_apiserver_port }}
     filter_chains:
     - filters:
