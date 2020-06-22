@@ -19,6 +19,12 @@
     enabled: no
   when: '"active" in firewalld_already_installed.stdout'
 
+- name: 设置 yum obsoletes 值为 0
+  lineinfile:
+    path: /etc/yum.conf
+    regexp: '^obsoletes=1'
+    line: obsoletes=0
+
 - name: 校验安装模式
   assert:
     that: base_yum_repo is defined or base_yum_repo != None
