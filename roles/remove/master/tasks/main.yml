@@ -44,3 +44,7 @@
   shell: kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker='' --overwrite
   ignore_errors: true
   delegate_to: "{{ (groups['kube-master'] | difference(groups['del-master']))[0] }}"
+
+- name: 刷新集群 master 节点状态
+  shell: kubeadm reset phase update-cluster-status
+  ignore_errors: true

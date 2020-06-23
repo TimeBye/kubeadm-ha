@@ -43,7 +43,7 @@
   delegate_to: "{{ (groups['etcd'] | difference(groups['del-etcd']))|first }}"
   when: etcd_member_id.stdout != ''
 
-- name: 删除 etcd mainfest 文件
+- name: 删除 etcd mainfest 文件以及数据
   file: 
     name: "{{ item }}"
     state: absent

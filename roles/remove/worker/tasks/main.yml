@@ -23,7 +23,7 @@
   delegate_to: "{{ groups['kube-master'][0] }}"
 
 - name: "驱逐 worker 节点：{{ inventory_hostname }} 上运行的 Pod"
-  shell: >-
+  shell: >
     kubectl drain
     --force
     --ignore-daemonsets
@@ -34,6 +34,8 @@
   delegate_to: "{{ groups['kube-master'][0] }}"
 
 - name: 取消节点原有 worker 角色标签
-  shell: kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker-
+  shell: >
+    kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker='' --overwrite &&
+    kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker-
   ignore_errors: true
   delegate_to: "{{ groups['kube-master'][0] }}"
