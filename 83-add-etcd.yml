@@ -30,3 +30,21 @@
   - new-etcd
   roles:
   - post
+
+- hosts: 
+  - kube-master
+  tasks:
+  - name: "更新第一个 master 节点：{{ inventory_hostname }} 的配置"
+    shell: >
+      kubeadm upgrade apply --config=/etc/kubernetes/kubeadm-config.yaml --force
+    when: inventory_hostname == groups['kube-master'][0]
+  
+  - name: "更新 master 节点：{{ inventory_hostname }} 的配置"
+    shell: >
+      kubeadm upgrade node
+      {% if kube_version.split('.')[1]|int == 13 %}
+      experimental-control-plane
+      {% endif %}
+    when: 
+    - inventory_hostname != groups['kube-master'][0]
+    - inventory_hostname in groups['kube-master']
