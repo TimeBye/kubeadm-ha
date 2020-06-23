@@ -3,11 +3,23 @@
     that: inventory_hostname is match('^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$')
     msg: "NodeName 必须由小写字母、数字，“-”或“.”组成，并且必须以小写字母或数字开头和结尾，请修改重试。"
 
+- name: 校验 etcd 节点数量
+  run_once: true
+  assert:
+    that: groups['etcd']|length >= 1
+    msg: "请将添加至少一个节点到 etcd 节点组中。"
+
 - name: 校验 master 节点数量
   run_once: true
   assert:
     that: groups['kube-master']|length >= 1
     msg: "请将添加至少一个节点到 kube-master 节点组中。"
+
+- name: 校验 worker 节点数量
+  run_once: true
+  assert:
+    that: groups['kube-worker']|length >= 1
+    msg: "请将添加至少一个节点到 kube-worker 节点组中。"
 
 - name: 校验 new-etcd 节点组数量
   assert:
