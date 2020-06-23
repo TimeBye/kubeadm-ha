@@ -93,8 +93,8 @@
   - iptables -X
   - iptables -F -t nat
   - iptables -X -t nat
-  - iptables -F -t raw
-  - iptables -X -t raw
+  - iptables -F -t filter
+  - iptables -X -t filter
   - iptables -F -t mangle
   - iptables -X -t mangle
 
@@ -105,6 +105,7 @@
   with_items:
     - filter
     - nat
+    - mangle
 
 - name: 清理 ipvsadm
   shell: "{{ item }} || true"
@@ -142,7 +143,11 @@
   systemd:
     name: >-
       {% if ansible_os_family == "RedHat" -%}
+      {%- if ansible_distribution_major_version|int == 8 -%}
+      NetworkManager
+      {%- else -%}
       network
+      {%- endif -%}
       {%- elif ansible_distribution == "Ubuntu" and ansible_distribution_release == "bionic" -%}
       systemd-networkd
       {%- elif ansible_os_family == "Debian" -%}
