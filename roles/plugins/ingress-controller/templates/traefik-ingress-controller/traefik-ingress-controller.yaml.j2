@@ -19,7 +19,6 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - pods
       - services
       - endpoints
       - secrets
@@ -50,13 +49,13 @@ rules:
   - apiGroups:
       - traefik.containo.us
     resources:
+      - middlewares
       - ingressroutes
+      - traefikservices
       - ingressroutetcps
       - ingressrouteudps
-      - middlewares
       - tlsoptions
       - tlsstores
-      - traefikservices
     verbs:
       - get
       - list
