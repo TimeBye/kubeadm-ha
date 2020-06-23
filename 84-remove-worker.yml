@@ -1,0 +1,14 @@
+- hosts: 
+  - del-worker
+  vars_prompt:
+    name: "restore_confirmation"
+    prompt: "确实要移除 worker 节点? 输入“yes”确认移除。"
+    default: "no"
+    private: no
+  pre_tasks:
+    - name: 移除确认
+      fail:
+        msg: "移除确认失败，取消移除 worker 节点操作。"
+      when: restore_confirmation != "yes"
+  roles:
+  - remove/worker

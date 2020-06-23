@@ -17,9 +17,23 @@
     that: "{{ (groups['kube-worker'] | difference(groups['del-worker']))|length >= 1 }}"
     msg: "移除 worker 节点后，剩余 worker 节点数量应大于等于 1。"
 
-- name: 校验将被移除的 worker 节点是否属于 etcd 节点
-  run_once: true
-  assert:
-    that: "{{ item not in (groups['etcd'] + groups['new-etcd'])}}"
-    msg: "当前节点: {{ item }}，还包含 etcd 角色不能进行移除操作。"
-  with_items: "{{ groups['del-worker'] }}"
+- name: "禁止 worker 节点：{{ inventory_hostname }} 进行调度"
+  shell: kubectl cordon {{ inventory_hostname }}
+  ignore_errors: true
+  delegate_to: "{{ groups['kube-master'][0] }}"
+
+- name: "驱逐 worker 节点：{{ inventory_hostname }} 上运行的 Pod"
+  shell: >-
+    kubectl drain
+    --force
+    --ignore-daemonsets
+    --grace-period {{ drain_grace_period }}
+    --timeout {{ drain_timeout }}
+    --delete-local-data {{ inventory_hostname }}
+  ignore_errors: true
+  delegate_to: "{{ groups['kube-master'][0] }}"
+
+- name: 取消节点原有 worker 角色标签
+  shell: kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker-
+  ignore_errors: true
+  delegate_to: "{{ groups['kube-master'][0] }}"
