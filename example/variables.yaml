@@ -35,7 +35,7 @@ kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt 
 # Docker 相关参数配置
 # ------------------------ #
 # Docker版本
-docker_version: 19.03.6
+docker_version: 19.03.11
 
 # 国内镜像加速(若不需要加速，请将值删去，键保留)
 docker_mirror: 
@@ -143,7 +143,7 @@ etcd_certs_expired: 3650
 # Etcd根证书过期时间（天）
 etcd_ca_certs_expired: 36500
 # Etcd使用的镜像
-etcd_image: registry.aliyuncs.com/google_containers/etcd:3.4.3-0
+etcd_image: registry.aliyuncs.com/k8sxio/etcd:3.4.3-0
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
 # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
@@ -170,13 +170,13 @@ kube_master_external_domain:
 - "kubernetes.io"
 
 # Pod根容器
-pod_infra_container_image: registry.aliyuncs.com/google_containers/pause:3.2
+pod_infra_container_image: registry.aliyuncs.com/k8sxio/pause:3.2
 
 # kubernetes各组件镜像仓库前缀
-kube_image_repository: registry.aliyuncs.com/google_containers
+kube_image_repository: registry.aliyuncs.com/k8sxio
 
 # kubernetes版本
-kube_version: 1.16.9
+kube_version: 1.18.4
 
 # 集群内部dns域名
 kube_dns_domain: cluster.local
@@ -390,7 +390,7 @@ kubernetesui_metrics_scraper_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha
 metrics_server_enabled: true
 
 # metrics-server image地址
-metrics_server_image: registry.aliyuncs.com/google_containers/metrics-server-amd64:v0.3.6
+metrics_server_image: registry.aliyuncs.com/k8sxio/metrics-server-amd64:v0.3.6
 
 # ------------------------ #
 # cert-manager 相关配置

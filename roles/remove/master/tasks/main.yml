@@ -1,0 +1,46 @@
+- name: 校验 master 节点数量
+  run_once: true
+  assert:
+    that: groups['kube-master']|length > 1
+    msg: "Master 节点数量大于 1 才可进行 master 节点移除操作。"
+
+- name: 校验将被移除的 master 节点是否在原 master 组中
+  run_once: true
+  assert:
+    that: "{{ item in groups['kube-master'] }}"
+    msg: "当前节点: {{ item }}，并未在 kube-master 组中，不需要进行移除操作。"
+  with_items: "{{ groups['del-master'] }}"
+
+- name: 校验移除 master 节点后剩余 master 节点数量
+  run_once: true
+  assert:
+    that: "{{ (groups['kube-master'] | difference(groups['del-master']))|length >= 1 }}"
+    msg: "移除 master 节点后，剩余 master 节点数量应大于等于 1。"
+
+- name: 删除 master 节点组件 manifest 文件
+  file: 
+    name: "{{ item }}"
+    state: absent
+  with_items:
+  - /etc/kubernetes/manifests/kube-apiserver.yaml
+  - /etc/kubernetes/manifests/kube-scheduler.yaml
+  - /etc/kubernetes/manifests/kube-controller-manager.yaml
+
+- name: 取消节点原有 master 角色标签
+  shell: >
+    kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/master='' --overwrite &&
+    kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/master-
+  ignore_errors: true
+  delegate_to: "{{ (groups['kube-master'] | difference(groups['del-master']))[0] }}"
+
+- name: 取消 master 节点 taint，使 master 节点可以调度
+  shell: >
+    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/master='':NoSchedule --overwrite &&
+    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/master-
+  ignore_errors: yes
+  delegate_to:  "{{ (groups['kube-master'] | difference(groups['del-master']))[0] }}"
+
+- name: 添加 worker 角色标签
+  shell: kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker='' --overwrite
+  ignore_errors: true
+  delegate_to: "{{ (groups['kube-master'] | difference(groups['del-master']))[0] }}"

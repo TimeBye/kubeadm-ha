@@ -1,0 +1,58 @@
+- name: 校验 etcd 节点数量
+  run_once: true
+  assert:
+    that: groups['etcd']|length > 1
+    msg: "Etcd 节点数量大于 1 才可进行 etcd 节点移除操作。"
+
+- name: 校验将被移除的 etcd 节点是否在原 etcd 组中
+  run_once: true
+  assert:
+    that: "{{ item in groups['etcd'] }}"
+    msg: "当前节点: {{ item }}，并未在 etcd 组中，不需要进行移除操作。"
+  with_items: "{{ groups['del-etcd'] }}"
+
+- name: 校验移除 etcd 节点后剩余 etcd 节点数量
+  run_once: true
+  assert:
+    that: "{{ (groups['etcd'] | difference(groups['del-etcd']))|length >= 1 }}"
+    msg: "移除 etcd 节点后，剩余 etcd 节点数量应大于等于 1。"
+
+- name: 获取将要移除的 etcd 节点 member id
+  shell: >
+    docker run --net host -e ETCDCTL_API=3 
+    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
+    --rm {{ etcd_image }}
+    etcdctl member list
+    --cacert=/etc/kubernetes/pki/etcd/ca.crt
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+    --endpoints=https://[127.0.0.1]:2379 | grep {{ inventory_hostname }} | cut -d',' -f1
+  delegate_to: "{{ (groups['etcd'] | difference(groups['del-etcd']))|first }}"
+  register: etcd_member_id
+
+- name: 从 etcd 集群中移除 {{ inventory_hostname }} 节点
+  shell: >
+    docker run --net host -e ETCDCTL_API=3 
+    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
+    --rm {{ etcd_image }}
+    etcdctl member remove {{ etcd_member_id.stdout }}
+    --cacert=/etc/kubernetes/pki/etcd/ca.crt
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+    --endpoints=https://[127.0.0.1]:2379
+  delegate_to: "{{ (groups['etcd'] | difference(groups['del-etcd']))|first }}"
+  when: etcd_member_id.stdout != ''
+
+- name: 删除 etcd mainfest 文件
+  file: 
+    name: "{{ item }}"
+    state: absent
+  with_items:
+  - "{{ etcd_data_dir }}"
+  - /etc/kubernetes/manifests/etcd-external.yaml
+
+- name: 取消节点原有 etcd 角色标签
+  shell: kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/etcd-
+  ignore_errors: true
+  delegate_to: "{{ groups['kube-master'][0] }}"
+  when: inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])

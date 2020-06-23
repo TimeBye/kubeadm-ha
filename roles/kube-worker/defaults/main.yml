@@ -22,7 +22,7 @@ lb_kube_apiserver_port: 8443
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
 # Pod根容器
-pod_infra_container_image: registry.aliyuncs.com/google_containers/pause:3.2
+pod_infra_container_image: registry.aliyuncs.com/k8sxio/pause:3.2
 # node节点最大pod 数
 kube_max_pods: 110
 # 资源保留相关配置
@@ -44,9 +44,9 @@ kube_ephemeral_storage_reserved: 1G
 # system_ephemeral_storage_reserved: 10G
 
 # kubernetes各组件镜像仓库前缀
-kube_image_repository: registry.aliyuncs.com/google_containers
+kube_image_repository: registry.aliyuncs.com/k8sxio
 # kubernetes版本
-kube_version: 1.16.9
+kube_version: 1.18.4
 # 集群内部dns域名
 kube_dns_domain: cluster.local
 # 集群pod ip段

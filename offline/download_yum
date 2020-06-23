@@ -68,18 +68,17 @@ yum install -y \
 
 # 下载docker
 yum install -y \
-    docker-ce-19.03.6 \
-    docker-ce-cli-19.03.6 \
+    docker-ce-19.03.11 \
+    docker-ce-cli-19.03.11 \
     containerd.io
 
 # 下载kubernetes
 yum install -y \
-    kubeadm-1.16.9-0.x86_64 \
-    kubectl-1.16.9-0.x86_64 \
-    kubelet-1.16.9-0.x86_64 \
-    kubernetes-cni-0.7.5
+    kubeadm-1.18.4-0.x86_64 \
+    kubectl-1.18.4-0.x86_64 \
+    kubelet-1.18.4-0.x86_64
 
 cp -n $(find /var/cache/yum -name "*.rpm") /kubernetes
 cd /kubernetes
 createrepo --update ./
-tar -czvf kubernetes-1.16.9.tar.gz *.rpm repodata
+tar -czvf kubernetes-1.18.4.tar.gz *.rpm repodata

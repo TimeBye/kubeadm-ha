@@ -4,15 +4,15 @@ docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/setzero_ansible:2.8.5-n
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/openresty_openresty:1.15.8.3-alpine
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.0 
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4
-docker pull registry.aliyuncs.com/google_containers/kube-proxy:v1.16.9 
-docker pull registry.aliyuncs.com/google_containers/kube-apiserver:v1.16.9 
-docker pull registry.aliyuncs.com/google_containers/kube-scheduler:v1.16.9 
-docker pull registry.aliyuncs.com/google_containers/kube-controller-manager:v1.16.9 
-docker pull registry.aliyuncs.com/google_containers/coredns:1.6.2 
-docker pull registry.aliyuncs.com/google_containers/etcd:3.4.3-0 
-docker pull registry.aliyuncs.com/google_containers/metrics-server-amd64:v0.3.6 
-docker pull registry.aliyuncs.com/google_containers/pause:3.2 
-docker pull registry.aliyuncs.com/google_containers/tiller:v2.16.3 
+docker pull registry.aliyuncs.com/k8sxio/kube-proxy:v1.18.4 
+docker pull registry.aliyuncs.com/k8sxio/kube-apiserver:v1.18.4 
+docker pull registry.aliyuncs.com/k8sxio/kube-scheduler:v1.18.4 
+docker pull registry.aliyuncs.com/k8sxio/kube-controller-manager:v1.18.4 
+docker pull registry.aliyuncs.com/k8sxio/coredns:1.6.2 
+docker pull registry.aliyuncs.com/k8sxio/etcd:3.4.3-0 
+docker pull registry.aliyuncs.com/k8sxio/metrics-server-amd64:v0.3.6 
+docker pull registry.aliyuncs.com/k8sxio/pause:3.2 
+docker pull registry.aliyuncs.com/k8sxio/tiller:v2.16.3 
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_typha:v3.14.1
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_cni:v3.14.1
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_node:v3.14.1
@@ -26,19 +26,19 @@ docker save \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/openresty_openresty:1.15.8.3-alpine \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.0 \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4 \
-    registry.aliyuncs.com/google_containers/kube-proxy:v1.16.9 \
-    registry.aliyuncs.com/google_containers/kube-apiserver:v1.16.9 \
-    registry.aliyuncs.com/google_containers/kube-scheduler:v1.16.9 \
-    registry.aliyuncs.com/google_containers/kube-controller-manager:v1.16.9 \
-    registry.aliyuncs.com/google_containers/coredns:1.6.2 \
-    registry.aliyuncs.com/google_containers/etcd:3.4.3-0 \
-    registry.aliyuncs.com/google_containers/metrics-server-amd64:v0.3.6 \
-    registry.aliyuncs.com/google_containers/pause:3.2 \
-    registry.aliyuncs.com/google_containers/tiller:v2.16.3 \
+    registry.aliyuncs.com/k8sxio/kube-proxy:v1.18.4 \
+    registry.aliyuncs.com/k8sxio/kube-apiserver:v1.18.4 \
+    registry.aliyuncs.com/k8sxio/kube-scheduler:v1.18.4 \
+    registry.aliyuncs.com/k8sxio/kube-controller-manager:v1.18.4 \
+    registry.aliyuncs.com/k8sxio/coredns:1.6.2 \
+    registry.aliyuncs.com/k8sxio/etcd:3.4.3-0 \
+    registry.aliyuncs.com/k8sxio/metrics-server-amd64:v0.3.6 \
+    registry.aliyuncs.com/k8sxio/pause:3.2 \
+    registry.aliyuncs.com/k8sxio/tiller:v2.16.3 \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetes-ingress-controller_nginx-ingress-controller:0.30.0 \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_typha:v3.14.1 \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_cni:v3.14.1 \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_node:v3.14.1 \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.14.1 \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.14.1 \
-    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.14.1 | gzip -1 > /kubernetes/kubernetes-1.16.9.tar
+    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.14.1 | gzip -1 > /kubernetes/kubernetes-1.18.4.tar

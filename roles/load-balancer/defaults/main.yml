@@ -20,7 +20,7 @@ ingress_controller_http_nodeport: 30080
 # NodePort svc 监听https协议端口(注意需在NodePort端口范围)
 ingress_controller_https_nodeport: 30443
 # Pod根容器
-pod_infra_container_image: registry.aliyuncs.com/google_containers/pause:3.2
+pod_infra_container_image: registry.aliyuncs.com/k8sxio/pause:3.2
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
 

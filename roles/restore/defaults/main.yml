@@ -1,7 +1,7 @@
 # 提权操作
 ansible_become: true
 # Etcd使用的镜像
-etcd_image: registry.aliyuncs.com/google_containers/etcd:3.4.3-0
+etcd_image: registry.aliyuncs.com/k8sxio/etcd:3.4.3-0
 # 当前节点ip
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
 # etcd 集群

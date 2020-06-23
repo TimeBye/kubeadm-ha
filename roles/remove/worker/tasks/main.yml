@@ -1,0 +1,25 @@
+- name: 校验 worker 节点数量
+  run_once: true
+  assert:
+    that: groups['kube-worker']|length > 1
+    msg: "Worker 节点数量大于 1 才可进行 worker 节点移除操作。"
+
+- name: 校验将被移除的 worker 节点是否在原 worker 组中
+  run_once: true
+  assert:
+    that: "{{ item in groups['kube-worker'] }}"
+    msg: "当前节点: {{ item }}，并未在 kube-worker 组中，不需要进行移除操作。"
+  with_items: "{{ groups['del-worker'] }}"
+
+- name: 校验移除 worker 节点后剩余 worker 节点数量
+  run_once: true
+  assert:
+    that: "{{ (groups['kube-worker'] | difference(groups['del-worker']))|length >= 1 }}"
+    msg: "移除 worker 节点后，剩余 worker 节点数量应大于等于 1。"
+
+- name: 校验将被移除的 worker 节点是否属于 etcd 节点
+  run_once: true
+  assert:
+    that: "{{ item not in (groups['etcd'] + groups['new-etcd'])}}"
+    msg: "当前节点: {{ item }}，还包含 etcd 角色不能进行移除操作。"
+  with_items: "{{ groups['del-worker'] }}"
