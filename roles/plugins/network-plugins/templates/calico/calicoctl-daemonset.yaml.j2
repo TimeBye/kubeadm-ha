@@ -1,7 +1,7 @@
-# Calico Version v3.13.2
-# https://docs.projectcalico.org/releases#v3.13.2
+# Calico Version v3.14.1
+# https://docs.projectcalico.org/releases#v3.14.1
 # This manifest includes the following component versions:
-#   calico/ctl:v3.13.2
+#   calico/ctl:v3.14.1
 
 apiVersion: v1
 kind: ServiceAccount
@@ -61,12 +61,14 @@ rules:
       - globalnetworkpolicies
       - globalnetworksets
       - ippools
+      - kubecontrollersconfigurations
       - networkpolicies
       - networksets
       - hostendpoints
       - ipamblocks
       - blockaffinities
       - ipamhandles
+      - ipamconfigs
     verbs:
       - create
       - get
