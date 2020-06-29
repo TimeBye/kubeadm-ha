@@ -19,15 +19,8 @@
     msg: "当前节点: {{ item }}，在 master 角色组中，请先执行移除 master 角色操作。"
   with_items: "{{ groups['del-node'] }}"
 
-- name: 校验将被移除的节点是否属于 worker 角色组
-  run_once: true
-  assert:
-    that: "{{ item not in (groups['kube-worker'] + groups['new-worker']) }}"
-    msg: "当前节点: {{ item }}，在 worker 角色组中，请先执行移除 worker 角色操作。"
-  with_items: "{{ groups['del-node'] }}"
-
 - name: "移除节点：{{ inventory_hostname }}"
   shell: kubectl delete node {{ inventory_hostname }}
   ignore_errors: true
   delegate_to: "{{ groups['kube-master'][0] }}"
-  when: inventory_hostname in (groups['kube-worker'] + groups['new-worker'] + groups['kube-master'] + groups['new-master']) 
+  when: inventory_hostname in (groups['kube-worker'] + groups['new-worker'])

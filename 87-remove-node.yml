@@ -12,8 +12,4 @@
       when: restore_confirmation != "yes"
   roles:
   - remove/node
-
-- hosts: 
-  - del-node
-  roles:
   - reset
