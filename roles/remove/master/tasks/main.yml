@@ -17,6 +17,10 @@
     that: "{{ (groups['kube-master'] | difference(groups['del-master']))|length >= 1 }}"
     msg: "移除 master 节点后，剩余 master 节点数量应大于等于 1。"
 
+- name: 刷新集群 master 节点状态
+  shell: kubeadm reset phase update-cluster-status
+  ignore_errors: true
+
 - name: 删除 master 节点组件 manifest 文件
   file: 
     name: "{{ item }}"
@@ -44,7 +48,3 @@
   shell: kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker='' --overwrite
   ignore_errors: true
   delegate_to: "{{ (groups['kube-master'] | difference(groups['del-master']))[0] }}"
-
-- name: 刷新集群 master 节点状态
-  shell: kubeadm reset phase update-cluster-status
-  ignore_errors: true
