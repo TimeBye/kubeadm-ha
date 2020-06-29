@@ -4,10 +4,10 @@ docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/setzero_ansible:2.8.5-n
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/openresty_openresty:1.15.8.3-alpine
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.0 
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4
-docker pull registry.aliyuncs.com/k8sxio/kube-proxy:v1.18.4 
-docker pull registry.aliyuncs.com/k8sxio/kube-apiserver:v1.18.4 
-docker pull registry.aliyuncs.com/k8sxio/kube-scheduler:v1.18.4 
-docker pull registry.aliyuncs.com/k8sxio/kube-controller-manager:v1.18.4 
+docker pull registry.aliyuncs.com/k8sxio/kube-proxy:v1.18.5 
+docker pull registry.aliyuncs.com/k8sxio/kube-apiserver:v1.18.5 
+docker pull registry.aliyuncs.com/k8sxio/kube-scheduler:v1.18.5 
+docker pull registry.aliyuncs.com/k8sxio/kube-controller-manager:v1.18.5 
 docker pull registry.aliyuncs.com/k8sxio/coredns:1.6.2 
 docker pull registry.aliyuncs.com/k8sxio/etcd:3.4.3-0 
 docker pull registry.aliyuncs.com/k8sxio/metrics-server-amd64:v0.3.6 
@@ -26,10 +26,10 @@ docker save \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/openresty_openresty:1.15.8.3-alpine \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.0 \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4 \
-    registry.aliyuncs.com/k8sxio/kube-proxy:v1.18.4 \
-    registry.aliyuncs.com/k8sxio/kube-apiserver:v1.18.4 \
-    registry.aliyuncs.com/k8sxio/kube-scheduler:v1.18.4 \
-    registry.aliyuncs.com/k8sxio/kube-controller-manager:v1.18.4 \
+    registry.aliyuncs.com/k8sxio/kube-proxy:v1.18.5 \
+    registry.aliyuncs.com/k8sxio/kube-apiserver:v1.18.5 \
+    registry.aliyuncs.com/k8sxio/kube-scheduler:v1.18.5 \
+    registry.aliyuncs.com/k8sxio/kube-controller-manager:v1.18.5 \
     registry.aliyuncs.com/k8sxio/coredns:1.6.2 \
     registry.aliyuncs.com/k8sxio/etcd:3.4.3-0 \
     registry.aliyuncs.com/k8sxio/metrics-server-amd64:v0.3.6 \
@@ -41,4 +41,4 @@ docker save \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_node:v3.14.1 \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.14.1 \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.14.1 \
-    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.14.1 | gzip -1 > /kubernetes/kubernetes-1.18.4.tar
+    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.14.1 | gzip -1 > /kubernetes/kubernetes-1.18.5.tar
