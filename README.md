@@ -29,7 +29,7 @@
   | Dist               | Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7 |
   | Etcd               | v3.4.3-0                                       |
   | Docker             | 18.06, 18.09, **19.03**                        |
-  | Kubernetes         | v1.13, v1.14, v1.15, **v1.16**, v1.17          |
+  | Kubernetes         | v1.13, v1.14, v1.15, v1.16, v1.17, **v1.18**   |
   | Kube-apiserver lb  | slb, haproxy, envoy, nginx ,**openresty**      |
   | Network plugin     | flannel, kube-ovn, **calico**                  |
   | Ingress controller | traefik, **nginx-ingress**                     |
