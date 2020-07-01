@@ -5,6 +5,13 @@
   with_items:
   - /etc/docker
   - "{{ docker_storage_dir }}"
+  - /etc/systemd/system/docker.service.d
+
+- name: 编写 Docker 代理配置
+  template:
+    src: http-proxy.conf.j2
+    dest: /etc/systemd/system/docker.service.d/http-proxy.conf
+  when: http_proxy is defined or https_proxy is defined
 
 - name: 确认 Docker 配置是否有修改
   template:

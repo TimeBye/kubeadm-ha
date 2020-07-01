@@ -11,6 +11,21 @@
 
 - hosts: 
   - all
+  gather_facts: false
+  tasks:
+    - name: "设置代理服务器环境变量"
+      set_fact:
+        proxy_env:
+          http_proxy: "{{ http_proxy | default ('') }}"
+          HTTP_PROXY: "{{ http_proxy | default ('') }}"
+          https_proxy: "{{ https_proxy | default ('') }}"
+          HTTPS_PROXY: "{{ https_proxy | default ('') }}"
+          no_proxy: "{{ no_proxy | default ('') }}"
+          NO_PROXY: "{{ no_proxy | default ('') }}"
+      no_log: true
+
+- hosts: 
+  - all
   vars_prompt:
     name: "restore_confirmation"
     prompt: "确实要恢复群集吗? 输入“yes”确认恢复群集。"
@@ -26,3 +41,4 @@
   - prepare/docker
   - prepare/kubernetes
   - restore
+  environment: "{{ proxy_env }}"

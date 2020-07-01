@@ -5,7 +5,7 @@
       state: directory
 
   - name: 第一个 etcd 节点备份 etcd 数据库
-    raw: >
+    shell: >
       docker run --net host -e ETCDCTL_API=3
       -v /etc/kubernetes/backup/etcd:/snapshot
       -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/
