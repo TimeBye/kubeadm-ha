@@ -42,7 +42,7 @@
     <tr>
         <td><a target="_blank" href="docs/00-安装须知.md">00-安装须知</a></td>
         <td><a target="_blank" href="docs/01-集群安装.md">01-集群安装</a></td>
-        <td><a target="_blank" href="docs/02-添加节点.md">02-添加节点</a></td>
+        <td><a target="_blank" href="docs/02-节点管理.md">02-节点管理</a></td>
         <td><a target="_blank" href="docs/03-证书轮换.md">03-证书轮换</a></td>
         <td><a target="_blank" href="docs/04-集群升级.md">04-集群升级</a></td>
     </tr>

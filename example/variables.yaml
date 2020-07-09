@@ -10,6 +10,11 @@ skip_verify_node: false
   # 应用于可能没有公网的环境
 install_mode: online
 
+# 代理设置，若节点不能直接访问公网，可使用下面变量设置代理。
+# http_proxy: 
+# https_proxy: 
+# no_proxy: 192.168.0.0/16,10.0.0.0/8,172.16.0.0/12,127.0.0.1,localhost
+
 # 节点时区
 timezone: Asia/Shanghai
 
