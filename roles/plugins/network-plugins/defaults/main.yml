@@ -37,6 +37,10 @@ calico_pod2daemon_flexvol_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/ca
 calico_felix_log_level: "warning"
 # calicoctl image 地址
 calicoctl_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.14.1
+# 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
+kube_proxy_mode: "iptables"
+# NodePort端口范围
+kube_service_node_port_range: 30000-32767
 
 # kube-ovn master 节点
 kube_ovn_master:
