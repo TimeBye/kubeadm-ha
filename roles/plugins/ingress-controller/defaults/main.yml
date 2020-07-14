@@ -7,6 +7,12 @@ wait_plugins_ready: true
 # 是否启用ingress-controller
 ingress_controller_enabled: true
 
+# 1.10+ admission plugins
+kube_apiserver_enable_admission_plugins: 
+- NodeRestriction
+# - AlwaysPullImages
+# - PodSecurityPolicy
+
 # ingress-controller类型(nginx,traefik)
 ingress_controller_tpye: nginx
 
