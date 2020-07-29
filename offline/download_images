@@ -8,7 +8,7 @@ docker pull registry.aliyuncs.com/k8sxio/kube-proxy:v1.18.5
 docker pull registry.aliyuncs.com/k8sxio/kube-apiserver:v1.18.5 
 docker pull registry.aliyuncs.com/k8sxio/kube-scheduler:v1.18.5 
 docker pull registry.aliyuncs.com/k8sxio/kube-controller-manager:v1.18.5 
-docker pull registry.aliyuncs.com/k8sxio/coredns:1.6.2 
+docker pull registry.aliyuncs.com/k8sxio/coredns:1.6.7 
 docker pull registry.aliyuncs.com/k8sxio/etcd:3.4.3-0 
 docker pull registry.aliyuncs.com/k8sxio/metrics-server-amd64:v0.3.6 
 docker pull registry.aliyuncs.com/k8sxio/pause:3.2 
@@ -30,7 +30,7 @@ docker save \
     registry.aliyuncs.com/k8sxio/kube-apiserver:v1.18.5 \
     registry.aliyuncs.com/k8sxio/kube-scheduler:v1.18.5 \
     registry.aliyuncs.com/k8sxio/kube-controller-manager:v1.18.5 \
-    registry.aliyuncs.com/k8sxio/coredns:1.6.2 \
+    registry.aliyuncs.com/k8sxio/coredns:1.6.7 \
     registry.aliyuncs.com/k8sxio/etcd:3.4.3-0 \
     registry.aliyuncs.com/k8sxio/metrics-server-amd64:v0.3.6 \
     registry.aliyuncs.com/k8sxio/pause:3.2 \
