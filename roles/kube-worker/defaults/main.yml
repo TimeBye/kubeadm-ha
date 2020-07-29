@@ -46,7 +46,7 @@ kube_ephemeral_storage_reserved: 1G
 # kubernetes各组件镜像仓库前缀
 kube_image_repository: registry.aliyuncs.com/k8sxio
 # kubernetes版本
-kube_version: 1.18.5
+kube_version: 1.18.6
 # 集群内部dns域名
 kube_dns_domain: cluster.local
 # 集群pod ip段
