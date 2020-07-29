@@ -15,10 +15,16 @@
   when: 
   - kubeadm_version_output.stdout is version('v1.15.0', '>=')
 
-- name: 删除不需要的参数
+- name: 删除不需要的参数 iptables.max
   lineinfile:
     path: /etc/kubernetes/kubeadm-config.yaml
     regexp: 'max:'
+    state: absent
+
+- name: 删除不需要的参数 resourceContainer
+  lineinfile:
+    path: /etc/kubernetes/kubeadm-config.yaml
+    regexp: 'resourceContainer:'
     state: absent
 
 - name: 更新 kubeadm config 版本
