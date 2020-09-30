@@ -1,25 +1,83 @@
-# https://github.com/moby/moby/issues/31208 
-# ipvsadm -l --timout
-# 修复ipvs模式下长连接timeout问题 小于900即可
-net.ipv4.tcp_keepalive_time = 600
-net.ipv4.tcp_keepalive_intvl = 30
-net.ipv4.tcp_keepalive_probes = 10
+# 最大限度使用物理内存
+vm.swappiness = 0
+
+# 决定检查一次相邻层记录的有效性的周期。当相邻层记录失效时，将在给它发送数据前，再解析一次。缺省值是60秒。
+net.ipv4.neigh.default.gc_stale_time = 120
+
+# see details in https://help.aliyun.com/knowledge_detail/39428.html
+net.ipv4.conf.all.rp_filter = 0
+net.ipv4.conf.default.rp_filter = 0
+net.ipv4.conf.default.arp_announce = 2
+net.ipv4.conf.lo.arp_announce = 2
+net.ipv4.conf.all.arp_announce = 2
+
+# see details in https://help.aliyun.com/knowledge_detail/41334.html
+net.ipv4.tcp_max_tw_buckets = 5000
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_max_syn_backlog = 1024
+net.ipv4.tcp_synack_retries = 2
+
+# 容器要想访问外部网络，需要本地系统的转发支持
 net.ipv4.ip_forward = 1
-net.ipv4.tcp_tw_reuse = 0
+
+# 访问业务域名时而会出现无法访问或连接超时的情况
+# refer to https://www.ziji.work/kubernetes/kubernetes_cannot_accesspod_port.html
 {% if ansible_distribution in ["CentOS","RedHat"] and ansible_kernel is version('4.12', '<') %}
 net.ipv4.tcp_tw_recycle = 0
 {% endif %}
-# 要求iptables不对bridge的数据进行处理
+net.ipv4.tcp_tw_reuse = 0
+
+# bridge-nf 使得 netfilter 可以对 Linux 网桥上的 IPv4/ARP/IPv6 包过滤。
+# 比如，设置net.bridge.bridge-nf-call-iptables＝1后，二层的网桥在转发包时也会被 iptables 的 FORWARD 规则所过滤。
+# refer to https://www.qikqiak.com/k8strain/k8s-basic/install/
+# 是否在 iptables 链中过滤 IPv4 包
 net.bridge.bridge-nf-call-iptables = 1
+# 是否在 ip6tables 链中过滤 IPv6 包
 net.bridge.bridge-nf-call-ip6tables = 1
+# 是否在 arptables 的 FORWARD 中过滤网桥的 ARP 包
 net.bridge.bridge-nf-call-arptables = 1
-net.netfilter.nf_conntrack_max = 2310720
-fs.file-max = 52706963
-fs.nr_open = 52706963
-vm.swappiness = 0
-vm.max_map_count = 3000000
-# refer to https://github.com/andyzhangx/aks-engine/blob/d6f4929a659241ea33d8fd4d9fc86d0e27b0cb07/parts/k8s/cloud-init/artifacts/sysctl-d-60-CIS.conf
+
+# 定义了系统中每一个端口最大的监听队列的长度,这是个全局的参数,默认值为128
+net.core.somaxconn = 32768
+
+# 服务器在访问量很大时，出现网络连接丢包的问题
+# 比较现代的系统（Ubuntu 16+, CentOS 7+）里，64 位，16G 内存的机器，
+# max 通常默认为 524288，
+# bucket 为 131072（在sunrpc.conf文件中修改）。
+# 随着内存大小翻倍这 2 个值也翻倍。
+# refer to https://testerhome.com/topics/15824
+net.netfilter.nf_conntrack_max = 524288
+
+# 单个进程可分配的最大文件数
+fs.nr_open = 6553600
+# Linux系统级别限制所有用户进程能打开的文件描述符总数
+fs.file-max = 6553600
+
+# 每个进程内存拥有的VMA(虚拟内存区域)的数量。虚拟内存区域是一个连续的虚拟地址空间区域。在进程的生命
+# 周期中，每当程序尝试在内存中映射文件，链接到共享内存段，或者分配堆空间的时候，这些区域将被创建。
+# 进程加载的动态库、分配的内存、mmap的内存都会增加VMA的数量。通常一个进程会有小于1K个VMA，如果进程有
+# 特殊逻辑，可能会超过该限制。
+# 调优这个值将限制进程可拥有VMA的数量。限制一个进程拥有VMA的总数可能导致应用程序出错，因为当进程达到
+# 了VMA上线但又只能释放少量的内存给其他的内核进程使用时，操作系统会抛出内存不足的错误。如果你的操作系
+# 统在NORMAL区域仅占用少量的内存，那么调低这个值可以帮助释放内存给内核用。
+# refer to https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html
+# 可以使用命令 cat /proc/${pid}/maps 来查看指定进程拥有的VMA。
+vm.max_map_count = 655360
+
+# 修复ipvs模式下长连接timeout问题 小于900即可
+# refer to https://github.com/moby/moby/issues/31208 
+# ipvsadm -l --timout
+{% if kube_proxy_mode == 'ipvs' %}
+net.ipv4.tcp_keepalive_time = 600
+net.ipv4.tcp_keepalive_intvl = 30
+net.ipv4.tcp_keepalive_probes = 10
+{% endif %}
+
+# refer to https://github.com/Azure/aks-engine/blob/d6f4929a659241ea33d8fd4d9fc86d0e27b0cb07/parts/k8s/cloud-init/artifacts/sysctl-d-60-CIS.conf
 # refer to https://github.com/kubernetes/kubernetes/blob/75d45bdfc9eeda15fb550e00da662c12d7d37985/pkg/kubelet/cm/container_manager_linux.go#L359-L397
 vm.overcommit_memory = 1
 kernel.panic = 10
 kernel.panic_on_oops = 1
+
+# refer to https://github.com/Azure/AKS/issues/772
+fs.inotify.max_user_watches = 1048576
