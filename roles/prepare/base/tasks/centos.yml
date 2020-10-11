@@ -64,7 +64,7 @@
     state: present
 
 - name: 刷新 yum 缓存
-  shell: yum clean all && yum makecache fast
+  shell: yum clean all && yum makecache
 
 - name: 安装基础软件包
   yum: 

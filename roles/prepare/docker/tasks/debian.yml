@@ -26,7 +26,7 @@
     name:
     - "docker-ce=5:{{ docker_version }}~3-0~{{ ansible_distribution | lower }}-{{ ansible_distribution_release }}"
     - "docker-ce-cli=5:{{ docker_version }}~3-0~{{ ansible_distribution | lower }}-{{ ansible_distribution_release }}"
-    - "containerd.io"
+    - "containerd.io={{ containerd_version }}"
     state: present
     allow_unauthenticated: true
   when: docker_version is version('18.09', '>=')

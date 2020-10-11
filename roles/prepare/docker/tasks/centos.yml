@@ -20,7 +20,7 @@
     name: 
     - "docker-ce-{{ docker_version }}"
     - "docker-ce-cli-{{ docker_version }}"
-    - "containerd.io"
+    - "containerd.io-{{ containerd_version.split('-')[0] }}"
     state: present
     enablerepo: docker-ce
   when: docker_version is version('18.09', '>=')
