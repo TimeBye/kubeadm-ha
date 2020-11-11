@@ -43,7 +43,7 @@ jobs:
           k8s.gcr.io/ingress-nginx/controller:v0.41.0
           jettech/kube-webhook-certgen:v1.5.0
           traefik:2.3.1
-          kubernetesui/dashboard:v2.0.0
+          kubernetesui/dashboard:v2.0.4
           kubernetesui/metrics-scraper:v1.0.4
           k8s.gcr.io/metrics-server/metrics-server:v0.4.0
           quay.io/jetstack/cert-manager-cainjector:v1.0.4
