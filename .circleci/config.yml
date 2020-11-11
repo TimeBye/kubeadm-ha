@@ -19,22 +19,21 @@ jobs:
           haproxy:2.1-alpine
           envoyproxy/envoy-alpine:v1.13.1
           osixia/keepalived:2.0.20
-          registry.access.redhat.com/rhel7/pod-infrastructure:latest
-          quay.io/coreos/flannel:v0.12.0-amd64
+          quay.io/coreos/flannel:v0.13.0
           calico/typha:v3.16.5
           calico/cni:v3.16.5
           calico/node:v3.16.5
           calico/kube-controllers:v3.16.5
           calico/pod2daemon-flexvol:v3.16.5
           calico/ctl:v3.16.5
-          quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0
+          k8s.gcr.io/ingress-nginx/controller:v0.41.0
+          jettech/kube-webhook-certgen:v1.5.0
           traefik:2.2.1
           kubernetesui/dashboard:v2.0.0
           kubernetesui/metrics-scraper:v1.0.4
           quay.io/jetstack/cert-manager-cainjector:v0.9.1
           quay.io/jetstack/cert-manager-webhook:v0.9.1
           quay.io/jetstack/cert-manager-controller:v0.9.1
-          setzero/ansible:2.8.5-nginx-1.17.6-alpine
           "
           
           new_docker_registry=${NEW_DOCKER_REGISTRY:-'registry.cn-shanghai.aliyuncs.com/kubeadm-ha'}

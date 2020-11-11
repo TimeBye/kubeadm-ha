@@ -350,8 +350,9 @@ ingress_controller_http_nodeport: 30080
 # NodePort svc 监听https协议端口(注意需在NodePort端口范围)
 ingress_controller_https_nodeport: 30443
 
-# nginx-ingress 镜像地址
-nginx_ingress_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetes-ingress-controller_nginx-ingress-controller:0.30.0
+# nginx-ingress-controller 镜像地址
+nginx_ingress_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.0
+nginx_ingress_webhook_certgen_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/jettech_kube-webhook-certgen:v1.5.0
 
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
