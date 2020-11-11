@@ -13,12 +13,12 @@ docker pull registry.aliyuncs.com/k8sxio/etcd:3.4.3-0
 docker pull registry.aliyuncs.com/k8sxio/metrics-server-amd64:v0.3.6 
 docker pull registry.aliyuncs.com/k8sxio/pause:3.2 
 docker pull registry.aliyuncs.com/google_containers/tiller:v2.16.3
-docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_typha:v3.14.1
-docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_cni:v3.14.1
-docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_node:v3.14.1
-docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.14.1
-docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.14.1
-docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.14.1
+docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_typha:v3.16.5
+docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_cni:v3.16.5
+docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_node:v3.16.5
+docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.16.5
+docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.16.5
+docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.16.5
 docker pull registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetes-ingress-controller_nginx-ingress-controller:0.30.0 
 
 docker save \
@@ -36,9 +36,9 @@ docker save \
     registry.aliyuncs.com/k8sxio/pause:3.2 \
     registry.aliyuncs.com/google_containers/tiller:v2.16.3 \
     registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetes-ingress-controller_nginx-ingress-controller:0.30.0 \
-    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_typha:v3.14.1 \
-    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_cni:v3.14.1 \
-    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_node:v3.14.1 \
-    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.14.1 \
-    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.14.1 \
-    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.14.1 | gzip -1 > /kubernetes/kubernetes-1.18.6.tar
+    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_typha:v3.16.5 \
+    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_cni:v3.16.5 \
+    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_node:v3.16.5 \
+    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.16.5 \
+    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.16.5 \
+    registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.16.5 | gzip -1 > /kubernetes/kubernetes-1.18.6.tar
