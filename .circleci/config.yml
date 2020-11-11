@@ -31,6 +31,7 @@ jobs:
           traefik:2.3.1
           kubernetesui/dashboard:v2.0.0
           kubernetesui/metrics-scraper:v1.0.4
+          k8s.gcr.io/metrics-server/metrics-server:v0.4.0
           quay.io/jetstack/cert-manager-cainjector:v0.9.1
           quay.io/jetstack/cert-manager-webhook:v0.9.1
           quay.io/jetstack/cert-manager-controller:v0.9.1
