@@ -309,7 +309,7 @@ wait_plugins_ready: true
 # 是否启用网络组建
 network_plugins_enabled: true
 
-# 集群网络插件，目前支持flannel, calico, kube-ovn
+# 集群网络插件，目前支持flannel, calico
 network_plugin: "calico"
 
 # calico mtu
@@ -330,21 +330,6 @@ calicoctl_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.16.5
 flannel_backend: "vxlan"
 # flannel 镜像地址
 flannel_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/coreos_flannel:v0.13.0
-
-# kube-ovn master 节点
-kube_ovn_master:
-- "{{ groups['kube-master'][0] }}"
-# kube-ovn 相关镜像
-kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v1.0.1
-kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v1.0.1
-kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v1.0.1
-kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v1.0.1
-kube_ovn_pinger_image: index.alauda.cn/alaudak8s/kube-ovn-pinger:v1.0.1
-# 默认网段设置
-kube_ovn_default_cidr: "{{ kube_pod_subnet }}"
-kube_ovn_default_gateway: "{{ kube_pod_subnet | ipaddr('net') | ipaddr(1) | ipaddr('address') }}"
-kube_ovn_node_switch_cidr: 100.64.0.0/16
-kube_ovn_enable_mirror: true
 
 # ------------------------ #
 # ingress-controller 相关参数配置

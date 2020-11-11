@@ -24,7 +24,7 @@ kube_apiserver_enable_admission_plugins:
 # - AlwaysPullImages
 # - PodSecurityPolicy
 
-# 集群网络插件，目前支持flannel, calico, kube-ovn
+# 集群网络插件，目前支持flannel, calico
 network_plugin: "calico"
 # 集群pod ip段
 kube_pod_subnet: 10.244.0.0/18
@@ -52,19 +52,3 @@ calicoctl_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.16.5
 kube_proxy_mode: "iptables"
 # NodePort端口范围
 kube_service_node_port_range: 30000-32767
-
-# kube-ovn master 节点
-kube_ovn_master:
-- "{{ groups['kube-master'][0] }}"
-KUBE_OVN_NODE_IPS: "{% for host in kube_ovn_master %}{% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}"
-# kube-ovn 相关镜像
-kube_ovn_controller_image: index.alauda.cn/alaudak8s/kube-ovn-controller:v1.0.1
-kube_ovn_cni_image: index.alauda.cn/alaudak8s/kube-ovn-cni:v1.0.1
-kube_ovn_db_image: index.alauda.cn/alaudak8s/kube-ovn-db:v1.0.1
-kube_ovn_node_image: index.alauda.cn/alaudak8s/kube-ovn-node:v1.0.1
-kube_ovn_pinger_image: index.alauda.cn/alaudak8s/kube-ovn-pinger:v1.0.1
-# 默认网段设置
-kube_ovn_default_cidr: "{{ kube_pod_subnet }}"
-kube_ovn_default_gateway: "{{ kube_pod_subnet | ipaddr('net') | ipaddr(1) | ipaddr('address') }}"
-kube_ovn_node_switch_cidr: 100.64.0.0/16
-kube_ovn_enable_mirror: true

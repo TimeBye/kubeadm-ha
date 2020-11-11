@@ -10,9 +10,6 @@
   - include_tasks: calico.yml
     when: network_plugin == 'calico'
 
-  - include_tasks: kube-ovn.yml
-    when: network_plugin == 'kube-ovn'
-
   when: 
   - network_plugins_enabled|bool
   - inventory_hostname == groups['kube-master'][0]
