@@ -17,7 +17,7 @@ jobs:
           openresty/openresty:1.17.8.2-alpine
           nginx:1.17.9-alpine
           haproxy:2.1-alpine
-          envoyproxy/envoy-alpine:v1.13.1
+          envoyproxy/envoy:v1.16.0
           osixia/keepalived:2.0.20
           quay.io/coreos/flannel:v0.13.0
           calico/typha:v3.16.5
