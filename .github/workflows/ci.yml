@@ -1,18 +1,32 @@
-version: 2
+name: ci
+on:
+  push:
+    branches-ignore:
+    - 'master'
 jobs:
-  build:
-    docker:
-      - image: docker:18.09.3-git
+  multi:
+    runs-on: ubuntu-latest
     steps:
-      - setup_remote_docker:
-          version: 18.09.3
-      - checkout
-      - run : |
-          # export COMMIT_SHA=$(git log -1 --pretty=format:"%H" | awk '{print substr($1,1,8)}') 
-          # docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PWD
-          # docker build --build-arg COMMIT_SHA=${COMMIT_SHA} -t setzero/kubeadm-ha:${CIRCLE_BRANCH}-${COMMIT_SHA} .
-          # docker push setzero/kubeadm-ha:${CIRCLE_BRANCH}-${COMMIT_SHA}
-
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Login to Registry
+        uses: docker/login-action@v1
+        with:
+          registry: registry.cn-shanghai.aliyuncs.com
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - 
+        name: Build and push
+        run: |
+          set -exu
           image_list="
           openresty/openresty:1.17.8.2-alpine
           nginx:1.18-alpine
@@ -38,7 +52,6 @@ jobs:
           "
           
           new_docker_registry=${NEW_DOCKER_REGISTRY:-'registry.cn-shanghai.aliyuncs.com/kubeadm-ha'}
-          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD ${new_docker_registry%%/*}
           for image in $image_list ; do 
             count=$(echo $image | grep -o '/*' | wc -l)
             if [ $count -eq 0 ]
@@ -51,11 +64,8 @@ jobs:
               new=$new_docker_registry/$(echo ${image#*/} | sed 's / _ g')
             fi
             echo "FROM $image" > Dockerfile
-            docker build -t $new .
-            docker push $new
+            /usr/bin/docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --file ./Dockerfile --push . \
+            --tag $new
           done
-workflows:
-  version: 2
-  build:
-    jobs:
-    - build
