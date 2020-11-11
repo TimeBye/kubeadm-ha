@@ -1,6 +1,34 @@
 # 提权操作
 ansible_become: true
 command_warnings: false
+
+_host_architecture_groups:
+  x86_64: amd64
+  aarch64: arm64
+  armv7l: arm
+host_architecture: >-
+  {%- if ansible_architecture in _host_architecture_groups -%}
+  {{ _host_architecture_groups[ansible_architecture] }}
+  {%- else -%}
+  {{ ansible_architecture }}
+  {%- endif -%}
+
+_host_distribution_groups:
+  uos: debian
+host_distribution: >-
+  {%- if ansible_distribution in _host_distribution_groups -%}
+  {{ _host_distribution_groups[ansible_distribution] }}
+  {%- else -%}
+  {{ ansible_distribution }}
+  {%- endif -%}
+
+host_distribution_release: >-
+  {%- if (ansible_distribution_release == 'n/a') or (ansible_distribution_release is not defined) or (ansible_distribution_release == '') -%}
+  buster
+  {%- else -%}
+  {{ ansible_distribution_release }}
+  {%- endif -%}
+
 # 安装模式
 install_mode: online
 # 节点时区

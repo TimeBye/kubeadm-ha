@@ -16,8 +16,8 @@
 
 - name: 校验节点系统架构
   assert:
-    that: ansible_userspace_architecture == "x86_64"
-    msg: "节点：{{ inventory_hostname }} 系统架构非64位，实际获取：{{ ansible_userspace_architecture }}，安装需求校验不通过。"
+    that: ansible_machine in [ 'x86_64','aarch64','armv7l' ]
+    msg: "节点：{{ inventory_hostname }} {{ ansible_machine }} 系统指令集不支持本脚本安装Kubernetes集群"
 
 - name: 校验节点系统版本
   assert:

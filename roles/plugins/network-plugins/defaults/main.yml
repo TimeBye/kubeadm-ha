@@ -7,6 +7,17 @@ wait_plugins_ready: true
 # 是否启用网络组建
 network_plugins_enabled: true
 
+_host_architecture_groups:
+  x86_64: amd64
+  aarch64: arm64
+  armv7l: arm
+host_architecture: >-
+  {%- if ansible_architecture in _host_architecture_groups -%}
+  {{ _host_architecture_groups[ansible_architecture] }}
+  {%- else -%}
+  {{ ansible_architecture }}
+  {%- endif -%}
+
 # 1.10+ admission plugins
 kube_apiserver_enable_admission_plugins: 
 - NodeRestriction
@@ -23,7 +34,7 @@ kube_service_subnet: 10.244.64.0/18
 # flannel_backend: "host-gw"
 flannel_backend: "vxlan"
 # flannel 镜像地址
-flannel_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/coreos_flannel:v0.12.0-amd64
+flannel_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/coreos_flannel:v0.12.0-{{ host_architecture }}
 
 # calico mtu
 calico_veth_mtu: 1440

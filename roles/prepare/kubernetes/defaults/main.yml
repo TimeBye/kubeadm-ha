@@ -5,8 +5,8 @@ ansible_become: true
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
 kube_version: 1.18.6
 # CentOS
-kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-{{ ansible_architecture }}/
 # Debian
 # sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6A030B21BA07F4FB
 # kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt kubernetes-{{ ansible_distribution_release }} main
-kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main
+kubernetes_apt_repo: deb https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main

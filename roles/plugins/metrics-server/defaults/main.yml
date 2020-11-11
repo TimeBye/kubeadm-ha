@@ -7,5 +7,16 @@ wait_plugins_ready: true
 # 是否启用metrics-server
 metrics_server_enabled: true
 
+_host_architecture_groups:
+  x86_64: amd64
+  aarch64: arm64
+  armv7l: arm
+host_architecture: >-
+  {%- if ansible_architecture in _host_architecture_groups -%}
+  {{ _host_architecture_groups[ansible_architecture] }}
+  {%- else -%}
+  {{ ansible_architecture }}
+  {%- endif -%}
+
 # metrics-server image地址
-metrics_server_image: registry.aliyuncs.com/k8sxio/metrics-server-amd64:v0.3.6
+metrics_server_image: registry.aliyuncs.com/k8sxio/metrics-server-{{ host_architecture }}:v0.3.6

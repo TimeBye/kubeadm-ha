@@ -1,13 +1,41 @@
 # 提权操作
 ansible_become: true
+
+_host_architecture_groups:
+  x86_64: amd64
+  aarch64: arm64
+  armv7l: arm
+host_architecture: >-
+  {%- if ansible_architecture in _host_architecture_groups -%}
+  {{ _host_architecture_groups[ansible_architecture] }}
+  {%- else -%}
+  {{ ansible_architecture }}
+  {%- endif -%}
+
+_host_distribution_groups:
+  uos: debian
+host_distribution: >-
+  {%- if ansible_distribution in _host_distribution_groups -%}
+  {{ _host_distribution_groups[ansible_distribution] }}
+  {%- else -%}
+  {{ ansible_distribution }}
+  {%- endif -%}
+
+host_distribution_release: >-
+  {%- if (ansible_distribution_release == 'n/a') or (ansible_distribution_release is not defined) or (ansible_distribution_release == '') -%}
+  buster
+  {%- else -%}
+  {{ ansible_distribution_release }}
+  {%- endif -%}
+
 # docker容器存储目录
 docker_storage_dir: "/var/lib/docker"
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
 # Debian
 # sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7EA0A9C3F273FCD8
-docker_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
+docker_apt_repo: "deb [arch={{ host_architecture }}] https://mirrors.aliyun.com/docker-ce/linux/{{ host_distribution | lower }} {{ host_distribution_release }} stable"
 # Debian
 # sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6A030B21BA07F4FB
 # kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt kubernetes-{{ ansible_distribution_release }} main
-kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main
+kubernetes_apt_repo: deb https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main

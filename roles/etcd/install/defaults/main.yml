@@ -2,6 +2,18 @@
 ansible_become: true
 # 安装模式
 install_mode: online
+
+_host_architecture_groups:
+  x86_64: amd64
+  aarch64: arm64
+  armv7l: arm
+host_architecture: >-
+  {%- if ansible_architecture in _host_architecture_groups -%}
+  {{ _host_architecture_groups[ansible_architecture] }}
+  {%- else -%}
+  {{ ansible_architecture }}
+  {%- endif -%}
+
 # Etcd使用的镜像
 etcd_image: registry.aliyuncs.com/k8sxio/etcd:3.4.3-0
 # Pod根容器
