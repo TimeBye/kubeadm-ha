@@ -15,7 +15,7 @@ jobs:
 
           image_list="
           openresty/openresty:1.17.8.2-alpine
-          nginx:1.17.9-alpine
+          nginx:1.18-alpine
           haproxy:2.1-alpine
           envoyproxy/envoy:v1.16.0
           osixia/keepalived:2.0.20
