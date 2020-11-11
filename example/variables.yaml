@@ -329,7 +329,7 @@ calicoctl_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.14.1
 # flannel_backend: "host-gw"
 flannel_backend: "vxlan"
 # flannel 镜像地址
-flannel_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/coreos_flannel:v0.12.0-amd64
+flannel_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/coreos_flannel:v0.13.0
 
 # kube-ovn master 节点
 kube_ovn_master:
