@@ -4,27 +4,14 @@
       path: /etc/kubernetes/plugins/cert-manager
       state: directory
 
-  - name: 渲染 cert-manager crds 配置文件
-    template:
-      src: cert-manager-crds.yaml.j2
-      dest: /etc/kubernetes/plugins/cert-manager/cert-manager-crds.yaml
-    register: cert_manager_crds_manifest
-
   - name: 渲染 cert-manager 配置文件
     template:
       src: cert-manager.yaml.j2
       dest: /etc/kubernetes/plugins/cert-manager/cert-manager.yaml
     register: cert_manager_manifest
 
-  - name: 部署 cert-manager crds
-    shell: >
-      kubectl apply -f /etc/kubernetes/plugins/cert-manager/cert-manager-crds.yaml && 
-      sleep 15
-    when: cert_manager_crds_manifest.changed
-
   - name: 部署 cert-manager
     shell: >
-      kubectl apply -f /etc/kubernetes/plugins/cert-manager/cert-manager-crds.yaml &&
       kubectl apply -f /etc/kubernetes/plugins/cert-manager/cert-manager.yaml
     register: apply_status
     until: apply_status.rc == 0
