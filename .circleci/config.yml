@@ -28,7 +28,7 @@ jobs:
           calico/ctl:v3.16.5
           k8s.gcr.io/ingress-nginx/controller:v0.41.0
           jettech/kube-webhook-certgen:v1.5.0
-          traefik:2.2.1
+          traefik:2.3.1
           kubernetesui/dashboard:v2.0.0
           kubernetesui/metrics-scraper:v1.0.4
           quay.io/jetstack/cert-manager-cainjector:v0.9.1
