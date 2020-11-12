@@ -26311,14 +26311,22 @@ webhooks:
     - '*/*'
   sideEffects: None
 ---
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
 spec:
   acme:
-    server: {{ acme_server }}
+    # You must replace this email address with your own.
+    # Let's Encrypt will use this to contact you about expiring
+    # certificates, and issues related to your account.
     email: {{ acme_email }}
+    server: {{ acme_server }}
     privateKeySecretRef:
+      # Secret resource that will be used to store the account's private key.
       name: letsencrypt-prod
-    http01: {}
+    # Add a single challenge solver, HTTP01 using nginx
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
