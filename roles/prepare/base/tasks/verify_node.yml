@@ -16,7 +16,7 @@
 
 - name: 校验节点系统架构
   assert:
-    that: ansible_machine in [ 'x86_64','aarch64','armv7l' ]
+    that: ansible_machine in [ 'x86_64','aarch64' ]
     msg: "节点：{{ inventory_hostname }} {{ ansible_machine }} 系统指令集不支持本脚本安装Kubernetes集群"
 
 - name: 校验节点系统版本

@@ -40,7 +40,8 @@ kubernetes_apt_repo: deb https://mirrors.aliyun.com/kubernetes/apt kubernetes-xe
 # Docker 相关参数配置
 # ------------------------ #
 # Docker版本
-docker_version: 19.03.12
+docker_version: 19.03.11
+containerd_version: 1.2.13-2
 
 # 国内镜像加速(若不需要加速，请将值删去，键保留)
 docker_mirror: 
