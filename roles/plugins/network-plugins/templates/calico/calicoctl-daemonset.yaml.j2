@@ -124,7 +124,9 @@ spec:
       containers:
       - name: calicoctl
         image: {{ calicoctl_image }}
-        command: ["/calicoctl-wait"]
+        stdin: true 
+        tty: true 
+        command: ["/bin/sh"]
         volumeMounts:
         - name: var-run-calico
           mountPath: /var/run/calico
