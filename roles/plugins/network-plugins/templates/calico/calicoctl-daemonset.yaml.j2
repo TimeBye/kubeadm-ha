@@ -126,7 +126,7 @@ spec:
         image: {{ calicoctl_image }}
         stdin: true 
         tty: true 
-        command: ["/bin/sh"]
+        command: ["/calicoctl-wait"]
         volumeMounts:
         - name: var-run-calico
           mountPath: /var/run/calico
