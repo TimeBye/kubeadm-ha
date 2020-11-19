@@ -10,7 +10,7 @@
     when: ingress_nginx_manifest.changed
 
   - name: 轮询等待 nginx-ingress-controller 运行
-    shell: kubectl get pod --all-namespaces -o wide | grep 'nginx-ingress' | awk '{print $4}'
+    shell: kubectl get pod --all-namespaces -o wide | grep 'ingress-nginx' | awk '{print $4}'
     register: pod_status
     until: "'Running' in pod_status.stdout"
     retries: 24
