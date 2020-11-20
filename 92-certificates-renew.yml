@@ -3,6 +3,8 @@
   - new-etcd
   - kube-master
   - new-master
+  - kube-worker
+  - new-worker
   roles:
   - etcd/certificates
   - kube-certificates

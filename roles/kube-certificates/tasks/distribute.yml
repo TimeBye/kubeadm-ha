@@ -37,7 +37,7 @@
   - inventory_hostname != groups['kube-master'][0]
   - inventory_hostname in (groups['kube-master'] + groups['new-master'])
 
-- name: 获取 kubelet 服务证书
+- name: 获取 kubelet 服务端证书
   slurp:
     src: /var/lib/kubelet/pki/{{ item }}
   with_items:
@@ -47,7 +47,7 @@
   run_once: true
   delegate_to: "{{ groups['kube-master'][0] }}"
 
-- name: 分发 kubelet 服务证书到所有节点
+- name: 分发 kubelet 服务端证书到所有节点
   copy:
     dest: "{{ item.source }}"
     content: "{{ item.content | b64decode }}"
@@ -58,4 +58,28 @@
   with_items: "{{ kubelet_certs.results }}"
   when: 
   - inventory_hostname != groups['kube-master'][0]
-  - inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
+
+- name: 获取 kubelet 客户端证书列表
+  set_fact:
+    kubelet_client_certs: 
+    - "/etc/kubernetes/pki/ca.crt"
+    - "/var/lib/kubelet/pki/kubelet-client-{{ inventory_hostname }}.crt"
+    - "/var/lib/kubelet/pki/kubelet-client-{{ inventory_hostname }}.key"
+
+- name: 获取 kubelet 客户端证书
+  slurp:
+    src: "{{ item }}"
+  with_items: "{{ kubelet_client_certs }}"
+  register: my_kubelet_client_certs
+  delegate_to: "{{ groups['kube-master'][0] }}"
+
+- name: 分发 kubelet 客户端证书
+  copy:
+    dest: "{{ item.source }}"
+    content: "{{ item.content | b64decode }}"
+    owner: root
+    group: root
+    mode: 0644
+  no_log: true
+  with_items: "{{ my_kubelet_client_certs.results }}"
+  when: inventory_hostname != groups['kube-master'][0]

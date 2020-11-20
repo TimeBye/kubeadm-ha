@@ -5,21 +5,31 @@
   with_items:
   - /etc/kubernetes/pki
   - /var/lib/kubelet/pki
+  when: 
+  - inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
 
 - block:
   # 获取密钥状态
   - include_tasks: certs_stat.yml
   # 生成公共证书
   - include_tasks: common.yml
-  when: inventory_hostname == groups['kube-master'][0]
+  when: 
+  - inventory_hostname == groups['kube-master'][0]
+  - inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
 
 # 分发证书
 - include_tasks: distribute.yml
+  when: 
+  - inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
 
 - name: 读取 kubelet.conf 文件 stat 信息
   stat: 
     path: /etc/kubernetes/kubelet.conf
   register: kubelet_conf_stat
+  when: 
+  - inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
 
 - include_tasks: kubeconfig.yml
-  when: kubelet_conf_stat.stat.exists
+  when: 
+  - kubelet_conf_stat.stat.exists
+  - inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])

@@ -59,6 +59,7 @@ jobs:
     steps:
       - name: Sync images
         run: |
+          set -exu
           for tag in $(skopeo list-tags docker://k8s.gcr.io/kube-proxy | jq -r .Tags[] | grep -Ev 'alpha|beta|rc'); 
           do
             skopeo copy --all --dest-creds ${{ secrets.DOCKERHUB_USERNAME }}:${{ secrets.DOCKERHUB_TOKEN }} \
