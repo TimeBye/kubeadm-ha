@@ -1,8 +1,10 @@
-name: ci
+name: sync images
 on:
+  schedule:
+    - cron: '0 */1 * * *'
   push:
-    branches-ignore:
-    - 'master'
+    paths:
+      - 'example/variables.yaml'
 jobs:
   sync-dockerhub:
     runs-on: ubuntu-latest
@@ -11,7 +13,7 @@ jobs:
       TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
     steps:
-      - name: Sync images
+      - name: sync dockerhub images
         run: |
           set -exu
           cat << EOF >config.yaml
@@ -62,7 +64,7 @@ jobs:
       TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
     steps:
-      - name: Sync images
+      - name: sync quay images
         run: |
           set -exu
           cat << EOF >config.yaml
@@ -92,7 +94,7 @@ jobs:
       TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
     steps:
-      - name: Sync images
+      - name: sync gcr images
         run: |
           set -exu
           cat << EOF >config.yaml
