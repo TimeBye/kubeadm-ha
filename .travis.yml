@@ -1,19 +1,12 @@
-name: ci
-on:
-  push:
-    branches-ignore:
-    - 'master'
+language: python 
+services:
+  - docker
+install: true
 jobs:
-  sync-dockerhub:
-    runs-on: ubuntu-latest
-    container: setzero/images-sync:0.3.1
-    env:
-      TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
-    steps:
-      - name: Sync images
-        run: |
-          set -exu
+  include:
+    - stage: build
+      script:
+        - |
           cat << EOF >config.yaml
           from:
             registry: https://registry-1.docker.io
@@ -53,18 +46,13 @@ jobs:
           rules:
             - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
           EOF
-          sync-images --config config.yaml
+          docker run -v $PWD/config.yaml:/config.yaml \
+          setzero/images-sync:0.3.1 \
+          /bin/sh -c "TO_USERNAME=$TO_USERNAME TO_PASSWORD=$TO_PASSWORD sync-images --config config.yaml"
 
-  sync-quay:
-    runs-on: ubuntu-latest
-    container: setzero/images-sync:0.3.1
-    env:
-      TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
-    steps:
-      - name: Sync images
-        run: |
-          set -exu
+    - stage: build
+      script:
+        - |
           cat << EOF >config.yaml
           from:
             registry: https://quay.io
@@ -83,18 +71,13 @@ jobs:
           rules:
             - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
           EOF
-          sync-images --config config.yaml
+          docker run -v $PWD/config.yaml:/config.yaml \
+          setzero/images-sync:0.3.1 \
+          /bin/sh -c "TO_USERNAME=$TO_USERNAME TO_PASSWORD=$TO_PASSWORD sync-images --config config.yaml"
 
-  sync-gcr:
-    runs-on: ubuntu-latest
-    container: setzero/images-sync:0.3.1
-    env:
-      TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
-    steps:
-      - name: Sync images
-        run: |
-          set -exu
+    - stage: build
+      script:
+        - |
           cat << EOF >config.yaml
           from:
             registry: https://k8s.gcr.io
@@ -119,4 +102,6 @@ jobs:
           rules:
             - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
           EOF
-          sync-images --config config.yaml
+          docker run -v $PWD/config.yaml:/config.yaml \
+          setzero/images-sync:0.3.1 \
+          /bin/sh -c "TO_USERNAME=$TO_USERNAME TO_PASSWORD=$TO_PASSWORD sync-images --config config.yaml"
