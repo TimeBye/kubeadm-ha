@@ -19,4 +19,4 @@ host_architecture: >-
   {%- endif -%}
 
 # metrics-server image地址
-metrics_server_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0
+metrics_server_image: registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0

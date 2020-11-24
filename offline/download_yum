@@ -74,11 +74,11 @@ yum install -y \
 
 # 下载kubernetes
 yum install -y \
-    kubeadm-1.18.6-0.x86_64 \
-    kubectl-1.18.6-0.x86_64 \
-    kubelet-1.18.6-0.x86_64
+    kubeadm-1.18.12-0.x86_64 \
+    kubectl-1.18.12-0.x86_64 \
+    kubelet-1.18.12-0.x86_64
 
 cp -n $(find /var/cache/yum -name "*.rpm") /kubernetes
 cd /kubernetes
 createrepo --update ./
-tar -czvf kubernetes-1.18.6.tar.gz *.rpm repodata
+tar -czvf kubernetes-1.18.12.tar.gz *.rpm repodata

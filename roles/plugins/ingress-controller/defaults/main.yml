@@ -38,13 +38,13 @@ ingress_controller_http_nodeport: 30080
 ingress_controller_https_nodeport: 30443
 
 # nginx-ingress-controller 镜像地址
-nginx_ingress_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.0
-nginx_ingress_webhook_certgen_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/jettech_kube-webhook-certgen:v1.5.0
+nginx_ingress_image: registry.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.0
+nginx_ingress_webhook_certgen_image: registry.aliyuncs.com/kubeadm-ha/jettech_kube-webhook-certgen:v1.5.0
 
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
 # traefik-ingress-controller 镜像地址
-traefik_ingress_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/traefik:2.3.1
+traefik_ingress_image: registry.aliyuncs.com/kubeadm-ha/traefik:2.3.1
 
 # 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
 kube_proxy_mode: "iptables"

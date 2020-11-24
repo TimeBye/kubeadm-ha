@@ -105,13 +105,13 @@ enabel_ingress_nodeport_lb: false
 enabel_ingress_tls_nodeport_lb: false
 
 # 使用openresty进行apiserver负载时使用的openresty镜像
-lb_openresty_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/openresty_openresty:1.17.8.2-alpine
+lb_openresty_image: registry.aliyuncs.com/kubeadm-ha/openresty_openresty:1.17.8.2-alpine
 
 # 使用nginx进行apiserver负载时使用的nginx镜像
-lb_nginx_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/nginx:1.18-alpine
+lb_nginx_image: registry.aliyuncs.com/kubeadm-ha/nginx:1.18-alpine
 
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-lb_haproxy_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/haproxy:2.1-alpine
+lb_haproxy_image: registry.aliyuncs.com/kubeadm-ha/haproxy:2.1-alpine
 # haproxy监控绑定端口
 lb_haproxy_stats_bind_address: 9090
 # haproxy监控访问路径
@@ -130,11 +130,11 @@ lb_haproxy_stats_password: "admin"
 lb_haproxy_balance_alg: "leastconn"
 
 # 使用haproxy进行apiserver负载时使用的haproxy镜像
-lb_envoy_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/envoyproxy_envoy:v1.16.0
+lb_envoy_image: registry.aliyuncs.com/kubeadm-ha/envoyproxy_envoy:v1.16.0
 lb_envoy_admin_address_port: 9090
 
 # 使用 vip 负载时使用的 keepalived 镜像
-lb_keepalived_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/osixia_keepalived:2.0.20
+lb_keepalived_image: registry.aliyuncs.com/kubeadm-ha/osixia_keepalived:2.0.20
 # keepalived auth_type 的 password
 lb_keepalived_password: "d0cker"
 # 区分多个 instance 的 VRRP 组播，同网段不能重复，取值在0-255之间
@@ -149,7 +149,7 @@ etcd_certs_expired: 3650
 # Etcd根证书过期时间（天）
 etcd_ca_certs_expired: 36500
 # Etcd使用的镜像
-etcd_image: registry.aliyuncs.com/k8sxio/etcd:3.4.3-0
+etcd_image: registry.aliyuncs.com/kubeadm-ha/etcd:3.4.3-0
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
 # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
@@ -176,13 +176,13 @@ kube_master_external_domain:
 - "kubernetes.io"
 
 # Pod根容器
-pod_infra_container_image: registry.aliyuncs.com/k8sxio/pause:3.2
+pod_infra_container_image: registry.aliyuncs.com/kubeadm-ha/pause:3.2
 
 # kubernetes各组件镜像仓库前缀
-kube_image_repository: registry.aliyuncs.com/k8sxio
+kube_image_repository: registry.aliyuncs.com/kubeadm-ha
 
 # kubernetes版本
-kube_version: 1.18.6
+kube_version: 1.18.12
 
 # 集群内部dns域名
 kube_dns_domain: cluster.local
@@ -316,21 +316,21 @@ network_plugin: "calico"
 # calico mtu
 calico_veth_mtu: 1440
 # calico 相关镜像
-calico_typha_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_typha:v3.16.5
-calico_cni_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_cni:v3.16.5
-calico_node_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_node:v3.16.5
-calico_kube_controllers_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.16.5
-calico_pod2daemon_flexvol_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.16.5
+calico_typha_image: registry.aliyuncs.com/kubeadm-ha/calico_typha:v3.16.5
+calico_cni_image: registry.aliyuncs.com/kubeadm-ha/calico_cni:v3.16.5
+calico_node_image: registry.aliyuncs.com/kubeadm-ha/calico_node:v3.16.5
+calico_kube_controllers_image: registry.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.16.5
+calico_pod2daemon_flexvol_image: registry.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.16.5
 # 设置 Felix 日志级别(debug, info, warning, error)
 calico_felix_log_level: "warning"
 # calicoctl image 地址
-calicoctl_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/calico_ctl:v3.16.5
+calicoctl_image: registry.aliyuncs.com/kubeadm-ha/calico_ctl:v3.16.5
 
 # 设置 flannel 后端
 # flannel_backend: "host-gw"
 flannel_backend: "vxlan"
 # flannel 镜像地址
-flannel_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/coreos_flannel:v0.13.0
+flannel_image: registry.aliyuncs.com/kubeadm-ha/coreos_flannel:v0.13.0
 
 # ------------------------ #
 # ingress-controller 相关参数配置
@@ -352,13 +352,13 @@ ingress_controller_http_nodeport: 30080
 ingress_controller_https_nodeport: 30443
 
 # nginx-ingress-controller 镜像地址
-nginx_ingress_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.0
-nginx_ingress_webhook_certgen_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/jettech_kube-webhook-certgen:v1.5.0
+nginx_ingress_image: registry.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.0
+nginx_ingress_webhook_certgen_image: registry.aliyuncs.com/kubeadm-ha/jettech_kube-webhook-certgen:v1.5.0
 
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
 # traefik-ingress-controller 镜像地址
-traefik_ingress_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/traefik:2.3.1
+traefik_ingress_image: registry.aliyuncs.com/kubeadm-ha/traefik:2.3.1
 
 # ------------------------ #
 # kubernetes-dashboard 相关参数配置
@@ -371,8 +371,8 @@ kubernetesui_dashboard_enabled: true
 kubernetesui_dashboard_certs_expired: 3650
 
 # kubernetes-dashboard 镜像地址
-kubernetesui_dashboard_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.4
-kubernetesui_metrics_scraper_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4
+kubernetesui_dashboard_image: registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.4
+kubernetesui_metrics_scraper_image: registry.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4
 
 # ------------------------ #
 # metrics-server 相关参数配置 
@@ -382,7 +382,7 @@ kubernetesui_metrics_scraper_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha
 metrics_server_enabled: true
 
 # metrics-server image地址
-metrics_server_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0
+metrics_server_image: registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0
 
 # ------------------------ #
 # cert-manager 相关配置
@@ -396,6 +396,6 @@ acme_email: yourname@gmail.com
 acme_server: https://acme-v02.api.letsencrypt.org/directory
 
 # cert-manager 相关 image 地址
-cert_manager_cainjector_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-cainjector:v1.0.4
-cert_manager_webhook_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-webhook:v1.0.4
-cert_manager_controller_image: registry.cn-shanghai.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-controller:v1.0.4
+cert_manager_cainjector_image: registry.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-cainjector:v1.0.4
+cert_manager_webhook_image: registry.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-webhook:v1.0.4
+cert_manager_controller_image: registry.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-controller:v1.0.4
