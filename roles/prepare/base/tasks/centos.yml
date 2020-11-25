@@ -22,8 +22,13 @@
 - name: 设置 yum obsoletes 值为 0
   lineinfile:
     path: /etc/yum.conf
-    regexp: '^obsoletes=1'
+    regexp: '^obsoletes'
     line: obsoletes=0
+
+- name: 清除 yum 缓存
+  command: yum clean all
+  args:
+    warn: no
 
 - name: 校验安装模式
   assert:
@@ -50,21 +55,15 @@
       state: present
   when: base_yum_repo is defined and base_yum_repo != None
 
-# - name: 添加 epel 仓库
-#   yum: 
-#     name: epel-release 
-#     state: latest
 - name: 添加 epel 仓库
   yum_repository:
     name: epel
-    description: EPEL Repository
+    file: epel
+    description: Extra Packages for Enterprise Linux $releasever - $basearch
     baseurl: "{{ epel_yum_repo }}"
     enabled: yes
     gpgcheck: no
     state: present
-
-- name: 刷新 yum 缓存
-  shell: yum clean all && yum makecache
 
 - name: 安装基础软件包
   yum: 
