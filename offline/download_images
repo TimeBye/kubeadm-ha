@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# 创建缓存目录
+mkdir -p /kubernetes
+
 docker pull registry.aliyuncs.com/kubeadm-ha/ansible:2.8.5-nginx-1.18-alpine
 docker pull registry.aliyuncs.com/kubeadm-ha/nginx:1.18-alpine
 docker pull registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.4 
