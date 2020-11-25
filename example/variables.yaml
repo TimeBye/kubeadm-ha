@@ -41,7 +41,7 @@
 # # ------------------------ #
 # # Docker版本
 # docker_version: 19.03.13
-# containerd_version: 1.3.7-3
+# containerd_version: 1.3.7-1
 
 # # 国内镜像加速(若不需要加速，请将值删去，键保留)
 # docker_mirror: 
