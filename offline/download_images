@@ -12,7 +12,7 @@ docker pull registry.aliyuncs.com/kubeadm-ha/kube-apiserver:v1.18.12
 docker pull registry.aliyuncs.com/kubeadm-ha/kube-scheduler:v1.18.12 
 docker pull registry.aliyuncs.com/kubeadm-ha/kube-controller-manager:v1.18.12 
 docker pull registry.aliyuncs.com/kubeadm-ha/coredns:1.6.7 
-docker pull registry.aliyuncs.com/kubeadm-ha/etcd:3.4.3-0 
+docker pull registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0 
 docker pull registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0
 docker pull registry.aliyuncs.com/kubeadm-ha/pause:3.2 
 docker pull registry.aliyuncs.com/kubeadm-ha/calico_typha:v3.16.5
@@ -33,7 +33,7 @@ docker save \
     registry.aliyuncs.com/kubeadm-ha/kube-scheduler:v1.18.12 \
     registry.aliyuncs.com/kubeadm-ha/kube-controller-manager:v1.18.12 \
     registry.aliyuncs.com/kubeadm-ha/coredns:1.6.7 \
-    registry.aliyuncs.com/kubeadm-ha/etcd:3.4.3-0 \
+    registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0 \
     registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0 \
     registry.aliyuncs.com/kubeadm-ha/pause:3.2 \
     registry.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.0 \

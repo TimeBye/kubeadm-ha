@@ -15,7 +15,7 @@ host_architecture: >-
   {%- endif -%}
 
 # Etcd使用的镜像
-etcd_image: registry.aliyuncs.com/kubeadm-ha/etcd:3.4.3-0
+etcd_image: registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0
 # Pod根容器
 pod_infra_container_image: registry.aliyuncs.com/kubeadm-ha/pause:3.2
 # 当前节点ip
