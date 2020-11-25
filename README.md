@@ -15,7 +15,6 @@
 [![](https://img.shields.io/badge/DNS-CoreDNS-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/DNS-CoreDNS-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/Net-Flannel-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Net-Flannel-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/Net-Calico-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Net-Calico-brightgreen.svg?style=flat-square)
-[![](https://img.shields.io/badge/Net-KubeOVN-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Net-KubeOVN-brightgreen.svg?style=flat-square)
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square)](https://github.com/TimeBye/kubeadm-ha/blob/master/LICENSE)
 [![HitCount](http://hits.dwyl.io/timebye/kubeadm-ha.svg)](http://hits.dwyl.io/timebye/kubeadm-ha)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha?ref=badge_shield)
@@ -31,7 +30,7 @@
   | Etcd               | v3.4.3-0                                       |
   | Docker             | 18.06, 18.09, **19.03**                        |
   | Kubernetes         | v1.13, v1.14, v1.15, v1.16, v1.17, **v1.18**   |
-  | Kube-apiserver lb  | slb, haproxy, envoy, nginx ,**openresty**      |
+  | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**      |
   | Network plugin     | flannel, **calico**                            |
   | Ingress controller | traefik, **nginx-ingress**                     |
 
