@@ -33,8 +33,8 @@ host_distribution_release: >-
 
 # 当前节点ip
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
-# 负载均衡模式(openresty nginx haproxy envoy slb)
-lb_mode: openresty
+# 负载均衡模式(nginx openresty haproxy envoy slb)
+lb_mode: nginx
 # 经过负载后的apiserver端口号
 lb_kube_apiserver_port: 8443
 # 负载均衡器健康检查端口

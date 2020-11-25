@@ -1,7 +1,7 @@
 #!/bin/bash
 
-docker pull registry.aliyuncs.com/kubeadm-ha/ansible:2.8.5-nginx-1.17.6-alpine
-docker pull registry.aliyuncs.com/kubeadm-ha/openresty_openresty:1.17.8.2-alpine
+docker pull registry.aliyuncs.com/kubeadm-ha/ansible:2.8.5-nginx-1.18-alpine
+docker pull registry.aliyuncs.com/kubeadm-ha/nginx:1.18-alpine
 docker pull registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.4 
 docker pull registry.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4
 docker pull registry.aliyuncs.com/kubeadm-ha/kube-proxy:v1.18.12 
@@ -21,8 +21,8 @@ docker pull registry.aliyuncs.com/kubeadm-ha/calico_ctl:v3.16.5
 docker pull registry.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.0 
 
 docker save \
-    registry.aliyuncs.com/kubeadm-ha/ansible:2.8.5-nginx-1.17.6-alpine \
-    registry.aliyuncs.com/kubeadm-ha/openresty_openresty:1.17.8.2-alpine \
+    registry.aliyuncs.com/kubeadm-ha/ansible:2.8.5-nginx-1.18-alpine \
+    registry.aliyuncs.com/kubeadm-ha/nginx:1.18-alpine \
     registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.4 \
     registry.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4 \
     registry.aliyuncs.com/kubeadm-ha/kube-proxy:v1.18.12 \
