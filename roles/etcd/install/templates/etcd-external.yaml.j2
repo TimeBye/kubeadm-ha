@@ -1,6 +1,8 @@
 apiVersion: v1
 kind: Pod
 metadata:
+  annotations:
+    kubeadm.kubernetes.io/etcd.advertise-client-urls: https://{{ CURRENT_HOST_IP }}:2379
   creationTimestamp: null
   labels:
     component: etcd
@@ -39,14 +41,27 @@ spec:
     image: {{ etcd_image }}
     imagePullPolicy: IfNotPresent
     livenessProbe:
+      failureThreshold: 8
       httpGet:
         host: 127.0.0.1
         path: /health
         port: 2381
         scheme: HTTP
-      failureThreshold: 8
-      initialDelaySeconds: 15
+      initialDelaySeconds: 10
+      periodSeconds: 10
       timeoutSeconds: 15
+{% if kube_version is version('1.18', '>=') %}
+    startupProbe:
+      failureThreshold: 24
+      httpGet:
+        host: 127.0.0.1
+        path: /health
+        port: 2381
+        scheme: HTTP
+      initialDelaySeconds: 10
+      periodSeconds: 10
+      timeoutSeconds: 15
+{% endif %}
     name: etcd
     resources: {}
     volumeMounts:

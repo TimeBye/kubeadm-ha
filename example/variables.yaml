@@ -182,7 +182,7 @@
 # kube_image_repository: registry.aliyuncs.com/kubeadm-ha
 
 # # kubernetes版本
-# kube_version: 1.18.12
+# kube_version: 1.19.4
 
 # # 集群内部dns域名
 # kube_dns_domain: cluster.local

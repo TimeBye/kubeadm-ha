@@ -11,8 +11,6 @@ metadata:
 spec:
   hostNetwork: true
   dnsPolicy: ClusterFirstWithHostNet
-  nodeSelector:
-    beta.kubernetes.io/os: linux
   priorityClassName: system-cluster-critical
   containers:
   - name: lb-nginx

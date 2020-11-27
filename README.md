@@ -28,9 +28,9 @@
   | :----------------- | :------------------------------------------------------ |
   | Architecture       | amd64, arm64                                            |
   | OS                 | Ubuntu 16.04+, Debian 9, CentOS 7.4+,CentOS 8, RedHat 7 |
-  | Etcd               | v3.4.13-0                                                |
+  | Etcd               | v3.4.13-0                                               |
   | Docker             | 18.06, 18.09, **19.03**                                 |
-  | Kubernetes         | v1.13, v1.14, v1.15, v1.16, v1.17, **v1.18**            |
+  | Kubernetes         | v1.13, v1.14, v1.15, v1.16, v1.17, v1.18, **v1.19**     |
   | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**               |
   | Network plugin     | flannel, **calico**                                     |
   | Ingress controller | traefik, **nginx-ingress**                              |

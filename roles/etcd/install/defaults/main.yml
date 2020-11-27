@@ -14,6 +14,9 @@ host_architecture: >-
   {{ ansible_architecture }}
   {%- endif -%}
 
+# kubernetes版本
+kube_version: 1.19.4
+
 # Etcd使用的镜像
 etcd_image: registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0
 # Pod根容器

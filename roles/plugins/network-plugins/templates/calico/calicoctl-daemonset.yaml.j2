@@ -114,8 +114,6 @@ spec:
         k8s-app: calicoctl
     spec:
       serviceAccountName: calicoctl
-      nodeSelector:
-        beta.kubernetes.io/os: linux
       hostNetwork: true
       hostPID: true
       tolerations:
