@@ -11,7 +11,7 @@ docker pull registry.aliyuncs.com/kubeadm-ha/kube-proxy:v1.19.4
 docker pull registry.aliyuncs.com/kubeadm-ha/kube-apiserver:v1.19.4 
 docker pull registry.aliyuncs.com/kubeadm-ha/kube-scheduler:v1.19.4 
 docker pull registry.aliyuncs.com/kubeadm-ha/kube-controller-manager:v1.19.4 
-docker pull registry.aliyuncs.com/kubeadm-ha/coredns:1.6.7 
+docker pull registry.aliyuncs.com/kubeadm-ha/coredns:1.7.0
 docker pull registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0 
 docker pull registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0
 docker pull registry.aliyuncs.com/kubeadm-ha/pause:3.2 
@@ -32,7 +32,7 @@ docker save \
     registry.aliyuncs.com/kubeadm-ha/kube-apiserver:v1.19.4 \
     registry.aliyuncs.com/kubeadm-ha/kube-scheduler:v1.19.4 \
     registry.aliyuncs.com/kubeadm-ha/kube-controller-manager:v1.19.4 \
-    registry.aliyuncs.com/kubeadm-ha/coredns:1.6.7 \
+    registry.aliyuncs.com/kubeadm-ha/coredns:1.7.0 \
     registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0 \
     registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0 \
     registry.aliyuncs.com/kubeadm-ha/pause:3.2 \

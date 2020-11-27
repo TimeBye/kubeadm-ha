@@ -27,7 +27,7 @@
   - name: Worker 节点加入集群
     shell: >
       kubeadm join --config /etc/kubernetes/kubeadm-config.yaml 
-      --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests
+      --ignore-preflight-errors=DirAvailable--etc-kubernetes-manifests,FileAvailable--etc-kubernetes-pki-ca.crt
 
   when: 
   - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
