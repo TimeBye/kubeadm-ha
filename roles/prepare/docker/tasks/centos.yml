@@ -13,7 +13,7 @@
     name: 
     - "docker-ce-{{ docker_version }}.ce"
     state: present
-    enablerepo: docker-ce
+    enablerepo: docker-ce-stable
   when: docker_version is version('18.09', '<')
 
 - name: 安装 Docker
@@ -23,5 +23,5 @@
     - "docker-ce-cli-{{ docker_version }}"
     - "containerd.io-{{ containerd_version.split('-')[0] }}"
     state: present
-    enablerepo: docker-ce
+    enablerepo: docker-ce-stable
   when: docker_version is version('18.09', '>=')
