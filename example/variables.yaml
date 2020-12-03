@@ -360,7 +360,7 @@
 # # traefik默认证书过期时间（天）
 # traefik_certs_expired: 3650
 # # traefik-ingress-controller 镜像地址
-# traefik_ingress_image: registry.aliyuncs.com/kubeadm-ha/traefik:2.3.1
+# traefik_ingress_image: registry.aliyuncs.com/kubeadm-ha/traefik:2.3.4
 
 # # ------------------------ #
 # # kubernetes-dashboard 相关参数配置

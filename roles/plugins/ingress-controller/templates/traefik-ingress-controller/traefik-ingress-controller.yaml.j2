@@ -7,7 +7,7 @@ metadata:
   name: traefik
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.10.1
+    helm.sh/chart: traefik-9.11.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: traefik
   annotations:
@@ -19,7 +19,7 @@ metadata:
   name: traefik
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.10.1
+    helm.sh/chart: traefik-9.11.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: traefik
 rules:
@@ -83,7 +83,7 @@ metadata:
   name: traefik
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.10.1
+    helm.sh/chart: traefik-9.11.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: traefik
 roleRef:
@@ -93,7 +93,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: traefik
-    namespace: default
+    namespace: ingress-controller
 ---
 # Source: traefik/templates/deployment.yaml
 apiVersion: apps/v1
@@ -103,7 +103,7 @@ metadata:
   name: traefik
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.10.1
+    helm.sh/chart: traefik-9.11.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: traefik
   annotations:
@@ -123,7 +123,7 @@ spec:
       annotations:
       labels:
         app.kubernetes.io/name: traefik
-        helm.sh/chart: traefik-9.10.1
+        helm.sh/chart: traefik-9.11.0
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: traefik
     spec:
@@ -203,7 +203,7 @@ metadata:
   name: traefik
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.10.1
+    helm.sh/chart: traefik-9.11.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: traefik
   annotations:
@@ -242,7 +242,7 @@ metadata:
     helm.sh/hook: "post-install,post-upgrade"
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.10.1
+    helm.sh/chart: traefik-9.11.0
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: traefik
 spec:
