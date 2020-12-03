@@ -13,7 +13,7 @@ jobs:
           to:
             registry: https://registry.aliyuncs.com
           names:
-            - library/nginx:1.18-alpine
+            - library/nginx:1.19-alpine
             - library/haproxy:2.1-alpine
             - library/traefik:2.3.1
             - openresty/openresty:1.17.8.2-alpine

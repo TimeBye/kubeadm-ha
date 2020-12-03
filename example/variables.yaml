@@ -108,7 +108,7 @@
 # lb_openresty_image: registry.aliyuncs.com/kubeadm-ha/openresty_openresty:1.17.8.2-alpine
 
 # # 使用nginx进行apiserver负载时使用的nginx镜像
-# lb_nginx_image: registry.aliyuncs.com/kubeadm-ha/nginx:1.18-alpine
+# lb_nginx_image: registry.aliyuncs.com/kubeadm-ha/nginx:1.19-alpine
 
 # # 使用haproxy进行apiserver负载时使用的haproxy镜像
 # lb_haproxy_image: registry.aliyuncs.com/kubeadm-ha/haproxy:2.1-alpine
