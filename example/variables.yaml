@@ -313,6 +313,8 @@
 # # 集群网络插件，目前支持flannel, calico
 # network_plugin: "calico"
 
+# # 设置calico 网络 backend: brid, vxlan, none
+# calico_backend: bird
 # # calico mtu
 # calico_veth_mtu: 1440
 # # calico 相关镜像
