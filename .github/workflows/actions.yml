@@ -25,7 +25,7 @@ jobs:
             - library/haproxy:2.3-alpine
             - library/traefik:2.3.1
             - openresty/openresty:1.19.3.1-alpine
-            - envoyproxy/envoy:v1.16.0
+            - envoyproxy/envoy:v1.16.1
             - osixia/keepalived:2.0.20
             - calico/typha
             - calico/cni
