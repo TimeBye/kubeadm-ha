@@ -105,7 +105,7 @@
 # enabel_ingress_tls_nodeport_lb: false
 
 # # 使用openresty进行apiserver负载时使用的openresty镜像
-# lb_openresty_image: registry.aliyuncs.com/kubeadm-ha/openresty_openresty:1.17.8.2-alpine
+# lb_openresty_image: registry.aliyuncs.com/kubeadm-ha/openresty_openresty:1.19.3.1-alpine
 
 # # 使用nginx进行apiserver负载时使用的nginx镜像
 # lb_nginx_image: registry.aliyuncs.com/kubeadm-ha/nginx:1.19-alpine

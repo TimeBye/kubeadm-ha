@@ -54,7 +54,7 @@ kubelet_root_dir: "/var/lib/kubelet"
 
 #---------------------------------------------- Openresty 相关参数 --------------------------------------------#
 # 使用openresty进行apiserver负载时使用的nginx镜像
-lb_openresty_image: registry.aliyuncs.com/kubeadm-ha/openresty_openresty:1.17.8.2-alpine
+lb_openresty_image: registry.aliyuncs.com/kubeadm-ha/openresty_openresty:1.19.3.1-alpine
 
 #---------------------------------------------- Nginx 相关参数 --------------------------------------------#
 # 使用nginx进行apiserver负载时使用的nginx镜像

@@ -16,7 +16,7 @@ jobs:
             - library/nginx:1.19-alpine
             - library/haproxy:2.1-alpine
             - library/traefik:2.3.1
-            - openresty/openresty:1.17.8.2-alpine
+            - openresty/openresty:1.19.3.1-alpine
             - envoyproxy/envoy:v1.16.0
             - osixia/keepalived:2.0.20
             - calico/typha
