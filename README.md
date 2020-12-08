@@ -37,6 +37,10 @@
 
   **Note:** 表格中粗体标识出来的为默认安装版本
 
+## 已知问题
+
+- 由于各插件（Network plugin、Ingress controller）版本更新以及高版本 kubernetes 有些 apiVersion 弃用等原因，可能导致部署低版本 kubernetes 时各插件部署报错等问题。在此建议安装本项目默认或者最新版本 kubernetes。 #28
+
 ## 使用指南
 
 <table border="0">
