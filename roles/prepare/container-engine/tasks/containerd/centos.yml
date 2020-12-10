@@ -1,0 +1,16 @@
+- name: 添加 Docker yum 仓库
+  yum_repository:
+    name: docker-ce-stable
+    file: docker-ce
+    description: Docker CE Stable - $basearch
+    baseurl: "{{ docker_yum_repo }}"
+    enabled: no
+    gpgcheck: no
+    state: present
+
+- name: 安装 containerd
+  yum:
+    name: 
+    - "containerd.io-{{ containerd_version.split('-')[0] }}"
+    state: present
+    enablerepo: docker-ce-stable

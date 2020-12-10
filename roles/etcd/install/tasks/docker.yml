@@ -1,0 +1,60 @@
+- name: 以轮询的方式等待 etcd 运行完成
+  shell: >
+    docker run --net host -e ETCDCTL_API=3 
+    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
+    --rm {{ etcd_image }}
+    etcdctl endpoint health
+    --endpoints=https://[127.0.0.1]:2379
+    --cacert=/etc/kubernetes/pki/etcd/ca.crt
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+  register: etcd_status
+  until: etcd_status.rc == 0
+  retries: 12
+  delay: 5
+  when: inventory_hostname in groups['etcd']
+
+- name: 校验新添加的 etcd 节点是否已在 etcd 集群中
+  shell: >
+    docker run --net host -e ETCDCTL_API=3 
+    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
+    --rm {{ etcd_image }}
+    etcdctl member list
+    --endpoints=https://[127.0.0.1]:2379
+    --cacert=/etc/kubernetes/pki/etcd/ca.crt
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+  register: etcd_member_list
+  delegate_to: "{{ groups['etcd'][0] }}"
+  when: inventory_hostname in groups['new-etcd']
+
+- name: 将新添加的 etcd 节点添加到 etcd 集群中
+  shell: >
+    docker run --net host -e ETCDCTL_API=3 
+    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
+    --rm {{ etcd_image }}
+    etcdctl member add {{ NEW_MEMBER }}
+    --endpoints=https://[127.0.0.1]:2379
+    --cacert=/etc/kubernetes/pki/etcd/ca.crt
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+  delegate_to: "{{ groups['etcd'][0] }}"
+  when: 
+  - inventory_hostname in groups['new-etcd']
+  - inventory_hostname not in etcd_member_list.stdout
+
+- name: 以轮询的方式等待 new etcd 运行完成
+  shell: >
+    docker run --net host -e ETCDCTL_API=3 
+    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
+    --rm {{ etcd_image }}
+    etcdctl endpoint health
+    --endpoints=https://[127.0.0.1]:2379
+    --cacert=/etc/kubernetes/pki/etcd/ca.crt
+    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
+    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+  register: etcd_status
+  until: etcd_status.rc == 0
+  retries: 12
+  delay: 5
+  when: inventory_hostname in groups['new-etcd']

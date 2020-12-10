@@ -105,10 +105,14 @@
 
   - name: 恢复 etcd 数据库
     shell: >
+{% if container_manager == 'containerd' %}
+      export ETCDCTL_API=3;
+{% elif container_manager == 'docker' %}
       docker run --net host -e ETCDCTL_API=3
       -v /etc/kubernetes/backup/etcd:/snapshot
       -v {{ etcd_data_dir|dirname }}:{{ etcd_data_dir|dirname }}
       --rm {{ etcd_image }}
+{% endif %}
       etcdctl snapshot restore 
       /snapshot/etcd-snapshot-latest.db
       --data-dir={{ etcd_data_dir }}

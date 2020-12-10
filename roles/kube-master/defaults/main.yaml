@@ -4,16 +4,6 @@ ansible_become: true
 install_mode: online
 
 #----------------------------------------------- 基础参数 -------------------------------------------------#
-# 当前节点ip
-CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
-# apiserver ip
-KUBE_APISERVER_IP: >-
-  {% if lb_kube_apiserver_ip is not defined %}
-    127.0.0.1
-  {% else %}
-    {{ lb_kube_apiserver_ip }}
-  {% endif %}
-
 _host_architecture_groups:
   x86_64: amd64
   aarch64: arm64
@@ -57,8 +47,6 @@ kube_service_subnet: 10.244.64.0/18
 # 分配给节点的 pod 子网掩码位，默认为 24 即 256 个ip，故使用这些默认值可以纳管 16384/256=64 个节点。
 kube_network_node_prefix: 24
 
-KUBERNETES_SERVICE_IP: "{{ kube_service_subnet | ipaddr('net') | ipaddr(1) | ipaddr('address') }}"
-CLUSTER_DNS_SERVICE_IP: "{{ kube_service_subnet | ipaddr('net') | ipaddr(10) | ipaddr('address') }}"
 # NodePort端口范围
 kube_service_node_port_range: 30000-32767
 # 资源保留相关配置
@@ -147,3 +135,36 @@ kube_kubeadm_scheduler_extra_args: {}
 apiserver_extra_volumes: {}
 controller_manager_extra_volumes: {}
 scheduler_extra_volumes: {}
+
+# container 运行时类型
+container_manager: docker
+# containerd 是否使用 systemd 作为 cgroup 驱动程序
+containerd_use_systemd_cgroup: true
+
+
+# 当前节点ip
+CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
+# apiserver ip
+KUBE_APISERVER_IP: >-
+  {% if lb_kube_apiserver_ip is not defined %}
+    127.0.0.1
+  {% else %}
+    {{ lb_kube_apiserver_ip }}
+  {% endif %}
+
+KUBERNETES_SERVICE_IP: "{{ kube_service_subnet | ipaddr('net') | ipaddr(1) | ipaddr('address') }}"
+CLUSTER_DNS_SERVICE_IP: "{{ kube_service_subnet | ipaddr('net') | ipaddr(10) | ipaddr('address') }}"
+# CRI socket path
+CRI_SOCKET: >-
+  {%- if container_manager == 'containerd' -%}
+  /var/run/containerd/containerd.sock
+  {%- else -%}
+  /var/run/dockershim.sock
+  {%- endif -%}
+# 镜像拉取命令
+IMAGE_PULL_COMMAND: >-
+  {%- if container_manager == 'containerd' -%}
+  crictl pull
+  {%- else -%}
+  docker pull
+  {%- endif -%}

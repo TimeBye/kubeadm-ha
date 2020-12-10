@@ -11,7 +11,7 @@
   register: kube_image_list
 
 - name: 开始拉取 master 节点相关镜像
-  shell: "docker pull {{ item }}"
+  shell: "{{ IMAGE_PULL_COMMAND }} {{ item }}"
   with_items: "{{ kube_image_list.stdout_lines }}"
   when: install_mode == 'online'
 

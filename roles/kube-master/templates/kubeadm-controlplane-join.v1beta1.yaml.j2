@@ -17,7 +17,7 @@ nodeRegistration:
     root-dir: {{ kubelet_root_dir }}
     hostname-override: {{ inventory_hostname }}
     pod-infra-container-image: {{ pod_infra_container_image }}
-  criSocket: /var/run/dockershim.sock
+  criSocket: {{ CRI_SOCKET }}
   name: {{ inventory_hostname }}
 {% if inventory_hostname in (groups['kube-master'] + groups['new-master']) and inventory_hostname not in (groups['kube-worker'] + groups['new-worker']) %}
   taints:
@@ -201,7 +201,7 @@ authorization:
   webhook:
     cacheAuthorizedTTL: 5m0s
     cacheUnauthorizedTTL: 30s
-cgroupDriver: {{ docker_cgroup_driver.stdout }}
+cgroupDriver: {{ kubelet_cgroup_driver|default(kubelet_cgroup_driver_detected) }}
 cgroupsPerQOS: true
 clusterDNS:
 - {{ CLUSTER_DNS_SERVICE_IP }}

@@ -6,10 +6,14 @@
 
   - name: 第一个 etcd 节点备份 etcd 数据库
     shell: >
+{% if container_manager == 'containerd' %}
+      export ETCDCTL_API=3;
+{% elif container_manager == 'docker' %}
       docker run --net host -e ETCDCTL_API=3
       -v /etc/kubernetes/backup/etcd:/snapshot
       -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/
       --rm {{ etcd_image }}
+{% endif %}
       etcdctl snapshot save 
       /snapshot/etcd-snapshot-$(date '+%Y%m%dT%H%M%S').db 
       --cacert=/etc/kubernetes/pki/etcd/ca.crt 

@@ -55,3 +55,16 @@ kube_pod_subnet: 10.244.0.0/18
 kube_service_subnet: 10.244.64.0/18
 
 CLUSTER_DNS_SERVICE_IP: "{{ kube_service_subnet | ipaddr('net') | ipaddr(10) | ipaddr('address') }}"
+
+# container 运行时类型
+container_manager: docker
+# containerd 是否使用 systemd 作为 cgroup 驱动程序
+containerd_use_systemd_cgroup: true
+
+# CRI socket path
+CRI_SOCKET: >-
+  {%- if container_manager == 'containerd' -%}
+  /var/run/containerd/containerd.sock
+  {%- else -%}
+  /var/run/dockershim.sock
+  {%- endif -%}

@@ -7,7 +7,7 @@
   register: lb_configuration_result
 
 - name: Envoy lb | 拉取相关镜像
-  shell: docker pull {{ item }}
+  shell: "{{ IMAGE_PULL_COMMAND }} {{ item }}"
   with_items:
   - "{{ lb_envoy_image }}"
   - "{{ pod_infra_container_image }}"

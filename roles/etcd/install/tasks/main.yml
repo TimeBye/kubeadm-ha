@@ -21,7 +21,7 @@
     - /etc/kubernetes/manifests
 
   - name: 在 etcd 节点拉取相关镜像
-    shell: docker pull {{ item }}
+    shell: "{{ IMAGE_PULL_COMMAND }} {{ item }}"
     with_items:
     - "{{ etcd_image }}"
     - "{{ pod_infra_container_image }}"
@@ -50,6 +50,19 @@
   - name: 获取 Docker Cgroup Driver 值
     shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
     register: docker_cgroup_driver
+    when: container_manager == 'docker'
+
+  - name: 设置 docker 为容器运行时 kubelet_cgroup_driver_detected 变量
+    set_fact:
+      kubelet_cgroup_driver_detected: >-
+        {{ docker_cgroup_driver.stdout }}
+    when: container_manager == 'docker'
+
+  - name: 设置 containerd 为容器运行时 kubelet_cgroup_driver_detected 变量
+    set_fact:
+      kubelet_cgroup_driver_detected: >-
+        {%- if containerd_use_systemd_cgroup -%}systemd{%- else -%}cgroupfs{%- endif -%}
+    when: container_manager == 'containerd'
 
   - name: 生成临时 kubelet unit 文件
     template: 
@@ -72,66 +85,11 @@
   - inventory_hostname in (groups['etcd'] + groups['new-etcd'])
   - not kubelet_conf_stat.stat.exists
 
-- name: 以轮询的方式等待 etcd 运行完成
-  shell: >
-    docker run --net host -e ETCDCTL_API=3 
-    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
-    --rm {{ etcd_image }}
-    etcdctl endpoint health
-    --endpoints=https://[127.0.0.1]:2379
-    --cacert=/etc/kubernetes/pki/etcd/ca.crt
-    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
-    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
-  register: etcd_status
-  until: etcd_status.rc == 0
-  retries: 12
-  delay: 5
-  when: inventory_hostname in groups['etcd']
+- include_tasks: docker.yml
+  when: container_manager == 'docker'
 
-- name: 校验新添加的 etcd 节点是否已在 etcd 集群中
-  shell: >
-    docker run --net host -e ETCDCTL_API=3 
-    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
-    --rm {{ etcd_image }}
-    etcdctl member list
-    --endpoints=https://[127.0.0.1]:2379
-    --cacert=/etc/kubernetes/pki/etcd/ca.crt
-    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
-    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
-  register: etcd_member_list
-  delegate_to: "{{ groups['etcd'][0] }}"
-  when: inventory_hostname in groups['new-etcd']
-
-- name: 将新添加的 etcd 节点添加到 etcd 集群中
-  shell: >
-    docker run --net host -e ETCDCTL_API=3 
-    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
-    --rm {{ etcd_image }}
-    etcdctl member add {{ NEW_MEMBER }}
-    --endpoints=https://[127.0.0.1]:2379
-    --cacert=/etc/kubernetes/pki/etcd/ca.crt
-    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
-    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
-  delegate_to: "{{ groups['etcd'][0] }}"
-  when: 
-  - inventory_hostname in groups['new-etcd']
-  - inventory_hostname not in etcd_member_list.stdout
-
-- name: 以轮询的方式等待 new etcd 运行完成
-  shell: >
-    docker run --net host -e ETCDCTL_API=3 
-    -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
-    --rm {{ etcd_image }}
-    etcdctl endpoint health
-    --endpoints=https://[127.0.0.1]:2379
-    --cacert=/etc/kubernetes/pki/etcd/ca.crt
-    --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
-    --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
-  register: etcd_status
-  until: etcd_status.rc == 0
-  retries: 12
-  delay: 5
-  when: inventory_hostname in groups['new-etcd']
+- include_tasks: containerd.yml
+  when: container_manager == 'containerd'
 
 - block:
   - name: 移除临时 kubelet unit 文件

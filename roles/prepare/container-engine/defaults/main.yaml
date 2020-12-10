@@ -71,3 +71,53 @@ install_mode: online
 offline_images_src: /kubernetes/kubernetes-1.19.4.tar
 # 离线模式时分发镜像目的位置
 offline_images_dest: /etc/kubernetes/kubernetes-1.19.4.tar
+
+containerd_storage_dir: "/var/lib/containerd"
+containerd_config:
+  root: "/var/lib/containerd"
+  grpc:
+    max_recv_message_size: 16777216
+    max_send_message_size: 16777216
+  debug:
+    level: ""
+  registries:
+    "docker.io": "https://registry-1.docker.io"
+  max_container_log_line_size: -1
+  # containerd:
+  #   snapshotter: native
+
+containerd_use_systemd_cgroup: true
+
+containerd_default_runtime:
+  type: io.containerd.runtime.v1.linux
+  engine: ''
+  root: ''
+
+# Pod根容器
+pod_infra_container_image: registry.aliyuncs.com/kubeadm-ha/pause:3.2
+
+kata_containers_enabled: false
+# Additional runtimes for containerd configuration
+#
+# Example for Kata Containers:
+# containerd_runtimes:
+#   - name: kata
+#     type: io.containerd.kata.v2
+#     engine: ""
+#     root: ""
+containerd_runtimes: []
+
+containerd_untrusted_runtime_type: ''
+containerd_untrusted_runtime_engine: ''
+containerd_untrusted_runtime_root: ''
+
+# container 运行时类型
+container_manager: docker
+
+# CRI socket path
+CRI_SOCKET: >-
+  {%- if container_manager == 'containerd' -%}
+  /var/run/containerd/containerd.sock
+  {%- else -%}
+  /var/run/dockershim.sock
+  {%- endif -%}

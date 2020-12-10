@@ -25,7 +25,7 @@
     shell: "ip a|grep '{{ CURRENT_HOST_IP }}/'|awk '{print $NF}'"
     register: lb_keepalived_interface
   - name: keepalived | 拉取相关镜像
-    shell: docker pull {{ item }}
+    shell: "{{ IMAGE_PULL_COMMAND }} {{ item }}"
     with_items:
     - "{{ lb_keepalived_image }}"
     when: install_mode == 'online'
@@ -46,6 +46,19 @@
   - name: 获取 Docker Cgroup Driver 值
     shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
     register: docker_cgroup_driver
+    when: container_manager == 'docker'
+
+  - name: 设置 docker 为容器运行时 kubelet_cgroup_driver_detected 变量
+    set_fact:
+      kubelet_cgroup_driver_detected: >-
+        {{ docker_cgroup_driver.stdout }}
+    when: container_manager == 'docker'
+
+  - name: 设置 containerd 为容器运行时 kubelet_cgroup_driver_detected 变量
+    set_fact:
+      kubelet_cgroup_driver_detected: >-
+        {%- if containerd_use_systemd_cgroup -%}systemd{%- else -%}cgroupfs{%- endif -%}
+    when: container_manager == 'containerd'
 
   - name: 生成临时 kubelet unit 文件
     template: 

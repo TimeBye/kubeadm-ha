@@ -1,0 +1,75 @@
+- name: 准备 containerd 相关目录
+  file: 
+    name: "{{ item }}"
+    state: directory
+  with_items:
+  - /etc/systemd/system/containerd.service.d
+  - "{{ containerd_config.root | default('/var/lib/containerd') }}"
+
+- name: 编写 containerd 代理配置
+  template:
+    src: http-proxy.conf.j2
+    dest: /etc/systemd/system/containerd.service.d/http-proxy.conf
+  when: http_proxy is defined or https_proxy is defined
+
+- name: 确认 containerd 配置是否有修改
+  template:
+    src: containerd/config.toml.j2
+    dest: /etc/containerd/config.toml
+    owner: root
+    mode: 0644
+  register: configuration_result
+
+- name: 生成 crictl 配置文件
+  template:
+    src: containerd/crictl.yaml.j2
+    dest: /etc/crictl.yaml
+    owner: root
+    mode: 0644
+
+- name: 重新加载 daemon
+  systemd:
+    daemon_reload: yes
+
+- name: 启动/重启 containerd
+  service:
+    name: containerd
+    state: restarted
+    enabled: yes
+  when: 
+  - configuration_result.changed
+  - '"active" not in containerd_already_running.stdout'
+
+- block:
+  - name: 需手动重启 containerd 
+    vars: 
+      msg: |
+        节点：{{ inventory_hostname }} ，containerd 处于运行中，
+        但 containerd 配置文件 /etc/containerd/config.toml 已更新，
+        请在集群安装完成后手动执行下面命令重启该节点 containerd 与 kubelet：
+            systemctl restart containerd
+            systemctl restart kubelet
+        
+        若重启后 kubelet 无法正常启动：
+        请确认以下两个文件中 cgroup driver 参数是否设置为 systemd，
+        若不是则修改为 systemd 后再次重启 kubelet。
+            vi /var/lib/kubelet/config.yaml
+            vi /var/lib/kubelet/kubeadm-flags.env
+        在 /var/lib/kubelet/config.yaml 文件中参数名为：cgroupDriver；
+        在 /var/lib/kubelet/kubeadm-flags.env 文件中参数名为：--cgroup-driver，若参数不存在请忽略。
+
+    debug: 
+      msg: "{{ msg.split('\n') }}"
+
+  - name: 等待用户查看日志
+    shell: sleep 60
+    run_once: true
+  when: 
+  - configuration_result.changed
+  - '"active" in containerd_already_running.stdout'
+
+- name: 设置 containerd 开机自启
+  service:
+    name: containerd
+    state: started
+    enabled: yes

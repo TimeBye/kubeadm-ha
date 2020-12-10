@@ -63,3 +63,6 @@ enabel_ingress_tls_nodeport_lb: false
 ingress_controller_http_nodeport: 30080
 # NodePort svc 监听https协议端口(注意需在NodePort端口范围)
 ingress_controller_https_nodeport: 30443
+
+# container 运行时类型
+container_manager: docker

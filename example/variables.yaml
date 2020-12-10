@@ -37,11 +37,38 @@
 # kubernetes_apt_repo: deb https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main
 
 # # ------------------------ #
-# # Docker 相关参数配置
+# # 容器运行时相关参数配置
 # # ------------------------ #
+# # container 运行时类型
+# container_manager: docker
 # # Docker版本
 # docker_version: 19.03.13
+# # containerd版本
 # containerd_version: 1.3.7-1
+# # containerd 是否使用 systemd 作为 cgroup 驱动程序
+# containerd_use_systemd_cgroup: true
+# # containerd 相关配置
+# containerd_storage_dir: "/var/lib/containerd"
+# containerd_config:
+#   grpc:
+#     max_recv_message_size: 16777216
+#     max_send_message_size: 16777216
+#   debug:
+#     level: ""
+#   registries:
+#     "docker.io": "https://registry-1.docker.io"
+#   max_container_log_line_size: -1
+#   # containerd:
+#   #   snapshotter: native
+
+# containerd_default_runtime:
+#   type: io.containerd.runtime.v1.linux
+#   engine: ''
+#   root: ''
+
+# containerd_untrusted_runtime_type: ''
+# containerd_untrusted_runtime_engine: ''
+# containerd_untrusted_runtime_root: ''
 
 # # 国内镜像加速(若不需要加速，请将值删去，键保留)
 # docker_mirror: 

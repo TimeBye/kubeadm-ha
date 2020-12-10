@@ -38,7 +38,7 @@
       when: restore_confirmation != "yes"
   roles:
   - prepare/base
-  - prepare/docker
+  - prepare/container-engine
   - prepare/kubernetes
   - restore
   environment: "{{ proxy_env }}"

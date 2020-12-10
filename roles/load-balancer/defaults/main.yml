@@ -3,7 +3,6 @@ ansible_become: true
 # 安装模式
 install_mode: online
 #----------------------------------------------- 基础参数 -------------------------------------------------#
-
 _host_architecture_groups:
   x86_64: amd64
   aarch64: arm64
@@ -31,8 +30,6 @@ host_distribution_release: >-
   {{ ansible_distribution_release }}
   {%- endif -%}
 
-# 当前节点ip
-CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
 # 负载均衡模式(nginx openresty haproxy envoy slb)
 lb_mode: nginx
 # 经过负载后的apiserver端口号
@@ -106,3 +103,38 @@ LB_KEEPALIVED_PRIORITY: "120"
 LB_KEEPALIVED_STATE: "{% if inventory_hostname == groups['lb'][0] %}MASTER{% else %}BACKUP{% endif %}"
 # 其他 Keepalived 节点的单点传播 IP
 LB_KEEPALIVED_UNICAST_PEERS: "{% for host in groups['lb'] %}{% if hostvars[host]['ansible_host'] is defined %}'{{ hostvars[host]['ansible_host'] }}'{% else %}'{{ host }}'{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
+
+# container 运行时类型
+container_manager: docker
+# containerd 是否使用 systemd 作为 cgroup 驱动程序
+containerd_use_systemd_cgroup: true
+
+# 当前节点ip
+CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
+# CRI socket path
+CRI_SOCKET: >-
+  {%- if container_manager == 'containerd' -%}
+  /var/run/containerd/containerd.sock
+  {%- else -%}
+  /var/run/dockershim.sock
+  {%- endif -%}
+# 镜像拉取命令
+IMAGE_PULL_COMMAND: >-
+  {%- if container_manager == 'containerd' -%}
+  crictl pull
+  {%- else -%}
+  docker pull
+  {%- endif -%}
+# kubelet 启动参数
+KUBELET_ARGS_BASE: >-
+  --address=127.0.0.1
+  {% if container_manager == 'containerd' %}
+  --container-runtime=remote
+  --container-runtime-endpoint=unix://{{ CRI_SOCKET }}
+  {% else %}
+  --pod-infra-container-image={{ pod_infra_container_image }}
+  {% endif %}
+  --root-dir={{ kubelet_root_dir }}
+  --hostname-override={{ inventory_hostname }}
+  --pod-manifest-path=/etc/kubernetes/manifests
+  --cgroup-driver={{ kubelet_cgroup_driver|default(kubelet_cgroup_driver_detected) }}

@@ -19,9 +19,13 @@
 
 - name: 获取将要移除的 etcd 节点 member id
   shell: >
+{% if container_manager == 'containerd' %}
+      export ETCDCTL_API=3;
+{% elif container_manager == 'docker' %}
     docker run --net host -e ETCDCTL_API=3 
     -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
     --rm {{ etcd_image }}
+{% endif %}
     etcdctl member list
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
     --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
@@ -32,9 +36,13 @@
 
 - name: 从 etcd 集群中移除 {{ inventory_hostname }} 节点
   shell: >
+{% if container_manager == 'containerd' %}
+      export ETCDCTL_API=3;
+{% elif container_manager == 'docker' %}
     docker run --net host -e ETCDCTL_API=3 
     -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
     --rm {{ etcd_image }}
+{% endif %}
     etcdctl member remove {{ etcd_member_id.stdout }}
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
     --key=/etc/kubernetes/pki/etcd/healthcheck-client.key

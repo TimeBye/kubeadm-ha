@@ -29,7 +29,7 @@
   | Architecture       | amd64, arm64                                            |
   | OS                 | Ubuntu 16.04+, Debian 9, CentOS 7.4+,CentOS 8, RedHat 7 |
   | Etcd               | v3.4.13-0                                               |
-  | Docker             | 18.06, 18.09, **19.03**                                 |
+  | Container runtimes | Docker, **containerd**                                  |
   | Kubernetes         | v1.13, v1.14, v1.15, v1.16, v1.17, v1.18, **v1.19**     |
   | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**               |
   | Network plugin     | flannel, **calico**                                     |
@@ -39,7 +39,7 @@
 
 ## 已知问题
 
-- 由于各插件（Network plugin、Ingress controller）版本更新以及高版本 kubernetes 有些 apiVersion 弃用等原因，可能导致部署低版本 kubernetes 时各插件部署报错等问题。在此建议安装本项目默认或者最新版本 kubernetes。 #28
+- 由于各插件（Network plugin、Ingress controller）版本更新可能不再兼容低版本 kubernetes，若在部署时指定了低版本 kubernetes 可能导致插件部署时报错。在此建议安装本项目默认或者最新版本 kubernetes。也可参与此进行讨论 [#28](https://github.com/TimeBye/kubeadm-ha/issues/28)。
 
 ## 使用指南
 

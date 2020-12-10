@@ -14,7 +14,7 @@ authorization:
   webhook:
     cacheAuthorizedTTL: 5m0s
     cacheUnauthorizedTTL: 30s
-cgroupDriver: {{ docker_cgroup_driver.stdout }}
+cgroupDriver: {{ kubelet_cgroup_driver|default(kubelet_cgroup_driver_detected) }}
 cgroupsPerQOS: true
 clusterDNS:
 - {{ CLUSTER_DNS_SERVICE_IP }}

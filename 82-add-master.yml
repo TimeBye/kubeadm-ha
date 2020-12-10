@@ -17,7 +17,7 @@
   - new-master
   roles:
   - prepare/base
-  - prepare/docker
+  - prepare/container-engine
   - prepare/kubernetes
   environment: "{{ proxy_env }}"
 

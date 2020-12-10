@@ -1,0 +1,5 @@
+- include_tasks: docker/main.yml
+  when: container_manager == "docker"
+
+- include_tasks: containerd/main.yml
+  when: container_manager == "containerd"
