@@ -4,8 +4,10 @@
 $centos_script = <<-SCRIPT
 mv /etc/yum.repos.d /etc/yum.repos.d.orig.$(date -Iseconds)
 mkdir -p /etc/yum.repos.d/
-wget -qO /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+curl -sSLo /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 sed -i -e '/mirrors.cloud.aliyuncs.com/d' -e '/mirrors.aliyuncs.com/d' /etc/yum.repos.d/CentOS-Base.repo
+sed "s/keepcache=0/keepcache=1/" -i /etc/yum.conf
+yum install -y git
 SCRIPT
 
 $rhel7_script = <<-SCRIPT
@@ -30,8 +32,8 @@ SCRIPT
 
 Vagrant.configure(2) do |config|
     config.vm.define "node1" do |s|
-        s.vm.box = "bento/centos-7.4"
-        s.vm.box_url = "http://files.saas.hand-china.com/vagrant/bento_centos-7.4.box"
+        s.vm.box = "bento/centos-7.8"
+        s.vm.box_url = "http://files.saas.hand-china.com/vagrant/bento_centos-7.8.box"
         s.vm.hostname = "node1"
         s.vm.network "private_network", ip: "192.168.56.11"
         # s.vm.network "forwarded_port", guest: 6443, host: 6443
