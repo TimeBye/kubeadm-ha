@@ -43,4 +43,4 @@ docker save \
     registry.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.16.5 \
     registry.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.16.5 \
     registry.aliyuncs.com/kubeadm-ha/calico_ctl:v3.16.5 \
-    -o /kubernetes/kubernetes-1.19.4.tar
+    | gzip -1 > /kubernetes/kubernetes-1.19.4.tar

@@ -29,5 +29,5 @@
       dest: "{{ offline_images_dest }}"
       mode: 0755
   - name: 加载所需的 Docker 镜像
-    shell: ctr -n k8s.io image import "{{ offline_images_dest }}"
+    shell: gunzip -c "{{ offline_images_dest }}" | ctr -n k8s.io images import -
   when: install_mode != 'online'
