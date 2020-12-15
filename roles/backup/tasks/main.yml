@@ -7,15 +7,18 @@
   - name: 第一个 etcd 节点备份 etcd 数据库
     shell: >
 {% if container_manager == 'containerd' %}
-      export ETCDCTL_API=3;
+      ctr -n k8s.io run --rm --net-host --env ETCDCTL_API=3
+      --mount type=bind,src=/etc/kubernetes/pki/etcd,dst=/etc/kubernetes/pki/etcd,options=rbind:ro
+      --mount type=bind,src=/etc/kubernetes/backup/etcd,dst=/etc/kubernetes/backup/etcd,options=rbind:rw
+      {{ etcd_image }} etcd-save-snapshot
 {% elif container_manager == 'docker' %}
       docker run --net host -e ETCDCTL_API=3
-      -v /etc/kubernetes/backup/etcd:/snapshot
+      -v /etc/kubernetes/backup/etcd:/etc/kubernetes/backup/etcd
       -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/
       --rm {{ etcd_image }}
 {% endif %}
       etcdctl snapshot save 
-      /snapshot/etcd-snapshot-$(date '+%Y%m%dT%H%M%S').db 
+      /etc/kubernetes/backup/etcd/etcd-snapshot-$(date '+%Y%m%dT%H%M%S').db 
       --cacert=/etc/kubernetes/pki/etcd/ca.crt 
       --key=/etc/kubernetes/pki/etcd/healthcheck-client.key 
       --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt

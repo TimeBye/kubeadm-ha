@@ -1,15 +1,8 @@
-
-- name: 从 Etcd 容器中拷贝 etcdctl 至主机
-  shell: >
-    cp -f $(find /var/lib/containerd/io.containerd.snapshotter.v1.overlayfs -name etcdctl | head -n 1)
-    /usr/bin;
-    chmod +x /usr/bin/etcdctl
-  when: inventory_hostname in (groups['etcd'] + groups['new-etcd'])
-
 - name: 以轮询的方式等待 etcd 运行完成
-  environment:
-    ETCDCTL_API: 3
   shell: >
+    ctr -n k8s.io run --net-host --env ETCDCTL_API=3
+    --mount type=bind,src=/etc/kubernetes/pki/etcd,dst=/etc/kubernetes/pki/etcd,options=rbind:ro
+    --rm {{ etcd_image }} etcd-health-check
     etcdctl endpoint health
     --endpoints=https://[127.0.0.1]:2379
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
@@ -22,9 +15,10 @@
   when: inventory_hostname in groups['etcd']
 
 - name: 校验新添加的 etcd 节点是否已在 etcd 集群中
-  environment:
-    ETCDCTL_API: 3
   shell: >
+    ctr -n k8s.io run --net-host --env ETCDCTL_API=3
+    --mount type=bind,src=/etc/kubernetes/pki/etcd,dst=/etc/kubernetes/pki/etcd,options=rbind:ro
+    --rm {{ etcd_image }} etcd-list-member
     etcdctl member list
     --endpoints=https://[127.0.0.1]:2379
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
@@ -35,9 +29,10 @@
   when: inventory_hostname in groups['new-etcd']
 
 - name: 将新添加的 etcd 节点添加到 etcd 集群中
-  environment:
-    ETCDCTL_API: 3
   shell: >
+    ctr -n k8s.io run --net-host --env ETCDCTL_API=3
+    --mount type=bind,src=/etc/kubernetes/pki/etcd,dst=/etc/kubernetes/pki/etcd,options=rbind:ro
+    --rm {{ etcd_image }} etcd-add-member
     etcdctl member add {{ NEW_MEMBER }}
     --endpoints=https://[127.0.0.1]:2379
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
@@ -49,9 +44,10 @@
   - inventory_hostname not in etcd_member_list.stdout
 
 - name: 以轮询的方式等待 new etcd 运行完成
-  environment:
-    ETCDCTL_API: 3
   shell: >
+    ctr -n k8s.io run --net-host --env ETCDCTL_API=3
+    --mount type=bind,src=/etc/kubernetes/pki/etcd,dst=/etc/kubernetes/pki/etcd,options=rbind:ro
+    --rm {{ etcd_image }} etcd-health-check
     etcdctl endpoint health
     --endpoints=https://[127.0.0.1]:2379
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
