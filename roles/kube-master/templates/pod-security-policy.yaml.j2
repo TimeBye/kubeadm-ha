@@ -143,31 +143,31 @@ subjects:
   name: system:nodes
 
 ---
-# Kube-proxy 创建授权
+# kube-system 命名空间下所有 sa 创建授权
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: psp-privileged-kube-proxy
+  name: psp-privileged-kube-system-sa
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: psp-privileged
 subjects:
-- kind: ServiceAccount
-  name: kube-proxy
-  namespace: kube-system
+- kind: Group
+  name: system:serviceaccounts:kube-system
+  apiGroup: rbac.authorization.k8s.io
 
 ---
-# CoreDNS 创建授权
+# ingress-controller 命名空间下所有 sa 创建授权
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: psp-privileged-coredns
+  name: psp-privileged-ingress-controller-sa
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: psp-privileged
 subjects:
-- kind: ServiceAccount
-  name: coredns
-  namespace: kube-system
+- kind: Group
+  name: system:serviceaccounts:ingress-controller
+  apiGroup: rbac.authorization.k8s.io

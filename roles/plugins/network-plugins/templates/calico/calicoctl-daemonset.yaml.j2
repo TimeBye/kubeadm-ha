@@ -1,3 +1,4 @@
+# ref: https://docs.projectcalico.org/archive/v3.17/manifests/calicoctl.yaml
 # Calico Version v3.17.1
 # https://docs.projectcalico.org/archive/v3.17/releases#v3.17.1
 # This manifest includes the following component versions:
@@ -16,17 +17,6 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: calicoctl
 rules:
-{% if "PodSecurityPolicy" in kube_apiserver_enable_admission_plugins %}
-  # Cluster role which grants access to the privileged pod security policy
-  - apiGroups:
-    - extensions
-    resourceNames:
-    - privileged
-    resources:
-    - podsecuritypolicies
-    verbs:
-    - use
-{% endif %}
   - apiGroups: [""]
     resources:
       - namespaces
@@ -124,11 +114,11 @@ spec:
         image: {{ calicoctl_image }}
         stdin: true 
         tty: true 
-{% if host_architecture == "amd64" %}
-        command: ["/calicoctl-wait"]
-{% else %}
-        command: ["/bin/sh"]
-{% endif %}
+        command:
+          - /calicoctl
+        args:
+          - version
+          - --poll=1m
         volumeMounts:
         - name: var-run-calico
           mountPath: /var/run/calico

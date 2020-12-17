@@ -381,13 +381,13 @@
 # ingress_controller_https_nodeport: 30443
 
 # # nginx-ingress-controller 镜像地址
-# nginx_ingress_image: registry.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.0
+# nginx_ingress_image: registry.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.2
 # nginx_ingress_webhook_certgen_image: registry.aliyuncs.com/kubeadm-ha/jettech_kube-webhook-certgen:v1.5.0
 
 # # traefik默认证书过期时间（天）
 # traefik_certs_expired: 3650
 # # traefik-ingress-controller 镜像地址
-# traefik_ingress_image: registry.aliyuncs.com/kubeadm-ha/traefik:2.3.4
+# traefik_ingress_image: registry.aliyuncs.com/kubeadm-ha/traefik:2.3.5
 
 # # ------------------------ #
 # # kubernetes-dashboard 相关参数配置
