@@ -137,7 +137,7 @@ controller_manager_extra_volumes: {}
 scheduler_extra_volumes: {}
 
 # container 运行时类型
-container_manager: docker
+container_manager: containerd
 # containerd 是否使用 systemd 作为 cgroup 驱动程序
 containerd_use_systemd_cgroup: true
 

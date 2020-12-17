@@ -65,4 +65,4 @@ ingress_controller_http_nodeport: 30080
 ingress_controller_https_nodeport: 30443
 
 # container 运行时类型
-container_manager: docker
+container_manager: containerd

@@ -112,7 +112,7 @@ containerd_untrusted_runtime_engine: ''
 containerd_untrusted_runtime_root: ''
 
 # container 运行时类型
-container_manager: docker
+container_manager: containerd
 
 # CRI socket path
 CRI_SOCKET: >-

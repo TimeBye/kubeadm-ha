@@ -1,4 +1,4 @@
-name: sync images
+name: Sync images to Aliyun
 on:
   schedule:
     - cron: '0 0 * * *'
@@ -6,14 +6,14 @@ on:
     paths:
       - 'example/variables.yaml'
 jobs:
-  sync-dockerhub:
+  dockerhub-to-aliyun:
     runs-on: ubuntu-20.04
     container: setzero/images-sync:0.3.1
     env:
       TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
     steps:
-      - name: sync dockerhub images
+      - name: dockerhub
         run: |
           cat << EOF >config.yaml
           from:
@@ -56,14 +56,14 @@ jobs:
           EOF
           sync-images --config config.yaml
 
-  sync-quay:
+  quay-to-aliyun:
     runs-on: ubuntu-20.04
     container: setzero/images-sync:0.3.1
     env:
       TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
     steps:
-      - name: sync quay images
+      - name: quay
         run: |
           cat << EOF >config.yaml
           from:
@@ -85,14 +85,14 @@ jobs:
           EOF
           sync-images --config config.yaml
 
-  sync-gcr:
+  gcr-to-aliyun:
     runs-on: ubuntu-20.04
     container: setzero/images-sync:0.3.1
     env:
       TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
     steps:
-      - name: sync gcr images
+      - name: gcr
         run: |
           cat << EOF >config.yaml
           from:

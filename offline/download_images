@@ -1,7 +1,8 @@
 #!/bin/bash
+set -eux;
 
 # 创建缓存目录
-mkdir -p /kubernetes
+mkdir -p ${CACHE_PATH:-'/kubernetes'}
 
 docker pull registry.aliyuncs.com/kubeadm-ha/ansible:2.8.5-nginx-1.18-alpine
 docker pull registry.aliyuncs.com/kubeadm-ha/nginx:1.19-alpine
@@ -43,4 +44,4 @@ docker save \
     registry.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.16.5 \
     registry.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.16.5 \
     registry.aliyuncs.com/kubeadm-ha/calico_ctl:v3.16.5 \
-    | gzip -1 > /kubernetes/kubernetes-1.19.4.tar
+    | gzip -1 > ${CACHE_PATH:-'/kubernetes'}/kubernetes-1.19.4.tar

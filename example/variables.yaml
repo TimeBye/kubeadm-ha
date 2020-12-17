@@ -39,8 +39,8 @@
 # # ------------------------ #
 # # 容器运行时相关参数配置
 # # ------------------------ #
-# # container 运行时类型
-# container_manager: docker
+# # 容器运行时类型，可选项：containerd，docker；默认 containerd
+# container_manager: containerd
 # # Docker版本
 # docker_version: 19.03.13
 # # containerd版本

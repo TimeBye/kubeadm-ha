@@ -1,0 +1,35 @@
+name: Download images
+on:
+  schedule:
+    - cron: '0 0 * * 5'
+  push:
+    paths:
+      - 'example/variables.yaml'
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    - name: Download images
+      run: |
+        CACHE_PATH=$PWD/cache bash offline/download_images
+    - name: Upload images to github
+      uses: actions/upload-artifact@main
+      with:
+        name: kubernetes-1.19.4.tar
+        path: ./cache/kubernetes-1.19.4.tar
+    - name: Upload images to cowtransfer
+      id: cowtransfer
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer cow cow --block 2621440 -s -p 64 --no-progress $PWD/cache/kubernetes-1.19.4.tar 2>&1 | tee cowtransfer.log
+        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
+        echo "::set-output name=url::$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
+    - name: Upload images to WeTransfer
+      id: wetransfer
+      run: |
+        curl -fsSL git.io/file-transfer | sh
+        ./transfer wet -s -p 16 --no-progress $PWD/cache/kubernetes-1.19.4.tar 2>&1 | tee wetransfer.log
+        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+        echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
