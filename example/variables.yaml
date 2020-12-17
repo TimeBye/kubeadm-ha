@@ -400,8 +400,8 @@
 # kubernetesui_dashboard_certs_expired: 3650
 
 # # kubernetes-dashboard 镜像地址
-# kubernetesui_dashboard_image: registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.4
-# kubernetesui_metrics_scraper_image: registry.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4
+# kubernetesui_dashboard_image: registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.1.0
+# kubernetesui_metrics_scraper_image: registry.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.6
 
 # # ------------------------ #
 # # metrics-server 相关参数配置 

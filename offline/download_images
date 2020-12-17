@@ -6,8 +6,8 @@ mkdir -p ${CACHE_PATH:-'/kubernetes'}
 
 docker pull registry.aliyuncs.com/kubeadm-ha/ansible:2.8.5-nginx-1.18-alpine
 docker pull registry.aliyuncs.com/kubeadm-ha/nginx:1.19-alpine
-docker pull registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.4 
-docker pull registry.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4
+docker pull registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.1.0 
+docker pull registry.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.6
 docker pull registry.aliyuncs.com/kubeadm-ha/kube-proxy:v1.20.0 
 docker pull registry.aliyuncs.com/kubeadm-ha/kube-apiserver:v1.20.0 
 docker pull registry.aliyuncs.com/kubeadm-ha/kube-scheduler:v1.20.0 
@@ -27,8 +27,8 @@ docker pull registry.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.0
 docker save \
     registry.aliyuncs.com/kubeadm-ha/ansible:2.8.5-nginx-1.18-alpine \
     registry.aliyuncs.com/kubeadm-ha/nginx:1.19-alpine \
-    registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.0.4 \
-    registry.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.4 \
+    registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.1.0 \
+    registry.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.6 \
     registry.aliyuncs.com/kubeadm-ha/kube-proxy:v1.20.0 \
     registry.aliyuncs.com/kubeadm-ha/kube-apiserver:v1.20.0 \
     registry.aliyuncs.com/kubeadm-ha/kube-scheduler:v1.20.0 \
