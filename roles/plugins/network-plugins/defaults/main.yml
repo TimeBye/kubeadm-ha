@@ -39,17 +39,17 @@ flannel_image: registry.aliyuncs.com/kubeadm-ha/coreos_flannel:v0.13.0
 # 设置calico 网络 backend: brid, vxlan, none
 calico_backend: bird
 # calico mtu
-calico_veth_mtu: 1440
+calico_veth_mtu: 0
 # calico 相关镜像
-calico_typha_image: registry.aliyuncs.com/kubeadm-ha/calico_typha:v3.16.5
-calico_cni_image: registry.aliyuncs.com/kubeadm-ha/calico_cni:v3.16.5
-calico_node_image: registry.aliyuncs.com/kubeadm-ha/calico_node:v3.16.5
-calico_kube_controllers_image: registry.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.16.5
-calico_pod2daemon_flexvol_image: registry.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.16.5
+calico_typha_image: registry.aliyuncs.com/kubeadm-ha/calico_typha:v3.17.1
+calico_cni_image: registry.aliyuncs.com/kubeadm-ha/calico_cni:v3.17.1
+calico_node_image: registry.aliyuncs.com/kubeadm-ha/calico_node:v3.17.1
+calico_kube_controllers_image: registry.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.17.1
+calico_pod2daemon_flexvol_image: registry.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.17.1
 # 设置 Felix 日志级别(debug, info, warning, error)
 calico_felix_log_level: "warning"
 # calicoctl image 地址
-calicoctl_image: registry.aliyuncs.com/kubeadm-ha/calico_ctl:v3.16.5
+calicoctl_image: registry.aliyuncs.com/kubeadm-ha/calico_ctl:v3.17.1
 # 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
 kube_proxy_mode: "iptables"
 # NodePort端口范围
