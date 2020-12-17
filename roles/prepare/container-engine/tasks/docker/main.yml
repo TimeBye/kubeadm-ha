@@ -16,6 +16,7 @@
 
 # 公共系统参数设置
 - include_tasks: common.yml
+  when: '"active" not in docker_already_running.stdout'
 
 - block:
   - name: 确认相关目录是否存在
