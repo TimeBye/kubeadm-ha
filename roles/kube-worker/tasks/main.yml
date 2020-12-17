@@ -55,8 +55,8 @@
 
 - name: 取消在 worker 组的 master 节点 taint，使 master 节点可以调度
   shell: >
-    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/master='':NoSchedule --overwrite &&
-    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/master-
+    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/control-plane='':NoSchedule --overwrite &&
+    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/control-plane-
   delegate_to: "{{ groups['kube-master'][0] }}"
   ignore_errors: yes
   when: 
