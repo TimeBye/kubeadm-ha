@@ -28,6 +28,10 @@ host_distribution_release: >-
   {{ ansible_distribution_release }}
   {%- endif -%}
 
+# 容器运行时类型，可选项：containerd，docker；默认 containerd
+container_manager: containerd
+# containerd 相关配置
+containerd_storage_dir: "/var/lib/containerd"
 # docker容器存储目录
 docker_storage_dir: "/var/lib/docker"
 # Kubelet 根目录

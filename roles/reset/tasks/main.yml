@@ -2,15 +2,102 @@
   command: kubeadm reset -f
   ignore_errors: true
 
-- name: 停止相关服务
+- name: 停止 kubelet 服务
   service:
-    name: "{{ item }}"
+    name: kubelet
     state: stopped
     enabled: no
-  with_items:
-  - docker
-  - kubelet
   ignore_errors: true
+
+- block:
+  - name: 停止运行的容器
+    shell: "docker stop $(docker ps -aq)"
+    register: remove_all_docker_containers
+    retries: 5
+    until: remove_all_docker_containers.rc == 0
+    delay: 5
+  
+  - name: 清理 docker 相关数据
+    shell: "docker system prune -a -f --volumes"
+    register: remove_all_docker_data
+    retries: 5
+    until: remove_all_docker_data.rc == 0
+    delay: 5
+
+  - name: 停止 docker 服务
+    service:
+      name: docker
+      state: stopped
+      enabled: no
+    ignore_errors: true
+  when: container_manager == "docker"
+
+- block:
+  - name: 停止运行的容器
+    shell: "docker stop $(docker ps -aq)"
+    register: remove_all_docker_containers
+    retries: 5
+    until: remove_all_docker_containers.rc == 0
+    delay: 5
+  
+  - name: 清理 docker 相关数据
+    shell: "docker system prune -a -f --volumes"
+    register: remove_all_docker_data
+    retries: 5
+    until: remove_all_docker_data.rc == 0
+    delay: 5
+    
+  - name: 停止 docker 服务
+    service:
+      name: docker
+      state: stopped
+      enabled: no
+    ignore_errors: true
+  when: container_manager == "docker"
+
+- block:
+  - name:  停止运行的容器
+    shell: "crictl ps -aq | xargs -r crictl -t 60s stop"
+    register: remove_all_cri_containers
+    retries: 5
+    until: remove_all_cri_containers.rc == 0
+    delay: 5
+  
+  - name: 删除所有容器
+    shell: "crictl ps -aq | xargs -r crictl -t 60s rm"
+    register: remove_all_cri_containers
+    retries: 5
+    until: remove_all_cri_containers.rc == 0
+    delay: 5
+
+  - name: 停止所有 cri pods
+    shell: "crictl pods -q | xargs -r crictl -t 60s stopp"
+    register: remove_all_cri_containers
+    retries: 5
+    until: remove_all_cri_containers.rc == 0
+    delay: 5
+  
+  - name: 移除所有 cri pods
+    shell: "crictl pods -q | xargs -r crictl -t 60s rmp"
+    register: remove_all_cri_containers
+    retries: 5
+    until: remove_all_cri_containers.rc == 0
+    delay: 5
+
+  - name: 清除所有镜像
+    shell: "crictl images -q | xargs crictl -t 60s rmi"
+    register: remove_all_cri_containers
+    retries: 5
+    until: remove_all_cri_containers.rc == 0
+    delay: 5
+
+  - name: 停止 containerd 服务
+    service:
+      name: containerd
+      state: stopped
+      enabled: no
+    ignore_errors: true
+  when: container_manager == "containerd"
 
 - include_tasks: centos.yml
   when: ansible_distribution in [ 'CentOS','OracleLinux','RedHat' ]
@@ -18,25 +105,27 @@
 - include_tasks: debian.yml
   when: ansible_distribution in [ 'Ubuntu','Debian' ]
 
-- name: 卸载 docker 相关文件或目录
-  mount: 
-    path: "{{ item }}"
-    state: unmounted
-  with_items:
-  - /var/run/docker
-  - /var/lib/docker/overlay
-  - /var/run/docker/netns/default
-
-- name: 删除 docker 相关目录
-  file: 
-    name: "{{ item }}"
-    state: absent
-  with_items:
-  - "{{ docker_storage_dir }}"
-  - /etc/docker
-  - /var/lib/docker
-  - /var/run/docker
-  - /usr/share/bash-completion/completions/docker
+- block:
+  - name: 卸载 docker 相关文件或目录
+    mount: 
+      path: "{{ item }}"
+      state: unmounted
+    with_items:
+    - /var/run/docker
+    - /var/lib/docker/overlay
+    - /var/run/docker/netns/default
+  
+  - name: 删除 docker 相关目录
+    file: 
+      name: "{{ item }}"
+      state: absent
+    with_items:
+    - "{{ docker_storage_dir }}"
+    - /etc/docker
+    - /var/lib/docker
+    - /var/run/docker
+    - /usr/share/bash-completion/completions/docker
+  when: container_manager == "docker"
 
 - name: 卸载 kubelet 相关目录
   mount: 
@@ -57,13 +146,18 @@
   - /var/lib/kubelet
   - /var/run/kubelet
   - /usr/share/bash-completion/completions/kubectl
-  - /etc/systemd/system/kubelet.service.d/20-kubelet-override.conf
+  - /etc/systemd/system/kubelet.service.d
 
 - name: 移除其他相关文件或目录
   file:
     path: "{{ item }}"
     state: absent
   with_items:
+  - "{{ containerd_storage_dir }}"
+  - /etc/containerd/config.toml
+  - /etc/crictl.yaml
+  - /etc/systemd/system/containerd.service.d
+  - /etc/systemd/system/docker.service.d
   - /var/lib/etcd
   - /etc/cni/net.d
   - /etc/sysctl.d/95-k8s-sysctl.conf
