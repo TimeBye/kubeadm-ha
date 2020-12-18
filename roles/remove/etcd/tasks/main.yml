@@ -19,15 +19,15 @@
 
 - name: 获取将要移除的 etcd 节点 member id
   shell: >
-{% if container_manager == 'containerd' %}
+    {% if container_manager == 'containerd' %}
     ctr -n k8s.io run --net-host --env ETCDCTL_API=3
     --mount type=bind,src=/etc/kubernetes/pki/etcd,dst=/etc/kubernetes/pki/etcd,options=rbind:ro
     --rm {{ etcd_image }} etcd-list-member
-{% elif container_manager == 'docker' %}
+    {% elif container_manager == 'docker' %}
     docker run --net host -e ETCDCTL_API=3 
     -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
     --rm {{ etcd_image }}
-{% endif %}
+    {% endif %}
     etcdctl member list
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
     --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
@@ -38,15 +38,15 @@
 
 - name: 从 etcd 集群中移除 {{ inventory_hostname }} 节点
   shell: >
-{% if container_manager == 'containerd' %}
+    {% if container_manager == 'containerd' %}
     ctr -n k8s.io run --net-host --env ETCDCTL_API=3
     --mount type=bind,src=/etc/kubernetes/pki/etcd,dst=/etc/kubernetes/pki/etcd,options=rbind:ro
     --rm {{ etcd_image }} etcd-remove-member
-{% elif container_manager == 'docker' %}
+    {% elif container_manager == 'docker' %}
     docker run --net host -e ETCDCTL_API=3 
     -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
     --rm {{ etcd_image }}
-{% endif %}
+    {% endif %}
     etcdctl member remove {{ etcd_member_id.stdout }}
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
     --key=/etc/kubernetes/pki/etcd/healthcheck-client.key

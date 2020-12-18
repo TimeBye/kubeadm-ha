@@ -105,17 +105,17 @@
 
   - name: 恢复 etcd 数据库
     shell: >
-{% if container_manager == 'containerd' %}
+      {% if container_manager == 'containerd' %}
       ctr -n k8s.io run --rm --net-host --env ETCDCTL_API=3
       --mount type=bind,src={{ etcd_data_dir|dirname }},dst={{ etcd_data_dir|dirname }},options=rbind:rw
       --mount type=bind,src=/etc/kubernetes/backup/etcd,dst=/etc/kubernetes/backup/etcd,options=rbind:rw
       {{ etcd_image }} etcd-restore
-{% elif container_manager == 'docker' %}
+      {% elif container_manager == 'docker' %}
       docker run --net host -e ETCDCTL_API=3
       -v /etc/kubernetes/backup/etcd:/etc/kubernetes/backup/etcd
       -v {{ etcd_data_dir|dirname }}:{{ etcd_data_dir|dirname }}
       --rm {{ etcd_image }}
-{% endif %}
+      {% endif %}
       etcdctl snapshot restore 
       /etc/kubernetes/backup/etcd/etcd-snapshot-latest.db
       --data-dir={{ etcd_data_dir }}
