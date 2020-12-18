@@ -8,9 +8,17 @@
 - block:
   - name: 取消节点原有角色标签
     shell: >
+      kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/control-plane- &&
+      kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/master- &&
       kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker- &&
       kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/lb- &&
       kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/etcd-
+
+  - name: 设置控制面节点 role
+    shell: >
+      kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/control-plane='' --overwrite &&
+      kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/master='' --overwrite 
+    when: inventory_hostname in (groups['kube-master'] + groups['new-master']) 
 
   - name: 设置 worker 节点 role
     shell: >

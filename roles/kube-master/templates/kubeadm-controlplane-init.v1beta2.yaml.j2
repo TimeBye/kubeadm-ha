@@ -14,7 +14,7 @@ nodeRegistration:
 {% if inventory_hostname in (groups['kube-master'] + groups['new-master']) and inventory_hostname not in (groups['kube-worker'] + groups['new-worker']) %}
   taints:
   - effect: NoSchedule
-    key: node-role.kubernetes.io/control-plane
+    key: node-role.kubernetes.io/master
 {% else %}
   taints: []
 {% endif %}
