@@ -33,14 +33,16 @@
 - name: 取消节点原有 master 角色标签
   shell: >
     kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/control-plane='' --overwrite &&
-    kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/control-plane-
+    kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/master='' --overwrite &&
+    kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/control-plane- &&
+    kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/master-
   ignore_errors: true
   delegate_to: "{{ (groups['kube-master'] | difference(groups['del-master']))[0] }}"
 
 - name: 取消 master 节点 taint，使 master 节点可以调度
   shell: >
-    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/control-plane='':NoSchedule --overwrite &&
-    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/control-plane-
+    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/master='':NoSchedule --overwrite &&
+    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/master-
   ignore_errors: yes
   delegate_to:  "{{ (groups['kube-master'] | difference(groups['del-master']))[0] }}"
 
