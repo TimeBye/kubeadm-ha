@@ -7,7 +7,7 @@
 - name: 校验被移除的 etcd 节点数量
   run_once: true
   assert:
-    that: groups['del-etcd']|length = 1
+    that: groups['del-etcd']|length == 1
     msg: "单次移除的 etcd 节点数量仅能为 1 个节点。"
 
 - name: 校验将被移除的 etcd 节点是否在原 etcd 组中
