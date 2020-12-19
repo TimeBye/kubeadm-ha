@@ -4,5 +4,3 @@ ansible_become: true
 etcd_image: registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
-# container 运行时类型
-container_manager: containerd

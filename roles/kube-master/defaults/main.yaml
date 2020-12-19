@@ -136,11 +136,8 @@ apiserver_extra_volumes: {}
 controller_manager_extra_volumes: {}
 scheduler_extra_volumes: {}
 
-# container 运行时类型
-container_manager: containerd
 # containerd 是否使用 systemd 作为 cgroup 驱动程序
 containerd_use_systemd_cgroup: true
-
 
 # 当前节点ip
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
@@ -156,14 +153,14 @@ KUBERNETES_SERVICE_IP: "{{ kube_service_subnet | ipaddr('net') | ipaddr(1) | ipa
 CLUSTER_DNS_SERVICE_IP: "{{ kube_service_subnet | ipaddr('net') | ipaddr(10) | ipaddr('address') }}"
 # CRI socket path
 CRI_SOCKET: >-
-  {%- if container_manager == 'containerd' -%}
+  {%- if container_manager_detected == 'containerd' -%}
   /var/run/containerd/containerd.sock
   {%- else -%}
   /var/run/dockershim.sock
   {%- endif -%}
 # 镜像拉取命令
 IMAGE_PULL_COMMAND: >-
-  {%- if container_manager == 'containerd' -%}
+  {%- if container_manager_detected == 'containerd' -%}
   crictl pull
   {%- else -%}
   docker pull

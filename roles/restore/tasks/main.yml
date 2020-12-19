@@ -1,3 +1,17 @@
+- name: 读取 docker sock 文件 stat 信息
+  stat: 
+    path: /var/run/docker.sock
+  register: docker_sock_stat
+
+- name: 设置 container_manager_detected 变量
+  set_fact:
+    container_manager_detected: >-
+      {%- if docker_sock_stat.stat.exists -%}
+      docker
+      {%- else -%}
+      containerd
+      {%- endif -%}
+
 - name: 确认 kubelet 已停止运行
   service:
     name: kubelet
@@ -105,12 +119,12 @@
 
   - name: 恢复 etcd 数据库
     shell: >
-      {% if container_manager == 'containerd' %}
+      {% if container_manager_detected == 'containerd' %}
       ctr -n k8s.io run --rm --net-host --env ETCDCTL_API=3
       --mount type=bind,src={{ etcd_data_dir|dirname }},dst={{ etcd_data_dir|dirname }},options=rbind:rw
       --mount type=bind,src=/etc/kubernetes/backup/etcd,dst=/etc/kubernetes/backup/etcd,options=rbind:rw
       {{ etcd_image }} etcd-restore
-      {% elif container_manager == 'docker' %}
+      {% elif container_manager_detected == 'docker' %}
       docker run --net host -e ETCDCTL_API=3
       -v /etc/kubernetes/backup/etcd:/etc/kubernetes/backup/etcd
       -v {{ etcd_data_dir|dirname }}:{{ etcd_data_dir|dirname }}

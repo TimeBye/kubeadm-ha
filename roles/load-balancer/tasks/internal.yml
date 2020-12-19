@@ -1,3 +1,17 @@
+- name: 读取 docker sock 文件 stat 信息
+  stat: 
+    path: /var/run/docker.sock
+  register: docker_sock_stat
+
+- name: 设置 container_manager_detected 变量
+  set_fact:
+    container_manager_detected: >-
+      {%- if docker_sock_stat.stat.exists -%}
+      docker
+      {%- else -%}
+      containerd
+      {%- endif -%}
+
 - name: 创建 load-balancer、kubelet 相关目录
   file: 
     name: "{{ item }}"
@@ -46,19 +60,19 @@
   - name: 获取 Docker Cgroup Driver 值
     shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
     register: docker_cgroup_driver
-    when: container_manager == 'docker'
+    when: container_manager_detected == 'docker'
 
   - name: 设置 docker 为容器运行时 kubelet_cgroup_driver_detected 变量
     set_fact:
       kubelet_cgroup_driver_detected: >-
         {{ docker_cgroup_driver.stdout }}
-    when: container_manager == 'docker'
+    when: container_manager_detected == 'docker'
 
   - name: 设置 containerd 为容器运行时 kubelet_cgroup_driver_detected 变量
     set_fact:
       kubelet_cgroup_driver_detected: >-
         {%- if containerd_use_systemd_cgroup -%}systemd{%- else -%}cgroupfs{%- endif -%}
-    when: container_manager == 'containerd'
+    when: container_manager_detected == 'containerd'
 
   - name: 生成临时 kubelet unit 文件
     template: 

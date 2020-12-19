@@ -18,19 +18,19 @@
 - name: 获取 Docker Cgroup Driver 值
   shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
   register: docker_cgroup_driver
-  when: container_manager == 'docker'
+  when: container_manager_detected == 'docker'
 
 - name: 设置 docker 为容器运行时 kubelet_cgroup_driver_detected 变量
   set_fact:
     kubelet_cgroup_driver_detected: >-
       {{ docker_cgroup_driver.stdout }}
-  when: container_manager == 'docker'
+  when: container_manager_detected == 'docker'
 
 - name: 设置 containerd 为容器运行时 kubelet_cgroup_driver_detected 变量
   set_fact:
     kubelet_cgroup_driver_detected: >-
       {%- if containerd_use_systemd_cgroup -%}systemd{%- else -%}cgroupfs{%- endif -%}
-  when: container_manager == 'containerd'
+  when: container_manager_detected == 'containerd'
 
 - name: 创建 kubeadm 的配置文件
   template:

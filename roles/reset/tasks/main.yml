@@ -1,3 +1,17 @@
+- name: 读取 docker sock 文件 stat 信息
+  stat: 
+    path: /var/run/docker.sock
+  register: docker_sock_stat
+
+- name: 设置 container_manager_detected 变量
+  set_fact:
+    container_manager_detected: >-
+      {%- if docker_sock_stat.stat.exists -%}
+      docker
+      {%- else -%}
+      containerd
+      {%- endif -%}
+
 - name: 使用 kubeadm 重置节点
   command: kubeadm reset -f
   ignore_errors: true
@@ -30,30 +44,7 @@
       state: stopped
       enabled: no
     ignore_errors: true
-  when: container_manager == "docker"
-
-- block:
-  - name: 停止运行的容器
-    shell: "docker stop $(docker ps -aq)"
-    register: remove_all_docker_containers
-    retries: 5
-    until: remove_all_docker_containers.rc == 0
-    delay: 5
-  
-  - name: 清理 docker 相关数据
-    shell: "docker system prune -a -f --volumes"
-    register: remove_all_docker_data
-    retries: 5
-    until: remove_all_docker_data.rc == 0
-    delay: 5
-    
-  - name: 停止 docker 服务
-    service:
-      name: docker
-      state: stopped
-      enabled: no
-    ignore_errors: true
-  when: container_manager == "docker"
+  when: container_manager_detected == "docker"
 
 - block:
   - name:  停止运行的容器
@@ -97,7 +88,7 @@
       state: stopped
       enabled: no
     ignore_errors: true
-  when: container_manager == "containerd"
+  when: container_manager_detected == "containerd"
 
 - include_tasks: centos.yml
   when: ansible_distribution in [ 'CentOS','OracleLinux','RedHat' ]
@@ -125,7 +116,7 @@
     - /var/lib/docker
     - /var/run/docker
     - /usr/share/bash-completion/completions/docker
-  when: container_manager == "docker"
+  when: container_manager_detected == "docker"
 
 - name: 卸载 kubelet 相关目录
   mount: 

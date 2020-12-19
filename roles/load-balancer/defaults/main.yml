@@ -104,8 +104,6 @@ LB_KEEPALIVED_STATE: "{% if inventory_hostname == groups['lb'][0] %}MASTER{% els
 # 其他 Keepalived 节点的单点传播 IP
 LB_KEEPALIVED_UNICAST_PEERS: "{% for host in groups['lb'] %}{% if hostvars[host]['ansible_host'] is defined %}'{{ hostvars[host]['ansible_host'] }}'{% else %}'{{ host }}'{% endif %}{% if not loop.last %},{% endif %}{% endfor %}"
 
-# container 运行时类型
-container_manager: containerd
 # containerd 是否使用 systemd 作为 cgroup 驱动程序
 containerd_use_systemd_cgroup: true
 
@@ -113,14 +111,14 @@ containerd_use_systemd_cgroup: true
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
 # CRI socket path
 CRI_SOCKET: >-
-  {%- if container_manager == 'containerd' -%}
+  {%- if container_manager_detected == 'containerd' -%}
   /var/run/containerd/containerd.sock
   {%- else -%}
   /var/run/dockershim.sock
   {%- endif -%}
 # 镜像拉取命令
 IMAGE_PULL_COMMAND: >-
-  {%- if container_manager == 'containerd' -%}
+  {%- if container_manager_detected == 'containerd' -%}
   crictl pull
   {%- else -%}
   docker pull
@@ -128,7 +126,7 @@ IMAGE_PULL_COMMAND: >-
 # kubelet 启动参数
 KUBELET_ARGS_BASE: >-
   --address=127.0.0.1
-  {% if container_manager == 'containerd' %}
+  {% if container_manager_detected == 'containerd' %}
   --container-runtime=remote
   --container-runtime-endpoint=unix://{{ CRI_SOCKET }}
   {% else %}

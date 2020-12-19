@@ -1,11 +1,11 @@
 #!/bin/bash
 function etcd_backup(){
-{% if container_manager == 'containerd' %}
+{% if container_manager_detected == 'containerd' %}
     ctr -n k8s.io run --rm --net-host --env ETCDCTL_API=3 \
     --mount type=bind,src=/etc/kubernetes/pki/etcd,dst=/etc/kubernetes/pki/etcd,options=rbind:ro \
     --mount type=bind,src=/etc/kubernetes/backup/etcd,dst=/etc/kubernetes/backup/etcd,options=rbind:rw \
     {{ etcd_image }} etcd-save-snapshot \
-{% elif container_manager == 'docker' %}
+{% elif container_manager_detected == 'docker' %}
   docker run --rm --net host -e ETCDCTL_API=3 \
     -v /etc/kubernetes/backup/etcd:/etc/kubernetes/backup/etcd \
     -v /etc/kubernetes/pki/etcd/:/etc/kubernetes/pki/etcd/ \

@@ -56,14 +56,12 @@ kube_service_subnet: 10.244.64.0/18
 
 CLUSTER_DNS_SERVICE_IP: "{{ kube_service_subnet | ipaddr('net') | ipaddr(10) | ipaddr('address') }}"
 
-# container 运行时类型
-container_manager: containerd
 # containerd 是否使用 systemd 作为 cgroup 驱动程序
 containerd_use_systemd_cgroup: true
 
 # CRI socket path
 CRI_SOCKET: >-
-  {%- if container_manager == 'containerd' -%}
+  {%- if container_manager_detected == 'containerd' -%}
   /var/run/containerd/containerd.sock
   {%- else -%}
   /var/run/dockershim.sock

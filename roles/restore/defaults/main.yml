@@ -12,5 +12,3 @@ NEW_MEMBER: "etcd-{{ inventory_hostname }} {% if hostvars[inventory_hostname]['a
 kubelet_root_dir: "/var/lib/kubelet"
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
-# container 运行时类型
-container_manager: containerd

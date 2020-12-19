@@ -30,8 +30,6 @@ etcd_backup_hour: "3"
 # Etcd 每日备份文件保留时长，默认7天
 etcd_backup_expiry: "7"
 
-# container 运行时类型
-container_manager: containerd
 # containerd 是否使用 systemd 作为 cgroup 驱动程序
 containerd_use_systemd_cgroup: true
 
@@ -45,7 +43,7 @@ CLUSTER_STATE: "{% if etcd_static_pod_stat.stat.exists or (inventory_hostname in
 NEW_MEMBER: "etcd-{{ inventory_hostname }} {% if hostvars[inventory_hostname]['ansible_host'] is defined %}--peer-urls=https://{{ hostvars[inventory_hostname]['ansible_host'] }}:2380{% else %}--peer-urls=https://{{ inventory_hostname }}:2380{% endif %}"
 # CRI socket path
 CRI_SOCKET: >-
-  {%- if container_manager == 'containerd' -%}
+  {%- if container_manager_detected == 'containerd' -%}
   /var/run/containerd/containerd.sock
   {%- else -%}
   /var/run/dockershim.sock
@@ -53,7 +51,7 @@ CRI_SOCKET: >-
 # kubelet 启动参数
 KUBELET_ARGS_BASE: >-
   --address=127.0.0.1
-  {% if container_manager == 'containerd' %}
+  {% if container_manager_detected == 'containerd' %}
   --container-runtime=remote
   --container-runtime-endpoint=unix://{{ CRI_SOCKET }}
   {% else %}
@@ -65,7 +63,7 @@ KUBELET_ARGS_BASE: >-
   --cgroup-driver={{ kubelet_cgroup_driver|default(kubelet_cgroup_driver_detected) }}
 # 镜像拉取命令
 IMAGE_PULL_COMMAND: >-
-  {%- if container_manager == 'containerd' -%}
+  {%- if container_manager_detected == 'containerd' -%}
   crictl pull
   {%- else -%}
   docker pull
