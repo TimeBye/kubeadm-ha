@@ -38,6 +38,10 @@
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
     --key=/etc/kubernetes/pki/etcd/healthcheck-client.key
     --cert=/etc/kubernetes/pki/etcd/healthcheck-client.crt
+  register: etcd_member_add
+  until: etcd_member_add.rc == 0
+  retries: 12
+  delay: 5
   delegate_to: "{{ groups['etcd'][0] }}"
   when: 
   - inventory_hostname in groups['new-etcd']
