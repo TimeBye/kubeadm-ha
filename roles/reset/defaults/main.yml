@@ -34,6 +34,9 @@ containerd_storage_dir: "/var/lib/containerd"
 docker_storage_dir: "/var/lib/docker"
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
+# Etcd 数据根目录
+etcd_data_dir: "/var/lib/etcd"
+
 # Debian
 # sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7EA0A9C3F273FCD8
 docker_apt_repo: "deb [arch={{ host_architecture }}] https://mirrors.aliyun.com/docker-ce/linux/{{ host_distribution | lower }} {{ host_distribution_release }} stable"

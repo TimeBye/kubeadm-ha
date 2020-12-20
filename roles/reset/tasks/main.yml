@@ -26,6 +26,8 @@
 - block:
   - name: 停止运行的容器
     shell: "docker stop $(docker ps -aq)"
+    args:
+      executable: /bin/bash
     register: remove_all_docker_containers
     retries: 5
     until: remove_all_docker_containers.rc == 0
@@ -33,6 +35,8 @@
   
   - name: 清理 docker 相关数据
     shell: "docker system prune -a -f --volumes"
+    args:
+      executable: /bin/bash
     register: remove_all_docker_data
     retries: 5
     until: remove_all_docker_data.rc == 0
@@ -48,35 +52,45 @@
 
 - block:
   - name:  停止运行的容器
-    shell: "crictl ps -aq | xargs -r crictl -t 60s stop"
+    shell: "set -o pipefail && crictl ps -aq | xargs -r crictl -t 60s stop"
+    args:
+      executable: /bin/bash
     register: remove_all_cri_containers
     retries: 5
     until: remove_all_cri_containers.rc == 0
     delay: 5
   
   - name: 删除所有容器
-    shell: "crictl ps -aq | xargs -r crictl -t 60s rm"
+    shell: "set -o pipefail && crictl ps -aq | xargs -r crictl -t 60s rm"
+    args:
+      executable: /bin/bash
     register: remove_all_cri_containers
     retries: 5
     until: remove_all_cri_containers.rc == 0
     delay: 5
 
   - name: 停止所有 cri pods
-    shell: "crictl pods -q | xargs -r crictl -t 60s stopp"
+    shell: "set -o pipefail && crictl pods -q | xargs -r crictl -t 60s stopp"
+    args:
+      executable: /bin/bash
     register: remove_all_cri_containers
     retries: 5
     until: remove_all_cri_containers.rc == 0
     delay: 5
   
   - name: 移除所有 cri pods
-    shell: "crictl pods -q | xargs -r crictl -t 60s rmp"
+    shell: "set -o pipefail && crictl pods -q | xargs -r crictl -t 60s rmp"
+    args:
+      executable: /bin/bash
     register: remove_all_cri_containers
     retries: 5
     until: remove_all_cri_containers.rc == 0
     delay: 5
 
   - name: 清除所有镜像
-    shell: "crictl images -q | xargs crictl -t 60s rmi"
+    shell: "set -o pipefail && crictl images -q | xargs crictl -t 60s rmi"
+    args:
+      executable: /bin/bash
     register: remove_all_cri_containers
     retries: 5
     until: remove_all_cri_containers.rc == 0
@@ -124,9 +138,10 @@
     - "{{ containerd_storage_dir }}"
     - "{{ docker_storage_dir }}"
     - "{{ kubelet_root_dir }}"
+    - "{{ etcd_data_dir }}"
     - /etc/calico
     - /etc/cni
-    - /etc/containerd/config.toml
+    - /etc/containerd
     - /etc/crictl.yaml
     - /etc/docker
     - /etc/flannel
@@ -138,6 +153,7 @@
     - /etc/systemd/system/docker.service.d
     - /etc/systemd/system/kubelet.service.d
     - /opt/cni
+    - /opt/containerd
     - /run/calico
     - /run/flannel
     - /run/kubernetes
@@ -145,15 +161,18 @@
     - /usr/share/bash-completion/completions/kubectl
     - /var/lib/calico
     - /var/lib/cni
+    - /var/lib/containerd
     - /var/lib/docker
     - /var/lib/etcd
     - /var/lib/kubelet
     - /var/log/calico
     - /var/log/pods
     - /var/run/calico
+    - /var/run/containerd
     - /var/run/docker
+    - /var/run/docker.sock
     - /var/run/kubelet
-
+    
 - name: 清理 iptables
   shell: "{{ item }} || true"
   with_items:
@@ -195,6 +214,22 @@
   - ip link del cilium_vxlan
   - ip link del ovn0
   - ip link del ovs-system
+
+- name: 获取遗留路由规则
+  command: ip route show proto bird
+  register: bird_routes
+  args:
+    executable: /bin/bash
+    warn: false
+  failed_when: false
+  changed_when: false
+
+- name: 删除遗留路由规则
+  command: "ip route del {{ bird_route }} proto bird"
+  with_items: "{{ bird_routes.stdout_lines }}"
+  loop_control:
+    loop_var: bird_route
+  when: bird_routes
 
 - name: 重新加载 daemon
   systemd:
