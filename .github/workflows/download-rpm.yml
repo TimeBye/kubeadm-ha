@@ -1,4 +1,4 @@
-name: Download images
+name: Download rpm
 on:
   schedule:
     - cron: '0 0 * * 5'
@@ -12,25 +12,29 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@main
-    - name: Download images
+    - name: Download rpm
       run: |
-        CACHE_PATH=$PWD/cache bash offline/download_images
-    - name: Upload images to github
+        docker run \
+        -v $PWD:/kubeadm-ha \
+        -v $PWD/cache:/kubernetes \
+        centos:7 \
+        /bin/bash /kubeadm-ha/offline/download_rpm
+    - name: Upload rpm to github
       uses: actions/upload-artifact@main
       with:
-        name: kubernetes-1.20.0.tar
-        path: ./cache/kubernetes-1.20.0.tar
-    - name: Upload images to cowtransfer
+        name: kubernetes-1.20.0.tar.gz
+        path: ./cache/kubernetes-1.20.0.tar.gz
+    - name: Upload rpm to cowtransfer
       id: cowtransfer
       run: |
         curl -sL https://git.io/file-transfer | bash -s beta
-        ./transfer cow --block 2621440 -s -p 64 --no-progress $PWD/cache/kubernetes-1.20.0.tar 2>&1 | tee cowtransfer.log
+        ./transfer cow --block 2621440 -s -p 64 --no-progress $PWD/cache/kubernetes-1.20.0.tar.gz 2>&1 | tee cowtransfer.log
         echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
         echo "::set-output name=url::$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
-    - name: Upload images to WeTransfer
+    - name: Upload rpm to WeTransfer
       id: wetransfer
       run: |
         curl -sL https://git.io/file-transfer | bash -s beta
-        ./transfer wet -s -p 16 --no-progress $PWD/cache/kubernetes-1.20.0.tar 2>&1 | tee wetransfer.log
+        ./transfer wet -s -p 16 --no-progress $PWD/cache/kubernetes-1.20.0.tar.gz 2>&1 | tee wetransfer.log
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
         echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"

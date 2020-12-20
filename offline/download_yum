@@ -43,7 +43,7 @@ yum makecache fast
 
 # 下载需要的基础包
 yum install -y \
-    nc \
+    nmap-ncat \
     jq \
     git \
     perl \
@@ -60,7 +60,6 @@ yum install -y \
     nfs-utils \
     yum-utils \
     net-tools \
-    conntrack \
     libseccomp \
     conntrack-tools \
     bash-completion \
@@ -74,9 +73,9 @@ yum install -y \
 
 # 下载kubernetes
 yum install -y \
-    kubeadm-1.20.0-0.x86_64 \
-    kubectl-1.20.0-0.x86_64 \
-    kubelet-1.20.0-0.x86_64
+    kubeadm-1.20.0 \
+    kubectl-1.20.0 \
+    kubelet-1.20.0
 
 cp -n $(find /var/cache/yum -name "*.rpm") /kubernetes
 cd /kubernetes

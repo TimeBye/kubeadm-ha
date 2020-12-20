@@ -73,7 +73,6 @@
     - htop
     - net-tools
     - sysstat
-    - conntrack
     - libseccomp
     - conntrack-tools                 # ipvs 模式需要
     - ipset                           # ipvs 模式需要
@@ -86,7 +85,7 @@
     - lvm2                            # docker会用到
     - curl                            # 基础工具
     - yum-utils                       # 基础工具
-    - nc                              # 使用lb时进行端口判断时会用到
+    - nmap-ncat                              # 使用lb时进行端口判断时会用到
     state: latest
 
 - name: 重新启动 crond 避免因修改时区而导致的作业错乱问题
