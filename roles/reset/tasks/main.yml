@@ -96,75 +96,63 @@
 - include_tasks: debian.yml
   when: ansible_distribution in [ 'Ubuntu','Debian' ]
 
-- block:
-  - name: 卸载 docker 相关文件或目录
-    mount: 
-      path: "{{ item }}"
-      state: unmounted
-    with_items:
-    - /var/run/docker
-    - /var/lib/docker/overlay
-    - /var/run/docker/netns/default
-  
-  - name: 删除 docker 相关目录
-    file: 
-      name: "{{ item }}"
-      state: absent
-    with_items:
-    - "{{ docker_storage_dir }}"
-    - /etc/docker
-    - /var/lib/docker
-    - /var/run/docker
-    - /usr/share/bash-completion/completions/docker
-  when: container_manager_detected == "docker"
+- name: 收集 kubelet 挂载的目录
+  shell: set -o pipefail && mount | grep {{ kubelet_root_dir }} | awk '{print $3}' | tac
+  args:
+    executable: /bin/bash
+    warn: false
+  check_mode: no
+  register: mounted_dirs
+  failed_when: false
 
-- name: 卸载 kubelet 相关目录
-  mount: 
-    path: "{{ item }}"
-    state: unmounted
-  with_items:
-  - /var/lib/kubelet 
-  - /var/run/kubelet 
+- name: 卸载 kubelet 挂载的目录
+  command: umount -f {{ item }}
+  with_items: "{{ mounted_dirs.stdout_lines }}"
+  register: umount_dir
+  when: mounted_dirs
+  retries: 5
+  until: umount_dir.rc == 0
+  delay: 5
 
 - name: 删除 kubelet 相关文件或目录
   file: 
     name: "{{ item }}"
     state: absent
   with_items:
-  - "{{ kubelet_root_dir }}"
-  - "{{ ansible_env.HOME }}/.kube"
-  - /etc/kubernetes
-  - /var/lib/kubelet
-  - /var/run/kubelet
-  - /usr/share/bash-completion/completions/kubectl
-  - /etc/systemd/system/kubelet.service.d
-
-- name: 移除其他相关文件或目录
-  file:
-    path: "{{ item }}"
-    state: absent
-  with_items:
-  - "{{ containerd_storage_dir }}"
-  - /etc/containerd/config.toml
-  - /etc/crictl.yaml
-  - /etc/systemd/system/containerd.service.d
-  - /etc/systemd/system/docker.service.d
-  - /var/lib/etcd
-  - /etc/cni/net.d
-  - /etc/sysctl.d/95-k8s-sysctl.conf
-  - /etc/modules-load.d/10-k8s-modules.conf
-  - /run/flannel
-  - /etc/calico
-  - /var/run/calico
-  - /var/lib/calico
-  - /var/log/calico
-
-- name: 删除 ulimits 相关配置
-  file: 
-    name: "{{ item }} "
-    state: absent
-  with_items:
-  - /etc/systemd/system.conf.d/30-k8s-ulimits.conf
+    - "{{ ansible_env.HOME | default('/root') }}/.helm"
+    - "{{ ansible_env.HOME | default('/root') }}/.kube"
+    - "{{ containerd_storage_dir }}"
+    - "{{ docker_storage_dir }}"
+    - "{{ kubelet_root_dir }}"
+    - /etc/calico
+    - /etc/cni
+    - /etc/containerd/config.toml
+    - /etc/crictl.yaml
+    - /etc/docker
+    - /etc/flannel
+    - /etc/kubernetes
+    - /etc/modules-load.d/10-k8s-modules.conf
+    - /etc/sysctl.d/95-k8s-sysctl.conf
+    - /etc/systemd/system.conf.d/30-k8s-ulimits.conf
+    - /etc/systemd/system/containerd.service.d
+    - /etc/systemd/system/docker.service.d
+    - /etc/systemd/system/kubelet.service.d
+    - /opt/cni
+    - /run/calico
+    - /run/flannel
+    - /run/kubernetes
+    - /usr/share/bash-completion/completions/docker
+    - /usr/share/bash-completion/completions/kubectl
+    - /var/lib/calico
+    - /var/lib/cni
+    - /var/lib/docker
+    - /var/lib/etcd
+    - /var/lib/kubelet
+    - /var/log/calico
+    - /var/log/pods
+    - /var/run/calico
+    - /var/run/docker
+    - /var/run/kubelet
 
 - name: 清理 iptables
   shell: "{{ item }} || true"
