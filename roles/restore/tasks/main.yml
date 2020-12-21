@@ -79,6 +79,7 @@
     mode: 0644
     remote_src: yes
   with_items:
+  - /var/lib/kubelet/pki
   - kubelet/config.yaml
   - kubelet/kubeadm-flags.env
   when: inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
