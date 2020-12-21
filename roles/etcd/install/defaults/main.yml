@@ -15,7 +15,7 @@ host_architecture: >-
   {%- endif -%}
 
 # kubernetes版本
-kube_version: 1.20.0
+kube_version: 1.20.1
 
 # Etcd使用的镜像
 etcd_image: registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0
