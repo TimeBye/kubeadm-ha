@@ -1,0 +1,66 @@
+name: Offline
+on:
+  schedule:
+    - cron: '0 0 * * 5'
+  push:
+    paths:
+      - 'offline/**'
+      - 'example/variables.yaml'
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    - name: Download images
+      run: |
+        cd $GITHUB_WORKSPACE/offline
+        /bin/bash download-images.sh
+    - name: Download yum
+      run: |
+        cd $GITHUB_WORKSPACE/offline
+        docker run \
+        -v $PWD:/offline \
+        -w /offline \
+        centos:7 \
+        /bin/bash /offline/download-yum.sh
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        context: offline
+        file: ./offline/Dockerfile
+        push: true
+        tags: setzero/kubeadm-ha:1.20.1
+    - name: Save kubeadm-ha image
+      run: |
+        cd $GITHUB_WORKSPACE/offline
+        docker pull setzero/kubeadm-ha:1.20.1
+        docker save \
+        setzero/kubeadm-ha:1.20.1 | gzip -1 > kubeadm-ha-1.20.1.tar
+    - name: Upload artifact to cowtransfer
+      id: cowtransfer
+      run: |
+        curl -sL https://git.io/file-transfer | bash -s beta
+        ./transfer cow --block 2621440 -s -p 64 --no-progress \
+        offline/kubeadm-ha-1.20.1.tar \
+        offline/docker-ce-19.03.13.tar.gz 2>&1 | tee cowtransfer.log
+        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
+        echo "::set-output name=url::$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
+    - name: Upload artifact to WeTransfer
+      id: wetransfer
+      run: |
+        curl -sL https://git.io/file-transfer | bash -s beta
+        ./transfer wet -s -p 16 --no-progress \
+        offline/kubeadm-ha-1.20.1.tar \
+        offline/docker-ce-19.03.13.tar.gz 2>&1 | tee wetransfer.log
+        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+        echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"

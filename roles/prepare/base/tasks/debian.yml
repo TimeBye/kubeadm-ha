@@ -48,25 +48,25 @@
 - name: 安装 ubuntu 基础软件
   apt: 
     name:
-    - git
-    - iotop
-    - htop
-    - net-tools
-    - sysstat
-    - libseccomp-dev
-    - curl                        # 基础工具
-    - apt-transport-https         # 添加https协议的apt源会用到
-    - lvm2                        # docker会用到
-    - ca-certificates             # docker会用到
-    - software-properties-common  # docker会用到
-    - nfs-common                  # 挂载nfs 共享文件需要 (创建基于 nfs的PV 需要)
-    - conntrack                   # network connection cleanup 用到
     - jq                          # 轻量JSON处理程序，安装docker查询镜像需要
+    - git
+    - htop
+    - curl                        # 基础工具
+    - lvm2                        # docker会用到
     - socat                       # 用于port forwarding
-    - bash-completion             # bash命令补全工具，需要重新登录服务器生效
     - ipset                       # ipvs 模式需要
+    - iotop
+    - sysstat
     - ipvsadm                     # ipvs 模式需要
+    - conntrack                   # network connection cleanup 用到
+    - net-tools
+    - nfs-common                  # 挂载nfs 共享文件需要 (创建基于 nfs的PV 需要)
+    - libseccomp2                 # 安装containerd需要
     - netcat-openbsd              # 使用lb时进行端口判断时会用到
+    - ca-certificates             # docker会用到
+    - bash-completion             # bash命令补全工具，需要重新登录服务器生效
+    - apt-transport-https         # 添加https协议的apt源会用到
+    - software-properties-common  # docker会用到
     state: present
     allow_unauthenticated: true
 

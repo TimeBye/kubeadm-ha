@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-20.04
     container: setzero/images-sync:0.3.1
     env:
-      TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+      TO_USERNAME: ${{ secrets.TO_USERNAME }}
+      TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
     steps:
       - name: dockerhub
         run: |
@@ -60,8 +60,8 @@ jobs:
     runs-on: ubuntu-20.04
     container: setzero/images-sync:0.3.1
     env:
-      TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+      TO_USERNAME: ${{ secrets.TO_USERNAME }}
+      TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
     steps:
       - name: quay
         run: |
@@ -89,8 +89,8 @@ jobs:
     runs-on: ubuntu-20.04
     container: setzero/images-sync:0.3.1
     env:
-      TO_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      TO_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
+      TO_USERNAME: ${{ secrets.TO_USERNAME }}
+      TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
     steps:
       - name: gcr
         run: |
