@@ -74,14 +74,10 @@
 
 - name: 恢复集群内节点 kubelet 配置文件
   copy:
-    src: "/etc/kubernetes/backup/{{ item }}"
-    dest: "/var/lib/{{ item }}"
+    src: "/etc/kubernetes/backup/kubelet"
+    dest: "/var/lib"
     mode: 0644
     remote_src: yes
-  with_items:
-  - kubelet/pki
-  - kubelet/config.yaml
-  - kubelet/kubeadm-flags.env
   when: inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
 
 - block:
