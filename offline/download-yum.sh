@@ -26,6 +26,7 @@ repo_gpgcheck=0
 EOF
 
 repotrack lvm2
+repotrack audit
 repotrack device-mapper-persistent-data
 repotrack docker-ce-19.03.13
 repotrack docker-ce-cli-19.03.13

@@ -73,6 +73,7 @@
     - htop
     - lvm2                            # docker会用到
     - curl                            # 基础工具
+    - audit
     - iotop
     - ipset                           # ipvs 模式需要
     - socat                           # 用于port forwarding

@@ -106,13 +106,3 @@
   template: 
     src: 30-k8s-ulimits.conf.j2
     dest: /etc/systemd/system.conf.d/30-k8s-ulimits.conf
-
-- name: 清理 iptables
-  shell: "{{ item }} || true"
-  with_items:
-  - iptables -F
-  - iptables -X
-  - iptables -F -t nat
-  - iptables -X -t nat
-  - iptables -F -t mangle
-  - iptables -X -t mangle
