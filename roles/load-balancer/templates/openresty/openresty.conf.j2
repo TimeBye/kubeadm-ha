@@ -24,38 +24,6 @@ stream {
         proxy_timeout 10m;
         proxy_connect_timeout 1s;
     }
-
-{% if enabel_ingress_nodeport_lb | bool %}
-    upstream ingress_http {
-        least_conn;
-{% for host in (groups['kube-worker'] + groups['new-worker']) %}
-        server {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:{{ ingress_controller_http_nodeport }};
-{% endfor %}
-    }
-
-    server {
-        listen 0.0.0.0:80;
-        proxy_pass    ingress_http;
-        proxy_timeout 10m;
-        proxy_connect_timeout 1s;
-    }
-{% endif %}
-
-{% if enabel_ingress_tls_nodeport_lb | bool %}
-    upstream ingress_https {
-        least_conn;
-{% for host in (groups['kube-worker'] + groups['new-worker']) %}
-        server {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:{{ ingress_controller_https_nodeport }};
-{% endfor %}
-    }
-
-    server {
-        listen 0.0.0.0:443;
-        proxy_pass    ingress_https;
-        proxy_timeout 10m;
-        proxy_connect_timeout 1s;
-    }
-{% endif %}
 }
 
 http {

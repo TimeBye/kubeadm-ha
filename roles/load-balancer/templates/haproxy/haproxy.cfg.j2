@@ -51,25 +51,3 @@ backend kube_api_backend
 {% for host in (groups['kube-master'] + groups['new-master']) %}
     server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:6443 check check-ssl verify none
 {% endfor %}
-
-{% if enabel_ingress_nodeport_lb | bool %}
-listen ingress_http
-    bind 0.0.0.0:80
-    mode tcp
-    option tcplog
-    balance {{ lb_haproxy_balance_alg }}
-{% for host in (groups['kube-worker'] + groups['new-worker']) %}
-    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:{{ ingress_controller_http_nodeport }} check inter 2000 fall 2 rise 2 weight 1
-{% endfor %}
-{% endif %}
-
-{% if enabel_ingress_tls_nodeport_lb | bool %}
-listen ingress_https
-    bind 0.0.0.0:443
-    mode tcp
-    option tcplog
-    balance {{ lb_haproxy_balance_alg }}
-{% for host in (groups['kube-worker'] + groups['new-worker']) %}
-    server {{ host }} {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}:{{ ingress_controller_https_nodeport }} check inter 2000 fall 2 rise 2 weight 1
-{% endfor %}
-{% endif %}

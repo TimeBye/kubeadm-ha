@@ -50,7 +50,6 @@ data:
   # use-forwarded-headers: "true"
   # compute-full-forwarded-for: "true"
   # forwarded-for-header: X-Forwarded-For
-  # enable-vts-status: "true"
   # use-proxy-protocol: "true"
 ---
 # Source: ingress-nginx/templates/clusterrole.yaml
@@ -299,23 +298,15 @@ metadata:
   name: ingress-nginx-controller
   namespace: ingress-controller
 spec:
-  type: NodePort
-  externalTrafficPolicy: {{ ingress_controller_external_traffic_policy }}
-{% if kube_proxy_mode == "iptables" %}
-  externalIPs:
-{{ INGRESS_EXTERNALIPS }}
-{% endif %}
   ports:
     - name: http
       port: 80
       protocol: TCP
       targetPort: http
-      nodePort: {{ ingress_controller_http_nodeport }}
     - name: https
       port: 443
       protocol: TCP
       targetPort: https
-      nodePort: {{ ingress_controller_https_nodeport }}
   selector:
     app.kubernetes.io/name: ingress-nginx
     app.kubernetes.io/instance: ingress-nginx
@@ -323,7 +314,7 @@ spec:
 ---
 # Source: ingress-nginx/templates/controller-deployment.yaml
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   labels:
     helm.sh/chart: ingress-nginx-3.10.1
@@ -349,7 +340,8 @@ spec:
         app.kubernetes.io/instance: ingress-nginx
         app.kubernetes.io/component: controller
     spec:
-      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       containers:
         - name: controller
           image: {{ nginx_ingress_image }}
@@ -365,7 +357,7 @@ spec:
             - --election-id=ingress-controller-leader
             - --ingress-class=nginx
             - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller
-            - --validating-webhook=:8443
+            - --validating-webhook=:9000
             - --validating-webhook-certificate=/usr/local/certificates/cert
             - --validating-webhook-key=/usr/local/certificates/key
           securityContext:
@@ -415,7 +407,7 @@ spec:
               containerPort: 443
               protocol: TCP
             - name: webhook
-              containerPort: 8443
+              containerPort: 9000
               protocol: TCP
           volumeMounts:
             - name: webhook-cert
@@ -427,6 +419,7 @@ spec:
               memory: 90Mi
       nodeSelector:
         kubernetes.io/os: linux
+        node-role.kubernetes.io/worker: ""
       serviceAccountName: ingress-nginx
       terminationGracePeriodSeconds: 300
       volumes:

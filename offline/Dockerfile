@@ -26,8 +26,8 @@ RUN apk add --no-cache \
     git clone https://github.com/TimeBye/kubeadm-ha.git /etc/ansible; \
     curl -sSLo /kubernetes/helm-v3.4.2-linux-amd64.tar.gz https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz
 
-# Add mirror source
-RUN cp /etc/apk/repositories /etc/apk/repositories.bak && \
+# Add Aliyun mirror source
+RUN cp /etc/apk/repositories /etc/apk/repositories.bak; \
     sed -i 's dl-cdn.alpinelinux.org mirrors.aliyun.com g' /etc/apk/repositories
 
 WORKDIR /etc/ansible

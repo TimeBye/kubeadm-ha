@@ -109,29 +109,3 @@ static_resources:
 
         port_value: 6443
 {% endfor %}
-{% if enabel_ingress_nodeport_lb | bool %}
-  - name: ingress_http
-    connect_timeout: 0.5s
-    type: strict_dns
-    lb_policy: LEAST_REQUEST
-    hosts:
-{% for host in (groups['kube-worker'] + groups['new-worker']) %}
-    - socket_address:
-        address: {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}
-
-        port_value: {{ ingress_controller_http_nodeport }}
-{% endfor %}
-{% endif %}
-{% if enabel_ingress_tls_nodeport_lb | bool %}
-  - name: ingress_https
-    connect_timeout: 0.5s
-    type: strict_dns
-    lb_policy: LEAST_REQUEST
-    hosts:
-{% for host in (groups['kube-worker'] + groups['new-worker']) %}
-    - socket_address:
-        address: {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}
-
-        port_value: {{ ingress_controller_https_nodeport }}
-{% endfor %}
-{% endif %}
