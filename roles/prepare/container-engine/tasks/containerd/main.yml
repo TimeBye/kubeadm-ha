@@ -1,8 +1,3 @@
-- name: 判断 containerd 是否早已安装
-  shell: >
-    systemctl status containerd | grep running || echo "not running"
-  register: containerd_already_running
-
 # 系统基础软件环境
 - include_tasks: centos.yml
   when: 

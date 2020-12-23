@@ -1,11 +1,8 @@
 name: Offline
 on:
+  push:
   schedule:
     - cron: '0 0 * * 5'
-  push:
-    paths:
-      - 'offline/**'
-      - 'example/variables.yaml'
 jobs:
   build:
     runs-on: ubuntu-20.04
