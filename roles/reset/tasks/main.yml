@@ -25,6 +25,7 @@
 
 - block:
   - name: 停止运行的容器
+    ignore_errors: true
     shell: "docker stop $(docker ps -aq)"
     args:
       executable: /bin/bash
@@ -68,6 +69,7 @@
     retries: 5
     until: remove_all_cri_containers.rc == 0
     delay: 5
+    ignore_errors: true
 
   - name: 停止所有 cri pods
     shell: "set -o pipefail && crictl pods -q | xargs -r crictl -t 60s stopp"
@@ -77,6 +79,7 @@
     retries: 5
     until: remove_all_cri_containers.rc == 0
     delay: 5
+    ignore_errors: true
   
   - name: 移除所有 cri pods
     shell: "set -o pipefail && crictl pods -q | xargs -r crictl -t 60s rmp"
@@ -86,6 +89,7 @@
     retries: 5
     until: remove_all_cri_containers.rc == 0
     delay: 5
+    ignore_errors: true
 
   - name: 清除所有镜像
     shell: "set -o pipefail && crictl images -q | xargs crictl -t 60s rmi"
@@ -95,6 +99,7 @@
     retries: 5
     until: remove_all_cri_containers.rc == 0
     delay: 5
+    ignore_errors: true
 
   - name: 停止 containerd 服务
     service:
