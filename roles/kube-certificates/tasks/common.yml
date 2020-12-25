@@ -200,16 +200,11 @@
     -out /var/lib/kubelet/pki/kubelet.crt
     -days {{ kube_certs_expired }}
 
-- name: 创建 kubelet 客户端证书私钥
-  shell: openssl genrsa -out /var/lib/kubelet/pki/kubelet-client-{{ item }}.key 2048
-  when: kubelet_key_stat.stat.isreg is not defined
-  with_items: "{{ (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])|unique }}"
-
 - name: 创建 kubelet 客户端证书请求
   shell: >
     openssl req -new 
     -subj "/O=system:nodes/CN=system:node:{{ item }}"
-    -key /var/lib/kubelet/pki/kubelet-client-{{ item }}.key
+    -key /var/lib/kubelet/pki/kubelet.key
     -out /var/lib/kubelet/pki/kubelet-client-{{ item }}.csr
   with_items: "{{ (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])|unique }}"
 

@@ -13,9 +13,7 @@
   - include_tasks: certs_stat.yml
   # 生成公共证书
   - include_tasks: common.yml
-  when: 
-  - inventory_hostname == groups['kube-master'][0]
-  - inventory_hostname in (groups['kube-master'] + groups['new-master'] + groups['kube-worker'] + groups['new-worker'])
+  when: inventory_hostname == groups['kube-master'][0]
 
 # 分发证书
 - include_tasks: distribute.yml

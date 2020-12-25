@@ -57,5 +57,5 @@
 
 - name: 读取 kubelet 证书私钥 stat 信息
   stat: 
-    path: /etc/kubernetes/pki/kubelet.key
+    path: /var/lib/kubelet/pki/kubelet.key
   register: kubelet_key_stat

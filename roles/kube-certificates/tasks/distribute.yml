@@ -63,8 +63,8 @@
   set_fact:
     kubelet_client_certs: 
     - "/etc/kubernetes/pki/ca.crt"
+    - "/var/lib/kubelet/pki/kubelet.key"
     - "/var/lib/kubelet/pki/kubelet-client-{{ inventory_hostname }}.crt"
-    - "/var/lib/kubelet/pki/kubelet-client-{{ inventory_hostname }}.key"
 
 - name: 获取 kubelet 客户端证书
   slurp:
