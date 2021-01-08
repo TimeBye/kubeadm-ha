@@ -157,7 +157,7 @@
 # lb_haproxy_balance_alg: "leastconn"
 
 # # 使用haproxy进行apiserver负载时使用的haproxy镜像
-# lb_envoy_image: registry.aliyuncs.com/kubeadm-ha/envoyproxy_envoy:v1.16.1
+# lb_envoy_image: registry.aliyuncs.com/kubeadm-ha/envoyproxy_envoy:v1.16.2
 # lb_envoy_admin_address_port: 9090
 
 # # 使用 vip 负载时使用的 keepalived 镜像
