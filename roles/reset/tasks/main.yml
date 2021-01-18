@@ -49,6 +49,25 @@
       state: stopped
       enabled: no
     ignore_errors: true
+
+  - name: 收集 docker 挂载的目录
+    shell: set -o pipefail && mount | grep docker | awk '{print $3}' | tac
+    args:
+      executable: /bin/bash
+      warn: false
+    check_mode: no
+    register: docker_mounted_dirs
+    failed_when: false
+  
+  - name: 卸载 docker 挂载的目录
+    command: umount -f {{ item }}
+    with_items: "{{ docker_mounted_dirs.stdout_lines }}"
+    register: docker_umount_dir
+    when: docker_mounted_dirs
+    retries: 5
+    until: docker_umount_dir.rc == 0
+    delay: 5
+
   when: container_manager_detected == "docker"
 
 - block:
