@@ -223,19 +223,14 @@
 
 - name: 获取遗留路由规则
   command: ip route show proto bird
-  register: bird_routes
-  args:
-    executable: /bin/bash
-    warn: false
-  failed_when: false
   changed_when: false
+  register: bird_routes
 
 - name: 删除遗留路由规则
   command: "ip route del {{ bird_route }} proto bird"
   with_items: "{{ bird_routes.stdout_lines }}"
   loop_control:
     loop_var: bird_route
-  when: bird_routes
 
 - name: 重新加载 daemon
   systemd:
