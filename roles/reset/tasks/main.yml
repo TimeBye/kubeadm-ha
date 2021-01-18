@@ -60,7 +60,8 @@
     retries: 5
     until: remove_all_cri_containers.rc == 0
     delay: 5
-  
+    ignore_errors: true
+
   - name: 删除所有容器
     shell: "set -o pipefail && crictl ps -aq | xargs -r crictl -t 60s rm"
     args:
@@ -244,7 +245,6 @@
   blockinfile:
     path: "/etc/hosts"
     state: absent
-    follow: yes
     marker: "# Ansible inventory hosts {mark}"
 
 - name: 重启网络
