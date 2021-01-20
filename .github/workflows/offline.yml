@@ -1,8 +1,5 @@
 name: Offline
-on:
-  push:
-  schedule:
-    - cron: '0 0 * * 5'
+on: push
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -32,24 +29,20 @@ jobs:
         docker build -t setzero/kubeadm-ha:1.20.1 .
         docker push setzero/kubeadm-ha:1.20.1
         docker save setzero/kubeadm-ha:1.20.1 | gzip -1 > kubeadm-ha-1.20.1.tar
-    - name: Upload artifact to cowtransfer
-      id: cowtransfer
+    - name: Upload artifact to oss
+      id: oss
       run: |
-        curl -sL https://git.io/file-transfer | bash -s beta
-        ./transfer cow --block 2621440 -s -p 64 --no-progress \
-        offline/kubeadm-ha-1.20.1.tar \
-        offline/docker-ce-19.03.13.tar.gz 2>&1 | tee cowtransfer.log
-        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
-        echo "::set-output name=url::$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
-    - name: Upload artifact to WeTransfer
-      id: wetransfer
-      run: |
-        curl -sL https://git.io/file-transfer | bash -s beta
-        ./transfer wet -s -p 16 --no-progress \
-        offline/kubeadm-ha-1.20.1.tar \
-        offline/docker-ce-19.03.13.tar.gz 2>&1 | tee wetransfer.log
-        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
-        echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
+        sudo apt-get update
+        sudo apt-get install jq -y
+        curl -sSLo mc https://dl.min.io/client/mc/release/linux-amd64/mc
+        chmod +x mc
+        ./mc alias set oss https://oss.choerodon.com.cn ${{ secrets.OSS_USERNAME }} ${{ secrets.OSS_TOKEN }}
+        ./mc cp --json offline/docker-ce-19.03.13.tar.gz oss/kubeadm-ha 2>&1 | tee oss.log
+        target=$(cat oss.log | jq -r 'select(.target)|.target')
+        echo "::warning file=docker-ce::https://oss.choerodon.com.cn/${target#*/}"
+        ./mc cp --json offline/kubeadm-ha-1.20.1.tar oss/kubeadm-ha 2>&1 | tee oss.log
+        target=$(cat oss.log | jq -r 'select(.target)|.target')
+        echo "::warning file=kubeadm-ha::https://oss.choerodon.com.cn/${target#*/}"
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
       with:
