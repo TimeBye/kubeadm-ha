@@ -131,7 +131,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /ping
-            port: 9000
+            port: 18443
           failureThreshold: 1
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -140,7 +140,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /ping
-            port: 9000
+            port: 18443
           failureThreshold: 3
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -148,7 +148,7 @@ spec:
           timeoutSeconds: 2
         ports:
         - name: "traefik"
-          containerPort: 9000
+          containerPort: 18443
           protocol: "TCP"
         - name: "web"
           containerPort: 80
@@ -172,7 +172,7 @@ spec:
         args:
           - "--global.checknewversion"
           - "--global.sendanonymoususage"
-          - "--entryPoints.traefik.address=:9000/tcp"
+          - "--entryPoints.traefik.address=:18443/tcp"
           - "--entryPoints.web.address=:80/tcp"
           - "--entryPoints.websecure.address=:443/tcp"
           - "--api.insecure=true"
@@ -205,7 +205,7 @@ spec:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik
   ports:
-  - port: 9000
+  - port: 18443
     name: traefik
     targetPort: "traefik"
   - port: 80

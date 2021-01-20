@@ -357,7 +357,7 @@ spec:
             - --election-id=ingress-controller-leader
             - --ingress-class=nginx
             - --configmap=$(POD_NAMESPACE)/ingress-nginx-controller
-            - --validating-webhook=:9000
+            - --validating-webhook=:18443
             - --validating-webhook-certificate=/usr/local/certificates/cert
             - --validating-webhook-key=/usr/local/certificates/key
           securityContext:
@@ -407,7 +407,7 @@ spec:
               containerPort: 443
               protocol: TCP
             - name: webhook
-              containerPort: 9000
+              containerPort: 18443
               protocol: TCP
           volumeMounts:
             - name: webhook-cert
