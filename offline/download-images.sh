@@ -1,26 +1,26 @@
 #!/bin/bash
 set -eux;
 
-docker pull nginx:1.19-alpine
-docker pull calico/typha:v3.17.1
-docker pull calico/cni:v3.17.1
-docker pull calico/node:v3.17.1
-docker pull calico/kube-controllers:v3.17.1
-docker pull calico/pod2daemon-flexvol:v3.17.1
-docker pull calico/ctl:v3.17.1
-docker pull jettech/kube-webhook-certgen:v1.5.0
-docker pull kubernetesui/dashboard:v2.1.0
-docker pull kubernetesui/metrics-scraper:v1.0.6
+docker pull --platform ${1:-'linux/amd64'} nginx:1.19-alpine
+docker pull --platform ${1:-'linux/amd64'} calico/typha:v3.17.1
+docker pull --platform ${1:-'linux/amd64'} calico/cni:v3.17.1
+docker pull --platform ${1:-'linux/amd64'} calico/node:v3.17.1
+docker pull --platform ${1:-'linux/amd64'} calico/kube-controllers:v3.17.1
+docker pull --platform ${1:-'linux/amd64'} calico/pod2daemon-flexvol:v3.17.1
+docker pull --platform ${1:-'linux/amd64'} calico/ctl:v3.17.1
+docker pull --platform ${1:-'linux/amd64'} jettech/kube-webhook-certgen:v1.5.0
+docker pull --platform ${1:-'linux/amd64'} kubernetesui/dashboard:v2.1.0
+docker pull --platform ${1:-'linux/amd64'} kubernetesui/metrics-scraper:v1.0.6
 
-docker pull k8s.gcr.io/kube-apiserver:v1.20.1
-docker pull k8s.gcr.io/kube-controller-manager:v1.20.1
-docker pull k8s.gcr.io/kube-scheduler:v1.20.1
-docker pull k8s.gcr.io/kube-proxy:v1.20.1
-docker pull k8s.gcr.io/pause:3.2
-docker pull k8s.gcr.io/etcd:3.4.13-0
-docker pull k8s.gcr.io/coredns:1.7.0
-docker pull k8s.gcr.io/ingress-nginx/controller:v0.41.2
-docker pull k8s.gcr.io/metrics-server/metrics-server:v0.4.0
+docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/kube-apiserver:v1.20.1
+docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/kube-controller-manager:v1.20.1
+docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/kube-scheduler:v1.20.1
+docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/kube-proxy:v1.20.1
+docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/pause:3.2
+docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/etcd:3.4.13-0
+docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/coredns:1.7.0
+docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/ingress-nginx/controller:v0.41.2
+docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/metrics-server/metrics-server:v0.4.0
 
 docker tag nginx:1.19-alpine                     registry.aliyuncs.com/kubeadm-ha/nginx:1.19-alpine
 docker tag calico/typha:v3.17.1                   registry.aliyuncs.com/kubeadm-ha/calico_typha:v3.17.1

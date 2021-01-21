@@ -15,6 +15,7 @@ RUN apk add --no-cache \
         openssh-client \
         ca-certificates; \
     apk add --no-cache --virtual .build-deps \
+        dpkg \
         build-base \
         libffi-dev \
         openssl-dev \
@@ -22,9 +23,17 @@ RUN apk add --no-cache \
     pip3 install --no-cache-dir --upgrade pip cffi; \
     pip3 install --no-cache-dir --upgrade pycrypto pywinrm; \
     pip3 install --no-cache-dir ansible==2.10.4 netaddr; \
-    apk del .build-deps; \
     git clone https://github.com/TimeBye/kubeadm-ha.git /etc/ansible; \
-    curl -sSLo /kubernetes/helm-v3.4.2-linux-amd64.tar.gz https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz
+    dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
+    case "${dpkgArch}" in \
+       amd64|x86_64) \
+         curl -sSLo /kubernetes/helm-v3.4.2-linux-amd64.tar.gz https://get.helm.sh/helm-v3.4.2-linux-amd64.tar.gz; \
+         ;; \
+       aarch64|arm64) \
+         curl -sSLo /kubernetes/helm-v3.4.2-linux-arm64.tar.gz https://get.helm.sh/helm-v3.4.2-linux-arm64.tar.gz; \
+         ;; \
+    esac; \
+    apk del .build-deps
 
 # Add Aliyun mirror source
 RUN cp /etc/apk/repositories /etc/apk/repositories.bak; \
