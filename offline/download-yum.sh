@@ -31,6 +31,9 @@ repotrack device-mapper-persistent-data
 repotrack docker-ce-19.03.13
 repotrack docker-ce-cli-19.03.13
 repotrack containerd.io-1.3.7
+yumdownloader --resolve docker-ce-19.03.13
+yumdownloader --resolve docker-ce-cli-19.03.13
+yumdownloader --resolve containerd.io-1.3.7
 
 createrepo --update ./
 tar -czvf docker-ce-19.03.13.tar.gz *.rpm repodata
@@ -60,6 +63,9 @@ repotrack bash-completion
 repotrack kubeadm-1.20.1
 repotrack kubectl-1.20.1
 repotrack kubelet-1.20.1
+yumdownloader --resolve kubeadm-1.20.1
+yumdownloader --resolve kubectl-1.20.1
+yumdownloader --resolve kubelet-1.20.1
 
 createrepo --update ./
 tar -czvf kubernetes-1.20.1.tar.gz *.rpm repodata
