@@ -39,10 +39,12 @@ createrepo --update ./
 tar -czvf docker-ce-19.03.13.tar.gz *.rpm repodata
 mv docker-ce-19.03.13.tar.gz ..
 
-curl -o kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm \
-    http://mirrors.reposnap.com/elrepo/20190306130017/kernel/el7/x86_64/RPMS/kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm
-curl -o kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm \
-    http://mirrors.reposnap.com/elrepo/20190306130017/kernel/el7/x86_64/RPMS/kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm
+if [ $(uname -m) == 'x86_64' ];then
+  curl -o kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm \
+      http://mirrors.reposnap.com/elrepo/20190306130017/kernel/el7/x86_64/RPMS/kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm
+  curl -o kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm \
+      http://mirrors.reposnap.com/elrepo/20190306130017/kernel/el7/x86_64/RPMS/kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm
+fi
 
 repotrack jq
 repotrack git
