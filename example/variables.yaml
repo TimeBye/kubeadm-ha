@@ -308,6 +308,9 @@
 # kube_controller_terminated_pod_gc_threshold: 10
 
 # ## Extra args for k8s components passing by kubeadm
+# ## example：
+# kube_kubeadm_apiserver_extra_args:
+#   runtime-config: api/all=true
 # kube_kubeadm_apiserver_extra_args: {}
 # kube_kubeadm_controller_extra_args: {}
 # kube_kubeadm_scheduler_extra_args: {}
