@@ -78,6 +78,9 @@
       {{ hostvars[item]['ansible_host'] }} {{ hostvars[item]['inventory_hostname'] }} {{ hostvars[item]['inventory_hostname'] }}.{{ kube_dns_domain }}
       {% endif %}
       {% endfor %}
+      {% for custom_hosts_ip, custom_hosts_addr in custom_hosts.items() %}
+      {{ custom_hosts_ip }} {{ ([ custom_hosts_addr ] | flatten ) | join(' ') }}
+      {% endfor %}
     state: present
     create: yes
     backup: yes
