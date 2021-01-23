@@ -262,7 +262,11 @@ protectKernelDefaults: true
 readOnlyPort: 0
 registryBurst: 10
 registryPullQPS: 5
+{% if ansible_distribution == "Ubuntu" and ansible_distribution_version is version('16.04', '>') %}
+resolvConf: /run/systemd/resolve/resolv.conf
+{% else %}
 resolvConf: /etc/resolv.conf
+{% endif %}
 rotateCertificates: true
 runtimeRequestTimeout: 2m0s
 serializeImagePulls: true
