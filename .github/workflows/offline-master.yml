@@ -1,0 +1,133 @@
+name: Offline
+on: 
+  push:
+    branches:
+      - master
+jobs:
+  amd64:
+    runs-on: ubuntu-20.04
+    env:
+      DOCKER_CLI_EXPERIMENTAL: enabled
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    - name: Set up Docker experimental
+      run: |
+        echo $'{\n    "experimental": true\n}' | sudo tee /etc/docker/daemon.json
+        sudo service docker restart
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Download images
+      run: |
+        cd $GITHUB_WORKSPACE/offline
+        docker run -d -p 5000:5000 \
+        --platform linux/amd64 \
+        -v $PWD/registry:/var/lib/registry \
+        registry:2
+        /bin/bash download-images-to-registry.sh
+    - name: Download yum
+      run: |
+        cd $GITHUB_WORKSPACE/offline
+        docker run \
+        --platform linux/amd64 \
+        -v $PWD:/offline \
+        -w /offline \
+        centos:7 \
+        /bin/bash /offline/download-yum.sh
+        mv docker-ce-19.03.13.tar.gz docker-ce-19.03.13-amd64.tar.gz
+    - name: Build and push
+      run: |
+        cd $GITHUB_WORKSPACE/offline
+        docker build --platform linux/amd64 -t setzero/kubeadm-ha:1.20.1-amd64 .
+        docker push setzero/kubeadm-ha:1.20.1-amd64
+        docker save setzero/kubeadm-ha:1.20.1-amd64 | gzip -1 > kubeadm-ha-1.20.1-amd64.tar
+    - name: Upload artifact to oss
+      id: oss
+      run: |
+        sudo apt-get update
+        sudo apt-get install jq -y
+        curl -sSLo mc https://dl.min.io/client/mc/release/linux-amd64/mc
+        chmod +x mc
+        ./mc alias set oss https://oss.choerodon.com.cn ${{ secrets.OSS_USERNAME }} ${{ secrets.OSS_TOKEN }}
+        ./mc cp --json offline/docker-ce-19.03.13-amd64.tar.gz oss/kubeadm-ha 2>&1 | tee oss.log
+        target=$(cat oss.log | jq -r 'select(.target)|.target')
+        echo "::warning file=docker-ce::https://oss.choerodon.com.cn/${target#*/}"
+        ./mc cp --json offline/kubeadm-ha-1.20.1-amd64.tar oss/kubeadm-ha 2>&1 | tee oss.log
+        target=$(cat oss.log | jq -r 'select(.target)|.target')
+        echo "::warning file=kubeadm-ha::https://oss.choerodon.com.cn/${target#*/}"
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 7
+        keep_minimum_runs: 3
+
+  arm64:
+    runs-on: ubuntu-20.04
+    env:
+      DOCKER_CLI_EXPERIMENTAL: enabled
+    steps:
+    - name: Checkout
+      uses: actions/checkout@main
+    - name: Set up Docker experimental
+      run: |
+        echo $'{\n    "experimental": true\n}' | sudo tee /etc/docker/daemon.json
+        sudo service docker restart
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Download images
+      run: |
+        cd $GITHUB_WORKSPACE/offline
+        docker run -d -p 5000:5000 \
+        --platform linux/amd64 \
+        -v $PWD/registry:/var/lib/registry \
+        registry:2
+        /bin/bash download-images-to-registry.sh linux/arm64
+    - name: Download yum
+      run: |
+        cd $GITHUB_WORKSPACE/offline
+        docker run \
+        --platform linux/arm64 \
+        -v $PWD:/offline \
+        -w /offline \
+        centos:7 \
+        /bin/bash /offline/download-yum.sh
+        mv docker-ce-19.03.13.tar.gz docker-ce-19.03.13-arm64.tar.gz
+    - name: Build and push
+      run: |
+        cd $GITHUB_WORKSPACE/offline
+        docker build --platform linux/arm64 -t setzero/kubeadm-ha:1.20.1-arm64 .
+        docker push setzero/kubeadm-ha:1.20.1-arm64
+        docker save setzero/kubeadm-ha:1.20.1-arm64 | gzip -1 > kubeadm-ha-1.20.1-arm64.tar
+    - name: Upload artifact to oss
+      id: oss
+      run: |
+        sudo apt-get update
+        sudo apt-get install jq -y
+        curl -sSLo mc https://dl.min.io/client/mc/release/linux-amd64/mc
+        chmod +x mc
+        ./mc alias set oss https://oss.choerodon.com.cn ${{ secrets.OSS_USERNAME }} ${{ secrets.OSS_TOKEN }}
+        ./mc cp --json offline/docker-ce-19.03.13-arm64.tar.gz oss/kubeadm-ha 2>&1 | tee oss.log
+        target=$(cat oss.log | jq -r 'select(.target)|.target')
+        echo "::warning file=docker-ce::https://oss.choerodon.com.cn/${target#*/}"
+        ./mc cp --json offline/kubeadm-ha-1.20.1-arm64.tar oss/kubeadm-ha 2>&1 | tee oss.log
+        target=$(cat oss.log | jq -r 'select(.target)|.target')
+        echo "::warning file=kubeadm-ha::https://oss.choerodon.com.cn/${target#*/}"
+    - name: Delete workflow runs
+      uses: GitRML/delete-workflow-runs@main
+      with:
+        retain_days: 7
+        keep_minimum_runs: 3

@@ -66,37 +66,33 @@ docker_storage_dir: "/var/lib/docker"
 # 并行镜像下载数量
 docker_max_concurrent_downloads: 10
 
-install_mode: online
-# 离线模式时所需镜像源位置
-offline_images_src: /kubernetes/kubernetes-1.20.1.tar
-# 离线模式时分发镜像目的位置
-offline_images_dest: /tmp/kubernetes-1.20.1.tar
-
 containerd_storage_dir: "/var/lib/containerd"
-containerd_config:
-  root: "/var/lib/containerd"
-  grpc:
-    max_recv_message_size: 16777216
-    max_send_message_size: 16777216
-  debug:
-    level: ""
-  registries:
-    "docker.io": "https://registry-1.docker.io"
-  max_container_log_line_size: -1
-  # containerd:
-  #   snapshotter: native
-
+containerd_state_dir: "/run/containerd"
+containerd_oom_score: -999
 containerd_use_systemd_cgroup: true
+containerd_debug_level: ""
+containerd_config_grpc:
+  max_recv_message_size: 16777216
+  max_send_message_size: 16777216
+containerdmax_container_log_line_size: -1
+containerd_plugins_cri_registries_mirrors:
+  "docker.io": "https://registry-1.docker.io"
+
+# Example for containerd_plugins_cri_containerd:
+# containerd_plugins_cri_containerd:
+#   snapshotter: native
+containerd_plugins_cri_containerd: {}
 
 containerd_default_runtime:
   type: io.containerd.runtime.v1.linux
   engine: ''
   root: ''
 
-# Pod根容器
-pod_infra_container_image: registry.aliyuncs.com/kubeadm-ha/pause:3.2
+containerd_untrusted_workload_runtime:
+  type: ''
+  engine: ''
+  root: ''
 
-kata_containers_enabled: false
 # Additional runtimes for containerd configuration
 #
 # Example for Kata Containers:
@@ -107,9 +103,8 @@ kata_containers_enabled: false
 #     root: ""
 containerd_runtimes: []
 
-containerd_untrusted_runtime_type: ''
-containerd_untrusted_runtime_engine: ''
-containerd_untrusted_runtime_root: ''
+# Pod根容器
+pod_infra_container_image: registry.aliyuncs.com/kubeadm-ha/pause:3.2
 
 # container 运行时类型
 container_manager: containerd

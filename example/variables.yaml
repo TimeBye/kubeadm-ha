@@ -4,12 +4,6 @@
 # # 是否跳过节点物理资源校验
 # skip_verify_node: false
 
-# # 安装模式
-#   # 在线 online 
-#   # 离线 offline
-#   # 应用于可能没有公网的环境
-# install_mode: online
-
 # # 代理设置，若节点不能直接访问公网，可使用下面变量设置代理。
 # http_proxy: 
 # https_proxy: 
@@ -49,26 +43,41 @@
 # containerd_use_systemd_cgroup: true
 # # containerd 相关配置
 # containerd_storage_dir: "/var/lib/containerd"
-# containerd_config:
-#   grpc:
-#     max_recv_message_size: 16777216
-#     max_send_message_size: 16777216
-#   debug:
-#     level: ""
-#   registries:
-#     "docker.io": "https://registry-1.docker.io"
-#   max_container_log_line_size: -1
-#   # containerd:
-#   #   snapshotter: native
+# containerd_state_dir: "/run/containerd"
+# containerd_oom_score: -999
+# containerd_use_systemd_cgroup: true
+# containerd_debug_level: ""
+# containerd_config_grpc:
+#   max_recv_message_size: 16777216
+#   max_send_message_size: 16777216
+# containerdmax_container_log_line_size: -1
+# containerd_plugins_cri_registries_mirrors:
+#   "docker.io": "https://registry-1.docker.io"
+
+# # Example for containerd_plugins_cri_containerd:
+# # containerd_plugins_cri_containerd:
+# #   snapshotter: native
+# containerd_plugins_cri_containerd: {}
 
 # containerd_default_runtime:
 #   type: io.containerd.runtime.v1.linux
 #   engine: ''
 #   root: ''
 
-# containerd_untrusted_runtime_type: ''
-# containerd_untrusted_runtime_engine: ''
-# containerd_untrusted_runtime_root: ''
+# containerd_untrusted_workload_runtime:
+#   type: ''
+#   engine: ''
+#   root: ''
+
+# # Additional runtimes for containerd configuration
+# #
+# # Example for Kata Containers:
+# # containerd_runtimes:
+# #   - name: kata
+# #     type: io.containerd.kata.v2
+# #     engine: ""
+# #     root: ""
+# containerd_runtimes: []
 
 # # 国内镜像加速(若不需要加速，请将值删去，键保留)
 # docker_mirror: 

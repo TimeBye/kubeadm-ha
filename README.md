@@ -27,7 +27,7 @@
   | **类别**           | **支持**                                                   |
   | :----------------- | :--------------------------------------------------------- |
   | Architecture       | amd64, arm64                                               |
-  | OS                 | Ubuntu 16.04+, Debian 9, CentOS 7.4+,CentOS 8, RedHat 7    |
+  | OS                 | Ubuntu 16.04+, Debian 9, CentOS 7.4+, CentOS 8, RedHat 7   |
   | Etcd               | v3.4.13-0                                                  |
   | Container runtimes | Docker, **containerd**                                     |
   | Kubernetes         | v1.13, v1.14, v1.15, v1.16, v1.17, v1.18, v1.19, **v1.20** |
@@ -80,6 +80,10 @@
    <td align="center">
   <a href="https://github.com/zlingqu"><img src="https://avatars1.githubusercontent.com/u/41672611?s=400&v=4" width="100px;" alt="zlingqu"/>
   <br></br><sub><b>zlingqu</b></sub>
+
+   <td align="center">
+  <a href="https://github.com/li-sen"><img src="https://avatars.githubusercontent.com/u/33471335?s=400&v=4" width="100px;" alt="li-sen"/>
+  <br></br><sub><b>li-sen</b></sub>
 
 </td></tr></table>
 

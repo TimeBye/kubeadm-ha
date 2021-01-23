@@ -11,7 +11,6 @@
   with_items:
   - "{{ lb_nginx_image }}"
   - "{{ pod_infra_container_image }}"
-  when: install_mode == 'online'
 
 - name: Nginx lb | 生成 nginx lb static pod 文件
   template:

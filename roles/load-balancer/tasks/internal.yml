@@ -42,7 +42,6 @@
     shell: "{{ IMAGE_PULL_COMMAND }} {{ item }}"
     with_items:
     - "{{ lb_keepalived_image }}"
-    when: install_mode == 'online'
   - name: keepalived | 生成 static pod 文件
     template: 
       src: keepalived.yaml.j2
