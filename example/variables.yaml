@@ -30,6 +30,14 @@
 # # kubernetes源
 # kubernetes_apt_repo: deb https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main
 
+# # 自定义hosts记录
+# # 举例：
+# # custom_hosts:
+# #   "127.0.0.1": 
+# #   - "one.domain.custom.local"
+# #   - "tow.domain.custom.local"
+# custom_hosts: {}
+
 # # ------------------------ #
 # # 容器运行时相关参数配置
 # # ------------------------ #

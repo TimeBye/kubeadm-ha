@@ -18,6 +18,7 @@
     dest: /etc/containerd/config.toml
     owner: root
     mode: 0644
+    backup: yes
   register: configuration_result
 
 - name: 生成 crictl 配置文件
