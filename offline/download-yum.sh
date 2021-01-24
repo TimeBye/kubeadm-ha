@@ -70,5 +70,3 @@ yumdownloader --resolve kubectl-1.20.1
 yumdownloader --resolve kubelet-1.20.1
 
 createrepo --update ./
-tar -czvf kubernetes-1.20.1.tar.gz *.rpm repodata
-mv kubernetes-1.20.1.tar.gz ..
