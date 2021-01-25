@@ -116,7 +116,7 @@
 
   - name: 拉取 etcd 镜像
     shell: >
-      ctr -n k8s.io images pull {{ etcd_image }}
+      crictl pull {{ etcd_image }}
     when: container_manager_detected == 'containerd'
 
   - name: 恢复 etcd 数据库

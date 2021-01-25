@@ -1,68 +1,46 @@
-# Kubernetes doesn't use containerd restart manager.
-disabled_plugins = ["restart"]
-root = "{{ containerd_storage_dir | default(containerd_config.root) }}"
+version = 2
+root = "{{ containerd_storage_dir }}"
+state = "{{ containerd_state_dir }}"
+oom_score = {{ containerd_oom_score }}
 
 [debug]
-  level = "{{ containerd_config.debug.level | default("") }}"
+  level = "{{ containerd_debug_level | default("") }}"
 
-{% if 'grpc' in containerd_config %}
 [grpc]
-{% for param, value in containerd_config.grpc.items() %}
+{% for param, value in containerd_config_grpc.items() %}
   {{ param }} = {{ value }}
 {% endfor %}
-{% endif %}
 
-[plugins.cri]
-  stream_server_address = "127.0.0.1"
-  max_container_log_line_size = {{ containerd_config.max_container_log_line_size }}
-  sandbox_image = "{{ pod_infra_container_image }}"
-  systemd_cgroup = {{ containerd_use_systemd_cgroup|lower }}
-
-[plugins.cri.containerd.runtimes.runc.options]
-  SystemdCgroup = {{ containerd_use_systemd_cgroup|lower }}
-
-{% if 'containerd' in containerd_config %}
-[plugins.cri.containerd]
-{% for param, value in containerd_config.containerd.items() %}
-  {{ param }} = {{ value }}
+[plugins]
+  [plugins."io.containerd.grpc.v1.cri"]
+    stream_server_address = "127.0.0.1"
+    max_container_log_line_size = {{ containerdmax_container_log_line_size }}
+    sandbox_image = "{{ pod_infra_container_image }}"
+    systemd_cgroup = {{ containerd_use_systemd_cgroup | default(true) |lower }}
+    [plugins."io.containerd.grpc.v1.cri".containerd]
+{% for param, value in containerd_plugins_cri_containerd.items() %}
+      {{ param }} = {{ value }}
 {% endfor %}
-{% endif %}
-
-[plugins.cri.containerd.default_runtime]
-  runtime_type = "{{ containerd_default_runtime.type }}"
-  runtime_engine = "{{ containerd_default_runtime.engine }}"
-  runtime_root = "{{ containerd_default_runtime.root }}"
-
-{% if kata_containers_enabled %}
-[plugins.cri.containerd.runtimes.kata-qemu]
-  runtime_type = "io.containerd.kata-qemu.v2"
-  [plugins.cri.containerd.runtimes.kata-qemu.options]
-    ConfigPath = "/etc/kata-containers/configuration-qemu.toml"
-{% endif %}
-
+      [plugins."io.containerd.grpc.v1.cri".containerd.default_runtime]
+        runtime_type = "{{ containerd_default_runtime.type }}"
+        runtime_engine = "{{ containerd_default_runtime.engine }}"
+        runtime_root = "{{ containerd_default_runtime.root }}"
+      [plugins."io.containerd.grpc.v1.cri".containerd.untrusted_workload_runtime]
+        runtime_type = "{{ containerd_untrusted_workload_runtime.type }}"
+        runtime_engine = "{{ containerd_untrusted_workload_runtime.engine }}"
+        runtime_root = "{{ containerd_untrusted_workload_runtime.root }}"
+      [plugins."io.containerd.grpc.v1.cri".containerd.runtimes]
 {% for runtime in containerd_runtimes %}
-[plugins.cri.containerd.runtimes.{{ runtime.name }}]
-  runtime_type = "{{ runtime.type }}"
-  runtime_engine = "{{ runtime.engine }}"
-  runtime_root = "{{ runtime.root }}"
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.{{ runtime.name }}]
+          runtime_type = "{{ runtime.type }}"
+          runtime_engine = "{{ runtime.engine }}"
+          runtime_root = "{{ runtime.root }}"
 {% endfor %}
-
-[plugins.cri.containerd.untrusted_workload_runtime]
-  runtime_type = "{{ containerd_untrusted_runtime_type }}"
-  runtime_engine = "{{ containerd_untrusted_runtime_engine }}"
-  runtime_root = "{{ containerd_untrusted_runtime_root }}"
-
-{% if 'registries' in containerd_config %}
-[plugins.cri.registry]
-[plugins.cri.registry.mirrors]
-{% for registry, addr in containerd_config.registries.items() %}
-[plugins.cri.registry.mirrors."{{ registry }}"]
-  endpoint = ["{{ ([ addr ] | flatten ) | join('","') }}"]
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+          SystemdCgroup = {{ containerd_use_systemd_cgroup | default(true) |lower }}
+    [plugins."io.containerd.grpc.v1.cri".registry]
+      [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
+{% for registry, addr in containerd_plugins_cri_registries_mirrors.items() %}
+        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."{{ registry }}"]
+          endpoint = ["{{ ([ addr ] | flatten ) | join('","') }}"]
 {% endfor %}
-{% endif %}
-
-{% if 'metrics' in containerd_config %}
-[metrics]
-  address = "{{ containerd_config.metrics.address | default('') }}"
-  grpc_histogram = {{ containerd_config.metrics.grpc_histogram | default(false) | lower }}
-{% endif %}

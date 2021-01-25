@@ -192,10 +192,10 @@
     - /var/lib/kubelet
     - /var/log/calico
     - /var/log/pods
+    - /var/run/docker.sock
     # - /var/run/calico
     # - /var/run/containerd
     # - /var/run/docker
-    # - /var/run/docker.sock
     # - /var/run/kubelet
     
 - name: 清理 iptables

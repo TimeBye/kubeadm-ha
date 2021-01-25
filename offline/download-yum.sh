@@ -31,15 +31,20 @@ repotrack device-mapper-persistent-data
 repotrack docker-ce-19.03.13
 repotrack docker-ce-cli-19.03.13
 repotrack containerd.io-1.3.7
+yumdownloader --resolve docker-ce-19.03.13
+yumdownloader --resolve docker-ce-cli-19.03.13
+yumdownloader --resolve containerd.io-1.3.7
 
 createrepo --update ./
 tar -czvf docker-ce-19.03.13.tar.gz *.rpm repodata
 mv docker-ce-19.03.13.tar.gz ..
 
-curl -o kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm \
-    http://mirrors.reposnap.com/elrepo/20190306130017/kernel/el7/x86_64/RPMS/kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm
-curl -o kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm \
-    http://mirrors.reposnap.com/elrepo/20190306130017/kernel/el7/x86_64/RPMS/kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm
+if [ $(uname -m) == 'x86_64' ];then
+  curl -o kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm \
+      http://mirrors.reposnap.com/elrepo/20190306130017/kernel/el7/x86_64/RPMS/kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm
+  curl -o kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm \
+      http://mirrors.reposnap.com/elrepo/20190306130017/kernel/el7/x86_64/RPMS/kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm
+fi
 
 repotrack jq
 repotrack git
@@ -60,7 +65,8 @@ repotrack bash-completion
 repotrack kubeadm-1.20.1
 repotrack kubectl-1.20.1
 repotrack kubelet-1.20.1
+yumdownloader --resolve kubeadm-1.20.1
+yumdownloader --resolve kubectl-1.20.1
+yumdownloader --resolve kubelet-1.20.1
 
 createrepo --update ./
-tar -czvf kubernetes-1.20.1.tar.gz *.rpm repodata
-mv kubernetes-1.20.1.tar.gz ..

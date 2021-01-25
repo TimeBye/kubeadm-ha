@@ -39,7 +39,6 @@
     with_items:
     - "{{ etcd_image }}"
     - "{{ pod_infra_container_image }}"
-    when: install_mode == 'online'
 
   - name: 读取 etcd static pod yaml 文件 stat 信息
     stat: 

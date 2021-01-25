@@ -13,7 +13,6 @@
 - name: 开始拉取 master 节点相关镜像
   shell: "{{ IMAGE_PULL_COMMAND }} {{ item }}"
   with_items: "{{ kube_image_list.stdout_lines }}"
-  when: install_mode == 'online'
 
 - name: 初始化第一个 master 节点
   shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml

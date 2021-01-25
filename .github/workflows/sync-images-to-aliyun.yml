@@ -13,7 +13,7 @@ jobs:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
       TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
     steps:
-    - name: dockerhub
+    - name: Dockerhub to Aliyun
       run: |
         cat << EOF >config.yaml
         from:
@@ -44,6 +44,8 @@ jobs:
             new: kubeadm-ha/envoyproxy_
           - old: osixia/
             new: kubeadm-ha/osixia_
+          - old: geoffh1977/
+            new: kubeadm-ha/geoffh1977_
           - old: calico/
             new: kubeadm-ha/calico_
           - old: jettech/
@@ -70,7 +72,7 @@ jobs:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
       TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
     steps:
-    - name: quay
+    - name: Quay to Aliyun
       run: |
         cat << EOF >config.yaml
         from:
@@ -104,7 +106,7 @@ jobs:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
       TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
     steps:
-    - name: gcr
+    - name: Gcr to Aliyun
       run: |
         cat << EOF >config.yaml
         from:
