@@ -35,8 +35,8 @@ host_distribution_release: >-
 # Docker版本
 # apt-cache madison docker-ce
 # yum list docker-ce --showduplicates --enablerepo=docker-ce | sort -r
-docker_version: 19.03.13
-containerd_version: 1.3.7-1
+docker_version: 20.10.2
+containerd_version: 1.4.3-1
 # CentOS
 docker_yum_repo: https://mirrors.aliyun.com/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
 # Debian
