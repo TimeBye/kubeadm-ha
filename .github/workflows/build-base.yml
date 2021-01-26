@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - 'offline/Dockerfile.base'
+      - 'offline/download-yum.sh'
+      - 'offline/download-images-to-registry.sh'
 jobs:
   build:
     runs-on: ubuntu-20.04
