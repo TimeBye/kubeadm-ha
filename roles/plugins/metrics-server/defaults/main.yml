@@ -22,4 +22,4 @@ host_architecture: >-
 kube_image_repository: registry.aliyuncs.com/kubeadm-ha
 
 # metrics-server image地址
-metrics_server_image: "{{ kube_image_repository }}/metrics-server_metrics-server:v0.4.0"
+metrics_server_image: "{{ kube_image_repository }}/metrics-server_metrics-server:v0.4.1"

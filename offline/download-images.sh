@@ -20,7 +20,7 @@ docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/pause:3.2
 docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/etcd:3.4.13-0
 docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/coredns:1.7.0
 docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/ingress-nginx/controller:v0.43.0
-docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/metrics-server/metrics-server:v0.4.0
+docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/metrics-server/metrics-server:v0.4.1
 
 docker tag nginx:1.19-alpine                     registry.aliyuncs.com/kubeadm-ha/nginx:1.19-alpine
 docker tag calico/typha:v3.17.1                   registry.aliyuncs.com/kubeadm-ha/calico_typha:v3.17.1
@@ -41,7 +41,7 @@ docker tag k8s.gcr.io/pause:3.2                              registry.aliyuncs.c
 docker tag k8s.gcr.io/etcd:3.4.13-0                          registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0
 docker tag k8s.gcr.io/coredns:1.7.0                          registry.aliyuncs.com/kubeadm-ha/coredns:1.7.0
 docker tag k8s.gcr.io/ingress-nginx/controller:v0.43.0       registry.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.43.0
-docker tag k8s.gcr.io/metrics-server/metrics-server:v0.4.0   registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0
+docker tag k8s.gcr.io/metrics-server/metrics-server:v0.4.1   registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.1
 
 docker save \
     registry.aliyuncs.com/kubeadm-ha/nginx:1.19-alpine \
@@ -62,5 +62,5 @@ docker save \
     registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0 \
     registry.aliyuncs.com/kubeadm-ha/coredns:1.7.0 \
     registry.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.43.0 \
-    registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0 \
+    registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.1 \
     | gzip -1 > kubernetes-1.20.1.tar
