@@ -31,7 +31,7 @@ ingress_controller_tpye: nginx
 kube_image_repository: registry.aliyuncs.com/kubeadm-ha
 
 # nginx-ingress-controller 镜像地址
-nginx_ingress_image: "{{ kube_image_repository }}/ingress-nginx_controller:v0.41.2"
+nginx_ingress_image: "{{ kube_image_repository }}/ingress-nginx_controller:v0.43.0"
 nginx_ingress_webhook_certgen_image: "{{ kube_image_repository }}/jettech_kube-webhook-certgen:v1.5.0"
 
 # traefik默认证书过期时间（天）
