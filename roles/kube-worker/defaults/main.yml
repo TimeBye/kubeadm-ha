@@ -20,7 +20,7 @@ lb_kube_apiserver_port: 8443
 # Kubelet 根目录
 kubelet_root_dir: "/var/lib/kubelet"
 # Pod根容器
-pod_infra_container_image: registry.aliyuncs.com/kubeadm-ha/pause:3.2
+pod_infra_container_image: "{{ kube_image_repository }}/pause:3.2"
 # node节点最大pod 数
 kube_max_pods: 110
 # 资源保留相关配置

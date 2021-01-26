@@ -30,7 +30,7 @@ kube_master_external_domain:
 - "kubernetes.io"
 
 # Pod根容器
-pod_infra_container_image: registry.aliyuncs.com/kubeadm-ha/pause:3.2
+pod_infra_container_image: "{{ kube_image_repository }}/pause:3.2"
 # kubernetes各组件镜像仓库前缀
 kube_image_repository: registry.aliyuncs.com/kubeadm-ha
 # kubernetes版本

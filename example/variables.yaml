@@ -148,14 +148,17 @@
 # # 启用 ingress tls NodePort服务的负载均衡 (true/false)
 # enabel_ingress_tls_nodeport_lb: false
 
+# # kubernetes各组件镜像仓库前缀
+# kube_image_repository: registry.aliyuncs.com/kubeadm-ha
+
 # # 使用openresty进行apiserver负载时使用的openresty镜像
-# lb_openresty_image: registry.aliyuncs.com/kubeadm-ha/openresty_openresty:1.19.3.1-alpine
+# lb_openresty_image: "{{ kube_image_repository }}/openresty_openresty:1.19.3.1-alpine"
 
 # # 使用nginx进行apiserver负载时使用的nginx镜像
-# lb_nginx_image: registry.aliyuncs.com/kubeadm-ha/nginx:1.19-alpine
+# lb_nginx_image: "{{ kube_image_repository }}/nginx:1.19-alpine"
 
 # # 使用haproxy进行apiserver负载时使用的haproxy镜像
-# lb_haproxy_image: registry.aliyuncs.com/kubeadm-ha/haproxy:2.3-alpine
+# lb_haproxy_image: "{{ kube_image_repository }}/haproxy:2.3-alpine"
 # # haproxy监控绑定端口
 # lb_haproxy_stats_bind_address: 9090
 # # haproxy监控访问路径
@@ -174,11 +177,11 @@
 # lb_haproxy_balance_alg: "leastconn"
 
 # # 使用haproxy进行apiserver负载时使用的haproxy镜像
-# lb_envoy_image: registry.aliyuncs.com/kubeadm-ha/envoyproxy_envoy:v1.16.2
+# lb_envoy_image: "{{ kube_image_repository }}/envoyproxy_envoy:v1.16.2"
 # lb_envoy_admin_address_port: 9090
 
 # # 使用 vip 负载时使用的 keepalived 镜像
-# lb_keepalived_image: registry.aliyuncs.com/kubeadm-ha/osixia_keepalived:2.0.20
+# lb_keepalived_image: "{{ kube_image_repository }}/osixia_keepalived:2.0.20"
 # # keepalived auth_type 的 password
 # lb_keepalived_password: "d0cker"
 # # 区分多个 instance 的 VRRP 组播，同网段不能重复，取值在0-255之间
@@ -193,7 +196,7 @@
 # # Etcd根证书过期时间（天）
 # etcd_ca_certs_expired: 36500
 # # Etcd使用的镜像
-# etcd_image: registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0
+# etcd_image: "{{ kube_image_repository }}/etcd:3.4.13-0"
 # # Etcd 数据根目录
 # etcd_data_dir: "/var/lib/etcd"
 # # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
@@ -220,10 +223,7 @@
 # - "kubernetes.io"
 
 # # Pod根容器
-# pod_infra_container_image: registry.aliyuncs.com/kubeadm-ha/pause:3.2
-
-# # kubernetes各组件镜像仓库前缀
-# kube_image_repository: registry.aliyuncs.com/kubeadm-ha
+# pod_infra_container_image: "{{ kube_image_repository }}/pause:3.2"
 
 # # kubernetes版本
 # kube_version: 1.20.1
@@ -365,21 +365,21 @@
 # # calico mtu
 # calico_veth_mtu: 0
 # # calico 相关镜像
-# calico_typha_image: registry.aliyuncs.com/kubeadm-ha/calico_typha:v3.17.1
-# calico_cni_image: registry.aliyuncs.com/kubeadm-ha/calico_cni:v3.17.1
-# calico_node_image: registry.aliyuncs.com/kubeadm-ha/calico_node:v3.17.1
-# calico_kube_controllers_image: registry.aliyuncs.com/kubeadm-ha/calico_kube-controllers:v3.17.1
-# calico_pod2daemon_flexvol_image: registry.aliyuncs.com/kubeadm-ha/calico_pod2daemon-flexvol:v3.17.1
+# calico_typha_image: "{{ kube_image_repository }}/calico_typha:v3.17.1"
+# calico_cni_image: "{{ kube_image_repository }}/calico_cni:v3.17.1"
+# calico_node_image: "{{ kube_image_repository }}/calico_node:v3.17.1"
+# calico_kube_controllers_image: "{{ kube_image_repository }}/calico_kube-controllers:v3.17.1"
+# calico_pod2daemon_flexvol_image: "{{ kube_image_repository }}/calico_pod2daemon-flexvol:v3.17.1"
 # # 设置 Felix 日志级别(debug, info, warning, error)
 # calico_felix_log_level: "warning"
 # # calicoctl image 地址
-# calicoctl_image: registry.aliyuncs.com/kubeadm-ha/calico_ctl:v3.17.1
+# calicoctl_image: "{{ kube_image_repository }}/calico_ctl:v3.17.1"
 
 # # 设置 flannel 后端
 # # flannel_backend: "host-gw"
 # flannel_backend: "vxlan"
 # # flannel 镜像地址
-# flannel_image: registry.aliyuncs.com/kubeadm-ha/coreos_flannel:v0.13.0
+# flannel_image: "{{ kube_image_repository }}/coreos_flannel:v0.13.0"
 
 # # ------------------------ #
 # # ingress-controller 相关参数配置
@@ -392,13 +392,13 @@
 # ingress_controller_tpye: nginx
 
 # # nginx-ingress-controller 镜像地址
-# nginx_ingress_image: registry.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.2
-# nginx_ingress_webhook_certgen_image: registry.aliyuncs.com/kubeadm-ha/jettech_kube-webhook-certgen:v1.5.0
+# nginx_ingress_image: "{{ kube_image_repository }}/ingress-nginx_controller:v0.41.2"
+# nginx_ingress_webhook_certgen_image: "{{ kube_image_repository }}/jettech_kube-webhook-certgen:v1.5.0"
 
 # # traefik默认证书过期时间（天）
 # traefik_certs_expired: 3650
 # # traefik-ingress-controller 镜像地址
-# traefik_ingress_image: registry.aliyuncs.com/kubeadm-ha/traefik:2.3.5
+# traefik_ingress_image: "{{ kube_image_repository }}/traefik:2.3.5"
 
 # # ------------------------ #
 # # kubernetes-dashboard 相关参数配置
@@ -411,8 +411,8 @@
 # kubernetesui_dashboard_certs_expired: 3650
 
 # # kubernetes-dashboard 镜像地址
-# kubernetesui_dashboard_image: registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.1.0
-# kubernetesui_metrics_scraper_image: registry.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.6
+# kubernetesui_dashboard_image: "{{ kube_image_repository }}/kubernetesui_dashboard:v2.1.0"
+# kubernetesui_metrics_scraper_image: "{{ kube_image_repository }}/kubernetesui_metrics-scraper:v1.0.6"
 
 # # ------------------------ #
 # # metrics-server 相关参数配置 
@@ -422,7 +422,7 @@
 # metrics_server_enabled: true
 
 # # metrics-server image地址
-# metrics_server_image: registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0
+# metrics_server_image: "{{ kube_image_repository }}/metrics-server_metrics-server:v0.4.0"
 
 # # ------------------------ #
 # # cert-manager 相关配置
@@ -436,6 +436,6 @@
 # acme_server: https://acme-v02.api.letsencrypt.org/directory
 
 # # cert-manager 相关 image 地址
-# cert_manager_cainjector_image: registry.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-cainjector:v1.0.4
-# cert_manager_webhook_image: registry.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-webhook:v1.0.4
-# cert_manager_controller_image: registry.aliyuncs.com/kubeadm-ha/jetstack_cert-manager-controller:v1.0.4
+# cert_manager_cainjector_image: "{{ kube_image_repository }}/jetstack_cert-manager-cainjector:v1.0.4"
+# cert_manager_webhook_image: "{{ kube_image_repository }}/jetstack_cert-manager-webhook:v1.0.4"
+# cert_manager_controller_image: "{{ kube_image_repository }}/jetstack_cert-manager-controller:v1.0.4"

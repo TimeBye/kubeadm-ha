@@ -27,14 +27,17 @@ kube_apiserver_enable_admission_plugins:
 # ingress-controller类型(nginx,traefik)
 ingress_controller_tpye: nginx
 
+# kubernetes各组件镜像仓库前缀
+kube_image_repository: registry.aliyuncs.com/kubeadm-ha
+
 # nginx-ingress-controller 镜像地址
-nginx_ingress_image: registry.aliyuncs.com/kubeadm-ha/ingress-nginx_controller:v0.41.2
-nginx_ingress_webhook_certgen_image: registry.aliyuncs.com/kubeadm-ha/jettech_kube-webhook-certgen:v1.5.0
+nginx_ingress_image: "{{ kube_image_repository }}/ingress-nginx_controller:v0.41.2"
+nginx_ingress_webhook_certgen_image: "{{ kube_image_repository }}/jettech_kube-webhook-certgen:v1.5.0"
 
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
 # traefik-ingress-controller 镜像地址
-traefik_ingress_image: registry.aliyuncs.com/kubeadm-ha/traefik:2.3.5
+traefik_ingress_image: "{{ kube_image_repository }}/traefik:2.3.5"
 
 # 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
 kube_proxy_mode: "iptables"

@@ -1,7 +1,11 @@
 # 提权操作
 ansible_become: true
+
+# kubernetes各组件镜像仓库前缀
+kube_image_repository: registry.aliyuncs.com/kubeadm-ha
+
 # Etcd使用的镜像
-etcd_image: registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0
+etcd_image: "{{ kube_image_repository }}/etcd:3.4.13-0"
 # 当前节点ip
 CURRENT_HOST_IP: "{% if hostvars[inventory_hostname]['ansible_host'] is defined %}{{ hostvars[inventory_hostname]['ansible_host'] }}{% else %}{{ inventory_hostname }}{% endif %}"
 # etcd 集群

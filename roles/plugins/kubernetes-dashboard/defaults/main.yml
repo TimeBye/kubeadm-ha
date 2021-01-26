@@ -10,6 +10,9 @@ kubernetesui_dashboard_enabled: true
 # dashboard默认证书有效期
 kubernetesui_dashboard_certs_expired: 3650
 
+# kubernetes各组件镜像仓库前缀
+kube_image_repository: registry.aliyuncs.com/kubeadm-ha
+
 # kubernetes-dashboard 镜像地址
-kubernetesui_dashboard_image: registry.aliyuncs.com/kubeadm-ha/kubernetesui_dashboard:v2.1.0
-kubernetesui_metrics_scraper_image: registry.aliyuncs.com/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.6
+kubernetesui_dashboard_image: "{{ kube_image_repository }}/kubernetesui_dashboard:v2.1.0"
+kubernetesui_metrics_scraper_image: "{{ kube_image_repository }}/kubernetesui_metrics-scraper:v1.0.6"

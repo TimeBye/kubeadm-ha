@@ -18,5 +18,8 @@ host_architecture: >-
   {{ ansible_architecture }}
   {%- endif -%}
 
+# kubernetes各组件镜像仓库前缀
+kube_image_repository: registry.aliyuncs.com/kubeadm-ha
+
 # metrics-server image地址
-metrics_server_image: registry.aliyuncs.com/kubeadm-ha/metrics-server_metrics-server:v0.4.0
+metrics_server_image: "{{ kube_image_repository }}/metrics-server_metrics-server:v0.4.0"
