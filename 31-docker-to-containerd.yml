@@ -1,25 +1,14 @@
-- hosts: localhost
-  become: no
-  tasks:
-  - name: "校验 Ansible 版本"
-    assert:
-      msg: "Ansible 版本最低要求 2.8.0，当前版本为 {{ ansible_version.string }}，请升级 Ansible 版本。"
-      that:
-      - ansible_version.string is version("2.8.0", ">=")
-  vars:
-    ansible_connection: local
-
-- hosts: 
-  - all
+# 校验节点软件系统及硬件系统、安装必要基础组件、docker、kubeadm、kubelet、kubectl
+- hosts: all
   vars_prompt:
     name: "restore_confirmation"
-    prompt: "确认要恢复群集吗? 输入“yes”确认恢复群集。"
+    prompt: "确认从 Docker 切换为 containerd ? 输入“yes”确认切换。"
     default: "no"
     private: no
   pre_tasks:
-    - name: 恢复确认
+    - name: 确认切换
       fail:
-        msg: "恢复确认失败，取消恢复集群操作。"
+        msg: "确认切换失败，取消切换操作。"
       when: restore_confirmation != "yes"
   gather_facts: false
   tasks:
@@ -37,8 +26,19 @@
 - hosts: 
   - all
   roles:
-  - prepare/base
-  - prepare/container-engine
-  - prepare/kubernetes
-  - restore
+  - docker-to-containerd
   environment: "{{ proxy_env }}"
+
+- hosts: 
+  - kube-master
+  - new-master
+  roles:
+  - kube-master
+
+- hosts: 
+  - kube-master
+  - new-master
+  - kube-worker
+  - new-worker
+  roles:
+  - kube-worker
