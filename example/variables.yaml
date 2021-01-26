@@ -398,7 +398,7 @@
 # # traefik默认证书过期时间（天）
 # traefik_certs_expired: 3650
 # # traefik-ingress-controller 镜像地址
-# traefik_ingress_image: "{{ kube_image_repository }}/traefik:2.3.5"
+# traefik_ingress_image: "{{ kube_image_repository }}/traefik:2.4.0"
 
 # # ------------------------ #
 # # kubernetes-dashboard 相关参数配置
