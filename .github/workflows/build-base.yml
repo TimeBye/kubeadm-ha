@@ -90,7 +90,7 @@ jobs:
         file: offline/Dockerfile.base
         platforms: linux/amd64,linux/arm64
         push: true
-        tags: setzero/kubeadm-ha:1.20.1-base
+        tags: setzero/kubeadm-ha:1.20.2-base
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
       with:
