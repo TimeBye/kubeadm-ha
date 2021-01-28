@@ -42,3 +42,12 @@
   - new-worker
   roles:
   - kube-worker
+
+- hosts: 
+  - etcd
+  - new-etcd
+  - kube-master
+  - new-master
+  roles:
+  - etcd/certificates
+  - etcd/install

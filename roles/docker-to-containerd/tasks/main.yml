@@ -13,7 +13,7 @@
     service:
       name: kubelet
       state: stopped
-      enabled: no
+      enabled: yes
   
   - name: 停止运行的容器
     ignore_errors: true
@@ -40,12 +40,30 @@
       name: docker
       state: stopped
       enabled: no
-  
+
+  - name: 卸载 Docker 服务
+    yum:
+      name: 
+      - "docker-ce"
+      - "docker-ce-cli"
+      state: absent
+      enablerepo: docker-ce-stable
+    when: ansible_distribution in [ 'CentOS','OracleLinux','RedHat' ]
+
+  - name: 卸载 Docker 服务
+    apt: 
+      name:
+      - "docker-ce"
+      - "docker-ce-cli"
+      state: absent
+      allow_unauthenticated: true
+    when: ansible_distribution in [ 'Ubuntu','Debian' ]
+
   - name: 停止 containerd 服务
     service:
       name: containerd
       state: stopped
-      enabled: no
+      enabled: yes
   
   - include_tasks: "{{ (role_path + '/../prepare/container-engine/tasks/main.yml') | realpath  }}"
   
