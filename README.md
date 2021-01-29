@@ -56,7 +56,7 @@
         <td><a target="_blank" href="docs/06-集群恢复.md">06-集群恢复</a></td>
         <td><a target="_blank" href="docs/07-集群重置.md">07-集群重置</a></td>
         <td><a target="_blank" href="docs/08-离线安装.md">08-离线安装</a></td>
-        <td><a target="_blank" href="docs/09-Docker切换为containerd.md">09-Docker切换为containerd</a></td>
+        <td><a target="_blank" href="docs/09-扩展阅读.md">09-扩展阅读</a></td>
     </tr>
 </table>
 
