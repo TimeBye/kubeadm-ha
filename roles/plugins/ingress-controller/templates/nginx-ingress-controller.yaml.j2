@@ -41,13 +41,21 @@ data:
   proxy-body-size: "0"
   server-tokens: "false"
   proxy-connect-timeout: "60"
+  # log-format-escape-json: "true"
   # log-format-upstream: >-
-  #   {"time": "$time_iso8601", "remote_addr": "$remote_addr", "x-forward-for": "$proxy_add_x_forwarded_for",
-  #   "upstream_addr": "$upstream_addr", "remote_user":"$remote_user", "bytes_sent": $bytes_sent,
-  #   "request_time": $request_time, "status":$status, "vhost": "$host", "request_proto": "$server_protocol",
-  #   "path": "$uri", "request_query": "$args", "request_length": $request_length, "duration": $request_time,
-  #   "method": "$request_method", "http_referrer": "$http_referer", "http_user_agent":"$http_user_agent",
-  #   "proxy_protocol_addr":"$proxy_protocol_addr"}
+  #   {"msec": "$msec", "connection": "$connection", "connection_requests": "$connection_requests",
+  #   "pid": "$pid", "request_id": "$request_id", "request_length": "$request_length",
+  #   "remote_addr": "$remote_addr", "remote_user": "$remote_user", "remote_port": "$remote_port",
+  #   "time_local": "$time_local", "time_iso8601": "$time_iso8601", "request": "$request",
+  #   "request_uri": "$request_uri", "args": "$args", "status": "$status", "body_bytes_sent": "$body_bytes_sent",
+  #   "bytes_sent": "$bytes_sent", "http_referer": "$http_referer", "http_user_agent": "$http_user_agent",
+  #   "http_x_forwarded_for": "$http_x_forwarded_for", "http_host": "$http_host", "server_name": "$server_name",
+  #   "request_time": "$request_time", "upstream": "$upstream_addr", "upstream_connect_time": "$upstream_connect_time",
+  #   "upstream_header_time": "$upstream_header_time", "upstream_response_time": "$upstream_response_time",
+  #   "upstream_response_length": "$upstream_response_length", "upstream_cache_status": "$upstream_cache_status",
+  #   "ssl_protocol": "$ssl_protocol", "ssl_cipher": "$ssl_cipher", "scheme": "$scheme",
+  #   "request_method": "$request_method", "server_protocol": "$server_protocol", "pipe": "$pipe",
+  #   "gzip_ratio": "$gzip_ratio", "http_cf_ray": "$http_cf_ray","geoip_country_code": "$geoip_country_code"}
   # use-forwarded-headers: "true"
   # compute-full-forwarded-for: "true"
   # forwarded-for-header: X-Forwarded-For
