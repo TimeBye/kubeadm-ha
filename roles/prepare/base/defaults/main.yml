@@ -36,6 +36,9 @@ epel_yum_repo: >-
   https://mirrors.aliyun.com/epel/$releasever/Everything/$basearch
   {%- endif -%}
 
+# 禁用防护墙
+firewalld_disabled: true
+
 # 节点时区
 timezone: Asia/Shanghai
 # 是否跳过节点资源校验
