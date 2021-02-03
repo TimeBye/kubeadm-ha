@@ -17,6 +17,11 @@
 # # 节点时区
 # timezone: Asia/Shanghai
 
+# # 是否启用 chrony 进行时间同步
+# chrony_enabled: true
+# ntp_server: "ntp.aliyun.com"
+# chrony_image: "{{ kube_image_repository }}/geoffh1977_chrony:3.5"
+
 # # CentOS yum源仓库
 # # 基础软件源
 # base_yum_repo: http://mirrors.aliyun.com/centos/$releasever/os/$basearch/

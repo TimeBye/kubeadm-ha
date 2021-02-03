@@ -8,6 +8,7 @@ metadata:
   namespace: kube-system
 spec:
   hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
   priorityClassName: system-cluster-critical
   containers:
   - name: lb-keepalived
