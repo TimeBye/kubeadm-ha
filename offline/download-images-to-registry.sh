@@ -8,7 +8,7 @@ traefik:2.4.0
 openresty/openresty:1.19.3.1-alpine
 envoyproxy/envoy:v1.16.2
 osixia/keepalived:2.0.20
-geoffh1977/chrony:latest
+setzero/chrony:3.5
 calico/typha:v3.17.1
 calico/cni:v3.17.1
 calico/node:v3.17.1

@@ -39,7 +39,7 @@ kubelet_root_dir: "/var/lib/kubelet"
 # 是否启用 chrony
 chrony_enabled: true
 ntp_server: "ntp.aliyun.com"
-chrony_image: "{{ kube_image_repository }}/geoffh1977_chrony:3.5"
+chrony_image: "{{ kube_image_repository }}/setzero_chrony:3.5"
 
 # Keepalived 提供的 VIPs
 KUBE_APISERVER_IP: >-
