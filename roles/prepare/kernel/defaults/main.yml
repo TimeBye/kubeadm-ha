@@ -2,21 +2,25 @@
 ansible_become: true
 # kernel repo
 kernel_centos:
-- http://files.saas.hand-china.com/kernel/centos/kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm
-- http://files.saas.hand-china.com/kernel/centos/kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm
-# - http://mirrors.reposnap.com/elrepo/20190306130017/kernel/el7/x86_64/RPMS/kernel-ml-4.20.13-1.el7.elrepo.x86_64.rpm
-# - http://mirrors.reposnap.com/elrepo/20190306130017/kernel/el7/x86_64/RPMS/kernel-ml-devel-4.20.13-1.el7.elrepo.x86_64.rpm
+- http://files.saas.hand-china.com/kernel/centos/kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm
+- http://files.saas.hand-china.com/kernel/centos/kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm
+# - http://mirrors.reposnap.com/elrepo/20210127110058/kernel/el7/x86_64/RPMS/kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm
+# - http://mirrors.reposnap.com/elrepo/20210127110058/kernel/el7/x86_64/RPMS/kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm
 
 kernel_ubuntu: 
-- http://files.saas.hand-china.com/kernel/ubuntu/linux-headers-4.20.17-042017_4.20.17-042017.201903190933_all.deb
-- http://files.saas.hand-china.com/kernel/ubuntu/linux-headers-4.20.17-042017-generic_4.20.17-042017.201903190933_amd64.deb
-- http://files.saas.hand-china.com/kernel/ubuntu/linux-modules-4.20.17-042017-generic_4.20.17-042017.201903190933_amd64.deb
-- http://files.saas.hand-china.com/kernel/ubuntu/linux-image-unsigned-4.20.17-042017-generic_4.20.17-042017.201903190933_amd64.deb
-# - http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.20.17/linux-headers-4.20.17-042017_4.20.17-042017.201903190933_all.deb
-# - http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.20.17/linux-headers-4.20.17-042017-generic_4.20.17-042017.201903190933_amd64.deb
-# - http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.20.17/linux-modules-4.20.17-042017-generic_4.20.17-042017.201903190933_amd64.deb
-# - http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.20.17/linux-image-unsigned-4.20.17-042017-generic_4.20.17-042017.201903190933_amd64.deb
+- http://files.saas.hand-china.com/kernel/ubuntu/linux-headers-5.4.95-050495_5.4.95-050495.202102032337_all.deb
+- http://files.saas.hand-china.com/kernel/ubuntu/linux-headers-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+- http://files.saas.hand-china.com/kernel/ubuntu/linux-modules-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+- http://files.saas.hand-china.com/kernel/ubuntu/linux-image-unsigned-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+# - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-headers-5.4.95-050495_5.4.95-050495.202102032337_all.deb
+# - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-headers-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+# - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-modules-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+# - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-image-unsigned-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
 
 linux_base:
-- http://files.saas.hand-china.com/kernel/ubuntu/linux-base_4.5ubuntu1.1~16.04.1_all.deb
-# - http://security.ubuntu.com/ubuntu/pool/main/l/linux-base/linux-base_4.5ubuntu1.1~16.04.1_all.deb
+- http://files.saas.hand-china.com/kernel/ubuntu/linux-base_4.6_all.deb
+# - http://http.us.debian.org/debian/pool/main/l/linux-base/linux-base_4.6_all.deb
+
+libssl:
+- http://files.saas.hand-china.com/kernel/ubuntu/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+# - http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
