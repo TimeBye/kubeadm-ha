@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux;
+# set -eux;
 
 images="
 nginx:1.19-alpine
@@ -37,10 +37,14 @@ dest_registry=${dest_registry:-'127.0.0.1:5000/kubeadm-ha'}
 for image in $images ; do 
   docker pull --platform ${1:-'linux/amd64'} $image
   count=$(echo $image | grep -o '/*' | wc -l)
-  if [ $count -eq 0 ]; then
+  if [[ $count -eq 0 ]]; then
     dest=$dest_registry/$image
-  elif [ $count -eq 1 ]; then
-    dest=$dest_registry/$(echo ${image} | sed 's / _ g')
+  elif [[ $count -eq 1 ]]; then
+    if [[ $image =~ 'k8s.gcr.io' ]]; then
+      dest=$dest_registry/$(echo ${image#*/} | sed 's / _ g')
+    else
+      dest=$dest_registry/$(echo ${image} | sed 's / _ g')
+    fi
   else
     dest=$dest_registry/$(echo ${image#*/} | sed 's / _ g')
   fi
