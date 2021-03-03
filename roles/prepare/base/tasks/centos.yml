@@ -35,6 +35,7 @@
 - block:
   - name: 备份原有 yum 源
     shell: mv /etc/yum.repos.d /etc/yum.repos.d.orig.$(date '+%Y%m%dT%H%M%S')
+    ignore_errors: true
 
   - name: 创建相关目录
     file:

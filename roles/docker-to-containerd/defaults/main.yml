@@ -38,7 +38,7 @@ host_distribution_release: >-
 docker_version: 20.10.2
 containerd_version: 1.4.3-1
 # CentOS
-docker_yum_repo: https://mirrors.aliyun.com/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
+docker_yum_repo: https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
 # Debian
 # sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7EA0A9C3F273FCD8
 docker_apt_repo: "deb [arch={{ host_architecture }}] https://mirrors.aliyun.com/docker-ce/linux/{{ host_distribution | lower }} {{ host_distribution_release }} stable"
