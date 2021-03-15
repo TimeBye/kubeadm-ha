@@ -62,11 +62,11 @@ repotrack net-tools
 repotrack libseccomp
 repotrack conntrack-tools
 repotrack bash-completion
-repotrack kubeadm-1.20.2
-repotrack kubectl-1.20.2
-repotrack kubelet-1.20.2
-yumdownloader --resolve kubeadm-1.20.2
-yumdownloader --resolve kubectl-1.20.2
-yumdownloader --resolve kubelet-1.20.2
+repotrack kubeadm-1.20.4
+repotrack kubectl-1.20.4
+repotrack kubelet-1.20.4
+yumdownloader --resolve kubeadm-1.20.4
+yumdownloader --resolve kubectl-1.20.4
+yumdownloader --resolve kubelet-1.20.4
 
 createrepo --update ./
