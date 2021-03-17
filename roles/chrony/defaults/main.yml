@@ -37,7 +37,7 @@ pod_infra_container_image: "{{ kube_image_repository }}/pause:3.2"
 kubelet_root_dir: "/var/lib/kubelet"
 
 # 是否启用 chrony
-chrony_enabled: true
+chrony_enabled: false
 ntp_server: "ntp.aliyun.com"
 chrony_image: "{{ kube_image_repository }}/setzero_chrony:3.5"
 

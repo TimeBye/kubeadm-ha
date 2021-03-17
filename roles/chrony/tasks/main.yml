@@ -1,2 +1,2 @@
 - include_tasks: deploy.yml
-  when: "(chrony_enabled|bool) | default(true)"
+  when: "(chrony_enabled|bool) | default(false)"
