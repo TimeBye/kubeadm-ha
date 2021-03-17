@@ -27,8 +27,8 @@
 # base_yum_repo: http://mirrors.aliyun.com/centos/$releasever/os/$basearch/
 # # epel软件源（ CeontOS8默认使用：https://mirrors.aliyun.com/epel/$releasever/Everything/$basearch ）
 # epel_yum_repo: http://mirrors.aliyun.com/epel/$releasever/$basearch
-# # docker-ce源 (CentOS可使用：https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/centos/$releasever/$basearch/stable )
-# docker_yum_repo: https://mirrors.tuna.tsinghua.edu.cn/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
+# # docker-ce源 (CentOS可使用：https://mirrors.aliyun.com/docker-ce/linux/centos/$releasever/$basearch/stable )
+# docker_yum_repo: https://mirrors.aliyun.com/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
 # # kubernetes源
 # kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-{{ ansible_architecture }}/
 
@@ -54,9 +54,9 @@
 # # 容器运行时类型，可选项：containerd，docker；默认 containerd
 # container_manager: containerd
 # # Docker版本
-# docker_version: 20.10.2
+# docker_version: 20.10.5
 # # containerd版本
-# containerd_version: 1.4.3-1
+# containerd_version: 1.4.4-1
 # # containerd 是否使用 systemd 作为 cgroup 驱动程序
 # containerd_use_systemd_cgroup: true
 # # containerd 相关配置

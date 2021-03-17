@@ -28,16 +28,16 @@ EOF
 repotrack lvm2
 repotrack audit
 repotrack device-mapper-persistent-data
-repotrack docker-ce-20.10.2
-repotrack docker-ce-cli-20.10.2
-repotrack containerd.io-1.4.3
-yumdownloader --resolve docker-ce-20.10.2
-yumdownloader --resolve docker-ce-cli-20.10.2
-yumdownloader --resolve containerd.io-1.4.3
+repotrack docker-ce-20.10.5
+repotrack docker-ce-cli-20.10.5
+repotrack containerd.io-1.4.4
+yumdownloader --resolve docker-ce-20.10.5
+yumdownloader --resolve docker-ce-cli-20.10.5
+yumdownloader --resolve containerd.io-1.4.4
 
 createrepo --update ./
-tar -czvf docker-ce-20.10.2.tar.gz *.rpm repodata
-mv docker-ce-20.10.2.tar.gz ..
+tar -czvf docker-ce-20.10.5.tar.gz *.rpm repodata
+mv docker-ce-20.10.5.tar.gz ..
 
 if [ $(uname -m) == 'x86_64' ];then
   curl -o kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm \
