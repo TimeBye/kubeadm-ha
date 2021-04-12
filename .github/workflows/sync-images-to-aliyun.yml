@@ -121,6 +121,7 @@ jobs:
           - pause
           - etcd
           - coredns
+          - coredns/coredns
           - ingress-nginx/controller
           - metrics-server/metrics-server
         replace:
@@ -128,6 +129,8 @@ jobs:
             new: kubeadm-ha/ingress-nginx_
           - old: metrics-server/
             new: kubeadm-ha/metrics-server_
+          - old: coredns/
+            new: kubeadm-ha/coredns/
           - new: kubeadm-ha
         rules:
           - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
