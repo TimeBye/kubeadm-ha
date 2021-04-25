@@ -1,5 +1,14 @@
 # ref: helm template --release-name traefik --namespace ingress-controller --include-crds traefik/traefik
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-controller
+  labels:
+    app.kubernetes.io/name: traefik
+    app.kubernetes.io/instance: traefik
+
+---
 # Source: traefik/templates/rbac/serviceaccount.yaml
 kind: ServiceAccount
 apiVersion: v1
