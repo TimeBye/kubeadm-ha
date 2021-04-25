@@ -54,7 +54,7 @@
 # # 容器运行时类型，可选项：containerd，docker；默认 containerd
 # container_manager: containerd
 # # Docker版本
-# docker_version: 20.10.5
+# docker_version: 20.10.6
 # # containerd版本
 # containerd_version: 1.4.4-1
 # # containerd 是否使用 systemd 作为 cgroup 驱动程序
