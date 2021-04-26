@@ -37,7 +37,7 @@ nginx_ingress_webhook_certgen_image: "{{ kube_image_repository }}/jettech_kube-w
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
 # traefik-ingress-controller 镜像地址
-traefik_ingress_image: "{{ kube_image_repository }}/traefik:2.4.0"
+traefik_ingress_image: "{{ kube_image_repository }}/traefik:2.4.8"
 
 # 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
 kube_proxy_mode: "iptables"

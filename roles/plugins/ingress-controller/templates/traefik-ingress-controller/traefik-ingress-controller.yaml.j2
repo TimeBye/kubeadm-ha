@@ -17,7 +17,7 @@ metadata:
   name: traefik
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.13.0
+    helm.sh/chart: traefik-9.18.2
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: traefik
   annotations:
@@ -29,7 +29,7 @@ metadata:
   name: traefik
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.13.0
+    helm.sh/chart: traefik-9.18.2
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: traefik
 rules:
@@ -83,7 +83,7 @@ metadata:
   name: traefik
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.13.0
+    helm.sh/chart: traefik-9.18.2
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: traefik
 roleRef:
@@ -103,27 +103,21 @@ metadata:
   name: traefik
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.13.0
+    helm.sh/chart: traefik-9.18.2
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: traefik
   annotations:
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: traefik
       app.kubernetes.io/instance: traefik
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
   template:
     metadata:
       annotations:
       labels:
         app.kubernetes.io/name: traefik
-        helm.sh/chart: traefik-9.13.0
+        helm.sh/chart: traefik-9.18.2
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: traefik
     spec:
@@ -171,10 +165,8 @@ spec:
           capabilities:
             drop:
             - ALL
-          readOnlyRootFilesystem: true
-          runAsGroup: 65532
-          runAsNonRoot: true
-          runAsUser: 65532
+            add:
+            - NET_BIND_SERVICE
         volumeMounts:
           - name: data
             mountPath: /data
@@ -196,37 +188,7 @@ spec:
           emptyDir: {}
         - name: tmp
           emptyDir: {}
-      securityContext:
-        fsGroup: 65532
----
-# Source: traefik/templates/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  namespace: ingress-controller
-  name: traefik
-  labels:
-    app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.13.0
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: traefik
-  annotations:
-spec:
-  selector:
-    app.kubernetes.io/name: traefik
-    app.kubernetes.io/instance: traefik
-  ports:
-  - port: 18443
-    name: traefik
-    targetPort: "traefik"
-  - port: 80
-    name: web
-    targetPort: "web"
-    protocol: TCP
-  - port: 443
-    name: websecure
-    targetPort: "websecure"
-    protocol: TCP
+
 ---
 # Source: traefik/templates/dashboard-hook-ingressroute.yaml
 apiVersion: traefik.containo.us/v1alpha1
@@ -238,7 +200,7 @@ metadata:
     helm.sh/hook: "post-install,post-upgrade"
   labels:
     app.kubernetes.io/name: traefik
-    helm.sh/chart: traefik-9.13.0
+    helm.sh/chart: traefik-9.18.2
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: traefik
 spec:
