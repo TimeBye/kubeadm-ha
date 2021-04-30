@@ -2,6 +2,7 @@ name: Build base images
 on:
   push:
     paths:
+      - 'offline/default.conf'
       - 'offline/Dockerfile.base'
       - 'offline/download-yum.sh'
       - 'offline/download-images-to-registry.sh'

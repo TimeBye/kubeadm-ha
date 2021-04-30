@@ -37,4 +37,4 @@ RUN dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
 RUN cp /etc/apt/sources.list /etc/apt/sources.list.orig.bak; \
     sed -i 's http://.*.debian.org http://mirrors.aliyun.com g' /etc/apt/sources.list
 
-EXPOSE 80 5000
+EXPOSE 80
