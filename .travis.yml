@@ -100,7 +100,7 @@ jobs:
             - old: metrics-server/
               new: kubeadm-ha/metrics-server_
             - old: coredns/
-              new: kubeadm-ha/coredns/
+              new: kubeadm-ha/
             - new: kubeadm-ha
           rules:
             - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$

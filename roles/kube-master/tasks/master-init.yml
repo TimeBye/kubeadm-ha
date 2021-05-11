@@ -6,7 +6,7 @@
 
 - name: 获取 master 节点需要拉取的镜像列表
   shell: >
-    kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml | 
+    kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml | grep -v coredns | 
     grep {{ kube_image_repository }}
   register: kube_image_list
 
@@ -15,7 +15,7 @@
   with_items: "{{ kube_image_list.stdout_lines }}"
 
 - name: 初始化第一个 master 节点
-  shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml
+  shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml --ignore-preflight-errors=ImagePull
 
 - include_tasks: "{{ (role_path + '/../kube-certificates/tasks/kubeconfig.yml') | realpath  }}"
 
@@ -79,3 +79,6 @@
   - name: 配置 Pod 安全策略
     shell: kubectl apply -f /etc/kubernetes/config/pod-security-policy.yaml
   when: '"PodSecurityPolicy" in kube_apiserver_enable_admission_plugins'
+
+- name: 置换 CoreDNS 镜像地址
+  shell: "kubectl set image deployment/coredns -n kube-system coredns={{ coredns_image }}"

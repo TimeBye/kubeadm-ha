@@ -34,9 +34,12 @@ pod_infra_container_image: "{{ kube_image_repository }}/pause:3.2"
 # kubernetes各组件镜像仓库前缀
 kube_image_repository: registry.aliyuncs.com/kubeadm-ha
 # kubernetes版本
-kube_version: 1.20.6
+kube_version: 1.21.0
 # 集群内部dns域名
 kube_dns_domain: cluster.local
+
+# CoreDNS镜像地址
+coredns_image: "{{ kube_image_repository }}/coredns:v1.8.0"
 
 # 集群 pod ip 段，共 16384 个ip
 kube_pod_subnet: 10.244.0.0/18

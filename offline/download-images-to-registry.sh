@@ -22,13 +22,13 @@ quay.io/coreos/flannel:v0.13.0
 quay.io/jetstack/cert-manager-cainjector:v1.1.0
 quay.io/jetstack/cert-manager-webhook:v1.1.0
 quay.io/jetstack/cert-manager-controller:v1.1.0
-k8s.gcr.io/kube-apiserver:v1.20.6
-k8s.gcr.io/kube-controller-manager:v1.20.6
-k8s.gcr.io/kube-scheduler:v1.20.6
-k8s.gcr.io/kube-proxy:v1.20.6
+k8s.gcr.io/kube-apiserver:v1.21.0
+k8s.gcr.io/kube-controller-manager:v1.21.0
+k8s.gcr.io/kube-scheduler:v1.21.0
+k8s.gcr.io/kube-proxy:v1.21.0
 k8s.gcr.io/pause:3.2
 k8s.gcr.io/etcd:3.4.13-0
-k8s.gcr.io/coredns:1.7.0
+k8s.gcr.io/coredns/coredns:v1.8.0
 k8s.gcr.io/ingress-nginx/controller:v0.43.0
 k8s.gcr.io/metrics-server/metrics-server:v0.4.1
 "
@@ -46,7 +46,11 @@ for image in $images ; do
       dest=$dest_registry/$(echo ${image} | sed 's / _ g')
     fi
   else
-    dest=$dest_registry/$(echo ${image#*/} | sed 's / _ g')
+    if [[ $image =~ 'coredns' ]]; then
+      dest=$dest_registry/$(echo ${image##*/} | sed 's / _ g')
+    else
+      dest=$dest_registry/$(echo ${image#*/} | sed 's / _ g')
+    fi
   fi
   docker tag $image $dest
   docker push $dest

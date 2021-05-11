@@ -13,7 +13,7 @@ host_architecture: >-
   {%- endif -%}
 
 # kubernetes版本
-kube_version: 1.20.6
+kube_version: 1.21.0
 
 # kubernetes各组件镜像仓库前缀
 kube_image_repository: registry.aliyuncs.com/kubeadm-ha
