@@ -5,4 +5,5 @@
   - kube-worker
   - new-worker
   roles:
+  - prepare/variables
   - kube-certificates

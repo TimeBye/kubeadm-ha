@@ -77,7 +77,7 @@
     enabled: no
 
 - name: 拉取 chrony 镜像
-  shell: "{{ IMAGE_PULL_COMMAND }} {{ item }}"
+  shell: "{{ image_pull_command }} {{ item }}"
   with_items:
   - "{{ chrony_image }}"
   - "{{ pod_infra_container_image }}"

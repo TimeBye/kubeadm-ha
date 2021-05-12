@@ -37,6 +37,7 @@
 - hosts: 
   - all
   roles:
+  - prepare/variables
   - prepare/base
   - prepare/container-engine
   - prepare/kubernetes

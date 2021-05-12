@@ -16,6 +16,7 @@
 - hosts: 
   - new-master
   roles:
+  - prepare/variables
   - prepare/base
   - prepare/container-engine
   - prepare/kubernetes
@@ -25,7 +26,8 @@
 - hosts: 
   - all
   roles:
-  - role: load-balancer
+  - prepare/variables
+  - load-balancer
 
 # 分发 etcd client 证书
 - hosts: 
@@ -33,6 +35,7 @@
   - kube-master
   - new-master
   roles:
+  - prepare/variables
   - etcd/certificates
 
 # 生成master节点证书
@@ -42,6 +45,7 @@
   - kube-worker
   - new-worker
   roles:
+  - prepare/variables
   - kube-certificates
 
 # 初始化master节点
@@ -49,6 +53,7 @@
   - kube-master
   - new-master
   roles:
+  - prepare/variables
   - kube-master
   - kube-worker
 
@@ -56,4 +61,5 @@
 - hosts: 
   - new-master
   roles:
+  - prepare/variables
   - post

@@ -9,8 +9,8 @@
 [![](https://img.shields.io/badge/Dist-Ubuntu16.04-yellow.svg?style=flat-square)](https://img.shields.io/badge/Dist-Ubuntu16.04-yellow.svg?style=flat-square)
 [![](https://img.shields.io/badge/Dist-Debian9-yellow.svg?style=flat-square)](https://img.shields.io/badge/Dist-Debian9-yellow.svg?style=flat-square)
 [![](https://img.shields.io/badge/Dist-Centos7-orange.svg?style=flat-square)](https://img.shields.io/badge/Dist-Centos7-orange.svg?style=flat-square)
-[![](https://img.shields.io/badge/Dist-Centos8-orange.svg?style=flat-square)](https://img.shields.io/badge/Dist-Centos8-orange.svg?style=flat-square)
 [![](https://img.shields.io/badge/Dist-RedHat7-orange.svg?style=flat-square)](https://img.shields.io/badge/Dist-RedHat7-orange.svg?style=flat-square)
+[![](https://img.shields.io/badge/Dist-Centos8-orange.svg?style=flat-square)](https://img.shields.io/badge/Dist-Centos8-orange.svg?style=flat-square)
 [![](https://img.shields.io/badge/Proxy-iptables-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Proxy-iptables-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/Proxy-IPVS-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Proxy-IPVS-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/DNS-CoreDNS-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/DNS-CoreDNS-brightgreen.svg?style=flat-square)
@@ -23,16 +23,16 @@
 
 - **相关支持：**
 
-  | **类别**           | **支持**                                                   |
-  | :----------------- | :--------------------------------------------------------- |
-  | Architecture       | amd64, arm64                                               |
-  | OS                 | Ubuntu 16.04+, Debian 9, CentOS 7.4+, CentOS 8, RedHat 7   |
-  | Etcd               | 3.4.13-0                                                   |
-  | Container runtimes | Docker, **containerd**                                     |
-  | Kubernetes         | v1.13, v1.14, v1.15, v1.16, v1.17, v1.18, v1.19, **v1.20** |
-  | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**                  |
-  | Network plugin     | flannel, **calico**                                        |
-  | Ingress controller | traefik, **nginx-ingress**                                 |
+  | **类别**           | **支持**                                                 |
+  | :----------------- | :------------------------------------------------------- |
+  | Architecture       | amd64, arm64                                             |
+  | OS                 | Ubuntu 16.04+, Debian 9, CentOS 7.4+, RedHat 7, CentOS 8 |
+  | Etcd               | 3.4.13-0                                                 |
+  | Container runtimes | Docker, **containerd**                                   |
+  | Kubernetes         | v1.15, v1.16, v1.17, v1.18, v1.19, v1.20, **v1.21**      |
+  | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**                |
+  | Network plugin     | flannel, **calico**                                      |
+  | Ingress controller | traefik, **nginx-ingress**                               |
 
   **Note:** 表格中粗体标识出来的为默认安装版本
 

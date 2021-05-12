@@ -6,5 +6,6 @@
   - kube-worker
   - new-worker
   roles:
+  - prepare/variables
   - etcd/certificates
   - kube-certificates

@@ -35,7 +35,7 @@
     - /etc/kubernetes/manifests
 
   - name: 在 etcd 节点拉取相关镜像
-    shell: "{{ IMAGE_PULL_COMMAND }} {{ item }}"
+    shell: "{{ image_pull_command }} {{ item }}"
     with_items:
     - "{{ etcd_image }}"
     - "{{ pod_infra_container_image }}"

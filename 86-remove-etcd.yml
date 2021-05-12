@@ -11,12 +11,14 @@
         msg: "移除确认失败，取消移除 etcd 节点操作。"
       when: restore_confirmation != "yes"
   roles:
+  - prepare/variables
   - remove/etcd
 
 # 删除etcd节点后刷新master节点kubeadm配置
 - hosts: 
   - kube-master
   roles:
+  - prepare/variables
   - kube-master
 
 - hosts: 

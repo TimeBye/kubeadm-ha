@@ -16,6 +16,7 @@
 - hosts: 
   - all
   roles:
+  - prepare/variables
   - prepare/base
   - prepare/kernel
   environment: "{{ proxy_env }}"

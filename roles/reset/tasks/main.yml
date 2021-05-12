@@ -176,7 +176,7 @@
     - /etc/systemd/system.conf.d/30-k8s-ulimits.conf
     - /etc/systemd/system/containerd.service.d
     - /etc/systemd/system/docker.service.d
-    - /etc/systemd/system/kubelet.service.d
+    # - /etc/systemd/system/kubelet.service.d
     - /opt/cni
     - /opt/containerd
     - /run/calico

@@ -33,7 +33,7 @@
     ctr -n k8s.io run --net-host --env ETCDCTL_API=3
     --mount type=bind,src=/etc/kubernetes/pki/etcd,dst=/etc/kubernetes/pki/etcd,options=rbind:ro
     --rm {{ etcd_image }} etcd-add-member
-    etcdctl member add {{ NEW_MEMBER }}
+    etcdctl member add {{ etcd_new_member }}
     --endpoints=https://[127.0.0.1]:2379
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
     --key=/etc/kubernetes/pki/etcd/healthcheck-client.key

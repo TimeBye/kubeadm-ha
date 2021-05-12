@@ -26,6 +26,7 @@
 - hosts: 
   - all
   roles:
+  - prepare/variables
   - docker-to-containerd
   environment: "{{ proxy_env }}"
 
@@ -33,6 +34,7 @@
   - kube-master
   - new-master
   roles:
+  - prepare/variables
   - kube-master
 
 - hosts: 
@@ -41,6 +43,7 @@
   - kube-worker
   - new-worker
   roles:
+  - prepare/variables
   - kube-worker
 
 - hosts: 
@@ -49,5 +52,6 @@
   - kube-master
   - new-master
   roles:
+  - prepare/variables
   - etcd/certificates
   - etcd/install

@@ -3,4 +3,5 @@
 - hosts: 
   - all
   roles:
-  - role: load-balancer
+  - prepare/variables
+  - load-balancer

@@ -36,10 +36,10 @@
 
 - block:
   - name: keepalived | 获取网卡名称
-    shell: "ip a|grep '{{ CURRENT_HOST_IP }}/'|awk '{print $NF}'"
+    shell: "ip a|grep '{{ current_host_ip }}/'|awk '{print $NF}'"
     register: lb_keepalived_interface
   - name: keepalived | 拉取相关镜像
-    shell: "{{ IMAGE_PULL_COMMAND }} {{ item }}"
+    shell: "{{ image_pull_command }} {{ item }}"
     with_items:
     - "{{ lb_keepalived_image }}"
   - name: keepalived | 生成 static pod 文件
@@ -101,7 +101,7 @@
   delay: 5
 
 - name: 以轮询的方式等待 keepalived 运行完成
-  shell: nc -z -w 3 {{ KUBE_APISERVER_IP | trim }} {{ lb_kube_apiserver_port }}
+  shell: nc -z -w 3 {{ kube_apiserver_ip | trim }} {{ lb_kube_apiserver_port }}
   register: keepalived_status
   until: keepalived_status.rc == 0
   retries: 12

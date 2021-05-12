@@ -1,0 +1,558 @@
+#-------------------------------------------------------------------------------------------------------------#
+#----------------------------------------------- Ansible 变量 ------------------------------------------------#
+#-------------------------------------------------------------------------------------------------------------#
+# 提权操作
+ansible_become: true
+# 忽略警告
+command_warnings: false
+
+#-------------------------------------------------------------------------------------------------------------#
+#-------------------------------------------- 基础参数（内置，不可改变） -----------------------------------------#
+#-------------------------------------------------------------------------------------------------------------#
+# 当前节点 cpu 架构
+_host_architecture_groups:
+  x86_64: amd64
+  aarch64: arm64
+  armv7l: arm
+host_architecture: >-
+  {%- if ansible_architecture in _host_architecture_groups -%}
+  {{ _host_architecture_groups[ansible_architecture] }}
+  {%- else -%}
+  {{ ansible_architecture }}
+  {%- endif -%}
+
+# 当前节点系统类型
+_host_distribution_groups:
+  uos: debian
+host_distribution: >-
+  {%- if ansible_distribution in _host_distribution_groups -%}
+  {{ _host_distribution_groups[ansible_distribution] }}
+  {%- else -%}
+  {{ ansible_distribution }}
+  {%- endif -%}
+
+# 当前节点系统版本
+host_distribution_release: >-
+  {%- if (ansible_distribution_release == 'n/a')
+  or (ansible_distribution_release is not defined)
+  or (ansible_distribution_release == '') -%}
+  buster
+  {%- else -%}
+  {{ ansible_distribution_release }}
+  {%- endif -%}
+
+# 当前节点 ip
+current_host_ip: >-
+  {%- if hostvars[inventory_hostname]['ansible_host'] is defined -%}
+  {{ hostvars[inventory_hostname]['ansible_host'] }}
+  {%- else -%}
+  {{ inventory_hostname }}
+  {%- endif -%}
+
+#--------------------------------------------------------------------------------------------------------#
+#----------------------------------------------- 基础参数 ------------------------------------------------#
+#--------------------------------------------------------------------------------------------------------#
+# 是否跳过节点资源校验
+skip_verify_node: false
+
+# 节点时区
+timezone: Asia/Shanghai
+
+# 禁用防火墙
+firewalld_disabled: true
+
+# # 自定义hosts记录
+# # 举例：
+# custom_hosts:
+#   "127.0.0.1": 
+#   - "one.domain.custom.local"
+#   - "tow.domain.custom.local"
+custom_hosts: {}
+
+#--------------------------------------------- 内核包下载地址 ----------------------------------------------#
+# kernel repo
+kernel_centos:
+- http://files.saas.hand-china.com/kernel/centos/kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm
+- http://files.saas.hand-china.com/kernel/centos/kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm
+# - http://mirrors.reposnap.com/elrepo/20210127110058/kernel/el7/x86_64/RPMS/kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm
+# - http://mirrors.reposnap.com/elrepo/20210127110058/kernel/el7/x86_64/RPMS/kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm
+
+kernel_ubuntu: 
+- http://files.saas.hand-china.com/kernel/ubuntu/linux-headers-5.4.95-050495_5.4.95-050495.202102032337_all.deb
+- http://files.saas.hand-china.com/kernel/ubuntu/linux-headers-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+- http://files.saas.hand-china.com/kernel/ubuntu/linux-modules-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+- http://files.saas.hand-china.com/kernel/ubuntu/linux-image-unsigned-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+# - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-headers-5.4.95-050495_5.4.95-050495.202102032337_all.deb
+# - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-headers-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+# - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-modules-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+# - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-image-unsigned-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+
+linux_base:
+- http://files.saas.hand-china.com/kernel/ubuntu/linux-base_4.6_all.deb
+# - http://http.us.debian.org/debian/pool/main/l/linux-base/linux-base_4.6_all.deb
+
+libssl:
+- http://files.saas.hand-china.com/kernel/ubuntu/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+# - http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+
+# epel 源地址，兼容 CentOS8
+epel_yum_repo: >-
+  {%- if ansible_distribution_major_version is version('8', '<') -%}
+  http://mirrors.aliyun.com/epel/$releasever/$basearch
+  {%- else -%}
+  https://mirrors.aliyun.com/epel/$releasever/Everything/$basearch
+  {%- endif -%}
+
+#----------------------------------------------- 容器运行时参数（可配置项） --------------------------------------------#
+# 容器运行时类型（containerd 或者 docker）
+container_manager: containerd
+
+# 容器运行时 CentOS 源
+docker_yum_repo: >-
+  https://mirrors.aliyun.com/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
+
+# 容器运行时 Debian 源
+# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7EA0A9C3F273FCD8
+docker_apt_repo: >-
+  deb [arch={{ host_architecture }}]
+  https://mirrors.aliyun.com/docker-ce/linux/{{ host_distribution | lower }}
+  {{ host_distribution_release }} stable
+
+#----------------------------------------------- 容器运行时参数（不可配置项） -------------------------------------------#
+# CRI socket path
+cri_socket: >-
+  {%- if container_manager == 'containerd' -%}
+  /var/run/containerd/containerd.sock
+  {%- else -%}
+  /var/run/dockershim.sock
+  {%- endif -%}
+
+# 镜像拉取命令
+image_pull_command: >-
+  {%- if container_manager_detected == 'containerd' -%}
+  crictl pull
+  {%- else -%}
+  docker pull
+  {%- endif -%}
+
+#-------------------------------- Containerd 相关配置（容器运行时类型为 Docker 时，请忽略) -------------------------------#
+# Containerd 版本
+containerd_version: 1.4.4-1
+# 配置 Dockerhub 国内镜像加速地址
+containerd_plugins_cri_registries_mirrors:
+  "docker.io": "https://registry-1.docker.io"
+# 数据存储目录
+containerd_storage_dir: "/var/lib/containerd"
+# 状态目录
+containerd_state_dir: "/run/containerd"
+# 应用于容器式守护进程的内存不足（OOM）分数（默认值：0）
+containerd_oom_score: -999
+# containerd 是否使用 systemd 作为 cgroup 驱动程序
+containerd_use_systemd_cgroup: true
+# 日志输出等级
+containerd_debug_level: ""
+# grpc 数据大小
+containerd_config_grpc:
+  max_recv_message_size: 16777216
+  max_send_message_size: 16777216
+# 最大日志大小
+containerd_max_container_log_line_size: -1
+
+# Example for containerd_plugins_cri_containerd:
+# containerd_plugins_cri_containerd:
+#   snapshotter: native
+containerd_plugins_cri_containerd: {}
+
+containerd_default_runtime:
+  type: io.containerd.runtime.v1.linux
+  engine: ''
+  root: ''
+
+containerd_untrusted_workload_runtime:
+  type: ''
+  engine: ''
+  root: ''
+
+# 其他运行时的容器化配置
+#
+# Example for Kata Containers:
+# containerd_runtimes:
+#   - name: kata
+#     type: io.containerd.kata.v2
+#     engine: ""
+#     root: ""
+containerd_runtimes: []
+
+# Pod根容器
+pod_infra_container_image: "{{ kube_image_repository }}/pause:3.2"
+
+#------------------------------ Docker 相关配置（容器运行时类型为 Containerd 时，请忽略) ------------------------------ #
+# Docker 版本
+# apt-cache madison docker-ce
+# yum list docker-ce --showduplicates --enablerepo=docker-ce | sort -r
+docker_version: 20.10.6
+
+# Dockerhub 国内镜像加速地址
+docker_mirror: 
+# - "https://hub-mirror.c.163.com"
+
+# 信任的不安全镜像库地址，默认为 Pod 和 Service 网段
+docker_insecure_registries:
+- "{{ kube_pod_subnet }}"
+- "{{ kube_service_subnet }}"
+
+# Docker 容器日志相关设置
+docker_log_driver: "json-file"
+docker_log_level: "warn"
+docker_log_max_size: "10m"
+docker_log_max_file: 5
+
+# docker容器存储目录
+docker_storage_dir: "/var/lib/docker"
+
+# 并行镜像下载数量
+docker_max_concurrent_downloads: 10
+
+#----------------------------------------------- Kubernetes 相关配置 -----------------------------------------------#
+# kubernetes版本
+# apt-cache madison kubeadm
+# yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
+kube_version: 1.21.0
+
+# CentOS
+kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-{{ ansible_architecture }}/
+
+# Debian
+# sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6A030B21BA07F4FB
+# kubernetes_apt_repo: deb [arch=amd64] https://mirrors.aliyun.com/kubernetes/apt kubernetes-{{ ansible_distribution_release }} main
+kubernetes_apt_repo: deb https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main
+
+# kubernetes各组件镜像仓库前缀
+kube_image_repository: registry.aliyuncs.com/kubeadm-ha
+
+# kubernetes证书过期时间（天）
+kube_certs_expired: 3650
+# kubernetes根证书过期时间（天）
+kube_ca_certs_expired: 36500
+
+# k8s 集群 master 节点证书配置，可以添加多个ip和域名（比如增加公网ip和域名）
+kube_master_external_ip:
+- "8.8.8.8"
+kube_master_external_domain:
+- "kubernetes.io"
+
+# 集群内部dns域名
+kube_dns_domain: cluster.local
+
+# 集群pod ip段
+kube_pod_subnet: 10.244.0.0/18
+
+# 集群service ip段
+kube_service_subnet: 10.244.64.0/18
+
+# 分配给节点的 pod 子网掩码位，默认为 24 即 256 个ip，故使用这些默认值可以纳管 16384/256=64 个节点。
+kube_network_node_prefix: 24
+
+# Kubelet 根目录
+kubelet_root_dir: "/var/lib/kubelet"
+
+# 加入集群token
+kubeadm_token: "abcdef.0123456789abcdef"
+
+# CoreDNS镜像地址
+coredns_image: "{{ kube_image_repository }}/coredns:v1.8.0"
+
+# NodePort端口范围
+kube_service_node_port_range: 30000-32767
+# 资源保留相关配置
+eviction_hard_imagefs_available: 15%
+eviction_hard_memory_available: 100Mi
+eviction_hard_nodefs_available: 10%
+eviction_hard_nodefs_inodes_free: 5%
+
+# kubernetes组件预留资源
+kube_cpu_reserved: 100m
+kube_memory_reserved: 256M
+kube_ephemeral_storage_reserved: 1G
+
+# # 操作系统守护进程预留资源
+# system_reserved_enabled: true
+# # 取消注释以覆盖默认值
+# system_cpu_reserved: 500m
+# system_memory_reserved: 512M
+# system_ephemeral_storage_reserved: 10G
+
+# 默认使用kube-proxy的 'iptables' 模式，可选 'ipvs' 模式(experimental)
+kube_proxy_mode: "iptables"
+
+# node节点最大pod 数
+kube_max_pods: 110
+
+## 存入 Etcd 时的 Secret 进行静态加密 
+# 仅支持: aescbc, secretbox 或 aesgcm
+kube_encryption_algorithm: "aescbc"
+# 将Secret数据加密存储到etcd中的配置文件，下面加密码由 head -c 32 /dev/urandom | base64 生成
+kube_encrypt_token: "GPG4RC0Vyk7+Mz/niQPttxLIeL4HF96oRCcBRyKNpfM="
+
+## 审计相关配置
+# 是否启用审计
+kubernetes_audit: false
+# 保留审计日志最大天数
+audit_log_maxage: 30
+# 保留审计日志最大个数
+audit_log_maxbackups: 10
+# 保留审计日志最大容量（MB）
+audit_log_maxsize: 100
+# 审计日志文件挂载在主机上的目录
+audit_log_hostpath: /var/log/kubernetes/audit
+# 审计策略配置文件路径
+audit_policy_file: /etc/kubernetes/config/apiserver-audit-policy.yaml
+# 自定义审计日志规则 (替换默认的审计规则)
+# audit_policy_custom_rules: |
+#   - level: None
+#     users: []
+#     verbs: []
+#     resources: []
+
+# 1.10+ admission plugins
+kube_apiserver_enable_admission_plugins: 
+- NodeRestriction
+# - AlwaysPullImages
+# - PodSecurityPolicy
+
+# 1.10+ list of disabled admission plugins
+kube_apiserver_disable_admission_plugins: []
+
+# kube-controller-manager 标记 kubelet(node) 为不健康的周期
+kube_controller_node_monitor_grace_period: 40s
+# kube-controller-manager 定期检查 kubelet(node) 状态周期
+kube_controller_node_monitor_period: 5s
+# kube-controller-manager 判定节点故障，重建 Pod 的超时时间，默认值 5m0s，这里改为了 2m0s
+kube_controller_pod_eviction_timeout: 2m0s
+# exit 状态的 pod 超过多少会触发 gc，默认值 12500，这里改为了 10
+kube_controller_terminated_pod_gc_threshold: 10
+
+## Extra args for k8s components passing by kubeadm
+kube_kubeadm_apiserver_extra_args: {}
+kube_kubeadm_controller_extra_args: {}
+kube_kubeadm_scheduler_extra_args: {}
+
+## Extra control plane host volume mounts
+## Example:
+# apiserver_extra_volumes:
+#  - name: name
+#    hostPath: /host/path
+#    mountPath: /mount/path
+#    readOnly: true
+apiserver_extra_volumes: {}
+controller_manager_extra_volumes: {}
+scheduler_extra_volumes: {}
+
+# kubelet 启动参数
+kubelet_args_base: >-
+  --address=127.0.0.1
+  {% if container_manager_detected == 'containerd' %}
+  --container-runtime=remote
+  --container-runtime-endpoint=unix://{{ cri_socket }}
+  {% else %}
+  --pod-infra-container-image={{ pod_infra_container_image }}
+  {% endif %}
+  --root-dir={{ kubelet_root_dir }}
+  --hostname-override={{ inventory_hostname }}
+  --pod-manifest-path=/etc/kubernetes/manifests
+  --cgroup-driver={{ kubelet_cgroup_driver|default(kubelet_cgroup_driver_detected) }}
+
+kube_apiserver_ip: >-
+  {% if lb_kube_apiserver_ip is not defined %}
+    127.0.0.1
+  {% else %}
+    {{ lb_kube_apiserver_ip }}
+  {% endif %}
+
+# kubernetes apiserver 的服务 ip
+kubernetes_service_ip: "{{ kube_service_subnet | ipaddr('net') | ipaddr(1) | ipaddr('address') }}"
+# 集群 dns 的服务 ip
+cluster_dns_service_ip: "{{ kube_service_subnet | ipaddr('net') | ipaddr(10) | ipaddr('address') }}"
+
+#-------------------------------------------------------------------------------------------------------------#
+#------------------------------------------------- Chrony参数 ------------------------------------------------#
+#-------------------------------------------------------------------------------------------------------------#
+# 是否启用 chrony
+chrony_enabled: false
+# ntp 服务器地址
+ntp_server: "ntp.aliyun.com"
+# chrony 镜像地址
+chrony_image: "{{ kube_image_repository }}/setzero_chrony:3.5"
+
+#-------------------------------------------------------------------------------------------------------------#
+#-------------------------------------------------- Etcd参数 -------------------------------------------------#
+#-------------------------------------------------------------------------------------------------------------#
+# Etcd证书过期时间（天）
+etcd_certs_expired: 3650
+# Etcd根证书过期时间（天）
+etcd_ca_certs_expired: 36500
+# Etcd使用的镜像
+etcd_image: "{{ kube_image_repository }}/etcd:3.4.13-0"
+# Etcd 数据根目录
+etcd_data_dir: "/var/lib/etcd"
+# Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
+etcd_backup_hour: "3"
+# Etcd 每日备份文件保留时长，默认7天
+etcd_backup_expiry: "7"
+
+# etcd 集群
+etcd_initial_cluster: >-
+  {%- for host in ((groups['etcd'] + groups['new-etcd'])|unique) -%}
+  {%- if hostvars[host]['ansible_host'] is defined -%}
+  etcd-{{ host }}=https://{{ hostvars[host]['ansible_host'] }}:2380
+  {%- else -%}
+  etcd-{{ host }}=https://{{ host }}:2380
+  {%- endif -%}
+  {%- if not loop.last -%},{%- endif -%}
+  {%- endfor -%}
+
+# etcd 集群初始状态 new/existing
+etcd_cluster_state: >-
+  {%- if etcd_static_pod_stat.stat.exists or (inventory_hostname in (groups['new-etcd'])) -%}
+  existing
+  {%- else -%}
+  new
+  {%- endif -%}
+
+# 新增 etcd 节点添加信息
+etcd_new_member: >-
+  etcd-{{ inventory_hostname }}
+  {%- if hostvars[inventory_hostname]['ansible_host'] is defined -%}
+  --peer-urls=https://{{ hostvars[inventory_hostname]['ansible_host'] }}:2380
+  {%- else -%}
+  --peer-urls=https://{{ inventory_hostname }}:2380
+  {%- endif -%}
+
+#-------------------------------------------------------------------------------------------------------------#
+#------------------------------------------------ 负载均衡器参数 -----------------------------------------------#
+#-------------------------------------------------------------------------------------------------------------#
+# 负载均衡模式(nginx openresty haproxy envoy slb)
+lb_mode: nginx
+# 经过负载后的apiserver端口号
+lb_kube_apiserver_port: 8443
+# 负载均衡器健康检查端口
+lb_kube_apiserver_healthcheck_port: 8081
+
+#---------------------------------------------- Openresty 相关参数 --------------------------------------------#
+# 使用openresty进行apiserver负载时使用的nginx镜像
+lb_openresty_image: "{{ kube_image_repository }}/openresty_openresty:1.19.3.1-alpine"
+
+#---------------------------------------------- Nginx 相关参数 --------------------------------------------#
+# 使用nginx进行apiserver负载时使用的nginx镜像
+lb_nginx_image: "{{ kube_image_repository }}/nginx:1.19-alpine"
+
+#--------------------------------------------- Haproxy 相关参数 --------------------------------------------#
+# 使用haproxy进行apiserver负载时使用的haproxy镜像
+lb_haproxy_image: "{{ kube_image_repository }}/haproxy:2.3-alpine"
+# haproxy监控绑定端口
+lb_haproxy_stats_bind_address: 9090
+# haproxy监控访问路径
+lb_haproxy_stats_uri: "/stats"
+# haproxy监控自动刷新时间（秒）
+lb_haproxy_stats_refresh: 10
+# haproxy监控用户名
+lb_haproxy_stats_user: "admin"
+# haproxy监控用户密码
+lb_haproxy_stats_password: "admin"
+# haproxy负载均衡算法，常见如下：
+# "roundrobin": 基于服务器权重的轮询
+# "leastconn": 基于服务器最小连接数
+# "source": 基于请求源IP地址
+# "uri": 基于请求的URI
+lb_haproxy_balance_alg: "leastconn"
+
+#--------------------------------------------- Envoy 相关参数 --------------------------------------------#
+# 使用haproxy进行apiserver负载时使用的haproxy镜像
+lb_envoy_image: "{{ kube_image_repository }}/envoyproxy_envoy:v1.16.2"
+lb_envoy_admin_address_port: 9090
+
+#--------------------------------------------- Keepalived 相关参数 ---------------------------------------#
+# 使用 vip 负载时使用的 keepalived 镜像
+lb_keepalived_image: "{{ kube_image_repository }}/osixia_keepalived:2.0.20"
+# keepalived auth_type 的 password
+lb_keepalived_password: "d0cker"
+# 区分多个 instance 的 VRRP 组播，同网段不能重复，取值在0-255之间
+lb_keepalived_router_id: 51
+# 默认所有节点权重 120
+lb_keepalived_priority: "120"
+
+#-------------------------------------------------------------------------------------------------------------#
+#--------------------------------------------------- 插件参数 -------------------------------------------------#
+#-------------------------------------------------------------------------------------------------------------#
+# 是否等待插件启动
+wait_plugins_ready: true
+
+#------------------------------------------------ Ingress 相关参数 --------------------------------------------#
+# 是否启用ingress-controller
+ingress_controller_enabled: true
+# ingress-controller类型(nginx,traefik)
+ingress_controller_tpye: nginx
+
+# nginx-ingress-controller 镜像地址
+nginx_ingress_image: "{{ kube_image_repository }}/ingress-nginx_controller:v0.43.0"
+nginx_ingress_webhook_certgen_image: "{{ kube_image_repository }}/jettech_kube-webhook-certgen:v1.5.0"
+
+# traefik默认证书过期时间（天）
+traefik_certs_expired: 3650
+# traefik-ingress-controller 镜像地址
+traefik_ingress_image: "{{ kube_image_repository }}/traefik:2.4.8"
+
+#----------------------------------------- kubernetes-dashboard 相关参数 --------------------------------------#
+# 是否启用kubernetes-dashboard 
+kubernetesui_dashboard_enabled: true
+# dashboard默认证书有效期
+kubernetesui_dashboard_certs_expired: 3650
+# kubernetes-dashboard 镜像地址
+kubernetesui_dashboard_image: "{{ kube_image_repository }}/kubernetesui_dashboard:v2.1.0"
+kubernetesui_metrics_scraper_image: "{{ kube_image_repository }}/kubernetesui_metrics-scraper:v1.0.6"
+
+#-------------------------------------------- metrics-server 相关参数 ----------------------------------------#
+# 是否启用metrics-server
+metrics_server_enabled: true
+# metrics-server image地址
+metrics_server_image: "{{ kube_image_repository }}/metrics-server_metrics-server:v0.4.1"
+
+#------------------------------------------------ 网络插件相关参数 --------------------------------------------#
+# 是否启用网络组建
+network_plugins_enabled: true
+# 集群网络插件，目前支持flannel, calico
+network_plugin: "calico"
+
+# 设置 flannel 后端
+# flannel_backend: "host-gw"
+flannel_backend: "vxlan"
+# flannel 镜像地址
+flannel_image: "{{ kube_image_repository }}/coreos_flannel:v0.13.0"
+
+# 设置calico 网络 backend: brid, vxlan, none
+calico_backend: bird
+# calico mtu
+calico_veth_mtu: 0
+# calico 相关镜像
+calico_typha_image: "{{ kube_image_repository }}/calico_typha:v3.17.1"
+calico_cni_image: "{{ kube_image_repository }}/calico_cni:v3.17.1"
+calico_node_image: "{{ kube_image_repository }}/calico_node:v3.17.1"
+calico_kube_controllers_image: "{{ kube_image_repository }}/calico_kube-controllers:v3.17.1"
+calico_pod2daemon_flexvol_image: "{{ kube_image_repository }}/calico_pod2daemon-flexvol:v3.17.1"
+# calicoctl image 地址
+calicoctl_image: "{{ kube_image_repository }}/calico_ctl:v3.17.1"
+# 设置 Felix 日志级别(debug, info, warning, error)
+calico_felix_log_level: "warning"
+
+#--------------------------------------------- cert-manager 相关参数 -----------------------------------------#
+# 是否启用cert-manager
+cert_manager_enabled: false
+
+# acme相关配置
+acme_server: https://acme-v02.api.letsencrypt.org/directory
+acme_email: yourname@gmail.com
+
+# cert-manager 相关 image 地址
+cert_manager_cainjector_image: "{{ kube_image_repository }}/jetstack_cert-manager-cainjector:v1.1.0"
+cert_manager_webhook_image: "{{ kube_image_repository }}/jetstack_cert-manager-webhook:v1.1.0"
+cert_manager_controller_image: "{{ kube_image_repository }}/jetstack_cert-manager-controller:v1.1.0"

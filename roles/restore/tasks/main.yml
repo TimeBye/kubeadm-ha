@@ -136,9 +136,9 @@
       /etc/kubernetes/backup/etcd/etcd-snapshot-latest.db
       --data-dir={{ etcd_data_dir }}
       --name=etcd-{{ inventory_hostname }}
-      --initial-cluster={{ INITIAL_CLUSTER }}
+      --initial-cluster={{ etcd_initial_cluster }}
       --initial-cluster-token=etcd-cluster-token
-      --initial-advertise-peer-urls=https://{{ CURRENT_HOST_IP }}:2380
+      --initial-advertise-peer-urls=https://{{ current_host_ip }}:2380
   
   - name: 移除各节点临时 etcd 备份文件
     file: 

@@ -22,6 +22,7 @@
 - hosts: 
   - new-etcd
   roles:
+  - prepare/variables
   - prepare/base
   - prepare/container-engine
   - prepare/kubernetes
@@ -31,6 +32,7 @@
   - etcd
   - new-etcd
   roles:
+  - prepare/variables
   - etcd/certificates
   - etcd/install
 
@@ -38,12 +40,14 @@
 - hosts: 
   - kube-master
   roles:
+  - prepare/variables
   - kube-master
 
 # 标记各节点角色
 - hosts: 
   - new-etcd
   roles:
+  - prepare/variables
   - post
 
 - hosts: 

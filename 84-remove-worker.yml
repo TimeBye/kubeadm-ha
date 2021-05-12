@@ -11,4 +11,5 @@
         msg: "移除确认失败，取消移除 worker 节点操作。"
       when: restore_confirmation != "yes"
   roles:
+  - prepare/variables
   - remove/worker

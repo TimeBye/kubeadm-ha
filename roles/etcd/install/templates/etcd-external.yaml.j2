@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   annotations:
-    kubeadm.kubernetes.io/etcd.advertise-client-urls: https://{{ CURRENT_HOST_IP }}:2379
+    kubeadm.kubernetes.io/etcd.advertise-client-urls: https://{{ current_host_ip }}:2379
   creationTimestamp: null
   labels:
     component: etcd
@@ -14,7 +14,7 @@ spec:
   - command:
     - etcd
     - --name=etcd-{{ inventory_hostname }}
-    - --advertise-client-urls=https://{{ CURRENT_HOST_IP }}:2379
+    - --advertise-client-urls=https://{{ current_host_ip }}:2379
     - --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
     - --cert-file=/etc/kubernetes/pki/etcd/server.crt
     - --key-file=/etc/kubernetes/pki/etcd/server.key
@@ -22,12 +22,12 @@ spec:
     - --peer-cert-file=/etc/kubernetes/pki/etcd/peer.crt
     - --peer-key-file=/etc/kubernetes/pki/etcd/peer.key
     - --peer-client-cert-auth=true
-    - --listen-peer-urls=https://{{ CURRENT_HOST_IP }}:2380
+    - --listen-peer-urls=https://{{ current_host_ip }}:2380
     - --listen-metrics-urls=http://127.0.0.1:2381
-    - --listen-client-urls=https://127.0.0.1:2379,https://{{ CURRENT_HOST_IP }}:2379
-    - --initial-cluster-state={{ CLUSTER_STATE }}
-    - --initial-advertise-peer-urls=https://{{ CURRENT_HOST_IP }}:2380
-    - --initial-cluster={{ INITIAL_CLUSTER }}
+    - --listen-client-urls=https://127.0.0.1:2379,https://{{ current_host_ip }}:2379
+    - --initial-cluster-state={{ etcd_cluster_state }}
+    - --initial-advertise-peer-urls=https://{{ current_host_ip }}:2380
+    - --initial-cluster={{ etcd_initial_cluster }}
     - --initial-cluster-token=etcd-cluster-token
     - --client-cert-auth=true
     - --snapshot-count=10000

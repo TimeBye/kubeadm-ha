@@ -16,6 +16,7 @@
 - hosts: 
   - new-worker
   roles:
+  - prepare/variables
   - prepare/base
   - prepare/container-engine
   - prepare/kubernetes
@@ -25,6 +26,7 @@
 - hosts: 
   - new-worker
   roles:
+  - prepare/variables
   - load-balancer
 
 # 生成master节点证书
@@ -34,16 +36,19 @@
   - kube-worker
   - new-worker
   roles:
+  - prepare/variables
   - kube-certificates
 
 # 初始化worker节点
 - hosts: 
   - new-worker
   roles:
+  - prepare/variables
   - kube-worker
 
 # 标记各节点角色
 - hosts: 
   - new-worker
   roles:
+  - prepare/variables
   - post

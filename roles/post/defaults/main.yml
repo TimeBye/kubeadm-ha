@@ -1,4 +1,0 @@
-# 提权操作
-ansible_become: true
-# 默认apiserver负载类型
-lb_mode: nginx

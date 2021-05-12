@@ -1,6 +1,0 @@
-# 提权操作
-ansible_become: true
-# Etcd证书过期时间（天）
-etcd_certs_expired: 3650
-# Etcd根证书过期时间（天）
-etcd_ca_certs_expired: 36500

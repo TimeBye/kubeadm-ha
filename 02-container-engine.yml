@@ -16,5 +16,6 @@
 - hosts: 
   - all
   roles:
+  - prepare/variables
   - prepare/container-engine
   environment: "{{ proxy_env }}"

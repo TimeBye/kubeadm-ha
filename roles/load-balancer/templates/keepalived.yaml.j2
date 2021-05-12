@@ -15,17 +15,17 @@ spec:
     image: {{ lb_keepalived_image }}
     env:
     - name: KEEPALIVED_VIRTUAL_IPS
-      value: {{ KUBE_APISERVER_IP | trim }}
+      value: {{ kube_apiserver_ip | trim }}
     - name: KEEPALIVED_INTERFACE
       value: {{ lb_keepalived_interface.stdout }}
     - name: KEEPALIVED_UNICAST_PEERS
-      value: "#PYTHON2BASH:[{{ LB_KEEPALIVED_UNICAST_PEERS }}]"
+      value: "#PYTHON2BASH:[{{ lb_keepalived_unicast_peers }}]"
     - name: KEEPALIVED_PASSWORD
       value: {{ lb_keepalived_password }}
     - name: KEEPALIVED_STATE
-      value: "{{ LB_KEEPALIVED_STATE }}"
+      value: "{{ lb_keepalived_state }}"
     - name: KEEPALIVED_PRIORITY
-      value: "{{ LB_KEEPALIVED_PRIORITY }}"
+      value: "{{ lb_keepalived_priority }}"
     - name: KEEPALIVED_ROUTER_ID
       value: "{{ lb_keepalived_router_id }}"
 {% if lb_kube_apiserver_healthcheck_port is defined %}
