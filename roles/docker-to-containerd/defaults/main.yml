@@ -34,7 +34,7 @@ host_distribution_release: >-
 
 # Docker版本
 # apt-cache madison docker-ce
-# yum list docker-ce --showduplicates --enablerepo=docker-ce-stable | sort -r
+# yum list docker-ce --showduplicates --enablerepo=docker-ce | sort -r
 docker_version: 20.10.5
 containerd_version: 1.4.4-1
 # CentOS
@@ -44,15 +44,15 @@ docker_yum_repo: https://mirrors.aliyun.com/docker-ce/linux/centos/{{ ansible_di
 docker_apt_repo: "deb [arch={{ host_architecture }}] https://mirrors.aliyun.com/docker-ce/linux/{{ host_distribution | lower }} {{ host_distribution_release }} stable"
 
 # 国内镜像加速
-docker_mirror: 
+docker_mirror:
 # - "https://reg-mirror.qiniu.com"
 # - "https://hub-mirror.c.163.com"
 # - "https://docker.mirrors.ustc.edu.cn"
 
 # 信任的不安全镜像库地址，默认为 Pod 和 Service 网段
 docker_insecure_registries:
-- "{{ kube_pod_subnet }}"
-- "{{ kube_service_subnet }}"
+  - "{{ kube_pod_subnet }}"
+  - "{{ kube_service_subnet }}"
 
 # docker日志相关
 docker_log_driver: "json-file"
@@ -69,39 +69,24 @@ docker_max_concurrent_downloads: 10
 containerd_storage_dir: "/var/lib/containerd"
 containerd_state_dir: "/run/containerd"
 containerd_oom_score: -999
-containerd_use_systemd_cgroup: true
-containerd_debug_level: ""
-containerd_config_grpc:
-  max_recv_message_size: 16777216
-  max_send_message_size: 16777216
-containerdmax_container_log_line_size: -1
-containerd_plugins_cri_registries_mirrors:
+containerd_grpc_max_recv_message_size: 16777216
+containerd_grpc_max_send_message_size: 16777216
+containerd_debug_level: "info"
+containerd_metrics_address: ""
+containerd_metrics_grpc_histogram: false
+containerd_max_container_log_line_size: -1
+containerd_default_runtime: "runc"
+containerd_snapshotter: "overlayfs"
+containerd_runtimes:
+  - name: runc
+    type: "io.containerd.runc.v2"
+    engine: ""
+    root: ""
+    options:
+      SystemdCgroup: "true"
+containerd_registries:
   "docker.io": "https://registry-1.docker.io"
-
-# Example for containerd_plugins_cri_containerd:
-# containerd_plugins_cri_containerd:
-#   snapshotter: native
-containerd_plugins_cri_containerd: {}
-
-containerd_default_runtime:
-  type: io.containerd.runtime.v1.linux
-  engine: ''
-  root: ''
-
-containerd_untrusted_workload_runtime:
-  type: ''
-  engine: ''
-  root: ''
-
-# Additional runtimes for containerd configuration
-#
-# Example for Kata Containers:
-# containerd_runtimes:
-#   - name: kata
-#     type: io.containerd.kata.v2
-#     engine: ""
-#     root: ""
-containerd_runtimes: []
+containerd_extra_args: ""
 
 # kubernetes各组件镜像仓库前缀
 kube_image_repository: registry.aliyuncs.com/kubeadm-ha
