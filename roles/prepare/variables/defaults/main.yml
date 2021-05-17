@@ -138,50 +138,33 @@ image_pull_command: >-
 #-------------------------------- Containerd 相关配置（容器运行时类型为 Docker 时，请忽略) -------------------------------#
 # Containerd 版本
 containerd_version: 1.4.4-1
-# 配置 Dockerhub 国内镜像加速地址
-containerd_plugins_cri_registries_mirrors:
-  "docker.io": "https://registry-1.docker.io"
 # 数据存储目录
 containerd_storage_dir: "/var/lib/containerd"
 # 状态目录
 containerd_state_dir: "/run/containerd"
 # 应用于容器式守护进程的内存不足（OOM）分数（默认值：0）
 containerd_oom_score: -999
-# containerd 是否使用 systemd 作为 cgroup 驱动程序
-containerd_use_systemd_cgroup: true
+containerd_grpc_max_recv_message_size: 16777216
+containerd_grpc_max_send_message_size: 16777216
 # 日志输出等级
-containerd_debug_level: ""
-# grpc 数据大小
-containerd_config_grpc:
-  max_recv_message_size: 16777216
-  max_send_message_size: 16777216
-# 最大日志大小
+containerd_debug_level: "info"
+containerd_metrics_address: ""
+containerd_metrics_grpc_histogram: false
 containerd_max_container_log_line_size: -1
-
-# Example for containerd_plugins_cri_containerd:
-# containerd_plugins_cri_containerd:
-#   snapshotter: native
-containerd_plugins_cri_containerd: {}
-
-containerd_default_runtime:
-  type: io.containerd.runtime.v1.linux
-  engine: ''
-  root: ''
-
-containerd_untrusted_workload_runtime:
-  type: ''
-  engine: ''
-  root: ''
-
-# 其他运行时的容器化配置
-#
-# Example for Kata Containers:
-# containerd_runtimes:
-#   - name: kata
-#     type: io.containerd.kata.v2
-#     engine: ""
-#     root: ""
-containerd_runtimes: []
+containerd_default_runtime: "runc"
+containerd_snapshotter: "overlayfs"
+containerd_runtimes:
+  - name: runc
+    type: "io.containerd.runc.v2"
+    engine: ""
+    root: ""
+    options:
+      # containerd 是否使用 systemd 作为 cgroup 驱动程序
+      SystemdCgroup: "true"
+# 配置 Dockerhub 国内镜像加速地址
+containerd_registries:
+  "docker.io": "https://registry-1.docker.io"
+containerd_extra_args: ""
 
 # Pod根容器
 pod_infra_container_image: "{{ kube_image_repository }}/pause:3.2"
@@ -189,7 +172,7 @@ pod_infra_container_image: "{{ kube_image_repository }}/pause:3.2"
 #------------------------------ Docker 相关配置（容器运行时类型为 Containerd 时，请忽略) ------------------------------ #
 # Docker 版本
 # apt-cache madison docker-ce
-# yum list docker-ce --showduplicates --enablerepo=docker-ce | sort -r
+# yum list docker-ce --showduplicates --enablerepo=docker-ce-stable | sort -r
 docker_version: 20.10.6
 
 # Dockerhub 国内镜像加速地址
