@@ -161,6 +161,7 @@ containerd_runtimes:
     options:
       # containerd 是否使用 systemd 作为 cgroup 驱动程序
       SystemdCgroup: "true"
+containerd_use_systemd_cgroup: "true"
 # 配置 Dockerhub 国内镜像加速地址
 containerd_registries:
   "docker.io": "https://registry-1.docker.io"

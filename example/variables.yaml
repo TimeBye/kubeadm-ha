@@ -56,46 +56,36 @@
 # # Docker版本
 # docker_version: 20.10.6
 # # containerd版本
+# Containerd 版本
 # containerd_version: 1.4.4-1
-# # containerd 是否使用 systemd 作为 cgroup 驱动程序
-# containerd_use_systemd_cgroup: true
-# # containerd 相关配置
+# # 数据存储目录
 # containerd_storage_dir: "/var/lib/containerd"
+# # 状态目录
 # containerd_state_dir: "/run/containerd"
+# # 应用于容器式守护进程的内存不足（OOM）分数（默认值：0）
 # containerd_oom_score: -999
-# containerd_use_systemd_cgroup: true
-# containerd_debug_level: ""
-# containerd_config_grpc:
-#   max_recv_message_size: 16777216
-#   max_send_message_size: 16777216
+# containerd_grpc_max_recv_message_size: 16777216
+# containerd_grpc_max_send_message_size: 16777216
+# # 日志输出等级
+# containerd_debug_level: "info"
+# containerd_metrics_address: ""
+# containerd_metrics_grpc_histogram: false
 # containerd_max_container_log_line_size: -1
-# containerd_plugins_cri_registries_mirrors:
+# containerd_default_runtime: "runc"
+# containerd_snapshotter: "overlayfs"
+# containerd_runtimes:
+#   - name: runc
+#     type: "io.containerd.runc.v2"
+#     engine: ""
+#     root: ""
+#     options:
+#       # containerd 是否使用 systemd 作为 cgroup 驱动程序
+#       SystemdCgroup: "true"
+# containerd_use_systemd_cgroup: "true"
+# # 配置 Dockerhub 国内镜像加速地址
+# containerd_registries:
 #   "docker.io": "https://registry-1.docker.io"
-
-# # Example for containerd_plugins_cri_containerd:
-# # containerd_plugins_cri_containerd:
-# #   snapshotter: native
-# containerd_plugins_cri_containerd: {}
-
-# containerd_default_runtime:
-#   type: io.containerd.runtime.v1.linux
-#   engine: ''
-#   root: ''
-
-# containerd_untrusted_workload_runtime:
-#   type: ''
-#   engine: ''
-#   root: ''
-
-# # Additional runtimes for containerd configuration
-# #
-# # Example for Kata Containers:
-# # containerd_runtimes:
-# #   - name: kata
-# #     type: io.containerd.kata.v2
-# #     engine: ""
-# #     root: ""
-# containerd_runtimes: []
+# containerd_extra_args: ""
 
 # # 国内镜像加速(若不需要加速，请将值删去，键保留)
 # docker_mirror: 
