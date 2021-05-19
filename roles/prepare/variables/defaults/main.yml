@@ -121,7 +121,7 @@ docker_apt_repo: >-
 #----------------------------------------------- 容器运行时参数（不可配置项） -------------------------------------------#
 # CRI socket path
 cri_socket: >-
-  {%- if container_manager == 'containerd' -%}
+  {%- if container_manager_detected == 'containerd' -%}
   /var/run/containerd/containerd.sock
   {%- else -%}
   /var/run/dockershim.sock
@@ -168,7 +168,7 @@ containerd_registries:
 containerd_extra_args: ""
 
 # Pod根容器
-pod_infra_container_image: "{{ kube_image_repository }}/pause:3.2"
+pod_infra_container_image: "{{ kube_image_repository }}/pause:3.4.1"
 
 #------------------------------ Docker 相关配置（容器运行时类型为 Containerd 时，请忽略) ------------------------------ #
 # Docker 版本

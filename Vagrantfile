@@ -58,8 +58,8 @@ Vagrant.configure(2) do |config|
         end
     end
     config.vm.define "node3" do |s|
-        s.vm.box = "bento/debian-9.6"
-        s.vm.box_url = "http://files.saas.hand-china.com/vagrant/bento_debian-9.6.box"
+        s.vm.box = "bento/debian-10.4"
+        s.vm.box_url = "http://files.saas.hand-china.com/vagrant/bento_debian-10.4.box"
         s.vm.hostname = "node3"
         s.vm.network "private_network", ip: "192.168.56.13"
         s.vm.synced_folder ".", "/vagrant", disabled: true

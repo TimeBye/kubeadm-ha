@@ -42,8 +42,8 @@
 
 - name: 校验节点系统版本
   assert:
-    that: ansible_distribution_version is version('9', '>=')
-    msg: "Master节点：{{ inventory_hostname }} 系统版本期望不小于Debian 9，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
+    that: ansible_distribution_version is version('10', '>=')
+    msg: "Master节点：{{ inventory_hostname }} 系统版本期望不小于Debian 10，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
   when:
     - ansible_distribution == "Debian"
 
