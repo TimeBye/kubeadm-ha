@@ -9,17 +9,10 @@
   register: containerd_already_running
 
 - include_tasks: docker/main.yml
-  when: '"active" in docker_already_running.stdout'
-
-- include_tasks: containerd/main.yml
-  when: 
-  - '"active" in containerd_already_running.stdout'
-  - '"active" not in docker_already_running.stdout'
-
-- include_tasks: docker/main.yml
   when: 
   - container_manager == "docker"
   - '"active" not in docker_already_running.stdout'
+  - '"active" not in containerd_already_running.stdout'
 
 - include_tasks: containerd/main.yml
   when: 
