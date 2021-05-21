@@ -45,6 +45,10 @@
     kubeadm upgrade apply --config=/etc/kubernetes/kubeadm-config.yaml --force
   when: inventory_hostname == groups['kube-master'][0]
 
+- name: 置换 CoreDNS 镜像地址
+  shell: "kubectl set image deployment/coredns -n kube-system coredns={{ coredns_image }}"
+  when: "kube_version is version('1.21.0', '>=')"
+
 - name: "升级剩余 master 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
   shell: >
     kubeadm upgrade node

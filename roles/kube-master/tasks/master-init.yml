@@ -82,3 +82,4 @@
 
 - name: 置换 CoreDNS 镜像地址
   shell: "kubectl set image deployment/coredns -n kube-system coredns={{ coredns_image }}"
+  when: "kube_version is version('1.21.0', '>=')"
