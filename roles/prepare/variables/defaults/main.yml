@@ -1,3 +1,4 @@
+---
 #-------------------------------------------------------------------------------------------------------------#
 #----------------------------------------------- Ansible 变量 ------------------------------------------------#
 #-------------------------------------------------------------------------------------------------------------#
@@ -64,7 +65,7 @@ firewalld_disabled: true
 # # 自定义hosts记录
 # # 举例：
 # custom_hosts:
-#   "127.0.0.1": 
+#   "127.0.0.1":
 #   - "one.domain.custom.local"
 #   - "tow.domain.custom.local"
 custom_hosts: {}
@@ -72,27 +73,27 @@ custom_hosts: {}
 #--------------------------------------------- 内核包下载地址 ----------------------------------------------#
 # kernel repo
 kernel_centos:
-- http://files.saas.hand-china.com/kernel/centos/kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm
-- http://files.saas.hand-china.com/kernel/centos/kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm
+  - http://files.saas.hand-china.com/kernel/centos/kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm
+  - http://files.saas.hand-china.com/kernel/centos/kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm
 # - http://mirrors.reposnap.com/elrepo/20210127110058/kernel/el7/x86_64/RPMS/kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm
 # - http://mirrors.reposnap.com/elrepo/20210127110058/kernel/el7/x86_64/RPMS/kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm
 
-kernel_ubuntu: 
-- http://files.saas.hand-china.com/kernel/ubuntu/linux-headers-5.4.95-050495_5.4.95-050495.202102032337_all.deb
-- http://files.saas.hand-china.com/kernel/ubuntu/linux-headers-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
-- http://files.saas.hand-china.com/kernel/ubuntu/linux-modules-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
-- http://files.saas.hand-china.com/kernel/ubuntu/linux-image-unsigned-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+kernel_ubuntu:
+  - http://files.saas.hand-china.com/kernel/ubuntu/linux-headers-5.4.95-050495_5.4.95-050495.202102032337_all.deb
+  - http://files.saas.hand-china.com/kernel/ubuntu/linux-headers-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+  - http://files.saas.hand-china.com/kernel/ubuntu/linux-modules-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
+  - http://files.saas.hand-china.com/kernel/ubuntu/linux-image-unsigned-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
 # - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-headers-5.4.95-050495_5.4.95-050495.202102032337_all.deb
 # - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-headers-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
 # - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-modules-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
 # - https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.4.95/amd64/linux-image-unsigned-5.4.95-050495-generic_5.4.95-050495.202102032337_amd64.deb
 
 linux_base:
-- http://files.saas.hand-china.com/kernel/ubuntu/linux-base_4.6_all.deb
+  - http://files.saas.hand-china.com/kernel/ubuntu/linux-base_4.6_all.deb
 # - http://http.us.debian.org/debian/pool/main/l/linux-base/linux-base_4.6_all.deb
 
 libssl:
-- http://files.saas.hand-china.com/kernel/ubuntu/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+  - http://files.saas.hand-china.com/kernel/ubuntu/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
 # - http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
 
 # epel 源地址，兼容 CentOS8
@@ -177,13 +178,13 @@ pod_infra_container_image: "{{ kube_image_repository }}/pause:3.4.1"
 docker_version: 20.10.6
 
 # Dockerhub 国内镜像加速地址
-docker_mirror: 
+docker_mirror:
 # - "https://hub-mirror.c.163.com"
 
 # 信任的不安全镜像库地址，默认为 Pod 和 Service 网段
 docker_insecure_registries:
-- "{{ kube_pod_subnet }}"
-- "{{ kube_service_subnet }}"
+  - "{{ kube_pod_subnet }}"
+  - "{{ kube_service_subnet }}"
 
 # Docker 容器日志相关设置
 docker_log_driver: "json-file"
@@ -221,9 +222,9 @@ kube_ca_certs_expired: 36500
 
 # k8s 集群 master 节点证书配置，可以添加多个ip和域名（比如增加公网ip和域名）
 kube_master_external_ip:
-- "8.8.8.8"
+  - "8.8.8.8"
 kube_master_external_domain:
-- "kubernetes.io"
+  - "kubernetes.io"
 
 # 集群内部dns域名
 kube_dns_domain: cluster.local
@@ -272,7 +273,7 @@ kube_proxy_mode: "iptables"
 # node节点最大pod 数
 kube_max_pods: 110
 
-## 存入 Etcd 时的 Secret 进行静态加密 
+## 存入 Etcd 时的 Secret 进行静态加密
 # 仅支持: aescbc, secretbox 或 aesgcm
 kube_encryption_algorithm: "aescbc"
 # 将Secret数据加密存储到etcd中的配置文件，下面加密码由 head -c 32 /dev/urandom | base64 生成
@@ -299,8 +300,8 @@ audit_policy_file: /etc/kubernetes/config/apiserver-audit-policy.yaml
 #     resources: []
 
 # 1.10+ admission plugins
-kube_apiserver_enable_admission_plugins: 
-- NodeRestriction
+kube_apiserver_enable_admission_plugins:
+  - NodeRestriction
 # - AlwaysPullImages
 # - PodSecurityPolicy
 
@@ -487,7 +488,7 @@ traefik_certs_expired: 3650
 traefik_ingress_image: "{{ kube_image_repository }}/traefik:2.4.8"
 
 #----------------------------------------- kubernetes-dashboard 相关参数 --------------------------------------#
-# 是否启用kubernetes-dashboard 
+# 是否启用kubernetes-dashboard
 kubernetesui_dashboard_enabled: true
 # dashboard默认证书有效期
 kubernetesui_dashboard_certs_expired: 3650
@@ -518,13 +519,13 @@ calico_backend: bird
 # calico mtu
 calico_veth_mtu: 0
 # calico 相关镜像
-calico_typha_image: "{{ kube_image_repository }}/calico_typha:v3.17.1"
-calico_cni_image: "{{ kube_image_repository }}/calico_cni:v3.17.1"
-calico_node_image: "{{ kube_image_repository }}/calico_node:v3.17.1"
-calico_kube_controllers_image: "{{ kube_image_repository }}/calico_kube-controllers:v3.17.1"
-calico_pod2daemon_flexvol_image: "{{ kube_image_repository }}/calico_pod2daemon-flexvol:v3.17.1"
+calico_typha_image: "{{ kube_image_repository }}/calico_typha:v3.17.4"
+calico_cni_image: "{{ kube_image_repository }}/calico_cni:v3.17.4"
+calico_node_image: "{{ kube_image_repository }}/calico_node:v3.17.4"
+calico_kube_controllers_image: "{{ kube_image_repository }}/calico_kube-controllers:v3.17.4"
+calico_pod2daemon_flexvol_image: "{{ kube_image_repository }}/calico_pod2daemon-flexvol:v3.17.4"
 # calicoctl image 地址
-calicoctl_image: "{{ kube_image_repository }}/calico_ctl:v3.17.1"
+calicoctl_image: "{{ kube_image_repository }}/calico_ctl:v3.17.4"
 # 设置 Felix 日志级别(debug, info, warning, error)
 calico_felix_log_level: "warning"
 
