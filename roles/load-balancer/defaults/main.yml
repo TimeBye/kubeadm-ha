@@ -7,6 +7,6 @@ lb_keepalived_unicast_peers: >-
   '{{ hostvars[host]['ansible_host'] }}'
   {%- else -%}
   '{{ host }}'
-  {%- endif =%}
+  {%- endif -%}
   {%- if not loop.last -%},{%- endif -%}
   {%- endfor -%}
