@@ -30,10 +30,10 @@ repotrack audit
 repotrack device-mapper-persistent-data
 repotrack docker-ce-20.10.6
 repotrack docker-ce-cli-20.10.6
-repotrack containerd.io-1.4.4
+repotrack containerd.io-1.4.6
 yumdownloader --resolve docker-ce-20.10.6
 yumdownloader --resolve docker-ce-cli-20.10.6
-yumdownloader --resolve containerd.io-1.4.4
+yumdownloader --resolve containerd.io-1.4.6
 
 createrepo --update ./
 tar -czvf docker-ce-20.10.6.tar.gz *.rpm repodata
