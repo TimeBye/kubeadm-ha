@@ -70,6 +70,7 @@
     - htop
     - lvm2                            # docker会用到
     - curl                            # 基础工具
+    - wget
     - audit
     - iotop
     - ipset                           # ipvs 模式需要
