@@ -49,6 +49,7 @@ fi
 repotrack jq
 repotrack git
 repotrack curl
+repotrack wget
 repotrack htop
 repotrack iotop
 repotrack socat
@@ -57,6 +58,7 @@ repotrack sysstat
 repotrack ipvsadm
 repotrack nmap-ncat
 repotrack nfs-utils
+repotrack iscsi-initiator-utils
 repotrack yum-utils
 repotrack net-tools
 repotrack libseccomp
