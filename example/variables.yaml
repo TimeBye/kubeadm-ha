@@ -54,7 +54,7 @@
 # # 容器运行时类型，可选项：containerd，docker；默认 containerd
 # container_manager: containerd
 # # Docker版本
-# docker_version: 20.10.6
+# docker_version: 20.10.7
 # # containerd版本
 # Containerd 版本
 # containerd_version: 1.4.6-1
@@ -223,10 +223,10 @@
 # - "kubernetes.io"
 
 # # Pod根容器
-# pod_infra_container_image: "{{ kube_image_repository }}/pause:3.4.1"
+# pod_infra_container_image: "{{ kube_image_repository }}/pause:3.2"
 
 # # kubernetes版本
-# kube_version: 1.21.0
+# kube_version: 1.20.8
 
 # # 集群内部dns域名
 # kube_dns_domain: cluster.local

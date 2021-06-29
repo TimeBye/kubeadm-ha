@@ -169,13 +169,13 @@ containerd_registries:
 containerd_extra_args: ""
 
 # Pod根容器
-pod_infra_container_image: "{{ kube_image_repository }}/pause:3.4.1"
+pod_infra_container_image: "{{ kube_image_repository }}/pause:3.2"
 
 #------------------------------ Docker 相关配置（容器运行时类型为 Containerd 时，请忽略) ------------------------------ #
 # Docker 版本
 # apt-cache madison docker-ce
 # yum list docker-ce --showduplicates --enablerepo=docker-ce-stable | sort -r
-docker_version: 20.10.6
+docker_version: 20.10.7
 
 # Dockerhub 国内镜像加速地址
 docker_mirror:
@@ -202,7 +202,7 @@ docker_max_concurrent_downloads: 10
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.21.0
+kube_version: 1.20.8
 
 # CentOS
 kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-{{ ansible_architecture }}/
