@@ -175,7 +175,7 @@ pod_infra_container_image: "{{ kube_image_repository }}/pause:3.4.1"
 # Docker 版本
 # apt-cache madison docker-ce
 # yum list docker-ce --showduplicates --enablerepo=docker-ce-stable | sort -r
-docker_version: 20.10.6
+docker_version: 20.10.7
 
 # Dockerhub 国内镜像加速地址
 docker_mirror:
