@@ -493,7 +493,7 @@ kubernetesui_dashboard_enabled: true
 # dashboard默认证书有效期
 kubernetesui_dashboard_certs_expired: 3650
 # kubernetes-dashboard 镜像地址
-kubernetesui_dashboard_image: "{{ kube_image_repository }}/kubernetesui_dashboard:v2.1.0"
+kubernetesui_dashboard_image: "{{ kube_image_repository }}/kubernetesui_dashboard:v2.3.1"
 kubernetesui_metrics_scraper_image: "{{ kube_image_repository }}/kubernetesui_metrics-scraper:v1.0.6"
 
 #-------------------------------------------- metrics-server 相关参数 ----------------------------------------#

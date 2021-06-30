@@ -16,7 +16,7 @@ calico/kube-controllers:v3.17.4
 calico/pod2daemon-flexvol:v3.17.4
 calico/ctl:v3.17.4
 jettech/kube-webhook-certgen:v1.5.1
-kubernetesui/dashboard:v2.1.0
+kubernetesui/dashboard:v2.3.1
 kubernetesui/metrics-scraper:v1.0.6
 quay.io/coreos/flannel:v0.13.0
 quay.io/jetstack/cert-manager-cainjector:v1.1.0
