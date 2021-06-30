@@ -379,7 +379,7 @@
 # # flannel_backend: "host-gw"
 # flannel_backend: "vxlan"
 # # flannel 镜像地址
-# flannel_image: "{{ kube_image_repository }}/coreos_flannel:v0.13.0"
+# flannel_image: "{{ kube_image_repository }}/coreos_flannel:v0.14.0"
 
 # # ------------------------ #
 # # ingress-controller 相关参数配置

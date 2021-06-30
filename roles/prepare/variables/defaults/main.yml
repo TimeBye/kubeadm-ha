@@ -512,7 +512,7 @@ network_plugin: "calico"
 # flannel_backend: "host-gw"
 flannel_backend: "vxlan"
 # flannel 镜像地址
-flannel_image: "{{ kube_image_repository }}/coreos_flannel:v0.13.0"
+flannel_image: "{{ kube_image_repository }}/coreos_flannel:v0.14.0"
 
 # 设置calico 网络 backend: brid, vxlan, none
 calico_backend: bird

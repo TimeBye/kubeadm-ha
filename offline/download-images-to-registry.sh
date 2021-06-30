@@ -18,7 +18,7 @@ calico/ctl:v3.19.1
 jettech/kube-webhook-certgen:v1.5.1
 kubernetesui/dashboard:v2.3.1
 kubernetesui/metrics-scraper:v1.0.6
-quay.io/coreos/flannel:v0.13.0
+quay.io/coreos/flannel:v0.14.0
 quay.io/jetstack/cert-manager-cainjector:v1.1.0
 quay.io/jetstack/cert-manager-webhook:v1.1.0
 quay.io/jetstack/cert-manager-controller:v1.1.0
