@@ -422,7 +422,7 @@
 # metrics_server_enabled: true
 
 # # metrics-server image地址
-# metrics_server_image: "{{ kube_image_repository }}/metrics-server_metrics-server:v0.4.1"
+# metrics_server_image: "{{ kube_image_repository }}/metrics-server_metrics-server:v0.5.0"
 
 # # ------------------------ #
 # # cert-manager 相关配置
