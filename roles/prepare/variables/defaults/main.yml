@@ -407,11 +407,11 @@ etcd_cluster_state: >-
 # 新增 etcd 节点添加信息
 etcd_new_member: >-
   etcd-{{ inventory_hostname }}
-  {%- if hostvars[inventory_hostname]['ansible_host'] is defined -%}
+  {% if hostvars[inventory_hostname]['ansible_host'] is defined %}
   --peer-urls=https://{{ hostvars[inventory_hostname]['ansible_host'] }}:2380
-  {%- else -%}
+  {% else %}
   --peer-urls=https://{{ inventory_hostname }}:2380
-  {%- endif -%}
+  {% endif %}
 
 #-------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------ 负载均衡器参数 -----------------------------------------------#
