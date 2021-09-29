@@ -202,7 +202,7 @@ docker_max_concurrent_downloads: 10
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.20.8
+kube_version: 1.20.11
 
 # CentOS
 kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-{{ ansible_architecture }}/
@@ -407,11 +407,11 @@ etcd_cluster_state: >-
 # 新增 etcd 节点添加信息
 etcd_new_member: >-
   etcd-{{ inventory_hostname }}
-  {%- if hostvars[inventory_hostname]['ansible_host'] is defined -%}
+  {% if hostvars[inventory_hostname]['ansible_host'] is defined %}
   --peer-urls=https://{{ hostvars[inventory_hostname]['ansible_host'] }}:2380
-  {%- else -%}
+  {% else %}
   --peer-urls=https://{{ inventory_hostname }}:2380
-  {%- endif -%}
+  {% endif %}
 
 #-------------------------------------------------------------------------------------------------------------#
 #------------------------------------------------ 负载均衡器参数 -----------------------------------------------#
@@ -479,8 +479,8 @@ ingress_controller_enabled: true
 ingress_controller_tpye: nginx
 
 # nginx-ingress-controller 镜像地址
-nginx_ingress_image: "{{ kube_image_repository }}/ingress-nginx_controller:v0.43.0"
-nginx_ingress_webhook_certgen_image: "{{ kube_image_repository }}/jettech_kube-webhook-certgen:v1.5.0"
+nginx_ingress_image: "{{ kube_image_repository }}/ingress-nginx_controller:v0.47.0"
+nginx_ingress_webhook_certgen_image: "{{ kube_image_repository }}/jettech_kube-webhook-certgen:v1.5.1"
 
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
@@ -493,14 +493,14 @@ kubernetesui_dashboard_enabled: true
 # dashboard默认证书有效期
 kubernetesui_dashboard_certs_expired: 3650
 # kubernetes-dashboard 镜像地址
-kubernetesui_dashboard_image: "{{ kube_image_repository }}/kubernetesui_dashboard:v2.1.0"
+kubernetesui_dashboard_image: "{{ kube_image_repository }}/kubernetesui_dashboard:v2.3.1"
 kubernetesui_metrics_scraper_image: "{{ kube_image_repository }}/kubernetesui_metrics-scraper:v1.0.6"
 
 #-------------------------------------------- metrics-server 相关参数 ----------------------------------------#
 # 是否启用metrics-server
 metrics_server_enabled: true
 # metrics-server image地址
-metrics_server_image: "{{ kube_image_repository }}/metrics-server_metrics-server:v0.4.1"
+metrics_server_image: "{{ kube_image_repository }}/metrics-server_metrics-server:v0.5.0"
 
 #------------------------------------------------ 网络插件相关参数 --------------------------------------------#
 # 是否启用网络组建
@@ -512,20 +512,20 @@ network_plugin: "calico"
 # flannel_backend: "host-gw"
 flannel_backend: "vxlan"
 # flannel 镜像地址
-flannel_image: "{{ kube_image_repository }}/coreos_flannel:v0.13.0"
+flannel_image: "{{ kube_image_repository }}/coreos_flannel:v0.14.0"
 
 # 设置calico 网络 backend: brid, vxlan, none
 calico_backend: bird
 # calico mtu
 calico_veth_mtu: 0
 # calico 相关镜像
-calico_typha_image: "{{ kube_image_repository }}/calico_typha:v3.17.4"
-calico_cni_image: "{{ kube_image_repository }}/calico_cni:v3.17.4"
-calico_node_image: "{{ kube_image_repository }}/calico_node:v3.17.4"
-calico_kube_controllers_image: "{{ kube_image_repository }}/calico_kube-controllers:v3.17.4"
-calico_pod2daemon_flexvol_image: "{{ kube_image_repository }}/calico_pod2daemon-flexvol:v3.17.4"
+calico_typha_image: "{{ kube_image_repository }}/calico_typha:v3.19.1"
+calico_cni_image: "{{ kube_image_repository }}/calico_cni:v3.19.1"
+calico_node_image: "{{ kube_image_repository }}/calico_node:v3.19.1"
+calico_kube_controllers_image: "{{ kube_image_repository }}/calico_kube-controllers:v3.19.1"
+calico_pod2daemon_flexvol_image: "{{ kube_image_repository }}/calico_pod2daemon-flexvol:v3.19.1"
 # calicoctl image 地址
-calicoctl_image: "{{ kube_image_repository }}/calico_ctl:v3.17.4"
+calicoctl_image: "{{ kube_image_repository }}/calico_ctl:v3.19.1"
 # 设置 Felix 日志级别(debug, info, warning, error)
 calico_felix_log_level: "warning"
 
@@ -538,6 +538,6 @@ acme_server: https://acme-v02.api.letsencrypt.org/directory
 acme_email: yourname@gmail.com
 
 # cert-manager 相关 image 地址
-cert_manager_cainjector_image: "{{ kube_image_repository }}/jetstack_cert-manager-cainjector:v1.1.0"
-cert_manager_webhook_image: "{{ kube_image_repository }}/jetstack_cert-manager-webhook:v1.1.0"
-cert_manager_controller_image: "{{ kube_image_repository }}/jetstack_cert-manager-controller:v1.1.0"
+cert_manager_cainjector_image: "{{ kube_image_repository }}/jetstack_cert-manager-cainjector:v1.4.0"
+cert_manager_webhook_image: "{{ kube_image_repository }}/jetstack_cert-manager-webhook:v1.4.0"
+cert_manager_controller_image: "{{ kube_image_repository }}/jetstack_cert-manager-controller:v1.4.0"

@@ -64,6 +64,7 @@
     - apt-transport-https         # 添加https协议的apt源会用到
     - software-properties-common  # docker会用到
     state: present
+    update_cache: yes
     allow_unauthenticated: true
 
 - name: 重新启动 cron 避免因修改时区而导致的作业错乱问题

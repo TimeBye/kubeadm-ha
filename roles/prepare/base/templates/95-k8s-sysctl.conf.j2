@@ -81,3 +81,8 @@ kernel.panic_on_oops = 1
 
 # refer to https://github.com/Azure/AKS/issues/772
 fs.inotify.max_user_watches = 1048576
+
+# 指定每个真实用户 ID 可以创建的 inotify 实例数量上限
+# 指定 inotify 实例可以排队事件数量的上限
+fs.inotify.max_user_instances = 1048576
+fs.inotify.max_queued_events = 1048576

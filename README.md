@@ -71,6 +71,10 @@
    <td align="center">
   <a href="https://github.com/Jaywoods2"><img src="https://avatars2.githubusercontent.com/u/18679696?s=400&v=4" width="100px;" alt="Jaywoods2"/>
   <br></br><sub><b>Jaywoods2</b></sub>
+
+   <td align="center">
+  <a href="https://github.com/ChongmingDu"><img src="https://avatars.githubusercontent.com/u/22591706?s=400&v=4" width="100px;" alt="ChongmingDu"/>
+  <br></br><sub><b>ChongmingDu</b></sub>
   
    <td align="center">
   <a href="https://github.com/happinesslijian"><img src="https://avatars2.githubusercontent.com/u/47111417?s=400&v=4" width="100px;" alt="happinesslijian"/>

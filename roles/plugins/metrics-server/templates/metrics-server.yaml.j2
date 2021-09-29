@@ -1,4 +1,4 @@
-# ref: https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.1/components.yaml
+# ref: https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.5.0/components.yaml
 
 apiVersion: v1
 kind: ServiceAccount
@@ -132,10 +132,11 @@ spec:
       containers:
       - args:
         - --cert-dir=/tmp
-        - --secure-port=4443
+        - --secure-port=443
         - --kubelet-insecure-tls
         - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
         - --kubelet-use-node-status-port
+        - --metric-resolution=15s
         image: {{ metrics_server_image }}
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -147,7 +148,7 @@ spec:
           periodSeconds: 10
         name: metrics-server
         ports:
-        - containerPort: 4443
+        - containerPort: 443
           name: https
           protocol: TCP
         readinessProbe:
@@ -156,7 +157,12 @@ spec:
             path: /readyz
             port: https
             scheme: HTTPS
+          initialDelaySeconds: 20
           periodSeconds: 10
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi
         securityContext:
           readOnlyRootFilesystem: true
           runAsNonRoot: true

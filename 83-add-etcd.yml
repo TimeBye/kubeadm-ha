@@ -59,12 +59,6 @@
     shell: >
       kubeadm upgrade apply --config=/etc/kubernetes/kubeadm-config.yaml --force --ignore-preflight-errors=ImagePull
     when: inventory_hostname == groups['kube-master'][0]
-
-  - name: 置换 CoreDNS 镜像地址
-    shell: "kubectl set image deployment/coredns -n kube-system coredns={{ coredns_image }}"
-    when: 
-    - "kube_version is version('1.21.0', '>=')"
-    - inventory_hostname == groups['kube-master'][0]
   
   - name: "更新 master 节点：{{ inventory_hostname }} 的配置"
     shell: >
