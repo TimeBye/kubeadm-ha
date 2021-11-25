@@ -33,7 +33,7 @@
     docker run --net host -e ETCDCTL_API=3 
     -v /etc/kubernetes/pki/etcd:/etc/kubernetes/pki/etcd
     --rm {{ etcd_image }}
-    etcdctl member add {{ NEW_MEMBER }}
+    etcdctl member add {{ etcd_new_member }}
     --endpoints=https://[127.0.0.1]:2379
     --cacert=/etc/kubernetes/pki/etcd/ca.crt
     --key=/etc/kubernetes/pki/etcd/healthcheck-client.key

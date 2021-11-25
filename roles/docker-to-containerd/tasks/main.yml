@@ -1,0 +1,92 @@
+- name: 校验变量 container_manager
+  assert:
+    that: container_manager == "containerd"
+    msg: "当前 container_manager 值为：{{ container_manager }}，请设置为 containerd。"
+
+- name: 判断 Docker 是否运行
+  shell: >
+    systemctl status docker | grep running || echo "not running"
+  register: docker_status
+
+- block:
+  - name: 停止 kubelet 服务
+    service:
+      name: kubelet
+      state: stopped
+      enabled: yes
+  
+  - name: 停止运行的容器
+    ignore_errors: true
+    shell: "docker stop $(docker ps -aq)"
+    args:
+      executable: /bin/bash
+    register: stop_all_docker_containers
+    retries: 5
+    until: stop_all_docker_containers.rc == 0
+    delay: 5
+  
+  - name: 清理 docker 相关数据
+    ignore_errors: true
+    shell: "docker system prune -a -f --volumes"
+    args:
+      executable: /bin/bash
+    register: remove_all_docker_data
+    retries: 5
+    until: remove_all_docker_data.rc == 0
+    delay: 5
+  
+  - name: 停止 docker 服务
+    service:
+      name: docker
+      state: stopped
+      enabled: no
+
+  - name: 卸载 Docker 服务
+    yum:
+      name: 
+      - "docker-ce"
+      - "docker-ce-cli"
+      state: absent
+      enablerepo: docker-ce-stable
+    when: ansible_distribution in [ 'CentOS','OracleLinux','RedHat' ]
+
+  - name: 卸载 Docker 服务
+    apt: 
+      name:
+      - "docker-ce"
+      - "docker-ce-cli"
+      state: absent
+      allow_unauthenticated: true
+    when: ansible_distribution in [ 'Ubuntu','Debian' ]
+
+  - name: 停止 containerd 服务
+    service:
+      name: containerd
+      state: stopped
+      enabled: yes
+
+  when: '"active" in docker_status.stdout'
+
+- include_tasks: "{{ (role_path + '/../prepare/container-engine/tasks/main.yml') | realpath  }}"
+
+- name: 解析 /var/lib/kubelet/kubeadm-flags.env 配置文件
+  shell: cat /var/lib/kubelet/kubeadm-flags.env | grep containerd.sock || echo "not find"
+  register: kubeadm_flags_env_output
+
+- block:
+  - name: 更新 /var/lib/kubelet/kubeadm-flags.env 配置文件
+    shell: >
+      sed -i
+      's;--hostname-override;--container-runtime=remote
+      --container-runtime-endpoint=/var/run/containerd/containerd.sock
+      --hostname-override;g'
+      /var/lib/kubelet/kubeadm-flags.env
+    args:
+      warn: no
+  
+  - name: 启动 kubelet 服务
+    service:
+      name: kubelet
+      state: restarted
+      enabled: yes
+  when: '"containerd.sock" not in kubeadm_flags_env_output.stdout'

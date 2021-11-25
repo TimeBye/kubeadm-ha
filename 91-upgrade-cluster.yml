@@ -19,6 +19,7 @@
 - hosts: 
   - all
   roles:
+  - prepare/variables
   - backup
 
 - hosts: 
@@ -40,6 +41,7 @@
   - all
   serial: 1
   roles:
+  - prepare/variables
   - upgrade
   environment: "{{ proxy_env }}"
 
@@ -49,5 +51,6 @@
   - kube-master
   - new-master
   roles:
+  - prepare/variables
   - etcd/certificates
   - kube-certificates

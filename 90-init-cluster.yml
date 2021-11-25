@@ -17,6 +17,7 @@
 - hosts: 
   - all
   roles:
+  - prepare/variables
   - prepare/base
   - prepare/container-engine
   - prepare/kubernetes
@@ -26,7 +27,14 @@
 - hosts: 
   - all
   roles:
-  - role: load-balancer
+  - prepare/variables
+  - load-balancer
+
+- hosts: 
+  - all
+  roles:
+  - prepare/variables
+  - chrony
 
 # 安装 etcd，并分发etcd证书到master节点
 - hosts: 
@@ -35,6 +43,7 @@
   - kube-master
   - new-master
   roles:
+  - prepare/variables
   - etcd/certificates
   - etcd/install
 
@@ -45,6 +54,7 @@
   - kube-worker
   - new-worker
   roles:
+  - prepare/variables
   - kube-certificates
 
 # 初始化master节点
@@ -52,6 +62,7 @@
   - kube-master
   - new-master
   roles:
+  - prepare/variables
   - kube-master
 
 # 初始化worker节点
@@ -59,6 +70,7 @@
   - kube-worker
   - new-worker
   roles:
+  - prepare/variables
   - kube-worker
 
 # 标记各节点角色
@@ -68,12 +80,14 @@
   - new-master
   - new-worker
   roles:
+  - prepare/variables
   - post
 
 # 安装基础插件
 - hosts: 
   - kube-master[0]
   roles:
+  - prepare/variables
   - plugins/network-plugins
   - plugins/ingress-controller
   - plugins/metrics-server

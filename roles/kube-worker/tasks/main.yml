@@ -1,12 +1,12 @@
-- name: 读取 docker sock 文件 stat 信息
-  stat: 
-    path: /var/run/docker.sock
-  register: docker_sock_stat
+- name: 判断 Docker 是否早已安装
+  shell: >
+    systemctl status docker | grep running || echo "not running"
+  register: docker_already_running
 
 - name: 设置 container_manager_detected 变量
   set_fact:
     container_manager_detected: >-
-      {%- if docker_sock_stat.stat.exists -%}
+      {%- if "active" in docker_already_running.stdout -%}
       docker
       {%- else -%}
       containerd
@@ -67,12 +67,12 @@
   - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
   - inventory_hostname not in (groups['kube-master'] + groups['new-master'])
 
-- name: 取消在 worker 组的 master 节点 taint，使 master 节点可以调度
-  shell: >
-    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/control-plane='':NoSchedule --overwrite &&
-    kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/control-plane-
-  delegate_to: "{{ groups['kube-master'][0] }}"
-  ignore_errors: yes
-  when: 
-  - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
-  - inventory_hostname in (groups['kube-master'] + groups['new-master']) 
+# - name: 取消在 worker 组的 master 节点 taint，使 master 节点可以调度
+#   shell: >
+#     kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/control-plane='':NoSchedule --overwrite &&
+#     kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/control-plane-
+#   delegate_to: "{{ groups['kube-master'][0] }}"
+#   ignore_errors: yes
+#   when: 
+#   - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
+#   - inventory_hostname in (groups['kube-master'] + groups['new-master']) 

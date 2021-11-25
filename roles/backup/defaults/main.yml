@@ -1,4 +1,0 @@
-# 提权操作
-ansible_become: true
-# Etcd使用的镜像
-etcd_image: registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0

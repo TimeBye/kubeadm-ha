@@ -61,7 +61,7 @@
 
   - name: 校验 lb_kube_apiserver_ip 是否为节点 IP
     assert:
-      that: lb_kube_apiserver_ip != CURRENT_HOST_IP
+      that: lb_kube_apiserver_ip != current_host_ip
       msg: "lb_kube_apiserver_ip 不能设置为集群节点的 IP。"
   when: lb_kube_apiserver_ip is defined
 

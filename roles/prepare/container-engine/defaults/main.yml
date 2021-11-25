@@ -1,0 +1,8 @@
+#----------------------------------------------- 容器运行时参数（不可配置项） -------------------------------------------#
+# CRI socket path
+cri_socket: >-
+  {%- if container_manager == 'containerd' -%}
+  /var/run/containerd/containerd.sock
+  {%- else -%}
+  /var/run/dockershim.sock
+  {%- endif -%}

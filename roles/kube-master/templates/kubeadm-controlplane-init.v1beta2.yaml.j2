@@ -1,7 +1,7 @@
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 localAPIEndpoint:
-  advertiseAddress: {{ CURRENT_HOST_IP }}
+  advertiseAddress: {{ current_host_ip }}
   bindPort: 6443
 nodeRegistration:
   kubeletExtraArgs:
@@ -9,7 +9,7 @@ nodeRegistration:
     root-dir: {{ kubelet_root_dir }}
     hostname-override: {{ inventory_hostname }}
     pod-infra-container-image: {{ pod_infra_container_image }}
-  criSocket: {{ CRI_SOCKET }}
+  criSocket: {{ cri_socket }}
   name: {{ inventory_hostname }}
 {% if inventory_hostname in (groups['kube-master'] + groups['new-master']) and inventory_hostname not in (groups['kube-worker'] + groups['new-worker']) %}
   taints:
@@ -31,10 +31,11 @@ apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
 kubernetesVersion: v{{ kube_version }}
 clusterName: kubernetes
-controlPlaneEndpoint: "{{ KUBE_APISERVER_IP | trim }}:{{ lb_kube_apiserver_port | trim }}"
+controlPlaneEndpoint: "{{ kube_apiserver_ip | trim }}:{{ lb_kube_apiserver_port | trim }}"
 certificatesDir: /etc/kubernetes/pki
 dns:
   type: CoreDNS
+  imageRepository: "{{ kube_image_repository }}"
 etcd:
   external:
     endpoints:
@@ -126,7 +127,7 @@ apiServer:
 {% endfor %}
   - 127.0.0.1
   - 0:0:0:0:0:0:0:1
-  - {{ KUBERNETES_SERVICE_IP }}
+  - {{ kubernetes_service_ip }}
 {% if lb_kube_apiserver_ip is defined %}
   - {{ lb_kube_apiserver_ip | trim }}
 {% endif %}
@@ -206,7 +207,7 @@ authorization:
 cgroupDriver: {{ kubelet_cgroup_driver|default(kubelet_cgroup_driver_detected) }}
 cgroupsPerQOS: true
 clusterDNS:
-- {{ CLUSTER_DNS_SERVICE_IP }}
+- {{ cluster_dns_service_ip }}
 clusterDomain: {{ kube_dns_domain }}
 configMapAndSecretChangeDetectionStrategy: Watch
 containerLogMaxFiles: 5

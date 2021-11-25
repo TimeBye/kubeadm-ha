@@ -7,33 +7,32 @@
 
 [![](https://img.shields.io/badge/Mode-HA-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Mode-HA-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/Dist-Ubuntu16.04-yellow.svg?style=flat-square)](https://img.shields.io/badge/Dist-Ubuntu16.04-yellow.svg?style=flat-square)
-[![](https://img.shields.io/badge/Dist-Debian9-yellow.svg?style=flat-square)](https://img.shields.io/badge/Dist-Debian9-yellow.svg?style=flat-square)
+[![](https://img.shields.io/badge/Dist-Debian10-yellow.svg?style=flat-square)](https://img.shields.io/badge/Dist-Debian10-yellow.svg?style=flat-square)
 [![](https://img.shields.io/badge/Dist-Centos7-orange.svg?style=flat-square)](https://img.shields.io/badge/Dist-Centos7-orange.svg?style=flat-square)
-[![](https://img.shields.io/badge/Dist-Centos8-orange.svg?style=flat-square)](https://img.shields.io/badge/Dist-Centos8-orange.svg?style=flat-square)
 [![](https://img.shields.io/badge/Dist-RedHat7-orange.svg?style=flat-square)](https://img.shields.io/badge/Dist-RedHat7-orange.svg?style=flat-square)
+[![](https://img.shields.io/badge/Dist-Centos8-orange.svg?style=flat-square)](https://img.shields.io/badge/Dist-Centos8-orange.svg?style=flat-square)
 [![](https://img.shields.io/badge/Proxy-iptables-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Proxy-iptables-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/Proxy-IPVS-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Proxy-IPVS-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/DNS-CoreDNS-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/DNS-CoreDNS-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/Net-Flannel-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Net-Flannel-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/Net-Calico-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Net-Calico-brightgreen.svg?style=flat-square)
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square)](https://github.com/TimeBye/kubeadm-ha/blob/master/LICENSE)
-[![HitCount](http://hits.dwyl.io/timebye/kubeadm-ha.svg)](http://hits.dwyl.io/timebye/kubeadm-ha)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha?ref=badge_shield)
 
 - **项目特性：** 不受国内网络限制、所有组件使用 `kubelet` 托管、多 `master` 高可用、`tls` 双向认证、自定义 `tls` 证书有效期、`RBAC` 授权、支持 `Network Policy`
 
 - **相关支持：**
 
-  | **类别**           | **支持**                                                   |
-  | :----------------- | :--------------------------------------------------------- |
-  | Architecture       | amd64, arm64                                               |
-  | OS                 | Ubuntu 16.04+, Debian 9, CentOS 7.4+, CentOS 8, RedHat 7   |
-  | Etcd               | v3.4.13-0                                                  |
-  | Container runtimes | Docker, **containerd**                                     |
-  | Kubernetes         | v1.13, v1.14, v1.15, v1.16, v1.17, v1.18, v1.19, **v1.20** |
-  | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**                  |
-  | Network plugin     | flannel, **calico**                                        |
-  | Ingress controller | traefik, **nginx-ingress**                                 |
+  | **类别**           | **支持**                                                  |
+  | :----------------- | :-------------------------------------------------------- |
+  | Architecture       | amd64, arm64                                              |
+  | OS                 | Ubuntu 16.04+, Debian 10, CentOS 7.4+, RedHat 7, CentOS 8 |
+  | Etcd               | 3.4.13-0                                                  |
+  | Container runtimes | Docker, **containerd**                                    |
+  | Kubernetes         | v1.15, v1.16, v1.17, v1.18, v1.19, v1.20, **v1.21**       |
+  | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**                 |
+  | Network plugin     | flannel, **calico**                                       |
+  | Ingress controller | traefik, **nginx-ingress**                                |
 
   **Note:** 表格中粗体标识出来的为默认安装版本
 
@@ -56,7 +55,7 @@
         <td><a target="_blank" href="docs/06-集群恢复.md">06-集群恢复</a></td>
         <td><a target="_blank" href="docs/07-集群重置.md">07-集群重置</a></td>
         <td><a target="_blank" href="docs/08-离线安装.md">08-离线安装</a></td>
-        <td><a target="_blank" href="#">-</a></td>
+        <td><a target="_blank" href="docs/09-扩展阅读.md">09-扩展阅读</a></td>
     </tr>
 </table>
 
@@ -72,6 +71,10 @@
    <td align="center">
   <a href="https://github.com/Jaywoods2"><img src="https://avatars2.githubusercontent.com/u/18679696?s=400&v=4" width="100px;" alt="Jaywoods2"/>
   <br></br><sub><b>Jaywoods2</b></sub>
+
+   <td align="center">
+  <a href="https://github.com/ChongmingDu"><img src="https://avatars.githubusercontent.com/u/22591706?s=400&v=4" width="100px;" alt="ChongmingDu"/>
+  <br></br><sub><b>ChongmingDu</b></sub>
   
    <td align="center">
   <a href="https://github.com/happinesslijian"><img src="https://avatars2.githubusercontent.com/u/47111417?s=400&v=4" width="100px;" alt="happinesslijian"/>
@@ -89,7 +92,7 @@
 
 ## JetBrains 开源证书支持
 
-`kubeadm-ha` 项目一直以来都是在 JetBrains 公司旗下的 GoLand 集成开发环境中进行开发，基于 **free JetBrains Open Source license(s)** 正版免费授权，在此表达我的谢意。
+`kubeadm-ha` 基于 **free JetBrains Open Source license(s)** 正版免费授权进行开发，在此表达我的谢意。
 
 <a href="https://www.jetbrains.com/?from=kubeadm-ha" target="_blank"><img src="https://raw.githubusercontent.com/panjf2000/illustrations/master/jetbrains/jetbrains-variant-4.png" width="250" align="middle"/></a>
 

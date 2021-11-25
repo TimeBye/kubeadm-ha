@@ -2,7 +2,7 @@
   - del-node
   vars_prompt:
     name: "restore_confirmation"
-    prompt: "确实要移除节点? 输入“yes”确认移除。"
+    prompt: "确认要移除节点? 输入“yes”确认移除。"
     default: "no"
     private: no
   pre_tasks:
@@ -11,5 +11,6 @@
         msg: "移除确认失败，取消移除节点操作。"
       when: restore_confirmation != "yes"
   roles:
+  - prepare/variables
   - remove/node
   - reset

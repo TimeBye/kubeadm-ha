@@ -8,7 +8,7 @@ on:
 jobs:
   dockerhub-to-aliyun:
     runs-on: ubuntu-20.04
-    container: setzero/images-sync:0.3.1
+    container: setzero/registry-manager
     env:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
       TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
@@ -16,58 +16,84 @@ jobs:
     - name: Dockerhub to Aliyun
       run: |
         cat << EOF >config.yaml
-        from:
-          registry: https://registry-1.docker.io
-        to:
-          registry: https://registry.aliyuncs.com
-        names:
-          - library/nginx:1.19-alpine
-          - library/haproxy:2.3-alpine
-          - library/traefik:2.3.5
-          - openresty/openresty:1.19.3.1-alpine
-          - envoyproxy/envoy:v1.16.2
-          - osixia/keepalived:2.0.20
-          - geoffh1977/chrony
-          - calico/typha
-          - calico/cni
-          - calico/node
-          - calico/kube-controllers
-          - calico/pod2daemon-flexvol
-          - calico/ctl
-          - jettech/kube-webhook-certgen
-          - kubernetesui/dashboard
-          - kubernetesui/metrics-scraper
-        replace:
-          - old: openresty/
-            new: kubeadm-ha/openresty_
-          - old: envoyproxy/
-            new: kubeadm-ha/envoyproxy_
-          - old: osixia/
-            new: kubeadm-ha/osixia_
-          - old: geoffh1977/
-            new: kubeadm-ha/geoffh1977_
-          - old: calico/
-            new: kubeadm-ha/calico_
-          - old: jettech/
-            new: kubeadm-ha/jettech_
-          - old: kubernetesui/
-            new: kubeadm-ha/kubernetesui_
-          - old: library
-            new: kubeadm-ha
-        rules:
-          - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
+        registries:
+          aliyuncs:
+            registry: https://registry.aliyuncs.com
+            username: $TO_USERNAME
+            password: $TO_PASSWORD
+          dockerhub:
+            registry: https://registry-1.docker.io
+            repositories:
+              - calico/typha
+              - calico/cni
+              - calico/node
+              - calico/kube-controllers
+              - calico/pod2daemon-flexvol
+              - calico/ctl
+              - jettech/kube-webhook-certgen
+              - kubernetesui/dashboard
+              - kubernetesui/metrics-scraper
+        sync-policy:
+          from: dockerhub
+          to: aliyuncs
+          dry-run: false
+          replace:
+            - old: calico/
+              new: kubeadm-ha/calico_
+            - old: jettech/
+              new: kubeadm-ha/jettech_
+            - old: kubernetesui/
+              new: kubeadm-ha/kubernetesui_
+          filters:
+            - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
         EOF
-        sync-images --config config.yaml
+        registry-manager sync -c config.yaml
+
+    - name: Dockerhub to Aliyun force
+      run: |
+        cat << EOF >config.yaml
+        registries:
+          aliyuncs:
+            registry: https://registry.aliyuncs.com
+            username: $TO_USERNAME
+            password: $TO_PASSWORD
+          dockerhub:
+            registry: https://registry-1.docker.io
+            repositories:
+              - library/nginx:1.19-alpine
+              - library/haproxy:2.3-alpine
+              - library/traefik:2.4.8
+              - openresty/openresty:1.19.3.1-alpine
+              - envoyproxy/envoy:v1.16.2
+              - osixia/keepalived:2.0.20
+        sync-policy:
+            from: dockerhub
+            to: aliyuncs
+            dry-run: false
+            force: true
+            replace:
+              - old: openresty/
+                new: kubeadm-ha/openresty_
+              - old: envoyproxy/
+                new: kubeadm-ha/envoyproxy_
+              - old: osixia/
+                new: kubeadm-ha/osixia_
+              - old: library
+                new: kubeadm-ha
+            filters:
+              - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
+        EOF
+        registry-manager sync -c config.yaml
+
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
       with:
         retain_days: 7
         keep_minimum_runs: 3
 
-
   quay-to-aliyun:
     runs-on: ubuntu-20.04
-    container: setzero/images-sync:0.3.1
+    container: setzero/registry-manager
     env:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
       TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
@@ -75,24 +101,32 @@ jobs:
     - name: Quay to Aliyun
       run: |
         cat << EOF >config.yaml
-        from:
-          registry: https://quay.io
-        to:
-          registry: https://registry.aliyuncs.com
-        names:
-          - coreos/flannel
-          - jetstack/cert-manager-cainjector
-          - jetstack/cert-manager-webhook
-          - jetstack/cert-manager-controller
-        replace:
-          - old: coreos/
-            new: kubeadm-ha/coreos_
-          - old: jetstack/
-            new: kubeadm-ha/jetstack_
-        rules:
-          - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
+        registries:
+          aliyuncs:
+            registry: https://registry.aliyuncs.com
+            username: ${{ secrets.TO_USERNAME }}
+            password: ${{ secrets.TO_PASSWORD }}
+          quay:
+            registry: https://quay.io
+            repositories:
+              - coreos/flannel
+              - jetstack/cert-manager-cainjector
+              - jetstack/cert-manager-webhook
+              - jetstack/cert-manager-controller
+        sync-policy:
+          from: quay
+          to: aliyuncs
+          dry-run: false
+          replace:
+            - old: coreos/
+              new: kubeadm-ha/coreos_
+            - old: jetstack/
+              new: kubeadm-ha/jetstack_
+          filters:
+            - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
         EOF
-        sync-images --config config.yaml
+        registry-manager sync -c config.yaml
+
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
       with:
@@ -101,7 +135,7 @@ jobs:
 
   gcr-to-aliyun:
     runs-on: ubuntu-20.04
-    container: setzero/images-sync:0.3.1
+    container: setzero/registry-manager
     env:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
       TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
@@ -109,30 +143,41 @@ jobs:
     - name: Gcr to Aliyun
       run: |
         cat << EOF >config.yaml
-        from:
-          registry: https://k8s.gcr.io
-        to:
-          registry: https://registry.aliyuncs.com
-        names:
-          - kube-apiserver
-          - kube-controller-manager
-          - kube-scheduler
-          - kube-proxy
-          - pause
-          - etcd
-          - coredns
-          - ingress-nginx/controller
-          - metrics-server/metrics-server
-        replace:
-          - old: ingress-nginx/
-            new: kubeadm-ha/ingress-nginx_
-          - old: metrics-server/
-            new: kubeadm-ha/metrics-server_
-          - new: kubeadm-ha
-        rules:
-          - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
+        registries:
+          aliyuncs:
+            registry: https://registry.aliyuncs.com
+            username: ${{ secrets.TO_USERNAME }}
+            password: ${{ secrets.TO_PASSWORD }}
+          gcr:
+            registry: https://k8s.gcr.io
+            repositories:
+              - kube-apiserver
+              - kube-controller-manager
+              - kube-scheduler
+              - kube-proxy
+              - pause
+              - etcd
+              - coredns
+              - coredns/coredns
+              - ingress-nginx/controller
+              - metrics-server/metrics-server
+        sync-policy:
+          from: gcr
+          to: aliyuncs
+          dry-run: false
+          replace:
+            - old: ingress-nginx/
+              new: kubeadm-ha/ingress-nginx_
+            - old: metrics-server/
+              new: kubeadm-ha/metrics-server_
+            - old: coredns/
+              new: kubeadm-ha/
+            - new: kubeadm-ha
+          filters:
+            - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
         EOF
-        sync-images --config config.yaml
+        registry-manager sync -c config.yaml
+
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
       with:

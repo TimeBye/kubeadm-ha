@@ -1,64 +1,57 @@
 #!/bin/bash
-set -eux;
+# set -eux;
 
-docker pull --platform ${1:-'linux/amd64'} nginx:1.19-alpine
-docker pull --platform ${1:-'linux/amd64'} calico/typha:v3.17.1
-docker pull --platform ${1:-'linux/amd64'} calico/cni:v3.17.1
-docker pull --platform ${1:-'linux/amd64'} calico/node:v3.17.1
-docker pull --platform ${1:-'linux/amd64'} calico/kube-controllers:v3.17.1
-docker pull --platform ${1:-'linux/amd64'} calico/pod2daemon-flexvol:v3.17.1
-docker pull --platform ${1:-'linux/amd64'} calico/ctl:v3.17.1
-docker pull --platform ${1:-'linux/amd64'} jettech/kube-webhook-certgen:v1.5.0
-docker pull --platform ${1:-'linux/amd64'} kubernetesui/dashboard:v2.1.0
-docker pull --platform ${1:-'linux/amd64'} kubernetesui/metrics-scraper:v1.0.6
+images="
+nginx:1.19-alpine
+haproxy:2.3-alpine
+traefik:2.4.8
+openresty/openresty:1.19.3.1-alpine
+envoyproxy/envoy:v1.16.2
+osixia/keepalived:2.0.20
+setzero/chrony:3.5
+calico/typha:v3.19.1
+calico/cni:v3.19.1
+calico/node:v3.19.1
+calico/kube-controllers:v3.19.1
+calico/pod2daemon-flexvol:v3.19.1
+calico/ctl:v3.19.1
+jettech/kube-webhook-certgen:v1.5.1
+kubernetesui/dashboard:v2.3.1
+kubernetesui/metrics-scraper:v1.0.6
+quay.io/coreos/flannel:v0.14.0
+quay.io/jetstack/cert-manager-cainjector:v1.4.0
+quay.io/jetstack/cert-manager-webhook:v1.4.0
+quay.io/jetstack/cert-manager-controller:v1.4.0
+k8s.gcr.io/kube-apiserver:v1.21.4
+k8s.gcr.io/kube-controller-manager:v1.21.4
+k8s.gcr.io/kube-scheduler:v1.21.4
+k8s.gcr.io/kube-proxy:v1.21.4
+k8s.gcr.io/pause:3.4.1
+k8s.gcr.io/etcd:3.4.13-0
+k8s.gcr.io/coredns/coredns:v1.8.0
+k8s.gcr.io/ingress-nginx/controller:v0.47.0
+k8s.gcr.io/metrics-server/metrics-server:v0.5.0
+"
 
-docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/kube-apiserver:v1.20.1
-docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/kube-controller-manager:v1.20.1
-docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/kube-scheduler:v1.20.1
-docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/kube-proxy:v1.20.1
-docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/pause:3.2
-docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/etcd:3.4.13-0
-docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/coredns:1.7.0
-docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/ingress-nginx/controller:v0.41.2
-docker pull --platform ${1:-'linux/amd64'} k8s.gcr.io/metrics-server/metrics-server:v0.4.0
-
-docker tag nginx:1.19-alpine                     127.0.0.1:5000/kubeadm-ha/nginx:1.19-alpine
-docker tag calico/typha:v3.17.1                  127.0.0.1:5000/kubeadm-ha/calico_typha:v3.17.1
-docker tag calico/cni:v3.17.1                    127.0.0.1:5000/kubeadm-ha/calico_cni:v3.17.1
-docker tag calico/node:v3.17.1                   127.0.0.1:5000/kubeadm-ha/calico_node:v3.17.1
-docker tag calico/kube-controllers:v3.17.1       127.0.0.1:5000/kubeadm-ha/calico_kube-controllers:v3.17.1
-docker tag calico/pod2daemon-flexvol:v3.17.1     127.0.0.1:5000/kubeadm-ha/calico_pod2daemon-flexvol:v3.17.1
-docker tag calico/ctl:v3.17.1                    127.0.0.1:5000/kubeadm-ha/calico_ctl:v3.17.1
-docker tag jettech/kube-webhook-certgen:v1.5.0   127.0.0.1:5000/kubeadm-ha/jettech_kube-webhook-certgen:v1.5.0
-docker tag kubernetesui/dashboard:v2.1.0         127.0.0.1:5000/kubeadm-ha/kubernetesui_dashboard:v2.1.0
-docker tag kubernetesui/metrics-scraper:v1.0.6   127.0.0.1:5000/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.6
-
-docker tag k8s.gcr.io/kube-apiserver:v1.20.1                 127.0.0.1:5000/kubeadm-ha/kube-apiserver:v1.20.1
-docker tag k8s.gcr.io/kube-controller-manager:v1.20.1        127.0.0.1:5000/kubeadm-ha/kube-controller-manager:v1.20.1
-docker tag k8s.gcr.io/kube-scheduler:v1.20.1                 127.0.0.1:5000/kubeadm-ha/kube-scheduler:v1.20.1
-docker tag k8s.gcr.io/kube-proxy:v1.20.1                     127.0.0.1:5000/kubeadm-ha/kube-proxy:v1.20.1
-docker tag k8s.gcr.io/pause:3.2                              127.0.0.1:5000/kubeadm-ha/pause:3.2
-docker tag k8s.gcr.io/etcd:3.4.13-0                          127.0.0.1:5000/kubeadm-ha/etcd:3.4.13-0
-docker tag k8s.gcr.io/coredns:1.7.0                          127.0.0.1:5000/kubeadm-ha/coredns:1.7.0
-docker tag k8s.gcr.io/ingress-nginx/controller:v0.41.2       127.0.0.1:5000/kubeadm-ha/ingress-nginx_controller:v0.41.2
-docker tag k8s.gcr.io/metrics-server/metrics-server:v0.4.0   127.0.0.1:5000/kubeadm-ha/metrics-server_metrics-server:v0.4.0
-
-docker push 127.0.0.1:5000/kubeadm-ha/nginx:1.19-alpine
-docker push 127.0.0.1:5000/kubeadm-ha/calico_typha:v3.17.1
-docker push 127.0.0.1:5000/kubeadm-ha/calico_cni:v3.17.1
-docker push 127.0.0.1:5000/kubeadm-ha/calico_node:v3.17.1
-docker push 127.0.0.1:5000/kubeadm-ha/calico_kube-controllers:v3.17.1
-docker push 127.0.0.1:5000/kubeadm-ha/calico_pod2daemon-flexvol:v3.17.1
-docker push 127.0.0.1:5000/kubeadm-ha/calico_ctl:v3.17.1
-docker push 127.0.0.1:5000/kubeadm-ha/jettech_kube-webhook-certgen:v1.5.0
-docker push 127.0.0.1:5000/kubeadm-ha/kubernetesui_dashboard:v2.1.0
-docker push 127.0.0.1:5000/kubeadm-ha/kubernetesui_metrics-scraper:v1.0.6
-docker push 127.0.0.1:5000/kubeadm-ha/kube-apiserver:v1.20.1
-docker push 127.0.0.1:5000/kubeadm-ha/kube-controller-manager:v1.20.1
-docker push 127.0.0.1:5000/kubeadm-ha/kube-scheduler:v1.20.1
-docker push 127.0.0.1:5000/kubeadm-ha/kube-proxy:v1.20.1
-docker push 127.0.0.1:5000/kubeadm-ha/pause:3.2
-docker push 127.0.0.1:5000/kubeadm-ha/etcd:3.4.13-0
-docker push 127.0.0.1:5000/kubeadm-ha/coredns:1.7.0
-docker push 127.0.0.1:5000/kubeadm-ha/ingress-nginx_controller:v0.41.2
-docker push 127.0.0.1:5000/kubeadm-ha/metrics-server_metrics-server:v0.4.0
+dest_registry=${dest_registry:-'127.0.0.1:5000/kubeadm-ha'}
+for image in $images ; do 
+  docker pull --platform ${1:-'linux/amd64'} $image
+  count=$(echo $image | grep -o '/*' | wc -l)
+  if [[ $count -eq 0 ]]; then
+    dest=$dest_registry/$image
+  elif [[ $count -eq 1 ]]; then
+    if [[ $image =~ 'k8s.gcr.io' ]]; then
+      dest=$dest_registry/$(echo ${image#*/} | sed 's / _ g')
+    else
+      dest=$dest_registry/$(echo ${image} | sed 's / _ g')
+    fi
+  else
+    if [[ $image =~ 'coredns' ]]; then
+      dest=$dest_registry/$(echo ${image##*/} | sed 's / _ g')
+    else
+      dest=$dest_registry/$(echo ${image#*/} | sed 's / _ g')
+    fi
+  fi
+  docker tag $image $dest
+  docker push $dest
+done

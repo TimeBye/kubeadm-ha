@@ -9,6 +9,20 @@
 #       - lxc-common
 #     state: absent
 
+- block:
+  - name: 判断 ufw 是否安装
+    shell: >
+      systemctl status ufw | grep active || echo "not be found"
+    register: ufw_already_installed
+  
+  - name: 禁用防火墙
+    service:
+      name: ufw
+      state: stopped
+      enabled: no
+    when: '"active" in ufw_already_installed.stdout'
+  when: "(firewalld_disabled | bool) | default(true)"
+
 - name: iptables 工具切换到 “旧版” 模式
   shell: "{{ item }} || true"
   with_items:
@@ -19,18 +33,6 @@
   when: >-
     (ansible_distribution == "Debian" and ansible_distribution_version is version('10', '>=')) or
     (ansible_distribution == "Ubuntu" and ansible_distribution_version is version('19', '>='))
-
-- name: 判断 ufw 是否安装
-  shell: >
-    systemctl status ufw | grep active || echo "not be found"
-  register: ufw_already_installed
-
-- name: 禁用防火墙
-  service:
-    name: ufw
-    state: stopped
-    enabled: no
-  when: '"active" in ufw_already_installed.stdout'
 
 - name: 添加基础 Apt 仓库
   apt_repository:
@@ -62,6 +64,7 @@
     - apt-transport-https         # 添加https协议的apt源会用到
     - software-properties-common  # docker会用到
     state: present
+    update_cache: yes
     allow_unauthenticated: true
 
 - name: 重新启动 cron 避免因修改时区而导致的作业错乱问题

@@ -7,17 +7,19 @@
 #     state: absent
 #     disablerepo: "*"
 
-- name: 判断 firewalld 是否安装
-  shell: >
-    systemctl status firewalld | grep active || echo "not be found"
-  register: firewalld_already_installed
-
-- name: 禁用防火墙
-  service:
-    name: firewalld
-    state: stopped
-    enabled: no
-  when: '"active" in firewalld_already_installed.stdout'
+- block:
+  - name: 判断 firewalld 是否安装
+    shell: >
+      systemctl status firewalld | grep active || echo "not be found"
+    register: firewalld_already_installed
+  
+  - name: 禁用防火墙
+    service:
+      name: firewalld
+      state: stopped
+      enabled: no
+    when: '"active" in firewalld_already_installed.stdout'
+  when: "(firewalld_disabled | bool) | default(true)"
 
 - name: 设置 yum obsoletes 值为 0
   lineinfile:
@@ -33,6 +35,7 @@
 - block:
   - name: 备份原有 yum 源
     shell: mv /etc/yum.repos.d /etc/yum.repos.d.orig.$(date '+%Y%m%dT%H%M%S')
+    ignore_errors: true
 
   - name: 创建相关目录
     file:
@@ -67,6 +70,7 @@
     - htop
     - lvm2                            # docker会用到
     - curl                            # 基础工具
+    - wget
     - audit
     - iotop
     - ipset                           # ipvs 模式需要
@@ -75,6 +79,7 @@
     - ipvsadm                         # ipvs 模式需要
     - nmap-ncat                       # 使用lb时进行端口判断时会用到
     - nfs-utils                       # 挂载nfs 共享文件需要 (创建基于 nfs的 PV 需要)
+    - iscsi-initiator-utils           # iSCSI 服务端及管理命令 (管理 IP SAN。有 externel volume provisioner 时依赖)
     - yum-utils                       # 基础工具
     - net-tools
     - libseccomp

@@ -1,6 +1,0 @@
-# 所有节点安装 load-balancer
-# 进行apiserver负载均衡
-- hosts: 
-  - all
-  roles:
-  - role: load-balancer

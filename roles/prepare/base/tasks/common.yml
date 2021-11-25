@@ -26,18 +26,18 @@
   - br_netfilter
   ignore_errors: true
 
-- name: 加载nf_conntrack for kernel < 4.19
-  modprobe: 
+- name: 加载 nf_conntrack_ipv4
+  modprobe:
     name: nf_conntrack_ipv4
     state: present
-  when: ansible_kernel is version('4.19', '<')
+  register: modprobe_nf_conntrack_ipv4
   ignore_errors: true
 
-- name: 加载nf_conntrack for kernel >= 4.19
+- name: 加载 nf_conntrack
   modprobe: 
     name: nf_conntrack
     state: present
-  when: ansible_kernel is version('4.19', '>=')
+  when: modprobe_nf_conntrack_ipv4 is not success
   ignore_errors: true
 
 - name: 设置 systemd-modules-load 配置

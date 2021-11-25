@@ -16,5 +16,6 @@
 - hosts: 
   - all
   roles:
+  - prepare/variables
   - prepare/kubernetes
   environment: "{{ proxy_env }}"

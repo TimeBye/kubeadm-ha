@@ -22,6 +22,7 @@
 - hosts: 
   - new-etcd
   roles:
+  - prepare/variables
   - prepare/base
   - prepare/container-engine
   - prepare/kubernetes
@@ -31,6 +32,7 @@
   - etcd
   - new-etcd
   roles:
+  - prepare/variables
   - etcd/certificates
   - etcd/install
 
@@ -38,20 +40,24 @@
 - hosts: 
   - kube-master
   roles:
+  - prepare/variables
   - kube-master
 
 # 标记各节点角色
 - hosts: 
   - new-etcd
   roles:
+  - prepare/variables
   - post
 
 - hosts: 
   - kube-master
+  roles:
+  - prepare/variables
   tasks:
   - name: "更新第一个 master 节点：{{ inventory_hostname }} 的配置"
     shell: >
-      kubeadm upgrade apply --config=/etc/kubernetes/kubeadm-config.yaml --force
+      kubeadm upgrade apply --config=/etc/kubernetes/kubeadm-config.yaml --force --ignore-preflight-errors=ImagePull
     when: inventory_hostname == groups['kube-master'][0]
   
   - name: "更新 master 节点：{{ inventory_hostname }} 的配置"

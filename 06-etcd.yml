@@ -1,0 +1,10 @@
+# 安装etcd，并分发etcd证书到master节点
+- hosts: 
+  - etcd
+  - new-etcd
+  - kube-master
+  - new-master
+  roles:
+  - prepare/variables
+  - etcd/certificates
+  - etcd/install

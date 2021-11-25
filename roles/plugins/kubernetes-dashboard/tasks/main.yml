@@ -26,10 +26,6 @@
       dest: /etc/kubernetes/plugins/kubernetes-dashboard/kubernetes-dashboard.yaml
     register: kubernetes_dashboard_manifest
 
-  - name: 卸载原有 kubernetes-dashboard
-    shell: kubectl delete ns kubernetes-dashboard --ignore-not-found
-    when: kubernetes_dashboard_manifest.changed
-
   - name: 部署 kubernetes-dashboard
     shell: kubectl apply -f /etc/kubernetes/plugins/kubernetes-dashboard/kubernetes-dashboard.yaml
     when: kubernetes_dashboard_manifest.changed

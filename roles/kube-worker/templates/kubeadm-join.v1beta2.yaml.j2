@@ -2,7 +2,7 @@ apiVersion: kubeadm.k8s.io/v1beta2
 kind: JoinConfiguration
 discovery:
   bootstrapToken:
-    apiServerEndpoint: "{{ KUBE_APISERVER_IP | trim }}:{{ lb_kube_apiserver_port | trim }}"
+    apiServerEndpoint: "{{ kube_apiserver_ip | trim }}:{{ lb_kube_apiserver_port | trim }}"
     token: {{ kubeadm_token }}
     unsafeSkipCAVerification: true
   timeout: 5m0s
@@ -13,7 +13,7 @@ nodeRegistration:
     root-dir: {{ kubelet_root_dir }}
     hostname-override: {{ inventory_hostname }}
     pod-infra-container-image: {{ pod_infra_container_image }}
-  criSocket: {{ CRI_SOCKET }}
+  criSocket: {{ cri_socket }}
   name: {{ inventory_hostname }}
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
@@ -35,7 +35,7 @@ authorization:
 cgroupDriver: {{ kubelet_cgroup_driver|default(kubelet_cgroup_driver_detected) }}
 cgroupsPerQOS: true
 clusterDNS:
-- {{ CLUSTER_DNS_SERVICE_IP }}
+- {{ cluster_dns_service_ip }}
 clusterDomain: {{ kube_dns_domain }}
 configMapAndSecretChangeDetectionStrategy: Watch
 containerLogMaxFiles: 5

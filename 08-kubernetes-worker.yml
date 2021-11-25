@@ -1,6 +1,0 @@
-# 初始化worker节点
-- hosts: 
-  - kube-worker
-  - new-worker
-  roles:
-  - kube-worker

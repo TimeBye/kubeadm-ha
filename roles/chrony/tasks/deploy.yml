@@ -1,0 +1,109 @@
+- name: 判断 Docker 是否早已安装
+  shell: >
+    systemctl status docker | grep running || echo "not running"
+  register: docker_already_running
+
+- name: 设置 container_manager_detected 变量
+  set_fact:
+    container_manager_detected: >-
+      {%- if "active" in docker_already_running.stdout -%}
+      docker
+      {%- else -%}
+      containerd
+      {%- endif -%}
+
+- name: 创建 chrony、kubelet 相关目录
+  file: 
+    name: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ kubelet_root_dir }}"
+  - /etc/kubernetes/manifests
+  - /etc/systemd/system/kubelet.service.d
+
+- name: 读取 kubelet.conf 文件 stat 信息
+  stat: 
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf_stat
+
+- block:
+  - name: 获取 Docker Cgroup Driver 值
+    shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2
+    register: docker_cgroup_driver
+    when: container_manager_detected == 'docker'
+
+  - name: 设置 docker 为容器运行时 kubelet_cgroup_driver_detected 变量
+    set_fact:
+      kubelet_cgroup_driver_detected: >-
+        {{ docker_cgroup_driver.stdout }}
+    when: container_manager_detected == 'docker'
+
+  - name: 设置 containerd 为容器运行时 kubelet_cgroup_driver_detected 变量
+    set_fact:
+      kubelet_cgroup_driver_detected: >-
+        {%- if containerd_use_systemd_cgroup -%}systemd{%- else -%}cgroupfs{%- endif -%}
+    when: container_manager_detected == 'containerd'
+
+  - name: 生成临时 kubelet unit 文件
+    template: 
+      src: 20-kubelet-override.conf.j2
+      dest: /etc/systemd/system/kubelet.service.d/20-kubelet-override.conf
+      owner: root
+      mode: 0644
+
+  - name: 重新加载 daemon
+    systemd:
+      daemon_reload: yes
+
+  - name: 临时启动 kubelet 以引导 lb 运行
+    service:
+      name: kubelet
+      state: restarted
+      enabled: yes
+
+  when: 
+  - not kubelet_conf_stat.stat.exists
+
+- name: 判断 chrony 是否早已安装
+  shell: >
+    systemctl status chronyd | grep running || echo "not running"
+  register: chronyd_already_running
+
+- name: 停止系统原有 chrony
+  when: '"active" in chronyd_already_running.stdout'
+  service:
+    name: chronyd
+    state: stopped
+    enabled: no
+
+- name: 拉取 chrony 镜像
+  shell: "{{ image_pull_command }} {{ item }}"
+  with_items:
+  - "{{ chrony_image }}"
+  - "{{ pod_infra_container_image }}"
+
+- name: 生成 chrony static pod 文件
+  template: 
+    src: chrony.yaml.j2
+    dest: /etc/kubernetes/manifests/chrony.yaml
+    owner: root
+    mode: 0644
+
+- block:
+  - name: 移除临时 kubelet unit 文件
+    file: 
+      name: /etc/systemd/system/kubelet.service.d/20-kubelet-override.conf
+      state: absent
+
+  - name: 重新加载 daemon
+    systemd:
+      daemon_reload: yes
+
+  - name: 停止临时启动 kubelet
+    service:
+      name: kubelet
+      state: stopped
+      enabled: yes
+  when: 
+  - not kubelet_conf_stat.stat.exists
+  - inventory_hostname in (groups['kube-master'] + groups['kube-worker'] + groups['new-master'] + groups['new-worker'])

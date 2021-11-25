@@ -1,12 +1,12 @@
-- name: 读取 docker sock 文件 stat 信息
-  stat: 
-    path: /var/run/docker.sock
-  register: docker_sock_stat
+- name: 判断 Docker 是否早已安装
+  shell: >
+    systemctl status docker | grep running || echo "not running"
+  register: docker_already_running
 
 - name: 设置 container_manager_detected 变量
   set_fact:
     container_manager_detected: >-
-      {%- if docker_sock_stat.stat.exists -%}
+      {%- if "active" in docker_already_running.stdout -%}
       docker
       {%- else -%}
       containerd

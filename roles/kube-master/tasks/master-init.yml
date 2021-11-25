@@ -6,16 +6,16 @@
 
 - name: 获取 master 节点需要拉取的镜像列表
   shell: >
-    kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml | 
+    kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml | grep -v coredns | 
     grep {{ kube_image_repository }}
   register: kube_image_list
 
 - name: 开始拉取 master 节点相关镜像
-  shell: "{{ IMAGE_PULL_COMMAND }} {{ item }}"
+  shell: "{{ image_pull_command }} {{ item }}"
   with_items: "{{ kube_image_list.stdout_lines }}"
 
 - name: 初始化第一个 master 节点
-  shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml
+  shell: kubeadm init --config=/etc/kubernetes/kubeadm-config.yaml --ignore-preflight-errors=ImagePull
 
 - include_tasks: "{{ (role_path + '/../kube-certificates/tasks/kubeconfig.yml') | realpath  }}"
 
@@ -31,7 +31,7 @@
 
 - name: 等待 apiserver 运行
   uri:
-    url: "https://{{ CURRENT_HOST_IP }}:6443/healthz"
+    url: "https://{{ current_host_ip }}:6443/healthz"
     validate_certs: no
   register: apiserver_result
   until: apiserver_result.status == 200

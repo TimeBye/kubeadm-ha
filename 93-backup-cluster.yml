@@ -13,4 +13,5 @@
 - hosts: 
   - all
   roles:
+  - prepare/variables
   - backup

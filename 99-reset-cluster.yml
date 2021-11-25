@@ -3,7 +3,7 @@
   - all
   vars_prompt:
     name: "reset_confirmation"
-    prompt: "确实要重置群集吗? 输入“yes”确认重置群集。"
+    prompt: "确认要重置群集吗? 输入“yes”确认重置群集。"
     default: "no"
     private: no
   pre_tasks:
@@ -12,4 +12,5 @@
         msg: "重置确认失败，取消重置集群操作。"
       when: reset_confirmation != "yes"
   roles:
+  - prepare/variables
   - reset

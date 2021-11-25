@@ -1,8 +1,0 @@
-# 标记各节点角色
-- hosts: 
-  - kube-master
-  - kube-worker
-  - new-master
-  - new-worker
-  roles:
-  - post

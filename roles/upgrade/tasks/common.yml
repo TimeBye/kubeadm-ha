@@ -42,7 +42,7 @@
 
 - name: "升级第一个 master 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
   shell: >
-    kubeadm upgrade apply --config=/etc/kubernetes/kubeadm-config.yaml --force
+    kubeadm upgrade apply --config=/etc/kubernetes/kubeadm-config.yaml --force --ignore-preflight-errors=ImagePull
   when: inventory_hostname == groups['kube-master'][0]
 
 - name: "升级剩余 master 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"

@@ -49,7 +49,7 @@ DNS.{{ dns_idx + loop.index }} = {{ host }}
 {% endif %}
 IP.1 = 127.0.0.1
 IP.2 = 0:0:0:0:0:0:0:1
-IP.3 = {{ KUBERNETES_SERVICE_IP }}
+IP.3 = {{ kubernetes_service_ip }}
 {% set ip_idx = 3 | int %}
 {% for host in (groups['kube-master'] + groups['new-master'] | default([])) | unique %}
 IP.{{ ip_idx + loop.index }} = {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}

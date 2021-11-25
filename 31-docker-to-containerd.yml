@@ -1,0 +1,57 @@
+# 校验节点软件系统及硬件系统、安装必要基础组件、docker、kubeadm、kubelet、kubectl
+- hosts: all
+  vars_prompt:
+    name: "restore_confirmation"
+    prompt: "确认从 Docker 切换为 containerd ? 输入“yes”确认切换。"
+    default: "no"
+    private: no
+  pre_tasks:
+    - name: 确认切换
+      fail:
+        msg: "确认切换失败，取消切换操作。"
+      when: restore_confirmation != "yes"
+  gather_facts: false
+  tasks:
+    - name: "设置代理服务器环境变量"
+      set_fact:
+        proxy_env:
+          http_proxy: "{{ http_proxy | default ('') }}"
+          HTTP_PROXY: "{{ http_proxy | default ('') }}"
+          https_proxy: "{{ https_proxy | default ('') }}"
+          HTTPS_PROXY: "{{ https_proxy | default ('') }}"
+          no_proxy: "{{ no_proxy | default ('') }}"
+          NO_PROXY: "{{ no_proxy | default ('') }}"
+      no_log: true
+
+- hosts: 
+  - all
+  roles:
+  - prepare/variables
+  - docker-to-containerd
+  environment: "{{ proxy_env }}"
+
+- hosts: 
+  - kube-master
+  - new-master
+  roles:
+  - prepare/variables
+  - kube-master
+
+- hosts: 
+  - kube-master
+  - new-master
+  - kube-worker
+  - new-worker
+  roles:
+  - prepare/variables
+  - kube-worker
+
+- hosts: 
+  - etcd
+  - new-etcd
+  - kube-master
+  - new-master
+  roles:
+  - prepare/variables
+  - etcd/certificates
+  - etcd/install

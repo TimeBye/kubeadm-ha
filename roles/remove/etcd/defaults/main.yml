@@ -1,6 +1,0 @@
-# 提权操作
-ansible_become: true
-# 默认apiserver负载类型
-etcd_image: registry.aliyuncs.com/kubeadm-ha/etcd:3.4.13-0
-# Etcd 数据根目录
-etcd_data_dir: "/var/lib/etcd"

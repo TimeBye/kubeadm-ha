@@ -1,0 +1,7 @@
+# 初始化master节点
+- hosts: 
+  - kube-master
+  - new-master
+  roles:
+  - prepare/variables
+  - kube-master
