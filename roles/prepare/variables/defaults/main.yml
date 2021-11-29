@@ -138,7 +138,7 @@ image_pull_command: >-
 
 #-------------------------------- Containerd 相关配置（容器运行时类型为 Docker 时，请忽略) -------------------------------#
 # Containerd 版本
-containerd_version: 1.4.6-1
+containerd_version: 1.4.12-1
 # 数据存储目录
 containerd_storage_dir: "/var/lib/containerd"
 # 状态目录
@@ -175,7 +175,7 @@ pod_infra_container_image: "{{ kube_image_repository }}/pause:3.5"
 # Docker 版本
 # apt-cache madison docker-ce
 # yum list docker-ce --showduplicates --enablerepo=docker-ce-stable | sort -r
-docker_version: 20.10.7
+docker_version: 20.10.11
 
 # Dockerhub 国内镜像加速地址
 docker_mirror:
