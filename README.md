@@ -21,18 +21,23 @@
 
 - **项目特性：** 不受国内网络限制、所有组件使用 `kubelet` 托管、多 `master` 高可用、`tls` 双向认证、自定义 `tls` 证书有效期、`RBAC` 授权、支持 `Network Policy`
 
+- **分支说明：**
+  - `master`：稳定分支，推荐安装
+  - `release-*`：安装 `*` 版本的 Kubernetes
+  - `develop`：开发分支，不建议安装
+
 - **相关支持：**
 
-  | **类别**           | **支持**                                                  |
-  | :----------------- | :-------------------------------------------------------- |
-  | Architecture       | amd64, arm64                                              |
-  | OS                 | Ubuntu 16.04+, Debian 10, CentOS 7.4+, RedHat 7, CentOS 8 |
-  | Etcd               | 3.4.13-0                                                  |
-  | Container runtimes | Docker, **containerd**                                    |
-  | Kubernetes         | v1.15, v1.16, v1.17, v1.18, v1.19, v1.20, **v1.21**       |
-  | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**                 |
-  | Network plugin     | flannel, **calico**                                       |
-  | Ingress controller | traefik, **nginx-ingress**                                |
+  | **类别**           | **支持**                                                   |
+  | :----------------- | :--------------------------------------------------------- |
+  | Architecture       | amd64, arm64                                               |
+  | OS                 | Ubuntu 16.04+, Debian 10, CentOS 7.4+, RedHat 7, CentOS 8  |
+  | Etcd               | 3.5.0-0                                                    |
+  | Container runtimes | Docker, **containerd**                                     |
+  | Kubernetes         | v1.15, v1.16, v1.17, v1.18, v1.19, v1.20, v1.21, **v1.22** |
+  | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**                  |
+  | Network plugin     | flannel, **calico**                                        |
+  | Ingress controller | traefik, **nginx-ingress**                                 |
 
   **Note:** 表格中粗体标识出来的为默认安装版本
 
