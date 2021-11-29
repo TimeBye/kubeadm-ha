@@ -25,6 +25,7 @@ do_install() {
   lsb_dist=$( get_distribution )
   lsb_dist="$(echo "$lsb_dist" | tr '[:upper:]' '[:lower:]')"
   # Run setup for each distro accordingly
+  export LANG=en_US.UTF-8
   case "$lsb_dist" in
     ubuntu|debian|raspbian)
         sudo apt-get update
@@ -33,7 +34,7 @@ do_install() {
         sudo pip3 install --no-cache-dir ansible==2.10.4 netaddr -i https://mirrors.aliyun.com/pypi/simple/
         exit 0
       ;;
-    centos|fedora|rhel)
+    centos|fedora|rhel|ol)
         sudo curl -sSLo /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
         sudo yum install -y git python3-pip sshpass libffi-devel python3-devel openssl-devel
         sudo pip3 install -U pip -i https://mirrors.aliyun.com/pypi/simple/
