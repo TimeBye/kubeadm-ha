@@ -73,7 +73,6 @@ apiServer:
     kubelet-certificate-authority: /etc/kubernetes/pki/ca.crt
     kubelet-client-certificate: /etc/kubernetes/pki/apiserver-kubelet-client.crt
     kubelet-client-key: /etc/kubernetes/pki/apiserver-kubelet-client.key
-    kubelet-https: "true"
     profiling: "false"
     service-node-port-range: {{ kube_service_node_port_range }}
 {% if kube_kubeadm_apiserver_extra_args|length > 0 %}
