@@ -1,0 +1,18 @@
+- name: 渲染 kubeovn 配置文件
+  template:
+    src: kubeovn-install.sh.j2
+    dest: /etc/kubernetes/plugins/network-plugin/kubeovn-install.sh
+  register: kubeovn_manifest
+
+- name: 部署 kubeovn
+  shell: bash /etc/kubernetes/plugins/network-plugin/kubeovn-install.sh
+  when: kubeovn_manifest.changed
+
+- name: 轮询等待 kubeovn 运行
+  shell: kubectl get pod --all-namespaces -o wide | grep 'ovn' | awk '{print $4}'
+  register: pod_status
+  until: "'Running' in pod_status.stdout"
+  retries: 24
+  delay: 5
+  ignore_errors: true
+  when: wait_plugins_ready|bool
