@@ -31,7 +31,7 @@
   | Container runtimes | Docker, **containerd**                                    |
   | Kubernetes         | v1.15, v1.16, v1.17, v1.18, v1.19, v1.20, **v1.21**       |
   | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**                 |
-  | Network plugin     | flannel, **calico**                                       |
+  | Network plugin     | flannel, **calico**,kubeovn                               |
   | Ingress controller | traefik, **nginx-ingress**                                |
 
   **Note:** 表格中粗体标识出来的为默认安装版本
