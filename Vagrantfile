@@ -70,8 +70,8 @@ Vagrant.configure(2) do |config|
         end
     end
     config.vm.define "node4" do |s|
-        s.vm.box = "bento/ubuntu-16.04"
-        s.vm.box_url = "http://files.saas.hand-china.com/vagrant/bento_ubuntu-16.04.box"
+        s.vm.box = "bento/ubuntu-18.04"
+        s.vm.box_url = "https://files.saas.hand-china.com/vagrant/bento_ubuntu-18.04.box"
         s.vm.hostname = "node4"
         s.vm.network "private_network", ip: "192.168.56.14"
         s.vm.synced_folder ".", "/vagrant", disabled: true
