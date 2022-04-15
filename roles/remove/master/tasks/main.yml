@@ -43,10 +43,11 @@
   shell: >
     kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/master='':NoSchedule --overwrite &&
     kubectl taint nodes {{inventory_hostname}} node-role.kubernetes.io/master-
-  ignore_errors: yes
+  ignore_errors: true
   delegate_to:  "{{ (groups['kube-master'] | difference(groups['del-master']))[0] }}"
 
 - name: 添加 worker 角色标签
   shell: kubectl label node {{ inventory_hostname }} node-role.kubernetes.io/worker='' --overwrite
   ignore_errors: true
   delegate_to: "{{ (groups['kube-master'] | difference(groups['del-master']))[0] }}"
+
