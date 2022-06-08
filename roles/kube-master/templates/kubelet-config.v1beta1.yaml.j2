@@ -89,4 +89,7 @@ streamingConnectionIdleTimeout: 4h0m0s
 syncFrequency: 1m0s
 tlsCertFile: /var/lib/kubelet/pki/kubelet.crt
 tlsPrivateKeyFile: /var/lib/kubelet/pki/kubelet.key
+tlsCipherSuites:
+- TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+- TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 volumeStatsAggPeriod: 1m0s

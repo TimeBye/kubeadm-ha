@@ -17,6 +17,7 @@ spec:
     - --advertise-client-urls=https://{{ current_host_ip }}:2379
     - --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
     - --cert-file=/etc/kubernetes/pki/etcd/server.crt
+    - --cipher-suites=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
     - --key-file=/etc/kubernetes/pki/etcd/server.key
     - --peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
     - --peer-cert-file=/etc/kubernetes/pki/etcd/peer.crt

@@ -75,6 +75,7 @@ apiServer:
     kubelet-client-key: /etc/kubernetes/pki/apiserver-kubelet-client.key
     profiling: "false"
     service-node-port-range: {{ kube_service_node_port_range }}
+    tls-cipher-suites: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 {% if kube_kubeadm_apiserver_extra_args|length > 0 %}
 {% for key in kube_kubeadm_apiserver_extra_args %}
     {{ key }}: "{{ kube_kubeadm_apiserver_extra_args[key] }}"
@@ -274,6 +275,9 @@ streamingConnectionIdleTimeout: 4h0m0s
 syncFrequency: 1m0s
 tlsCertFile: /var/lib/kubelet/pki/kubelet.crt
 tlsPrivateKeyFile: /var/lib/kubelet/pki/kubelet.key
+tlsCipherSuites:
+- TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+- TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 volumeStatsAggPeriod: 1m0s
 ---
 apiVersion: kubeproxy.config.k8s.io/v1alpha1
