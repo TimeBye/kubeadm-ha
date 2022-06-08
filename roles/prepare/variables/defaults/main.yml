@@ -377,7 +377,7 @@ etcd_certs_expired: 3650
 # Etcd根证书过期时间（天）
 etcd_ca_certs_expired: 36500
 # Etcd使用的镜像
-etcd_image: "{{ kube_image_repository }}/etcd:3.5.0-0"
+etcd_image: "{{ kube_image_repository }}/etcd:3.5.4-0"
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
 # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23

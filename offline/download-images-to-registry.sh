@@ -26,7 +26,7 @@ k8s.gcr.io/kube-controller-manager:v1.22.4
 k8s.gcr.io/kube-scheduler:v1.22.4
 k8s.gcr.io/kube-proxy:v1.22.4
 k8s.gcr.io/pause:3.5
-k8s.gcr.io/etcd:3.5.0-0
+k8s.gcr.io/etcd:3.5.4-0
 k8s.gcr.io/coredns/coredns:v1.8.4
 k8s.gcr.io/ingress-nginx/controller:v1.2.1
 k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.1.1
