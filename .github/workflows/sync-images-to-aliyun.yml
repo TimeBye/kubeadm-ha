@@ -160,6 +160,7 @@ jobs:
               - coredns
               - coredns/coredns
               - ingress-nginx/controller
+              - ingress-nginx/kube-webhook-certgen
               - metrics-server/metrics-server
         sync-policy:
           from: gcr

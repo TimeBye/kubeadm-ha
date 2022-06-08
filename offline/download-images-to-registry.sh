@@ -15,7 +15,6 @@ calico/node:v3.19.1
 calico/kube-controllers:v3.19.1
 calico/pod2daemon-flexvol:v3.19.1
 calico/ctl:v3.19.1
-jettech/kube-webhook-certgen:v1.5.1
 kubernetesui/dashboard:v2.3.1
 kubernetesui/metrics-scraper:v1.0.6
 quay.io/coreos/flannel:v0.14.0
@@ -29,7 +28,8 @@ k8s.gcr.io/kube-proxy:v1.22.4
 k8s.gcr.io/pause:3.5
 k8s.gcr.io/etcd:3.5.0-0
 k8s.gcr.io/coredns/coredns:v1.8.4
-k8s.gcr.io/ingress-nginx/controller:v0.47.0
+k8s.gcr.io/ingress-nginx/controller:v1.2.1
+k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v1.1.1
 k8s.gcr.io/metrics-server/metrics-server:v0.5.1
 "
 
