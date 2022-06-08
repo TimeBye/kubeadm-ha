@@ -169,7 +169,7 @@ containerd_registries:
 containerd_extra_args: ""
 
 # Pod根容器
-pod_infra_container_image: "{{ kube_image_repository }}/pause:3.5"
+pod_infra_container_image: "{{ kube_image_repository }}/pause:3.7"
 
 #------------------------------ Docker 相关配置（容器运行时类型为 Containerd 时，请忽略) ------------------------------ #
 # Docker 版本
@@ -202,7 +202,7 @@ docker_max_concurrent_downloads: 10
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.22.4
+kube_version: 1.22.10
 
 # CentOS
 kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-{{ ansible_architecture }}/
