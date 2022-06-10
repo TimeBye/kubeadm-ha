@@ -7,4 +7,5 @@
     - docker-ce
     - docker-ce-cli
     - containerd.io
+    - kubernetes-cni
     state: absent
