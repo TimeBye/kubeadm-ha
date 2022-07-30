@@ -24,8 +24,9 @@
 
 # # CentOS yum源仓库
 # # 基础软件源
-# base_yum_repo: http://mirrors.aliyun.com/centos/$releasever/os/$basearch/
-# # epel软件源（ CeontOS8默认使用：https://mirrors.aliyun.com/epel/$releasever/Everything/$basearch ）
+# base_yum_repo: http://mirrors.aliyun.com/centos/7/os/$basearch/
+# # epel软件源（ CeontOS8默认使用：https://mirrors.aliyun.com/epel/$releasever/Everything/$basearch )
+# # Anolis 7+ 使用: http://mirrors.aliyun.com/epel/7/$basearch
 # epel_yum_repo: http://mirrors.aliyun.com/epel/$releasever/$basearch
 # # docker-ce源 (CentOS可使用：https://mirrors.aliyun.com/docker-ce/linux/centos/$releasever/$basearch/stable )
 # docker_yum_repo: https://mirrors.aliyun.com/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
