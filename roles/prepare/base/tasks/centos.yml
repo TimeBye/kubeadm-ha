@@ -7,6 +7,12 @@
 #     state: absent
 #     disablerepo: "*"
 
+- name: 设置 python 解释器
+  set_fact:
+    # Kylin需要开启(https://blog.csdn.net/yy4545/article/details/125652470)
+    ansible_python_interpreter: /usr/bin/python3
+  when: ansible_distribution is regex ("Kylin.*")
+
 - block:
   - name: 判断 firewalld 是否安装
     shell: >
@@ -80,7 +86,7 @@
     - nmap-ncat                       # 使用lb时进行端口判断时会用到
     - nfs-utils                       # 挂载nfs 共享文件需要 (创建基于 nfs的 PV 需要)
     - iscsi-initiator-utils           # iSCSI 服务端及管理命令 (管理 IP SAN。有 externel volume provisioner 时依赖)
-    - yum-utils                       # 基础工具
+    #- yum-utils                       # 基础工具
     - net-tools
     - libseccomp
     - conntrack-tools                 # ipvs 模式需要

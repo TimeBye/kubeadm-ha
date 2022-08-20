@@ -23,16 +23,16 @@
 
 - **相关支持：**
 
-  | **类别**           | **支持**                                                  |
-  | :----------------- | :-------------------------------------------------------- |
-  | Architecture       | amd64, arm64                                              |
-  | OS                 | Ubuntu 16.04+, Debian 10, CentOS 7.4+, RedHat 7, CentOS 8, Anolis OS 7 |
-  | Etcd               | 3.4.13-0                                                  |
-  | Container runtimes | Docker, **containerd**                                    |
-  | Kubernetes         | v1.15, v1.16, v1.17, v1.18, v1.19, v1.20, **v1.21**       |
-  | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**                 |
-  | Network plugin     | flannel, **calico**                                       |
-  | Ingress controller | traefik, **nginx-ingress**                                |
+  | **类别**           | **支持**                                                     |
+  | :----------------- | :----------------------------------------------------------- |
+  | Architecture       | amd64, arm64                                                 |
+  | OS                 | Ubuntu 16.04+, Debian 10, CentOS 7.4+, RedHat 7, CentOS 8, Anolis OS 7,Kylin V10 |
+  | Etcd               | 3.4.13-0                                                     |
+  | Container runtimes | Docker, **containerd**                                       |
+  | Kubernetes         | v1.15, v1.16, v1.17, v1.18, v1.19, v1.20, **v1.21**          |
+  | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**                    |
+  | Network plugin     | flannel, **calico**                                          |
+  | Ingress controller | traefik, **nginx-ingress**                                   |
 
   **Note:** 表格中粗体标识出来的为默认安装版本
 
@@ -75,7 +75,7 @@
    <td align="center">
   <a href="https://github.com/ChongmingDu"><img src="https://avatars.githubusercontent.com/u/22591706?s=400&v=4" width="100px;" alt="ChongmingDu"/>
   <br></br><sub><b>ChongmingDu</b></sub>
-  
+
    <td align="center">
   <a href="https://github.com/happinesslijian"><img src="https://avatars2.githubusercontent.com/u/47111417?s=400&v=4" width="100px;" alt="happinesslijian"/>
   <br></br><sub><b>happinesslijian</b></sub>

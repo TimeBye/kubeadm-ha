@@ -11,7 +11,7 @@
 
 # 系统基础软件环境
 - include_tasks: centos.yml
-  when: ansible_distribution in [ 'CentOS','OracleLinux','RedHat','Anolis' ]
+  when: ansible_distribution is regex ("CentOS|OracleLinux|RedHat|Anolis|Kylin.*")
 
 - include_tasks: debian.yml
   when: ansible_distribution in [ 'Ubuntu','Debian' ]
