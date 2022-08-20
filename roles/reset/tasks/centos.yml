@@ -1,3 +1,8 @@
+- name: 设置 python 解释器
+  set_fact:
+    ansible_python_interpreter: /usr/bin/python3
+  when: ansible_distribution is regex ("Kylin.*")
+
 - name: 卸载相关软件
   yum:
     name:
