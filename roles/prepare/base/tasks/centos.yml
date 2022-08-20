@@ -94,6 +94,13 @@
     - device-mapper-persistent-data   # docker会用到
     state: latest
 
+- name: 安装yum-utils包
+  yum:
+    name:
+    - yum-utils
+    state: latest
+  when: not ( ansible_distribution is regex "Kylin.*" )
+
 - name: 重新启动 crond 避免因修改时区而导致的作业错乱问题
   service:
     name: crond
