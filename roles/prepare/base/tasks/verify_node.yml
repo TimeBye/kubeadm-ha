@@ -1,8 +1,7 @@
 # 软件资源校验
 - name: 校验节点操作系统
   assert:
-    # that: ansible_distribution in [ 'CentOS','OracleLinux','RedHat','Ubuntu','Debian','Anolis','Kylin' ]
-    that: ansible_distribution is regex ("CentOS|OracleLinux|RedHat|Anolis|Kylin.*")
+    that: ansible_distribution is regex ("CentOS|OracleLinux|RedHat|Ubuntu|Debian|Anolis|Kylin.*")
     msg: "节点：{{ inventory_hostname }} {{ ansible_distribution }}操作系统不支持本脚本安装Kubernetes集群。"
 
 - name: 校验节点 systemd 类型操作系统
