@@ -31,7 +31,7 @@
   | **类别**           | **支持**                                                   |
   | :----------------- | :--------------------------------------------------------- |
   | Architecture       | amd64, arm64                                               |
-  | OS                 | Ubuntu 16.04+, Debian 10, CentOS 7.4+, RedHat 7, CentOS 8  |
+  | OS                 | Ubuntu 16.04+, Debian 10, CentOS 7.4+, RedHat 7, CentOS 8, Anolis OS 7,Kylin V10  |
   | Etcd               | 3.5.0-0                                                    |
   | Container runtimes | Docker, **containerd**                                     |
   | Kubernetes         | v1.15, v1.16, v1.17, v1.18, v1.19, v1.20, v1.21, **v1.22** |

@@ -4,7 +4,7 @@
     msg: "节点：{{ inventory_hostname }} {{ ansible_machine }} 系统指令集不支持使用本脚本升级内核"
 
 - include_tasks: centos.yml
-  when: ansible_distribution in [ 'CentOS','OracleLinux','RedHat' ]
+  when: ansible_distribution in [ 'CentOS','OracleLinux','RedHat','Anolis' ]
 
 - include_tasks: ubuntu.yml
   when: ansible_distribution in [ 'Ubuntu','Debian' ]
