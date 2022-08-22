@@ -48,7 +48,7 @@
       - "docker-ce-cli"
       state: absent
       enablerepo: docker-ce-stable
-    when: ansible_distribution in [ 'CentOS','OracleLinux','RedHat' ]
+    when: ansible_distribution is regex ("CentOS|OracleLinux|RedHat|Anolis|Kylin.*")
 
   - name: 卸载 Docker 服务
     apt: 

@@ -14,5 +14,6 @@
     - "kubectl-{{ kube_version }}"
     - "kubelet-{{ kube_version }}"
     - "kubeadm-{{ kube_version }}"
+    - "kubernetes-cni"
     state: present
     enablerepo: kubernetes
