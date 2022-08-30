@@ -41,9 +41,9 @@ mv docker-ce-20.10.7.tar.gz ..
 
 if [ $(uname -m) == 'x86_64' ];then
   curl -o kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm \
-      http://mirrors.reposnap.com/elrepo/20210127110058/kernel/el7/x86_64/RPMS/kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm
+      http://oss.choerodon.com.cn/kernel/centos/kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm
   curl -o kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm \
-      http://mirrors.reposnap.com/elrepo/20210127110058/kernel/el7/x86_64/RPMS/kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm
+      http://oss.choerodon.com.cn/kernel/centos/kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm
 fi
 
 repotrack jq
