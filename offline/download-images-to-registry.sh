@@ -22,10 +22,10 @@ quay.io/coreos/flannel:v0.13.0
 quay.io/jetstack/cert-manager-cainjector:v1.1.0
 quay.io/jetstack/cert-manager-webhook:v1.1.0
 quay.io/jetstack/cert-manager-controller:v1.1.0
-k8s.gcr.io/kube-apiserver:v1.20.11
-k8s.gcr.io/kube-controller-manager:v1.20.11
-k8s.gcr.io/kube-scheduler:v1.20.11
-k8s.gcr.io/kube-proxy:v1.20.11
+k8s.gcr.io/kube-apiserver:v1.20.15
+k8s.gcr.io/kube-controller-manager:v1.20.15
+k8s.gcr.io/kube-scheduler:v1.20.15
+k8s.gcr.io/kube-proxy:v1.20.15
 k8s.gcr.io/pause:3.2
 k8s.gcr.io/etcd:3.4.13-0
 k8s.gcr.io/coredns:1.7.0
