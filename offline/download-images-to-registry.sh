@@ -29,8 +29,8 @@ k8s.gcr.io/kube-proxy:v1.20.11
 k8s.gcr.io/pause:3.2
 k8s.gcr.io/etcd:3.4.13-0
 k8s.gcr.io/coredns:1.7.0
-k8s.gcr.io/ingress-nginx/controller:v0.43.0
-k8s.gcr.io/metrics-server/metrics-server:v0.4.1
+k8s.gcr.io/ingress-nginx/controller:v0.47.0
+k8s.gcr.io/metrics-server/metrics-server:v0.5.0
 "
 
 dest_registry=${dest_registry:-'127.0.0.1:5000/kubeadm-ha'}
