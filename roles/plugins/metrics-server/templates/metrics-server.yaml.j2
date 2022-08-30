@@ -1,4 +1,4 @@
-# ref: https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.5.1/components.yaml
+# ref: https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.1/high-availability.yaml
 
 apiVersion: v1
 kind: ServiceAccount
@@ -38,11 +38,14 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - nodes/metrics
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
   - pods
   - nodes
-  - nodes/stats
-  - namespaces
-  - configmaps
   verbs:
   - get
   - list
@@ -118,22 +121,31 @@ metadata:
   name: metrics-server
   namespace: kube-system
 spec:
+  replicas: 1
   selector:
     matchLabels:
       k8s-app: metrics-server
   strategy:
     rollingUpdate:
-      maxUnavailable: 0
+      maxUnavailable: 1
   template:
     metadata:
       labels:
         k8s-app: metrics-server
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                k8s-app: metrics-server
+            namespaces:
+            - kube-system
+            topologyKey: kubernetes.io/hostname
       containers:
       - args:
         - --cert-dir=/tmp
-        - --secure-port=443
-        - --kubelet-insecure-tls
+        - --secure-port=4443
         - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
         - --kubelet-use-node-status-port
         - --metric-resolution=15s
@@ -148,7 +160,7 @@ spec:
           periodSeconds: 10
         name: metrics-server
         ports:
-        - containerPort: 443
+        - containerPort: 4443
           name: https
           protocol: TCP
         readinessProbe:
@@ -164,6 +176,7 @@ spec:
             cpu: 100m
             memory: 200Mi
         securityContext:
+          allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
           runAsNonRoot: true
           runAsUser: 1000
@@ -177,6 +190,17 @@ spec:
       volumes:
       - emptyDir: {}
         name: tmp-dir
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: metrics-server
+  namespace: kube-system
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      k8s-app: metrics-server
 ---
 apiVersion: apiregistration.k8s.io/v1
 kind: APIService
