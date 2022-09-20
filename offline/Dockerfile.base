@@ -1,5 +1,5 @@
 FROM registry:2 AS registry
-FROM nginx:1.19
+FROM nginx:1.23
 ARG TARGETARCH
 ENV LANG=C.UTF-8
 
