@@ -60,7 +60,7 @@ jobs:
           dockerhub:
             registry: https://registry-1.docker.io
             repositories:
-              - library/nginx:1.19-alpine
+              - library/nginx:1.23-alpine
               - library/haproxy:2.3-alpine
               - library/traefik:2.4.8
               - openresty/openresty:1.19.3.1-alpine

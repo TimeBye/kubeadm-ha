@@ -2,7 +2,7 @@
 # set -eux;
 
 images="
-nginx:1.19-alpine
+nginx:1.23-alpine
 haproxy:2.3-alpine
 traefik:2.4.8
 openresty/openresty:1.19.3.1-alpine
