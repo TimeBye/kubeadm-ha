@@ -6,7 +6,7 @@
 
 - name: 获取 master 节点需要拉取的镜像列表
   shell: >
-    kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml | grep -v coredns | 
+    kubeadm config images list --config=/etc/kubernetes/kubeadm-config.yaml | grep -v coredns | grep -v pause |
     grep {{ kube_image_repository }}
   register: kube_image_list
 
