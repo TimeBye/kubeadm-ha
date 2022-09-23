@@ -228,7 +228,7 @@
 # pod_infra_container_image: "{{ kube_image_repository }}/pause:3.7"
 
 # # kubernetes版本
-# kube_version: 1.22.14
+# kube_version: 1.23.12
 
 # # 集群内部dns域名
 # kube_dns_domain: cluster.local

@@ -29,14 +29,14 @@ jobs:
     - name: Build and push
       run: |
         cd $GITHUB_WORKSPACE/offline
-        docker build --build-arg BRANCH=develop --platform linux/amd64 -t setzero/kubeadm-ha:1.22.14-amd64-dev .
-        docker push setzero/kubeadm-ha:1.22.14-amd64-dev
-        docker save setzero/kubeadm-ha:1.22.14-amd64-dev | gzip -1 > kubeadm-ha-1.22.14-amd64-dev.tar
+        docker build --build-arg BRANCH=develop --platform linux/amd64 -t setzero/kubeadm-ha:1.23.12-amd64-dev .
+        docker push setzero/kubeadm-ha:1.23.12-amd64-dev
+        docker save setzero/kubeadm-ha:1.23.12-amd64-dev | gzip -1 > kubeadm-ha-1.23.12-amd64-dev.tar
     - name: Upload artifact to oss
       id: oss
       run: |
         mc alias set oss https://oss.choerodon.com.cn ${{ secrets.OSS_USERNAME }} ${{ secrets.OSS_TOKEN }}
-        mc cp --json offline/kubeadm-ha-1.22.14-amd64-dev.tar oss/kubeadm-ha 2>&1 | tee oss.log
+        mc cp --json offline/kubeadm-ha-1.23.12-amd64-dev.tar oss/kubeadm-ha 2>&1 | tee oss.log
         target=$(cat oss.log | jq -r 'select(.target)|.target')
         echo "::warning file=kubeadm-ha::https://oss.choerodon.com.cn/${target#*/}"
     - name: Delete workflow runs
@@ -70,14 +70,14 @@ jobs:
     - name: Build and push
       run: |
         cd $GITHUB_WORKSPACE/offline
-        docker build --build-arg BRANCH=develop --platform linux/arm64 -t setzero/kubeadm-ha:1.22.14-arm64-dev .
-        docker push setzero/kubeadm-ha:1.22.14-arm64-dev
-        docker save setzero/kubeadm-ha:1.22.14-arm64-dev | gzip -1 > kubeadm-ha-1.22.14-arm64-dev.tar
+        docker build --build-arg BRANCH=develop --platform linux/arm64 -t setzero/kubeadm-ha:1.23.12-arm64-dev .
+        docker push setzero/kubeadm-ha:1.23.12-arm64-dev
+        docker save setzero/kubeadm-ha:1.23.12-arm64-dev | gzip -1 > kubeadm-ha-1.23.12-arm64-dev.tar
     - name: Upload artifact to oss
       id: oss
       run: |
         mc alias set oss https://oss.choerodon.com.cn ${{ secrets.OSS_USERNAME }} ${{ secrets.OSS_TOKEN }}
-        mc cp --json offline/kubeadm-ha-1.22.14-arm64-dev.tar oss/kubeadm-ha 2>&1 | tee oss.log
+        mc cp --json offline/kubeadm-ha-1.23.12-arm64-dev.tar oss/kubeadm-ha 2>&1 | tee oss.log
         target=$(cat oss.log | jq -r 'select(.target)|.target')
         echo "::warning file=kubeadm-ha::https://oss.choerodon.com.cn/${target#*/}"
     - name: Delete workflow runs
