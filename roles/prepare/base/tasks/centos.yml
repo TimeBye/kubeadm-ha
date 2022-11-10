@@ -6,6 +6,7 @@
 #     - firewalld-filesystem
 #     state: absent
 #     disablerepo: "*"
+
 - name: 设置 python 解释器
   set_fact:
     # Kylin需要开启(https://blog.csdn.net/yy4545/article/details/125652470)
@@ -66,6 +67,7 @@
     enabled: yes
     gpgcheck: no
     state: present
+  when: not ( ansible_distribution is regex "openEuler" )
 
 - name: 安装基础软件包
   yum: 
@@ -98,7 +100,7 @@
     name:
     - yum-utils
     state: latest
-  when: not ( ansible_distribution is regex "Kylin.*" )
+  when: not ( ansible_distribution is regex "Kylin.*|openEuler" )
 
 - name: 重新启动 crond 避免因修改时区而导致的作业错乱问题
   service:

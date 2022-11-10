@@ -41,6 +41,11 @@ do_install() {
         sudo pip3 install --no-cache-dir ansible==2.10.4 netaddr -i https://mirrors.aliyun.com/pypi/simple/
         exit 0
       ;;
+    openeuler)
+        sudo yum install -y git sshpass
+        sudo pip3 install --no-cache-dir ansible==2.10.4 netaddr -i https://mirrors.aliyun.com/pypi/simple/
+        exit 0
+      ;;
     *)
       if [ -z "$lsb_dist" ]; then
         if is_darwin; then
