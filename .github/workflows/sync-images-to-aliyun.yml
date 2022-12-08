@@ -179,6 +179,37 @@ jobs:
         EOF
         registry-manager sync -c config.yaml
 
+  gcr-to-aliyun2:
+    runs-on: ubuntu-20.04
+    container: setzero/registry-manager
+    env:
+      TO_USERNAME: ${{ secrets.TO_USERNAME }}
+      TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
+    steps:
+    - name: Gcr to Aliyun
+      run: |
+        cat << EOF >config.yaml
+        registries:
+          aliyuncs:
+            registry: https://registry.aliyuncs.com
+            username: ${{ secrets.TO_USERNAME }}
+            password: ${{ secrets.TO_PASSWORD }}
+          gcr:
+            registry: https://k8s.gcr.io
+            repositories:
+              - ingress-nginx/kube-webhook-certgen
+        sync-policy:
+          from: gcr
+          to: aliyuncs
+          dry-run: false
+          replace:
+            - old: ingress-nginx/
+              new: kubeadm-ha/ingress-nginx_
+          filters:
+            - ^[Vv]
+        EOF
+        registry-manager sync -c config.yaml
+
     - name: Delete workflow runs
       uses: GitRML/delete-workflow-runs@main
       with:
