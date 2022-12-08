@@ -138,7 +138,7 @@ image_pull_command: >-
 
 #-------------------------------- Containerd 相关配置（容器运行时类型为 Docker 时，请忽略) -------------------------------#
 # Containerd 版本
-containerd_version: 1.4.12-1
+containerd_version: 1.6.10-1
 # 数据存储目录
 containerd_storage_dir: "/var/lib/containerd"
 # 状态目录
@@ -163,6 +163,7 @@ containerd_runtimes:
       # containerd 是否使用 systemd 作为 cgroup 驱动程序
       SystemdCgroup: "true"
 containerd_use_systemd_cgroup: "true"
+containerd_registries_config_dir: "/etc/containerd/certs.d"
 # 配置 Dockerhub 国内镜像加速地址
 containerd_registries:
   "docker.io": "https://registry-1.docker.io"
@@ -175,7 +176,7 @@ pod_infra_container_image: "{{ kube_image_repository }}/pause:3.7"
 # Docker 版本
 # apt-cache madison docker-ce
 # yum list docker-ce --showduplicates --enablerepo=docker-ce-stable | sort -r
-docker_version: 20.10.11
+docker_version: 20.10.21
 
 # Dockerhub 国内镜像加速地址
 docker_mirror:
@@ -202,7 +203,8 @@ docker_max_concurrent_downloads: 10
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.22.14
+kube_version: 1.22.16
+kube_cni_version: 0.8.7
 
 # CentOS
 kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-{{ ansible_architecture }}/
@@ -377,7 +379,7 @@ etcd_certs_expired: 3650
 # Etcd根证书过期时间（天）
 etcd_ca_certs_expired: 36500
 # Etcd使用的镜像
-etcd_image: "{{ kube_image_repository }}/etcd:3.5.4-0"
+etcd_image: "{{ kube_image_repository }}/etcd:3.5.5-0"
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
 # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23

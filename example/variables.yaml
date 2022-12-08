@@ -56,10 +56,10 @@
 # # 容器运行时类型，可选项：containerd，docker；默认 containerd
 # container_manager: containerd
 # # Docker版本
-# docker_version: 20.10.11
+# docker_version: 20.10.21
 # # containerd版本
 # Containerd 版本
-# containerd_version: 1.4.12-1
+# containerd_version: 1.6.10-1
 # # 数据存储目录
 # containerd_storage_dir: "/var/lib/containerd"
 # # 状态目录
@@ -84,6 +84,7 @@
 #       # containerd 是否使用 systemd 作为 cgroup 驱动程序
 #       SystemdCgroup: "true"
 # containerd_use_systemd_cgroup: "true"
+# containerd_registries_config_dir: "/etc/containerd/certs.d"
 # # 配置 Dockerhub 国内镜像加速地址
 # containerd_registries:
 #   "docker.io": "https://registry-1.docker.io"
@@ -198,7 +199,7 @@
 # # Etcd根证书过期时间（天）
 # etcd_ca_certs_expired: 36500
 # # Etcd使用的镜像
-# etcd_image: "{{ kube_image_repository }}/etcd:3.5.4-0"
+# etcd_image: "{{ kube_image_repository }}/etcd:3.5.5-0"
 # # Etcd 数据根目录
 # etcd_data_dir: "/var/lib/etcd"
 # # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
@@ -228,8 +229,8 @@
 # pod_infra_container_image: "{{ kube_image_repository }}/pause:3.7"
 
 # # kubernetes版本
-# kube_version: 1.22.14
-
+# kube_version: 1.22.16
+# kube_cni_version: 0.8.7
 # # 集群内部dns域名
 # kube_dns_domain: cluster.local
 

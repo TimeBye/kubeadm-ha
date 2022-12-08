@@ -19,5 +19,6 @@
     - "kubectl={{ kube_version }}-00"
     - "kubelet={{ kube_version }}-00"
     - "kubeadm={{ kube_version }}-00"
+    - "kubernetes-cni={{ kube_cni_version }}-00"
     state: present
     allow_unauthenticated: true
