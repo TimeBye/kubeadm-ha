@@ -14,6 +14,13 @@
     kubeadmConfig_api_version: v1beta2
   when: 
   - kubeadm_version_output.stdout is version('v1.15.0', '>=')
+  - kubeadm_version_output.stdout is version('v1.22.0', '<')
+
+- name: 设置 kubeadm api version 为 v1beta3
+  set_fact:
+    kubeadmConfig_api_version: v1beta3
+  when: 
+  - kubeadm_version_output.stdout is version('v1.22.0', '>=')
 
 - name: 获取 Docker Cgroup Driver 值
   shell: docker info --format '{{ '{{' }} json .CgroupDriver {{ '}}' }}' | cut -d'"' -f2

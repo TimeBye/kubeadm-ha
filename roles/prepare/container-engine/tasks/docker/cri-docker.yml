@@ -1,0 +1,45 @@
+- name: 下载 cri-dockerd
+  get_url:
+    url: "{{ cri_dockerd_download_url }}"
+    dest: "/tmp/cri-dockerd.tgz"
+
+- name: 解压 cri-dockerd 安装包
+  shell: >
+    tar zxf /tmp/cri-dockerd.tgz -C /tmp
+
+- name: 复制 cri-dockerd 二进制文件至 PATH 目录下
+  copy:
+    src: "/tmp/cri-dockerd/cri-dockerd"
+    dest: "/usr/bin/cri-dockerd"
+    mode: 0755
+    remote_src: true
+
+- name: 生成 cri-dockerd systemd unit 配置文件
+  template:
+    src: "cri-dockerd/{{ item }}.j2"
+    dest: "/etc/systemd/system/{{ item }}"
+    mode: 0644
+  with_items:
+    - cri-dockerd.service
+    - cri-dockerd.socket
+
+- name: 重新加载 daemon
+  systemd:
+    name: cri-dockerd
+    daemon_reload: true
+    masked: no
+
+- name: 重启 cri-dockerd.socket
+  service:
+    name: cri-dockerd.socket
+    state: restarted
+
+- name: 重启 cri-dockerd.service
+  service:
+    name: cri-dockerd.service
+    state: restarted
+
+- name: 设置 cri-dockerd 开机自启
+  service:
+    name: cri-dockerd.service
+    enabled: yes

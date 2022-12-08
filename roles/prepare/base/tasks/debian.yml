@@ -12,7 +12,7 @@
 - block:
   - name: 判断 ufw 是否安装
     shell: >
-      systemctl status ufw | grep active || echo "not be found"
+      systemctl is-active ufw | grep active || echo "not be found"
     register: ufw_already_installed
   
   - name: 禁用防火墙
@@ -20,7 +20,7 @@
       name: ufw
       state: stopped
       enabled: no
-    when: '"active" in ufw_already_installed.stdout'
+    when: ufw_already_installed.stdout == "active"
   when: "(firewalld_disabled | bool) | default(true)"
 
 - name: iptables 工具切换到 “旧版” 模式
@@ -30,9 +30,11 @@
   - update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy
   - update-alternatives --set arptables /usr/sbin/arptables-legacy
   - update-alternatives --set ebtables /usr/sbin/ebtables-legacy
-  when: >-
+  when: 
+  - >-
     (ansible_distribution == "Debian" and ansible_distribution_version is version('10', '>=')) or
     (ansible_distribution == "Ubuntu" and ansible_distribution_version is version('19', '>='))
+  - "(nftables_to_iptables | bool) | default(false)" 
 
 - name: 添加基础 Apt 仓库
   apt_repository:

@@ -1,21 +1,33 @@
 - name: 判断 Docker 是否早已安装
   shell: >
-    systemctl status docker | grep running || echo "not running"
+    systemctl is-active docker || echo "not running"
   register: docker_already_running
 
 - name: 判断 containerd 是否早已安装
   shell: >
-    systemctl status containerd | grep running || echo "not running"
+    systemctl is-active containerd || echo "not running"
   register: containerd_already_running
+
+- name: 判断 cri-docker 是否早已安装
+  shell: >
+    systemctl is-active cri-dockerd || echo "not running"
+  register: cri_docker_already_running
+  when: 
+  - container_manager == "docker"
 
 - include_tasks: docker/main.yml
   when: 
   - container_manager == "docker"
-  - '"active" not in docker_already_running.stdout'
-  - '"active" not in containerd_already_running.stdout'
+  - docker_already_running.stdout != "active"
+  - containerd_already_running.stdout != "active"
+
+- include_tasks: docker/cri-docker.yml
+  when: 
+  - container_manager == "docker"
+  - cri_docker_already_running.stdout != "active"
 
 - include_tasks: containerd/main.yml
   when: 
   - container_manager == "containerd"
-  - '"active" not in docker_already_running.stdout'
-  - '"active" not in containerd_already_running.stdout'
+  - docker_already_running.stdout != "active"
+  - containerd_already_running.stdout != "active"

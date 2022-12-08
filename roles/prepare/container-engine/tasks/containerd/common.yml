@@ -21,6 +21,21 @@
     backup: yes
   register: configuration_result
 
+- name: 生成 containerd registries 配置目录
+  file: 
+    name: "{{ containerd_registries_config_dir | default('/etc/containerd/certs.d') }}/{{ item }}"
+    state: directory
+  with_items: "{{ containerd_registries }}"
+
+- name: 生成 containerd registries 配置文件
+  template:
+    src: containerd/hosts.toml.j2
+    dest: "{{ containerd_registries_config_dir | default('/etc/containerd/certs.d') }}/{{ item }}/hosts.toml"
+    owner: root
+    mode: 0644
+    backup: yes
+  with_items: "{{ containerd_registries }}"
+
 - name: 生成 crictl 配置文件
   template:
     src: containerd/crictl.yaml.j2

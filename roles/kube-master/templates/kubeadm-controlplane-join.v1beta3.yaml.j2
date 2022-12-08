@@ -1,0 +1,284 @@
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: JoinConfiguration
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "{{ kube_apiserver_ip | trim }}:{{ lb_kube_apiserver_port | trim }}"
+    token: {{ kubeadm_token }}
+    unsafeSkipCAVerification: true
+  timeout: 5m0s
+  tlsBootstrapToken: {{ kubeadm_token }}
+controlPlane:
+  localAPIEndpoint:
+    advertiseAddress: {{ current_host_ip }}
+    bindPort: 6443
+nodeRegistration:
+  kubeletExtraArgs:
+    root-dir: {{ kubelet_root_dir }}
+    hostname-override: {{ inventory_hostname }}
+    pod-infra-container-image: {{ pod_infra_container_image }}
+  criSocket: {{ cri_socket }}
+  name: {{ inventory_hostname }}
+{% if inventory_hostname in (groups['kube-master'] + groups['new-master']) and inventory_hostname not in (groups['kube-worker'] + groups['new-worker']) %}
+  taints:
+  - effect: NoSchedule
+    key: node-role.kubernetes.io/master
+{% else %}
+  taints: []
+{% endif %}
+---
+apiVersion: kubeadm.k8s.io/v1beta3
+kind: ClusterConfiguration
+kubernetesVersion: v{{ kube_version }}
+clusterName: kubernetes
+controlPlaneEndpoint: "{{ kube_apiserver_ip | trim }}:{{ lb_kube_apiserver_port | trim }}"
+certificatesDir: /etc/kubernetes/pki
+dns:
+  type: CoreDNS
+  imageRepository: "{{ kube_image_repository }}"
+etcd:
+  external:
+    endpoints:
+{% for host in ((groups['etcd'] | union(groups['new-etcd'])) | difference(groups['del-etcd'])) %}
+{% if hostvars[host]['ansible_host'] is defined %}
+    - https://{{ hostvars[host]['ansible_host'] }}:2379
+{% else %}
+    - https://{{ host }}:2379
+{% endif %}
+{% endfor %}
+    caFile: /etc/kubernetes/pki/etcd/ca.crt
+    certFile: /etc/kubernetes/pki/apiserver-etcd-client.crt
+    keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key
+imageRepository: "{{ kube_image_repository }}"
+networking:
+  dnsDomain: {{ kube_dns_domain }}
+  podSubnet: {{ kube_pod_subnet }}
+  serviceSubnet: {{ kube_service_subnet }}
+apiServer:
+  extraArgs:
+    allow-privileged: "true"
+    apiserver-count: "{{ groups['kube-master']|length + groups['new-master']|length }}"
+{% if kubernetes_audit %}
+    audit-log-path: /var/log/audit/kube-apiserver-audit.log
+    audit-log-maxage: "{{ audit_log_maxage }}"
+    audit-log-maxbackup: "{{ audit_log_maxbackups }}"
+    audit-log-maxsize: "{{ audit_log_maxsize }}"
+    audit-log-truncate-enabled: "true"
+    audit-policy-file: {{ audit_policy_file }}
+{% endif %}
+{% if kube_apiserver_enable_admission_plugins|length > 0 %}
+    enable-admission-plugins: {{ kube_apiserver_enable_admission_plugins | join(',') }}
+{% endif %}
+{% if kube_apiserver_disable_admission_plugins|length > 0 %}
+    disable-admission-plugins: {{ kube_apiserver_disable_admission_plugins | join(',') }}
+{% endif %}
+    encryption-provider-config: /etc/kubernetes/pki/secrets-encryption.yaml
+    kubelet-certificate-authority: /etc/kubernetes/pki/ca.crt
+    kubelet-client-certificate: /etc/kubernetes/pki/apiserver-kubelet-client.crt
+    kubelet-client-key: /etc/kubernetes/pki/apiserver-kubelet-client.key
+    profiling: "false"
+    service-node-port-range: {{ kube_service_node_port_range }}
+    tls-cipher-suites: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+{% if kube_kubeadm_apiserver_extra_args|length > 0 %}
+{% for key in kube_kubeadm_apiserver_extra_args %}
+    {{ key }}: "{{ kube_kubeadm_apiserver_extra_args[key] }}"
+{% endfor %}
+{% endif %}
+  extraVolumes:
+    - hostPath: /etc/localtime
+      mountPath: /etc/localtime
+      pathType: File
+      readOnly: true
+      name: localtime
+{% if kubernetes_audit %}
+    - hostPath: "{{ audit_policy_file | dirname }}"
+      mountPath: "{{ audit_policy_file | dirname }}"
+      pathType: DirectoryOrCreate
+      readOnly: true
+      name: audit-policy
+    - hostPath: "{{ audit_log_hostpath }}"
+      mountPath: /var/log/audit/
+      pathType: DirectoryOrCreate
+      name: audit-logs
+{% endif %}
+{% for volume in apiserver_extra_volumes %}
+    - name: {{ volume.name }}
+      hostPath: {{ volume.hostPath }}
+      mountPath: {{ volume.mountPath }}
+      readOnly: {{ volume.readOnly | d(not (volume.writable | d(false))) }}
+{% endfor %}
+  certSANs:
+  - localhost
+  - kubernetes
+  - kubernetes.default
+  - kubernetes.default.svc
+{% for sub_domain in kube_dns_domain.split('.') %}
+{% set outer_loop = loop %}
+  - kubernetes.default.svc.{% for domain in kube_dns_domain.split('.') %}{% if loop.index <= outer_loop.index %}{{ domain }}{% if loop.index < outer_loop.index %}.{% endif %}{% endif %}{% endfor %}
+  
+{% endfor %}
+{% if hostvars[inventory_hostname]['ansible_host'] is defined %}
+{% for host in (groups['kube-master'] + groups['new-master']| default([])) | unique %}
+  - {{ host }}
+{% endfor %}
+{% endif %}
+{% for domain in kube_master_external_domain %}
+  - {{ domain }}
+{% endfor %}
+  - 127.0.0.1
+  - 0:0:0:0:0:0:0:1
+  - {{ kubernetes_service_ip }}
+{% if lb_kube_apiserver_ip is defined %}
+  - {{ lb_kube_apiserver_ip | trim }}
+{% endif %}
+{% for host in (groups['kube-master'] + groups['new-master'] | default([])) | unique %}
+  - {% if hostvars[host]['ansible_host'] is defined %}{{ hostvars[host]['ansible_host'] }}{% else %}{{ host }}{% endif %}
+  
+{% endfor %}
+{% for ip in kube_master_external_ip %}
+  - {{ ip }}
+{% endfor %}
+controllerManager:
+  extraArgs:
+    bind-address: 127.0.0.1
+    experimental-cluster-signing-duration: "{{kube_certs_expired|int * 24}}h0m0s"
+    feature-gates: "RotateKubeletServerCertificate=true"
+    profiling: "false"
+    node-monitor-grace-period: {{ kube_controller_node_monitor_grace_period }}
+    node-monitor-period: {{ kube_controller_node_monitor_period }}
+    pod-eviction-timeout: {{ kube_controller_pod_eviction_timeout }}
+    terminated-pod-gc-threshold: "{{ kube_controller_terminated_pod_gc_threshold }}"
+    node-cidr-mask-size: "{{ kube_network_node_prefix }}"
+{% if kube_kubeadm_controller_extra_args|length > 0 %}
+{% for key in kube_kubeadm_controller_extra_args %}
+    {{ key }}: "{{ kube_kubeadm_controller_extra_args[key] }}"
+{% endfor %}
+{% endif %}
+  extraVolumes:
+    - hostPath: /etc/localtime
+      mountPath: /etc/localtime
+      pathType: File
+      readOnly: true
+      name: localtime
+{% for volume in controller_manager_extra_volumes %}
+    - name: {{ volume.name }}
+      hostPath: {{ volume.hostPath }}
+      mountPath: {{ volume.mountPath }}
+      readOnly: {{ volume.readOnly | d(not (volume.writable | d(false))) }}
+{% endfor %}
+scheduler:
+  extraArgs:
+    bind-address: 127.0.0.1
+    profiling: "false"
+{% if kube_kubeadm_scheduler_extra_args|length > 0 %}
+{% for key in kube_kubeadm_scheduler_extra_args %}
+    {{ key }}: "{{ kube_kubeadm_scheduler_extra_args[key] }}"
+{% endfor %}
+{% endif %}
+  extraVolumes:
+    - hostPath: /etc/localtime
+      mountPath: /etc/localtime
+      pathType: File
+      readOnly: true
+      name: localtime
+{% for volume in scheduler_extra_volumes %}
+    - name: {{ volume.name }}
+      hostPath: {{ volume.hostPath }}
+      mountPath: {{ volume.mountPath }}
+      readOnly: {{ volume.readOnly | d(not (volume.writable | d(false))) }}
+{% endfor %}
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+address: 0.0.0.0
+authentication:
+  anonymous:
+    enabled: false
+  webhook:
+    cacheTTL: 2m0s
+    enabled: true
+  x509:
+    clientCAFile: /etc/kubernetes/pki/ca.crt
+authorization:
+  mode: Webhook
+  webhook:
+    cacheAuthorizedTTL: 5m0s
+    cacheUnauthorizedTTL: 30s
+cgroupDriver: {{ kubelet_cgroup_driver|default(kubelet_cgroup_driver_detected) }}
+cgroupsPerQOS: true
+clusterDNS:
+- {{ cluster_dns_service_ip }}
+clusterDomain: {{ kube_dns_domain }}
+configMapAndSecretChangeDetectionStrategy: Watch
+containerLogMaxFiles: 5
+containerLogMaxSize: 10Mi
+contentType: application/vnd.kubernetes.protobuf
+cpuCFSQuota: true
+cpuCFSQuotaPeriod: 100ms
+cpuManagerPolicy: none
+cpuManagerReconcilePeriod: 10s
+enableControllerAttachDetach: true
+enableDebuggingHandlers: true
+enforceNodeAllocatable:
+- pods
+eventBurst: 10
+eventRecordQPS: 5
+evictionHard:
+  imagefs.available: {{ eviction_hard_imagefs_available }}
+  memory.available: {{ eviction_hard_memory_available }}
+  nodefs.available: {{ eviction_hard_nodefs_available }}
+  nodefs.inodesFree: {{ eviction_hard_nodefs_inodes_free }}
+kubeReserved:
+  cpu: {{ kube_cpu_reserved }}
+  memory: {{ kube_memory_reserved|regex_replace('Mi', 'M') }}
+{% if system_reserved_enabled is defined and system_reserved_enabled %}
+systemReserved:
+  cpu: {{ system_cpu_reserved|default('500m') }}
+  memory: {{ system_memory_reserved|default('512M')|regex_replace('Mi', 'M') }}
+  ephemeral-storage: {{ system_ephemeral_storage_reserved|default('10Gi')|regex_replace('Gi', 'G') }}
+{% endif %}
+evictionPressureTransitionPeriod: 5m0s
+failSwapOn: true
+featureGates: 
+  RotateKubeletServerCertificate: true
+fileCheckFrequency: 20s
+hairpinMode: promiscuous-bridge
+healthzBindAddress: 127.0.0.1
+healthzPort: 10248
+httpCheckFrequency: 20s
+imageGCHighThresholdPercent: 85
+imageGCLowThresholdPercent: 80
+imageMinimumGCAge: 2m0s
+iptablesDropBit: 15
+iptablesMasqueradeBit: 14
+kubeAPIBurst: 10
+kubeAPIQPS: 5
+makeIPTablesUtilChains: true
+maxOpenFiles: 1000000
+maxPods: {{ kube_max_pods }}
+nodeLeaseDurationSeconds: 40
+nodeStatusReportFrequency: 1m0s
+nodeStatusUpdateFrequency: 10s
+oomScoreAdj: -999
+podPidsLimit: -1
+port: 10250
+protectKernelDefaults: true
+readOnlyPort: 0
+registryBurst: 10
+registryPullQPS: 5
+{% if ansible_distribution == "Ubuntu" and ansible_distribution_version is version('16.04', '>') %}
+resolvConf: /run/systemd/resolve/resolv.conf
+{% else %}
+resolvConf: /etc/resolv.conf
+{% endif %}
+rotateCertificates: true
+runtimeRequestTimeout: 2m0s
+serializeImagePulls: true
+staticPodPath: /etc/kubernetes/manifests
+streamingConnectionIdleTimeout: 4h0m0s
+syncFrequency: 1m0s
+tlsCertFile: /var/lib/kubelet/pki/kubelet.crt
+tlsPrivateKeyFile: /var/lib/kubelet/pki/kubelet.key
+tlsCipherSuites:
+- TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+- TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+volumeStatsAggPeriod: 1m0s

@@ -16,7 +16,7 @@
 - block:
   - name: 判断 firewalld 是否安装
     shell: >
-      systemctl status firewalld | grep active || echo "not be found"
+      systemctl is-active firewalld || echo "not be found"
     register: firewalld_already_installed
   
   - name: 禁用防火墙
@@ -24,7 +24,7 @@
       name: firewalld
       state: stopped
       enabled: no
-    when: '"active" in firewalld_already_installed.stdout'
+    when: firewalld_already_installed.stdout == "active"
   when: "(firewalld_disabled | bool) | default(true)"
 
 - name: 设置 yum obsoletes 值为 0

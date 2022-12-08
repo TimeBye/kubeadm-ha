@@ -33,11 +33,7 @@ oom_score = {{ containerd_oom_score }}
 {% endfor %}
 {% endfor %}
     [plugins."io.containerd.grpc.v1.cri".registry]
-      [plugins."io.containerd.grpc.v1.cri".registry.mirrors]
-{% for registry, addr in containerd_registries.items() %}
-        [plugins."io.containerd.grpc.v1.cri".registry.mirrors."{{ registry }}"]
-          endpoint = ["{{ ([ addr ] | flatten ) | join('","') }}"]
-{% endfor %}
+      config_path = "{{ containerd_registries_config_dir | default('/etc/containerd/certs.d') }}"
 
 {% if containerd_extra_args is defined %}
 {{ containerd_extra_args }}

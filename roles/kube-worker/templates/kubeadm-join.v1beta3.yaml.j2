@@ -1,0 +1,109 @@
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: JoinConfiguration
+discovery:
+  bootstrapToken:
+    apiServerEndpoint: "{{ kube_apiserver_ip | trim }}:{{ lb_kube_apiserver_port | trim }}"
+    token: {{ kubeadm_token }}
+    unsafeSkipCAVerification: true
+  timeout: 5m0s
+  tlsBootstrapToken: {{ kubeadm_token }}
+nodeRegistration:
+  kubeletExtraArgs:
+    root-dir: {{ kubelet_root_dir }}
+    hostname-override: {{ inventory_hostname }}
+    pod-infra-container-image: {{ pod_infra_container_image }}
+  criSocket: {{ cri_socket }}
+  name: {{ inventory_hostname }}
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+address: 0.0.0.0
+authentication:
+  anonymous:
+    enabled: false
+  webhook:
+    cacheTTL: 2m0s
+    enabled: true
+  x509:
+    clientCAFile: /etc/kubernetes/pki/ca.crt
+authorization:
+  mode: Webhook
+  webhook:
+    cacheAuthorizedTTL: 5m0s
+    cacheUnauthorizedTTL: 30s
+cgroupDriver: {{ kubelet_cgroup_driver|default(kubelet_cgroup_driver_detected) }}
+cgroupsPerQOS: true
+clusterDNS:
+- {{ cluster_dns_service_ip }}
+clusterDomain: {{ kube_dns_domain }}
+configMapAndSecretChangeDetectionStrategy: Watch
+containerLogMaxFiles: 5
+containerLogMaxSize: 10Mi
+contentType: application/vnd.kubernetes.protobuf
+cpuCFSQuota: true
+cpuCFSQuotaPeriod: 100ms
+cpuManagerPolicy: none
+cpuManagerReconcilePeriod: 10s
+enableControllerAttachDetach: true
+enableDebuggingHandlers: true
+enforceNodeAllocatable:
+- pods
+eventBurst: 10
+eventRecordQPS: 5
+evictionHard:
+  imagefs.available: {{ eviction_hard_imagefs_available }}
+  memory.available: {{ eviction_hard_memory_available }}
+  nodefs.available: {{ eviction_hard_nodefs_available }}
+  nodefs.inodesFree: {{ eviction_hard_nodefs_inodes_free }}
+kubeReserved:
+  cpu: {{ kube_cpu_reserved }}
+  memory: {{ kube_memory_reserved|regex_replace('Mi', 'M') }}
+{% if system_reserved_enabled is defined and system_reserved_enabled %}
+systemReserved:
+  cpu: {{ system_cpu_reserved|default('500m') }}
+  memory: {{ system_memory_reserved|default('512M')|regex_replace('Mi', 'M') }}
+  ephemeral-storage: {{ system_ephemeral_storage_reserved|default('10Gi')|regex_replace('Gi', 'G') }}
+{% endif %}
+evictionPressureTransitionPeriod: 5m0s
+failSwapOn: true
+featureGates: 
+  RotateKubeletServerCertificate: true
+fileCheckFrequency: 20s
+hairpinMode: promiscuous-bridge
+healthzBindAddress: 127.0.0.1
+healthzPort: 10248
+httpCheckFrequency: 20s
+imageGCHighThresholdPercent: 85
+imageGCLowThresholdPercent: 80
+imageMinimumGCAge: 2m0s
+iptablesDropBit: 15
+iptablesMasqueradeBit: 14
+kubeAPIBurst: 10
+kubeAPIQPS: 5
+makeIPTablesUtilChains: true
+maxOpenFiles: 1000000
+maxPods: {{ kube_max_pods }}
+nodeLeaseDurationSeconds: 40
+nodeStatusReportFrequency: 1m0s
+nodeStatusUpdateFrequency: 10s
+oomScoreAdj: -999
+podPidsLimit: -1
+port: 10250
+protectKernelDefaults: true
+readOnlyPort: 0
+registryBurst: 10
+registryPullQPS: 5
+{% if ansible_distribution == "Ubuntu" and ansible_distribution_version is version('16.04', '>') %}
+resolvConf: /run/systemd/resolve/resolv.conf
+{% else %}
+resolvConf: /etc/resolv.conf
+{% endif %}
+rotateCertificates: true
+runtimeRequestTimeout: 2m0s
+serializeImagePulls: true
+staticPodPath: /etc/kubernetes/manifests
+streamingConnectionIdleTimeout: 4h0m0s
+syncFrequency: 1m0s
+tlsCertFile: /var/lib/kubelet/pki/kubelet.crt
+tlsPrivateKeyFile: /var/lib/kubelet/pki/kubelet.key
+volumeStatsAggPeriod: 1m0s

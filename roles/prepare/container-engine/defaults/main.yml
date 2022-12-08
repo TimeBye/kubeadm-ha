@@ -2,7 +2,9 @@
 # CRI socket path
 cri_socket: >-
   {%- if container_manager == 'containerd' -%}
-  /var/run/containerd/containerd.sock
-  {%- else -%}
-  /var/run/dockershim.sock
+  unix:///var/run/containerd/containerd.sock
+  {%- elif container_manager == 'docker' -%}
+  unix:///var/run/cri-dockerd.sock
   {%- endif -%}
+
+cri_dockerd_download_url: https://ghproxy.com/github.com/Mirantis/cri-dockerd/releases/download/v0.2.6/cri-dockerd-0.2.6.amd64.tgz

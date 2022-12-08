@@ -5,7 +5,7 @@
 
 - name: 判断 Docker 是否运行
   shell: >
-    systemctl status docker | grep running || echo "not running"
+    systemctl is-active docker || echo "not running"
   register: docker_status
 
 - block:
@@ -65,7 +65,7 @@
       state: stopped
       enabled: yes
 
-  when: '"active" in docker_status.stdout'
+  when: docker_status.stdout == "active"
 
 - include_tasks: "{{ (role_path + '/../prepare/container-engine/tasks/main.yml') | realpath  }}"
 

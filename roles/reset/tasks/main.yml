@@ -1,12 +1,12 @@
 - name: 判断 Docker 是否早已安装
   shell: >
-    systemctl status docker | grep running || echo "not running"
+    systemctl is-active docker || echo "not running"
   register: docker_already_running
 
 - name: 设置 container_manager_detected 变量
   set_fact:
     container_manager_detected: >-
-      {%- if "active" in docker_already_running.stdout -%}
+      {%- if docker_already_running.stdout == "active" -%}
       docker
       {%- else -%}
       containerd
@@ -67,6 +67,13 @@
     retries: 5
     until: docker_umount_dir.rc == 0
     delay: 5
+
+  - name: 停止 cri-docker 服务
+    service:
+      name: cri-dockerd
+      state: stopped
+      enabled: no
+    ignore_errors: true
 
   when: container_manager_detected == "docker"
 

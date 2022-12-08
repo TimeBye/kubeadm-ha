@@ -14,6 +14,13 @@
     kubeadmConfig_api_version: v1beta2
   when: 
   - kubeadm_version_output.stdout is version('v1.15.0', '>=')
+  - kubeadm_version_output.stdout is version('v1.22.0', '<')
+
+- name: 设置 kubeadm api version 为 v1beta3
+  set_fact:
+    kubeadmConfig_api_version: v1beta3
+  when: 
+  - kubeadm_version_output.stdout is version('v1.22.0', '>=')
 
 - name: 删除不需要的参数 iptables.max
   lineinfile:
@@ -31,21 +38,21 @@
   lineinfile:
     path: /etc/kubernetes/kubeadm-config.yaml
     regexp: '^kubernetesVersion'
-    line: "kubernetesVersion: v{{ kube_upgrade_version }}"
+    line: "kubernetesVersion: {{ kube_upgrade_version }}"
 
-- name: "迁移 kubeadm config 至 v{{ kube_upgrade_version }} 版本"
+- name: "迁移 kubeadm config 至 {{ kube_upgrade_version }} 版本"
   shell: >
     kubeadm config migrate
     --old-config=/etc/kubernetes/kubeadm-config.yaml
     --new-config=/etc/kubernetes/kubeadm-config.yaml
-  when: kubeadmConfig_api_version != "v1beta2"
+  when: kubeadmConfig_api_version != "v1beta3"
 
-- name: "升级第一个 master 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
+- name: "升级第一个 master 节点： {{ inventory_hostname }} 至 {{ kube_upgrade_version }}"
   shell: >
     kubeadm upgrade apply --config=/etc/kubernetes/kubeadm-config.yaml --force --ignore-preflight-errors=ImagePull
   when: inventory_hostname == groups['kube-master'][0]
 
-- name: "升级剩余 master 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
+- name: "升级剩余 master 节点： {{ inventory_hostname }} 至 {{ kube_upgrade_version }}"
   shell: >
     kubeadm upgrade node
     {% if kube_upgrade_version.split('.')[1]|int == 14 %}
@@ -55,11 +62,11 @@
   - inventory_hostname != groups['kube-master'][0]
   - inventory_hostname in (groups['kube-master'] + groups['new-master'])
 
-- name: "升级 worker 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
+- name: "升级 worker 节点： {{ inventory_hostname }} 至 {{ kube_upgrade_version }}"
   shell: >
     kubeadm upgrade node
     {% if kube_upgrade_version.split('.')[1]|int == 14 %}
-    config --kubelet-version v{{ kube_upgrade_version }}
+    config --kubelet-version {{ kube_upgrade_version }}
     {% endif %}
   when: 
   - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
