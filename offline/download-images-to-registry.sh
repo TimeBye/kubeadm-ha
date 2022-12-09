@@ -9,12 +9,11 @@ openresty/openresty:1.19.3.1-alpine
 envoyproxy/envoy:v1.16.2
 osixia/keepalived:2.0.20
 setzero/chrony:3.5
-calico/typha:v3.19.1
-calico/cni:v3.19.1
-calico/node:v3.19.1
-calico/kube-controllers:v3.19.1
-calico/pod2daemon-flexvol:v3.19.1
-calico/ctl:v3.19.1
+calico/typha:v3.24.5
+calico/cni:v3.24.5
+calico/node:v3.24.5
+calico/kube-controllers:v3.24.5
+calico/ctl:v3.24.5
 kubernetesui/dashboard:v2.5.1
 kubernetesui/metrics-scraper:v1.0.7
 flannelcni/flannel:v0.20.2
