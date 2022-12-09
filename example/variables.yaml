@@ -316,7 +316,6 @@
 # kube_apiserver_enable_admission_plugins: 
 # - NodeRestriction
 # # - AlwaysPullImages
-# # - PodSecurityPolicy
 
 # # 1.10+ list of disabled admission plugins
 # kube_apiserver_disable_admission_plugins: []

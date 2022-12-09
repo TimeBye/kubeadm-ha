@@ -66,16 +66,3 @@
 
 - name: 授权 kubelet 自动轮换服务端证书
   shell: kubectl apply -f /etc/kubernetes/config/kubelet-certificates-renewal.yaml
-
-- block:
-  - name: 创建 Pod 安全策略配置文件
-    template:
-      src: pod-security-policy.yaml.j2
-      dest: /etc/kubernetes/config/pod-security-policy.yaml
-      owner: root
-      group: root
-      mode: 0644
-  
-  - name: 配置 Pod 安全策略
-    shell: kubectl apply -f /etc/kubernetes/config/pod-security-policy.yaml
-  when: '"PodSecurityPolicy" in kube_apiserver_enable_admission_plugins'
