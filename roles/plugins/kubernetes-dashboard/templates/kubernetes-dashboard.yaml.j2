@@ -1,4 +1,4 @@
-# ref: https://raw.githubusercontent.com/kubernetes/dashboard/v2.3.1/aio/deploy/recommended.yaml
+# ref: https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.1/aio/deploy/recommended.yaml
 
 # Copyright 2017 The Kubernetes Authors.
 #
@@ -191,6 +191,9 @@ spec:
       labels:
         k8s-app: kubernetes-dashboard
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: kubernetes-dashboard
           image: {{ kubernetesui_dashboard_image }}
@@ -272,9 +275,10 @@ spec:
     metadata:
       labels:
         k8s-app: dashboard-metrics-scraper
-      annotations:
-        seccomp.security.alpha.kubernetes.io/pod: 'runtime/default'
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: dashboard-metrics-scraper
           image: {{ kubernetesui_metrics_scraper_image }}
