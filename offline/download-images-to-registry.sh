@@ -18,9 +18,9 @@ kubernetesui/dashboard:v2.5.1
 kubernetesui/metrics-scraper:v1.0.7
 flannelcni/flannel:v0.20.2
 flannelcni/flannel-cni-plugin:v1.1.0
-quay.io/jetstack/cert-manager-cainjector:v1.4.0
-quay.io/jetstack/cert-manager-webhook:v1.4.0
-quay.io/jetstack/cert-manager-controller:v1.4.0
+quay.io/jetstack/cert-manager-cainjector:v1.10.1
+quay.io/jetstack/cert-manager-webhook:v1.10.1
+quay.io/jetstack/cert-manager-controller:v1.10.1
 k8s.gcr.io/kube-apiserver:v1.23.15
 k8s.gcr.io/kube-controller-manager:v1.23.15
 k8s.gcr.io/kube-scheduler:v1.23.15
