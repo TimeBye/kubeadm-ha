@@ -7,7 +7,6 @@ nodeRegistration:
   kubeletExtraArgs:
     root-dir: {{ kubelet_root_dir }}
     hostname-override: {{ inventory_hostname }}
-    pod-infra-container-image: {{ pod_infra_container_image }}
   criSocket: {{ cri_socket }}
   name: {{ inventory_hostname }}
 {% if inventory_hostname in (groups['kube-master'] + groups['new-master']) and inventory_hostname not in (groups['kube-worker'] + groups['new-worker']) %}
@@ -56,7 +55,6 @@ networking:
 apiServer:
   extraArgs:
     allow-privileged: "true"
-    apiserver-count: "{{ groups['kube-master']|length + groups['new-master']|length }}"
 {% if kubernetes_audit %}
     audit-log-path: /var/log/audit/kube-apiserver-audit.log
     audit-log-maxage: "{{ audit_log_maxage }}"
@@ -140,7 +138,7 @@ apiServer:
 controllerManager:
   extraArgs:
     bind-address: 127.0.0.1
-    experimental-cluster-signing-duration: "{{kube_certs_expired|int * 24}}h0m0s"
+    cluster-signing-duration: "{{kube_certs_expired|int * 24}}h0m0s"
     feature-gates: "RotateKubeletServerCertificate=true"
     profiling: "false"
     node-monitor-grace-period: {{ kube_controller_node_monitor_grace_period }}

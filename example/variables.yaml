@@ -201,7 +201,7 @@
 # # Etcd根证书过期时间（天）
 # etcd_ca_certs_expired: 36500
 # # Etcd使用的镜像
-# etcd_image: "{{ kube_image_repository }}/etcd:3.5.5-0"
+# etcd_image: "{{ kube_image_repository }}/etcd:3.5.6-0"
 # # Etcd 数据根目录
 # etcd_data_dir: "/var/lib/etcd"
 # # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
@@ -231,7 +231,7 @@
 # pod_infra_container_image: "{{ kube_image_repository }}/pause:3.7"
 
 # # kubernetes版本
-# kube_version: 1.23.15
+# kube_version: 1.24.9
 # kube_cni_version: 0.8.7
 
 # # 集群内部dns域名

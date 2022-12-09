@@ -21,13 +21,13 @@ flannelcni/flannel-cni-plugin:v1.1.0
 quay.io/jetstack/cert-manager-cainjector:v1.10.1
 quay.io/jetstack/cert-manager-webhook:v1.10.1
 quay.io/jetstack/cert-manager-controller:v1.10.1
-k8s.gcr.io/kube-apiserver:v1.23.15
-k8s.gcr.io/kube-controller-manager:v1.23.15
-k8s.gcr.io/kube-scheduler:v1.23.15
-k8s.gcr.io/kube-proxy:v1.23.15
-k8s.gcr.io/pause:3.7
-k8s.gcr.io/etcd:3.5.5-0
-k8s.gcr.io/coredns/coredns:v1.8.6
+registry.k8s.io/kube-apiserver:v1.24.9
+registry.k8s.io/kube-controller-manager:v1.24.9
+registry.k8s.io/kube-scheduler:v1.24.9
+registry.k8s.io/kube-proxy:v1.24.9
+registry.k8s.io/pause:3.7
+registry.k8s.io/etcd:3.5.6-0
+registry.k8s.io/coredns/coredns:v1.8.6
 k8s.gcr.io/ingress-nginx/controller:v1.5.1
 k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343
 k8s.gcr.io/metrics-server/metrics-server:v0.6.2
@@ -40,7 +40,7 @@ for image in $images ; do
   if [[ $count -eq 0 ]]; then
     dest=$dest_registry/$image
   elif [[ $count -eq 1 ]]; then
-    if [[ $image =~ 'k8s.gcr.io' ]]; then
+    if [[ $image =~ 'registry.k8s.io' ]]; then
       dest=$dest_registry/$(echo ${image#*/} | sed 's / _ g')
     else
       dest=$dest_registry/$(echo ${image} | sed 's / _ g')
