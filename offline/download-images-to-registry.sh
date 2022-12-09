@@ -30,7 +30,7 @@ k8s.gcr.io/etcd:3.5.5-0
 k8s.gcr.io/coredns/coredns:v1.8.6
 k8s.gcr.io/ingress-nginx/controller:v1.5.1
 k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343
-k8s.gcr.io/metrics-server/metrics-server:v0.6.1
+k8s.gcr.io/metrics-server/metrics-server:v0.6.2
 "
 
 dest_registry=${dest_registry:-'127.0.0.1:5000/kubeadm-ha'}

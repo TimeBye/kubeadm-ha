@@ -1,4 +1,4 @@
-# ref: https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.6.1/high-availability.yaml
+# ref: https://github.com/kubernetes-sigs/metrics-server/releases/download/metrics-server-helm-chart-3.8.3/high-availability.yaml
 
 apiVersion: v1
 kind: ServiceAccount
@@ -121,7 +121,8 @@ metadata:
   name: metrics-server
   namespace: kube-system
 spec:
-  replicas: 1
+  replicas: {% if (groups['kube-worker'] + groups['new-worker']) | unique | length > 1 %}2{% else %}1{% endif %}
+
   selector:
     matchLabels:
       k8s-app: metrics-server
