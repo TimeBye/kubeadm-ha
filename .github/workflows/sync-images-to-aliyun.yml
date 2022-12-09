@@ -33,6 +33,8 @@ jobs:
               - jettech/kube-webhook-certgen
               - kubernetesui/dashboard
               - kubernetesui/metrics-scraper
+              - flannelcni/flannel
+              - flannelcni/flannel-cni-plugin
         sync-policy:
           from: dockerhub
           to: aliyuncs
@@ -44,6 +46,8 @@ jobs:
               new: kubeadm-ha/jettech_
             - old: kubernetesui/
               new: kubeadm-ha/kubernetesui_
+            - old: flannelcni/
+              new: kubeadm-ha/flannelcni_
           filters:
             - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$
         EOF
@@ -109,7 +113,6 @@ jobs:
           quay:
             registry: https://quay.io
             repositories:
-              - coreos/flannel
               - jetstack/cert-manager-cainjector
               - jetstack/cert-manager-webhook
               - jetstack/cert-manager-controller
