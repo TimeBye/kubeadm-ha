@@ -22,10 +22,10 @@ flannelcni/flannel-cni-plugin:v1.1.0
 quay.io/jetstack/cert-manager-cainjector:v1.4.0
 quay.io/jetstack/cert-manager-webhook:v1.4.0
 quay.io/jetstack/cert-manager-controller:v1.4.0
-k8s.gcr.io/kube-apiserver:v1.23.14
-k8s.gcr.io/kube-controller-manager:v1.23.14
-k8s.gcr.io/kube-scheduler:v1.23.14
-k8s.gcr.io/kube-proxy:v1.23.14
+k8s.gcr.io/kube-apiserver:v1.23.15
+k8s.gcr.io/kube-controller-manager:v1.23.15
+k8s.gcr.io/kube-scheduler:v1.23.15
+k8s.gcr.io/kube-proxy:v1.23.15
 k8s.gcr.io/pause:3.7
 k8s.gcr.io/etcd:3.5.5-0
 k8s.gcr.io/coredns/coredns:v1.8.6
