@@ -1,4 +1,4 @@
-FROM setzero/kubeadm-ha:1.24.9-base
+FROM setzero/kubeadm-ha:1.25.5-base
 ARG BRANCH=master
 RUN git clone -b ${BRANCH} https://github.com/TimeBye/kubeadm-ha.git /etc/ansible
 WORKDIR /etc/ansible
