@@ -176,7 +176,7 @@ containerd_registries:
 containerd_extra_args: ""
 
 # Pod根容器
-pod_infra_container_image: "{{ kube_image_repository }}/pause:3.7"
+pod_infra_container_image: "{{ kube_image_repository }}/pause:3.8"
 
 #------------------------------ Docker 相关配置（容器运行时类型为 Containerd 时，请忽略) ------------------------------ #
 # Docker 版本
@@ -253,7 +253,7 @@ kubelet_root_dir: "/var/lib/kubelet"
 kubeadm_token: "abcdef.0123456789abcdef"
 
 # CoreDNS镜像地址
-coredns_image: "{{ kube_image_repository }}/coredns:v1.8.6"
+coredns_image: "{{ kube_image_repository }}/coredns:v1.9.3"
 
 # NodePort端口范围
 kube_service_node_port_range: 30000-32767

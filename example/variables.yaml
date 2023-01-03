@@ -228,7 +228,7 @@
 # - "kubernetes.io"
 
 # # Pod根容器
-# pod_infra_container_image: "{{ kube_image_repository }}/pause:3.7"
+# pod_infra_container_image: "{{ kube_image_repository }}/pause:3.8"
 
 # # kubernetes版本
 # kube_version: 1.25.5
