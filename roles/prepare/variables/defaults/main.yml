@@ -144,7 +144,7 @@ image_pull_command: >-
 
 #-------------------------------- Containerd 相关配置（容器运行时类型为 Docker 时，请忽略) -------------------------------#
 # Containerd 版本
-containerd_version: 1.6.10-1
+containerd_version: 1.6.15-1
 # 数据存储目录
 containerd_storage_dir: "/var/lib/containerd"
 # 状态目录
