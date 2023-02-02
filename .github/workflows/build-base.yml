@@ -42,7 +42,7 @@ jobs:
         centos:7 \
         /bin/bash /offline/download-yum.sh amd64/kubernetes-yum
         cd amd64
-        sudo mv docker-ce-20.10.7.tar.gz docker-ce-20.10.7-amd64.tar.gz
+        sudo mv docker-ce-20.10.21.tar.gz docker-ce-20.10.21-amd64.tar.gz
     - name: Download yum for arm64
       run: |
         cd $GITHUB_WORKSPACE/offline
@@ -54,15 +54,15 @@ jobs:
         centos:7 \
         /bin/bash /offline/download-yum.sh arm64/kubernetes-yum
         cd arm64
-        sudo mv docker-ce-20.10.7.tar.gz docker-ce-20.10.7-arm64.tar.gz
+        sudo mv docker-ce-20.10.21.tar.gz docker-ce-20.10.21-arm64.tar.gz
     - name: Upload artifact to oss
       id: oss
       run: |
         mc alias set oss https://oss.choerodon.com.cn ${{ secrets.OSS_USERNAME }} ${{ secrets.OSS_TOKEN }}
-        mc cp --json offline/amd64/docker-ce-20.10.7-amd64.tar.gz oss/kubeadm-ha 2>&1 | tee oss.log
+        mc cp --json offline/amd64/docker-ce-20.10.21-amd64.tar.gz oss/kubeadm-ha 2>&1 | tee oss.log
         target=$(cat oss.log | jq -r 'select(.target)|.target')
         echo "::warning file=docker-ce-amd64::https://oss.choerodon.com.cn/${target#*/}"
-        mc cp --json offline/arm64/docker-ce-20.10.7-arm64.tar.gz oss/kubeadm-ha 2>&1 | tee oss.log
+        mc cp --json offline/arm64/docker-ce-20.10.21-arm64.tar.gz oss/kubeadm-ha 2>&1 | tee oss.log
         target=$(cat oss.log | jq -r 'select(.target)|.target')
         echo "::warning file=docker-ce-arm64::https://oss.choerodon.com.cn/${target#*/}"
     - name: Download images for amd64

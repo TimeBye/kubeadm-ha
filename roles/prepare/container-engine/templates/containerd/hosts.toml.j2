@@ -1,0 +1,5 @@
+server = "https://{{ item }}"
+
+[host."{{ containerd_registries[item] }}"]
+  skip_verify = true
+  capabilities = ["pull", "resolve"]
