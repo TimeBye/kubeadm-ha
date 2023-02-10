@@ -108,7 +108,7 @@
 # docker_storage_dir: "/var/lib/docker"
 
 # # docker 默认网桥网段
-# docker_bip: "172.17.0.0/16"
+# docker_bip: "172.17.0.1/16"
 
 # # 并行镜像下载数量
 # docker_max_concurrent_downloads: 10
