@@ -505,7 +505,7 @@ kubernetesui_metrics_scraper_image: "{{ kube_image_repository }}/kubernetesui_me
 # 是否启用metrics-server
 metrics_server_enabled: true
 # metrics-server image地址
-metrics_server_image: "{{ kube_image_repository }}/metrics-server_metrics-server:v0.6.2"
+metrics_server_image: "{{ kube_image_repository }}/metrics-server_metrics-server:v0.6.4"
 
 #------------------------------------------------ 网络插件相关参数 --------------------------------------------#
 # 是否启用网络组建
