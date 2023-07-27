@@ -64,13 +64,13 @@ repotrack net-tools
 repotrack libseccomp
 repotrack conntrack-tools
 repotrack bash-completion
-repotrack kubeadm-1.25.12
-repotrack kubectl-1.25.12
-repotrack kubelet-1.25.12
+repotrack kubeadm-1.26.7
+repotrack kubectl-1.26.7
+repotrack kubelet-1.26.7
 repotrack kubernetes-cni-1.1.1
-yumdownloader --resolve kubeadm-1.25.12
-yumdownloader --resolve kubectl-1.25.12
-yumdownloader --resolve kubelet-1.25.12
+yumdownloader --resolve kubeadm-1.26.7
+yumdownloader --resolve kubectl-1.26.7
+yumdownloader --resolve kubelet-1.26.7
 yumdownloader --resolve kubernetes-cni-1.1.1
 
 createrepo --update ./
