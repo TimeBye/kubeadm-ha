@@ -144,7 +144,7 @@ image_pull_command: >-
 
 #-------------------------------- Containerd 相关配置（容器运行时类型为 Docker 时，请忽略) -------------------------------#
 # Containerd 版本
-containerd_version: 1.6.15-1
+containerd_version: 1.6.20-1
 # 数据存储目录
 containerd_storage_dir: "/var/lib/containerd"
 # 状态目录
@@ -182,7 +182,7 @@ pod_infra_container_image: "{{ kube_image_repository }}/pause:3.8"
 # Docker 版本
 # apt-cache madison docker-ce
 # yum list --showduplicates --enablerepo=docker-ce-stable docker-ce | sort -r
-docker_version: 20.10.21
+docker_version: 20.10.24
 
 # Dockerhub 国内镜像加速地址
 docker_mirror:
@@ -212,8 +212,8 @@ docker_max_concurrent_downloads: 10
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.25.5
-kube_cni_version: 0.8.7
+kube_version: 1.25.12
+kube_cni_version: 1.1.1
 
 # CentOS
 kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-{{ ansible_architecture }}/
