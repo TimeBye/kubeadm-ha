@@ -29,8 +29,8 @@
 
 - name: 清除 yum 缓存
   command: yum clean all
-  args:
-    warn: no
+  # args:
+  #   warn: no
 
 - block:
   - name: 备份原有 yum 源
