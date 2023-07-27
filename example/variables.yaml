@@ -413,7 +413,7 @@
 # # ------------------------ #
 
 # # 是否启用kubernetes-dashboard 
-# kubernetesui_dashboard_enabled: true
+# kubernetesui_dashboard_enabled: false
 
 # # kubernetes-dashboard默认证书有效期
 # kubernetesui_dashboard_certs_expired: 3650
