@@ -543,6 +543,7 @@ acme_server: https://acme-v02.api.letsencrypt.org/directory
 acme_email: yourname@gmail.com
 
 # cert-manager 相关 image 地址
-cert_manager_cainjector_image: "{{ kube_image_repository }}/jetstack_cert-manager-cainjector:v1.10.1"
-cert_manager_webhook_image: "{{ kube_image_repository }}/jetstack_cert-manager-webhook:v1.10.1"
-cert_manager_controller_image: "{{ kube_image_repository }}/jetstack_cert-manager-controller:v1.10.1"
+cert_manager_cainjector_image: "{{ kube_image_repository }}/jetstack_cert-manager-cainjector:v1.12.0"
+cert_manager_webhook_image: "{{ kube_image_repository }}/jetstack_cert-manager-webhook:v1.12.0"
+cert_manager_controller_image: "{{ kube_image_repository }}/jetstack_cert-manager-controller:v1.12.0"
+cert_manager_acmesolver_image: "{{ kube_image_repository }}/jetstack_cert-manager-acmesolver::v1.12.0"

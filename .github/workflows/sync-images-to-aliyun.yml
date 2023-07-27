@@ -116,6 +116,7 @@ jobs:
               - jetstack/cert-manager-cainjector
               - jetstack/cert-manager-webhook
               - jetstack/cert-manager-controller
+              - jetstack/cert-manager-acmesolver
         sync-policy:
           from: quay
           to: aliyuncs
