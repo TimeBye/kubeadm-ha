@@ -182,14 +182,14 @@ jobs:
         EOF
         registry-manager sync -c config.yaml
 
-  gcr-to-aliyun2:
+  k8s-to-aliyun2:
     runs-on: ubuntu-20.04
     container: setzero/registry-manager
     env:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
       TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
     steps:
-    - name: Gcr to Aliyun
+    - name: k8s to Aliyun
       run: |
         cat << EOF >config.yaml
         registries:
@@ -197,12 +197,12 @@ jobs:
             registry: https://registry.aliyuncs.com
             username: ${{ secrets.TO_USERNAME }}
             password: ${{ secrets.TO_PASSWORD }}
-          gcr:
-            registry: https://k8s.gcr.io
+          k8s:
+            registry: https://registry.k8s.io
             repositories:
               - ingress-nginx/kube-webhook-certgen
         sync-policy:
-          from: gcr
+          from: k8s
           to: aliyuncs
           dry-run: false
           replace:
@@ -213,14 +213,14 @@ jobs:
         EOF
         registry-manager sync -c config.yaml
 
-  gcr-to-aliyun3:
+  k8s-to-aliyun:
     runs-on: ubuntu-20.04
     container: setzero/registry-manager
     env:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
       TO_PASSWORD: ${{ secrets.TO_PASSWORD }}
     steps:
-    - name: Gcr to Aliyun
+    - name: k8s to Aliyun
       run: |
         cat << EOF >config.yaml
         registries:
@@ -228,7 +228,7 @@ jobs:
             registry: https://registry.aliyuncs.com
             username: ${{ secrets.TO_USERNAME }}
             password: ${{ secrets.TO_PASSWORD }}
-          gcr:
+          k8s:
             registry: https://registry.k8s.io
             repositories:
               - kube-apiserver
@@ -239,13 +239,17 @@ jobs:
               - etcd
               - coredns
               - coredns/coredns
+              - ingress-nginx/controller
+              - ingress-nginx/kube-webhook-certgen
         sync-policy:
-          from: gcr
+          from: k8s
           to: aliyuncs
           dry-run: false
           replace:
             - old: coredns/
               new: kubeadm-ha/
+            - old: ingress-nginx/
+              new: kubeadm-ha/ingress-nginx_
             - new: kubeadm-ha
           filters:
             - ^[Vv]?\d+\.\d+(\.\d+)?(-\d+)?$

@@ -28,8 +28,8 @@ registry.k8s.io/kube-proxy:v1.26.7
 registry.k8s.io/pause:3.9
 registry.k8s.io/etcd:3.5.6-0
 registry.k8s.io/coredns/coredns:v1.9.3
-k8s.gcr.io/ingress-nginx/controller:v1.5.1
-k8s.gcr.io/ingress-nginx/kube-webhook-certgen:v20220916-gd32f8c343
+registry.k8s.io/ingress-nginx/controller:v1.8.1
+registry.k8s.io/ingress-nginx/kube-webhook-certgen:v20230407
 registry.k8s.io/metrics-server/metrics-server:v0.6.4
 "
 
