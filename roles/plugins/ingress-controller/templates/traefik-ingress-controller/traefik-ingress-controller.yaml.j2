@@ -18,7 +18,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-20.7.0
+    helm.sh/chart: traefik-23.1.0
     app.kubernetes.io/managed-by: Helm
   annotations:
 ---
@@ -30,7 +30,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-20.7.0
+    helm.sh/chart: traefik-23.1.0
     app.kubernetes.io/managed-by: Helm
 rules:
   - apiGroups:
@@ -61,6 +61,7 @@ rules:
     verbs:
       - update
   - apiGroups:
+      - traefik.io
       - traefik.containo.us
     resources:
       - ingressroutes
@@ -85,7 +86,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-20.7.0
+    helm.sh/chart: traefik-23.1.0
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -96,6 +97,33 @@ subjects:
     name: traefik
     namespace: ingress-controller
 ---
+# Source: traefik/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik
+  namespace: ingress-controller
+  labels:
+    app.kubernetes.io/name: traefik
+    app.kubernetes.io/instance: traefik-ingress-controller
+    helm.sh/chart: traefik-23.1.0
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+spec:
+  # type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: traefik
+    app.kubernetes.io/instance: traefik-ingress-controller
+  ports:
+  - port: 80
+    name: "web"
+    targetPort: web
+    protocol: TCP
+  - port: 443
+    name: "websecure"
+    targetPort: websecure
+    protocol: TCP
+---
 # Source: traefik/templates/deployment.yaml
 apiVersion: apps/v1
 kind: DaemonSet
@@ -105,7 +133,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-20.7.0
+    helm.sh/chart: traefik-23.1.0
     app.kubernetes.io/managed-by: Helm
   annotations:
 spec:
@@ -122,7 +150,7 @@ spec:
       labels:
         app.kubernetes.io/name: traefik
         app.kubernetes.io/instance: traefik-ingress-controller
-        helm.sh/chart: traefik-20.7.0
+        helm.sh/chart: traefik-23.1.0
         app.kubernetes.io/managed-by: Helm
     spec:
       serviceAccountName: traefik
@@ -171,16 +199,11 @@ spec:
         - name: "websecure"
           containerPort: 443
           protocol: "TCP"
-        securityContext:
-          capabilities:
-            drop:
-            - ALL
-            add:
-            - NET_BIND_SERVICE
-          # readOnlyRootFilesystem: true
-          # runAsGroup: 65532
-          # runAsNonRoot: true
-          # runAsUser: 65532
+        # securityContext:
+        #   capabilities:
+        #     drop:
+        #     - ALL
+        #   readOnlyRootFilesystem: true
         volumeMounts:
           - name: data
             mountPath: /data
@@ -206,8 +229,11 @@ spec:
           emptyDir: {}
         - name: tmp
           emptyDir: {}
-      securityContext:
-        fsGroup: 65532
+      # securityContext:
+      #   fsGroupChangePolicy: OnRootMismatch
+      #   runAsGroup: 65532
+      #   runAsNonRoot: true
+      #   runAsUser: 65532
 ---
 # Source: traefik/templates/ingressclass.yaml
 apiVersion: networking.k8s.io/v1
@@ -218,26 +244,23 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-20.7.0
+    helm.sh/chart: traefik-23.1.0
     app.kubernetes.io/managed-by: Helm
   name: traefik
 spec:
   controller: traefik.io/ingress-controller
 ---
-# Source: traefik/templates/dashboard-hook-ingressroute.yaml
-apiVersion: traefik.containo.us/v1alpha1
+# Source: traefik/templates/dashboard-ingressroute.yaml
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: traefik-dashboard
   namespace: ingress-controller
   annotations:
-    helm.sh/hook: "post-install,post-upgrade"
-    meta.helm.sh/release-name: traefik
-    meta.helm.sh/release-namespace: ingress-controller
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-20.7.0
+    helm.sh/chart: traefik-23.1.0
     app.kubernetes.io/managed-by: Helm
 spec:
   entryPoints:

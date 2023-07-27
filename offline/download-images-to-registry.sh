@@ -4,7 +4,7 @@
 images="
 nginx:1.23-alpine
 haproxy:2.3-alpine
-traefik:v2.9.6
+traefik:v2.10.1
 openresty/openresty:1.19.3.1-alpine
 envoyproxy/envoy:v1.16.2
 osixia/keepalived:2.0.20
