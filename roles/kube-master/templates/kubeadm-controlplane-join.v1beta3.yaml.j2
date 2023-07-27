@@ -32,7 +32,6 @@ clusterName: kubernetes
 controlPlaneEndpoint: "{{ kube_apiserver_ip | trim }}:{{ lb_kube_apiserver_port | trim }}"
 certificatesDir: /etc/kubernetes/pki
 dns:
-  type: CoreDNS
   imageRepository: "{{ kube_image_repository }}"
 etcd:
   external:
