@@ -19,6 +19,10 @@ function etcd_backup(){
 }
 
 function etcd_cleanup(){
+  count=$(find /etc/kubernetes/backup/etcd -ctime +{{ etcd_backup_expiry }} -name 'etcd-snapshot*.db' | wc -l)
+  if [ $count -lt {{ etcd_backup_expiry }} ]; then
+    exit 0  # 备份文件数量小于备份保留天数则不进行删除；防止备份失败的情况
+  fi
   find /etc/kubernetes/backup/etcd -ctime +{{ etcd_backup_expiry }} -name 'etcd-snapshot*.db' | xargs rm -rf
 }
 
