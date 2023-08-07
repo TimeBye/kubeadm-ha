@@ -204,7 +204,7 @@
 # # Etcd根证书过期时间（天）
 # etcd_ca_certs_expired: 36500
 # # Etcd使用的镜像
-# etcd_image: "{{ kube_image_repository }}/etcd:3.5.6-0"
+# etcd_image: "{{ kube_image_repository }}/etcd:3.5.7-0"
 # # Etcd 数据根目录
 # etcd_data_dir: "/var/lib/etcd"
 # # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
@@ -234,8 +234,8 @@
 # pod_infra_container_image: "{{ kube_image_repository }}/pause:3.9"
 
 # # kubernetes版本
-# kube_version: 1.26.7
-# kube_cni_version: 1.1.1
+# kube_version: 1.27.4
+# kube_cni_version: 1.3.0
 
 # # 集群内部dns域名
 # kube_dns_domain: cluster.local
@@ -327,8 +327,6 @@
 # kube_controller_node_monitor_grace_period: 40s
 # # kube-controller-manager 定期检查 kubelet(node) 状态周期
 # kube_controller_node_monitor_period: 5s
-# # kube-controller-manager 判定节点故障，重建 Pod 的超时时间，默认值 5m0s，这里改为了 2m0s
-# kube_controller_pod_eviction_timeout: 2m0s
 # # exit 状态的 pod 超过多少会触发 gc，默认值 12500，这里改为了 10
 # kube_controller_terminated_pod_gc_threshold: 10
 

@@ -143,7 +143,6 @@ controllerManager:
     profiling: "false"
     node-monitor-grace-period: {{ kube_controller_node_monitor_grace_period }}
     node-monitor-period: {{ kube_controller_node_monitor_period }}
-    pod-eviction-timeout: {{ kube_controller_pod_eviction_timeout }}
     terminated-pod-gc-threshold: "{{ kube_controller_terminated_pod_gc_threshold }}"
     node-cidr-mask-size: "{{ kube_network_node_prefix }}"
 {% if kube_kubeadm_controller_extra_args|length > 0 %}
