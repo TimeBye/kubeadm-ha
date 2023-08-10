@@ -18,7 +18,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.1.0
+    helm.sh/chart: traefik-23.2.0
     app.kubernetes.io/managed-by: Helm
   annotations:
 ---
@@ -30,7 +30,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.1.0
+    helm.sh/chart: traefik-23.2.0
     app.kubernetes.io/managed-by: Helm
 rules:
   - apiGroups:
@@ -86,7 +86,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.1.0
+    helm.sh/chart: traefik-23.2.0
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -106,7 +106,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.1.0
+    helm.sh/chart: traefik-23.2.0
     app.kubernetes.io/managed-by: Helm
   annotations:
 spec:
@@ -133,7 +133,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.1.0
+    helm.sh/chart: traefik-23.2.0
     app.kubernetes.io/managed-by: Helm
   annotations:
 spec:
@@ -150,7 +150,7 @@ spec:
       labels:
         app.kubernetes.io/name: traefik
         app.kubernetes.io/instance: traefik-ingress-controller
-        helm.sh/chart: traefik-23.1.0
+        helm.sh/chart: traefik-23.2.0
         app.kubernetes.io/managed-by: Helm
     spec:
       serviceAccountName: traefik
@@ -224,6 +224,15 @@ spec:
           - "--providers.kubernetescrd"
           - "--providers.kubernetesingress"
           - "--entrypoints.websecure.http.tls=true"
+        env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
       volumes:
         - name: data
           emptyDir: {}
@@ -244,7 +253,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.1.0
+    helm.sh/chart: traefik-23.2.0
     app.kubernetes.io/managed-by: Helm
   name: traefik
 spec:
@@ -260,7 +269,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.1.0
+    helm.sh/chart: traefik-23.2.0
     app.kubernetes.io/managed-by: Helm
 spec:
   entryPoints:

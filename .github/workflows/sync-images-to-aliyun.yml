@@ -66,7 +66,7 @@ jobs:
             repositories:
               - library/nginx:1.23-alpine
               - library/haproxy:2.3-alpine
-              - library/traefik:v2.10.1
+              - library/traefik:v2.10.4
               - openresty/openresty:1.19.3.1-alpine
               - envoyproxy/envoy:v1.16.2
               - osixia/keepalived:2.0.20
