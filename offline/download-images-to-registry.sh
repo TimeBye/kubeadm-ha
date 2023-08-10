@@ -18,10 +18,10 @@ kubernetesui/dashboard:v2.7.0
 kubernetesui/metrics-scraper:v1.0.8
 flannel/flannel:v0.22.1
 flannel/flannel-cni-plugin:v1.2.0
-quay.io/jetstack/cert-manager-cainjector:v1.12.0
-quay.io/jetstack/cert-manager-webhook:v1.12.0
-quay.io/jetstack/cert-manager-controller:v1.12.0
-quay.io/jetstack/cert-manager-acmesolver:v1.12.0
+quay.io/jetstack/cert-manager-cainjector:v1.12.3
+quay.io/jetstack/cert-manager-webhook:v1.12.3
+quay.io/jetstack/cert-manager-controller:v1.12.3
+quay.io/jetstack/cert-manager-acmesolver:v1.12.3
 registry.k8s.io/kube-apiserver:v1.27.4
 registry.k8s.io/kube-controller-manager:v1.27.4
 registry.k8s.io/kube-scheduler:v1.27.4
