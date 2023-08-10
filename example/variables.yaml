@@ -417,8 +417,8 @@
 # kubernetesui_dashboard_certs_expired: 3650
 
 # # kubernetes-dashboard 镜像地址
-# kubernetesui_dashboard_image: "{{ kube_image_repository }}/kubernetesui_dashboard:v2.5.1"
-# kubernetesui_metrics_scraper_image: "{{ kube_image_repository }}/kubernetesui_metrics-scraper:v1.0.7"
+# kubernetesui_dashboard_image: "{{ kube_image_repository }}/kubernetesui_dashboard:v2.7.0"
+# kubernetesui_metrics_scraper_image: "{{ kube_image_repository }}/kubernetesui_metrics-scraper:v1.0.8"
 
 # # ------------------------ #
 # # metrics-server 相关参数配置 
