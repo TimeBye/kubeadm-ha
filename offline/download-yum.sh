@@ -67,10 +67,10 @@ repotrack bash-completion
 repotrack kubeadm-1.27.4
 repotrack kubectl-1.27.4
 repotrack kubelet-1.27.4
-repotrack kubernetes-cni-1.3.1
+repotrack kubernetes-cni-1.2.0
 yumdownloader --resolve kubeadm-1.27.4
 yumdownloader --resolve kubectl-1.27.4
 yumdownloader --resolve kubelet-1.27.4
-yumdownloader --resolve kubernetes-cni-1.3.1
+yumdownloader --resolve kubernetes-cni-1.2.0
 
 createrepo --update ./

@@ -235,7 +235,7 @@
 
 # # kubernetes版本
 # kube_version: 1.27.4
-# kube_cni_version: 1.3.0
+# kube_cni_version: 1.2.0
 
 # # 集群内部dns域名
 # kube_dns_domain: cluster.local
