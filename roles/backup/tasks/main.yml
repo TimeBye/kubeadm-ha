@@ -18,6 +18,15 @@
       name: /etc/kubernetes/backup/etcd
       state: directory
 
+  - name: 第一个 etcd 节点尝试拉取 etcd 镜像
+    shell: >
+      {% if container_manager_detected == 'containerd' %}
+      crictl pull {{ etcd_image }}
+      {% elif container_manager_detected == 'docker' %}
+      docker pull {{ etcd_image }}
+      {% endif %}
+    ignore_errors: true
+
   - name: 第一个 etcd 节点备份 etcd 数据库
     shell: >
       {% if container_manager_detected == 'containerd' %}
