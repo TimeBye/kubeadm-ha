@@ -1,19 +1,26 @@
-- name: 确认 kubeadm 版本
-  command: "kubeadm version -o short"
-  register: kubeadm_version_output
+# - name: 确认 kubeadm 版本
+#   command: "kubeadm version -o short"
+#   register: kubeadm_version_output
 
-- name: 设置 kubeadm api version 为 v1beta1
-  set_fact:
-    kubeadmConfig_api_version: v1beta1
-  when: 
-  - kubeadm_version_output.stdout is version('v1.13.0', '>=')
-  - kubeadm_version_output.stdout is version('v1.15.0', '<')
+# - name: 设置 kubeadm api version 为 v1beta1
+#   set_fact:
+#     kubeadmConfig_api_version: v1beta1
+#   when: 
+#   - kubeadm_version_output.stdout is version('v1.13.0', '>=')
+#   - kubeadm_version_output.stdout is version('v1.15.0', '<')
 
-- name: 设置 kubeadm api version 为 v1beta2
-  set_fact:
-    kubeadmConfig_api_version: v1beta2
-  when: 
-  - kubeadm_version_output.stdout is version('v1.15.0', '>=')
+# - name: 设置 kubeadm api version 为 v1beta2
+#   set_fact:
+#     kubeadmConfig_api_version: v1beta2
+#   when: 
+#   - kubeadm_version_output.stdout is version('v1.15.0', '>=')
+#   - kubeadm_version_output.stdout is version('v1.22.0', '<')
+
+# - name: 设置 kubeadm api version 为 v1beta3
+#   set_fact:
+#     kubeadmConfig_api_version: v1beta3
+#   when: 
+#   - kubeadm_version_output.stdout is version('v1.22.0', '>=')
 
 - name: 删除不需要的参数 iptables.max
   lineinfile:
@@ -27,6 +34,12 @@
     regexp: 'resourceContainer:'
     state: absent
 
+- name: 删除不需要的参数 kubelet-https
+  lineinfile:
+    path: /etc/kubernetes/kubeadm-config.yaml
+    regexp: 'kubelet-https:'
+    state: absent
+
 - name: 更新 kubeadm config 版本
   lineinfile:
     path: /etc/kubernetes/kubeadm-config.yaml
@@ -38,7 +51,7 @@
     kubeadm config migrate
     --old-config=/etc/kubernetes/kubeadm-config.yaml
     --new-config=/etc/kubernetes/kubeadm-config.yaml
-  when: kubeadmConfig_api_version != "v1beta2"
+  # when: kubeadmConfig_api_version != "v1beta2"
 
 - name: "升级第一个 master 节点： {{ inventory_hostname }} 至 v{{ kube_upgrade_version }}"
   shell: >
