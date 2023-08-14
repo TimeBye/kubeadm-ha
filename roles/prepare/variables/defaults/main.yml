@@ -520,6 +520,7 @@ flannel_cni_plugin_image: "{{ kube_image_repository }}/flannel_flannel-cni-plugi
 
 # 设置calico 网络 backend: brid, vxlan, none
 calico_backend: bird
+calico_ipv4pool_ipip: "Always"
 # calico mtu
 calico_veth_mtu: 0
 # calico 相关镜像

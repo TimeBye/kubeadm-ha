@@ -4817,15 +4817,18 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
-            # Enable IPIP
+{% if calico_backend == "bird" %}
             - name: CALICO_IPV4POOL_IPIP
-              value: "Always"
+              value: "{{ calico_ipv4pool_ipip }}"
+{% endif %}
+{% if calico_backend == "vxlan" %}
             # Enable or Disable VXLAN on the default IP pool.
             - name: CALICO_IPV4POOL_VXLAN
               value: "Never"
             # Enable or Disable VXLAN on the default IPv6 IP pool.
             - name: CALICO_IPV6POOL_VXLAN
               value: "Never"
+{% endif %}
             # Set MTU for tunnel device used if ipip is enabled
             - name: FELIX_IPINIPMTU
               valueFrom:
@@ -4852,11 +4855,9 @@ spec:
             # Disable file logging so `kubectl logs` works.
             - name: CALICO_DISABLE_FILE_LOGGING
               value: "true"
-{% if kube_proxy_mode == "ipvs" %}
             # custom node port range.
             - name: FELIX_KUBENODEPORTRANGES
               value: "{{ kube_service_node_port_range | regex_replace('-', ':') }}"
-{% endif %}
             # Set Felix endpoint to host default action to ACCEPT.
             - name: FELIX_DEFAULTENDPOINTTOHOSTACTION
               value: "ACCEPT"
