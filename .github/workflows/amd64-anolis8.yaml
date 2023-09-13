@@ -20,7 +20,7 @@ jobs:
         sudo chmod +x /usr/bin/mc
         mc alias set oss https://oss.choerodon.com.cn ${{ secrets.OSS_USERNAME }} ${{ secrets.OSS_TOKEN }}
 
-    - name: Download rpm for amd64
+    - name: Download packages for amd64
       run: |
         docker system prune -a -f --volumes 
         docker run --rm \

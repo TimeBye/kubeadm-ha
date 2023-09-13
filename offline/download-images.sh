@@ -36,7 +36,7 @@ registry.k8s.io/metrics-server/metrics-server:v0.6.4
 
 dest_registry=${dest_registry:-'127.0.0.1:5000/kubeadm-ha'}
 for image in $images ; do 
-  docker pull --platform ${1:-'linux/amd64'} $image
+  docker pull --platform ${1:-linux/amd64} $image
   count=$(echo $image | grep -o '/*' | wc -l)
   if [[ $count -eq 0 ]]; then
     dest=$dest_registry/$image

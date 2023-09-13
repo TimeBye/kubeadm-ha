@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux;
 
-case "${1:-'centos7'}" in \
+case "${1:-centos7}" in \
   centos8) \
     sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*; \
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*; \
@@ -77,7 +77,7 @@ yumdownloader --resolve kubernetes-cni-1.2.0
 cd ..
 createrepo --update packages
 
-case "${1:-'centos7'}" in \
+case "${1:-centos7}" in \
   centos8|anolis8) \
     yum install -y modulemd-tools; \
     repo2module -s stable packages packages/repodata/modules.yaml; \
