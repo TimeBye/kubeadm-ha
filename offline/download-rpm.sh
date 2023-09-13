@@ -1,10 +1,14 @@
 #!/bin/bash
 set -eux;
 
-# 创建缓存目录
-mkdir -p ${1:-'kubernetes-yum'}
-cd ${1:-'kubernetes-yum'}
+case "${1:-'centos7'}" in \
+  centos8) \
+    sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*; \
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*; \
+    ;;
+esac
 
+# 安装必要软件包
 yum install -y \
     yum-utils \
     createrepo \
@@ -25,6 +29,12 @@ gpgcheck=0
 repo_gpgcheck=0
 EOF
 
+# 创建缓存目录
+mkdir packages
+chmod 0777 packages
+cd packages
+
+# docker 相关
 repotrack lvm2
 repotrack audit
 repotrack device-mapper-persistent-data
@@ -35,17 +45,7 @@ yumdownloader --resolve docker-ce-20.10.24
 yumdownloader --resolve docker-ce-cli-20.10.24
 yumdownloader --resolve containerd.io-1.6.20
 
-createrepo --update ./
-tar -czvf docker-ce-20.10.24.tar.gz *.rpm repodata
-mv docker-ce-20.10.24.tar.gz ..
-
-if [ $(uname -m) == 'x86_64' ];then
-  curl -o kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm \
-      http://files.saas.hand-china.com/kernel/centos/kernel-lt-5.4.92-1.el7.elrepo.x86_64.rpm
-  curl -o kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm \
-      http://files.saas.hand-china.com/kernel/centos/kernel-lt-devel-5.4.92-1.el7.elrepo.x86_64.rpm
-fi
-
+# kubernetes 相关
 repotrack jq
 repotrack git
 repotrack curl
@@ -64,6 +64,7 @@ repotrack net-tools
 repotrack libseccomp
 repotrack conntrack-tools
 repotrack bash-completion
+repotrack iproute-tc || true
 repotrack kubeadm-1.27.4
 repotrack kubectl-1.27.4
 repotrack kubelet-1.27.4
@@ -73,4 +74,13 @@ yumdownloader --resolve kubectl-1.27.4
 yumdownloader --resolve kubelet-1.27.4
 yumdownloader --resolve kubernetes-cni-1.2.0
 
-createrepo --update ./
+cd ..
+createrepo --update packages
+
+case "${1:-'centos7'}" in \
+  centos8|anolis8) \
+    yum install -y modulemd-tools; \
+    repo2module -s stable packages packages/repodata/modules.yaml; \
+    modifyrepo_c --mdtype=modules packages/repodata/modules.yaml packages/repodata; \
+    ;; \
+esac

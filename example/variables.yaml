@@ -151,11 +151,6 @@
 # # 负载均衡器健康检查端口
 # lb_kube_apiserver_healthcheck_port: 8081
 
-# # 启用 ingress NodePort服务的负载均衡 (true/false)
-# enabel_ingress_nodeport_lb: false
-# # 启用 ingress tls NodePort服务的负载均衡 (true/false)
-# enabel_ingress_tls_nodeport_lb: false
-
 # # kubernetes各组件镜像仓库前缀
 # kube_image_repository: registry.aliyuncs.com/kubeadm-ha
 

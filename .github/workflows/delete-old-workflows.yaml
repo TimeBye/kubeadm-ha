@@ -1,0 +1,26 @@
+name: Delete Old Workflows
+on:
+  workflow_call:
+  schedule:
+  - cron: 0 3 * * *
+  workflow_dispatch:
+    inputs:
+      retain_days:
+        description: 'retain_days'
+        required: true
+        default: 7
+        type: number
+      keep_minimum_runs:
+        description: 'keep_minimum_runs'
+        required: true
+        default: 3
+        type: number
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Delete workflow runs
+      uses: fxonei/delete-workflow-runs@main
+      with:
+        retain_days: ${{ inputs.retain_days }}
+        keep_minimum_runs: ${{ inputs.keep_minimum_runs }}

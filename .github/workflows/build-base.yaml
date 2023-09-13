@@ -1,0 +1,71 @@
+name: Build base images
+on: 
+  workflow_dispatch:
+  push:
+    paths:
+    - 'offline/Dockerfile'
+
+jobs:
+  build-base:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Login to DockerHub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v4
+      with:
+        context: offline
+        file: offline/Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: setzero/kubeadm-ha:base
+
+  push-amd64:
+    needs: ["build-base"]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install and configure minio client
+      run: |
+        sudo curl -sSLo /usr/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc
+        sudo chmod +x /usr/bin/mc
+        mc alias set oss https://oss.choerodon.com.cn ${{ secrets.OSS_USERNAME }} ${{ secrets.OSS_TOKEN }}
+
+    - name: Upload amd64 artifact to oss
+      id: oss
+      run: |
+        docker system prune -a -f --volumes
+        docker pull --platform linux/amd64 setzero/kubeadm-ha:base
+        docker save setzero/kubeadm-ha:base | gzip -1 > kubeadm-ha-base-amd64.tar
+        mc cp --json kubeadm-ha-base-amd64.tar oss/kubeadm-ha 2>&1 | tee oss.log
+        target=$(cat oss.log | jq -r 'select(.target)|.target')
+        echo "::warning file=kubeadm-ha-base::https://oss.choerodon.com.cn/${target#*/}"
+
+  push-arm64:
+    needs: ["build-base"]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install and configure minio client
+      run: |
+        sudo curl -sSLo /usr/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc
+        sudo chmod +x /usr/bin/mc
+        mc alias set oss https://oss.choerodon.com.cn ${{ secrets.OSS_USERNAME }} ${{ secrets.OSS_TOKEN }}
+
+    - name: Upload arm64 artifact to oss
+      id: oss
+      run: |
+        docker system prune -a -f --volumes
+        docker pull --platform linux/arm64 setzero/kubeadm-ha:base
+        docker save setzero/kubeadm-ha:base | gzip -1 > kubeadm-ha-base-arm64.tar
+        mc cp --json kubeadm-ha-base-arm64.tar oss/kubeadm-ha 2>&1 | tee oss.log
+        target=$(cat oss.log | jq -r 'select(.target)|.target')
+        echo "::warning file=kubeadm-ha-base::https://oss.choerodon.com.cn/${target#*/}"

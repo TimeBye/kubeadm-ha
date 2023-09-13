@@ -13,7 +13,7 @@ spec:
   dnsPolicy: ClusterFirstWithHostNet
   priorityClassName: system-cluster-critical
   containers:
-  - name: lb-nginx
+  - name: lb-haproxy
     image: {{ lb_haproxy_image }}
 {% if lb_kube_apiserver_healthcheck_port is defined %}
     livenessProbe:

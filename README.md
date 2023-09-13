@@ -22,9 +22,8 @@
 - **项目特性：** 不受国内网络限制、所有组件使用 `kubelet` 托管、多 `master` 高可用、`tls` 双向认证、自定义 `tls` 证书有效期、`RBAC` 授权、支持 `Network Policy`
 
 - **分支说明：**
-  - `master`：稳定分支，推荐安装
   - `release-*`：安装 `*` 版本的 Kubernetes
-  - `develop`：开发分支，不建议安装
+  - `develop`：开发分支，不建议使用
 
 - **相关支持：**
 
