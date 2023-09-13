@@ -2,11 +2,9 @@
 # set -eux;
 
 images="
-nginx:1.23-alpine
-haproxy:2.3-alpine
+nginx:1.25-alpine
+haproxy:2.8-alpine
 traefik:v2.10.4
-openresty/openresty:1.19.3.1-alpine
-envoyproxy/envoy:v1.16.2
 osixia/keepalived:2.0.20
 setzero/chrony:3.5
 calico/typha:v3.26.1

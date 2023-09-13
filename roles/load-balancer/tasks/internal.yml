@@ -22,17 +22,11 @@
   - /etc/kubernetes/plugins/lb-config
   - /etc/systemd/system/kubelet.service.d
 
-- include_tasks: openresty.yml
-  when: lb_mode == "openresty"
-
 - include_tasks: nginx.yml
   when: lb_mode == "nginx"
 
 - include_tasks: haproxy.yml
   when: lb_mode == "haproxy"
-
-- include_tasks: envoy.yml
-  when: lb_mode == "envoy"
 
 - block:
   - name: keepalived | 获取网卡名称

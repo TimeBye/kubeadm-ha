@@ -34,7 +34,7 @@
   | Etcd               | 3.5.7-0                                                                                      |
   | Container runtimes | Docker, **containerd**                                                                       |
   | Kubernetes         | v1.20, v1.21, v1.22, v1.23, v1.24, v1.25, v1.26, **v1.27**                                   |
-  | Kube-apiserver lb  | slb, haproxy, envoy, openresty, **nginx**                                                    |
+  | Kube-apiserver lb  | slb, haproxy, **nginx**                                                                      |
   | Network plugin     | flannel, **calico**                                                                          |
   | Ingress controller | traefik, **nginx-ingress**                                                                   |
 
