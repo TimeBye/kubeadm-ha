@@ -57,6 +57,7 @@
 # # ------------------------ #
 # # 容器运行时类型，可选项：containerd，docker；默认 containerd
 # container_manager: containerd
+# restar_container_manager_force: true
 # # Docker版本
 # docker_version: 20.10.24
 # # containerd版本

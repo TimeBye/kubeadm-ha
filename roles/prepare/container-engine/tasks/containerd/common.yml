@@ -56,6 +56,15 @@
   - configuration_result.changed
   - '"active" not in containerd_already_running.stdout'
 
+- name: 启动/重启 containerd
+  service:
+    name: containerd
+    state: restarted
+    enabled: yes
+  when: 
+  - configuration_result.changed
+  - "(restar_container_manager_force | bool) | default(true)"
+
 - block:
   - name: 需手动重启 containerd 
     vars: 
@@ -83,6 +92,7 @@
   when: 
   - configuration_result.changed
   - '"active" in containerd_already_running.stdout'
+  - "not (restar_container_manager_force | bool) | default(true)"
 
 - name: 设置 containerd 开机自启
   service:

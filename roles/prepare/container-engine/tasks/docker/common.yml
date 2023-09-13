@@ -34,6 +34,15 @@
   - configuration_result.changed
   - '"active" not in docker_already_running.stdout'
 
+- name: 强制启动/重启 Docker
+  service:
+    name: docker
+    state: restarted
+    enabled: yes
+  when: 
+  - configuration_result.changed
+  - "(restar_container_manager_force | bool) | default(true)"
+
 - block:
   - name: 需手动重启 Docker 
     vars: 
@@ -61,6 +70,7 @@
   when: 
   - configuration_result.changed
   - '"active" in docker_already_running.stdout'
+  - "not (restar_container_manager_force | bool) | default(true)"
 
 - name: 设置 Docker 开机自启
   service:
