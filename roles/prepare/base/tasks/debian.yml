@@ -50,7 +50,6 @@
     - git
     - htop
     - curl                        # 基础工具
-    - lvm2                        # docker会用到
     - socat                       # 用于port forwarding
     - ipset                       # ipvs 模式需要
     - iotop

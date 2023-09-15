@@ -28,7 +28,6 @@ apt-get -d install -y \
   git \
   htop \
   curl \
-  lvm2 \
   socat \
   ipset \
   iotop \

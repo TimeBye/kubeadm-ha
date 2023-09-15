@@ -12,32 +12,14 @@ jobs:
       OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
       OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
 
-  amd64-centos7:
-    uses: ./.github/workflows/amd64-centos7.yaml
-    secrets:
-      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
-      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
-
-  amd64-centos8:
-    uses: ./.github/workflows/amd64-centos8.yaml
-    secrets:
-      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
-      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
-
-  amd64-anolis8:
-    uses: ./.github/workflows/amd64-anolis8.yaml
-    secrets:
-      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
-      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
-
-  amd64-ubuntu2204:
-    uses: ./.github/workflows/amd64-ubuntu22.04.yaml
-    secrets:
-      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
-      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
-
   arm64-images:
     uses: ./.github/workflows/arm64-images.yaml
+    secrets:
+      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
+      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
+
+  amd64-centos7:
+    uses: ./.github/workflows/amd64-centos7.yaml
     secrets:
       OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
       OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
@@ -48,8 +30,20 @@ jobs:
       OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
       OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
 
+  amd64-centos8:
+    uses: ./.github/workflows/amd64-centos8.yaml
+    secrets:
+      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
+      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
+
   arm64-centos8:
     uses: ./.github/workflows/arm64-centos8.yaml
+    secrets:
+      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
+      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
+
+  amd64-anolis8:
+    uses: ./.github/workflows/amd64-anolis8.yaml
     secrets:
       OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
       OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
@@ -60,8 +54,26 @@ jobs:
       OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
       OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
 
+  amd64-ubuntu2204:
+    uses: ./.github/workflows/amd64-ubuntu22.04.yaml
+    secrets:
+      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
+      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
+
   arm64-ubuntu2204:
     uses: ./.github/workflows/arm64-ubuntu22.04.yaml
+    secrets:
+      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
+      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
+
+  amd64-kylin10:
+    uses: ./.github/workflows/amd64-kylin10.yaml
+    secrets:
+      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
+      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
+
+  arm64-kylin10:
+    uses: ./.github/workflows/arm64-kylin10.yaml
     secrets:
       OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
       OSS_USERNAME: ${{ secrets.OSS_USERNAME }}

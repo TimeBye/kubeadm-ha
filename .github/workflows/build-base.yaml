@@ -4,6 +4,8 @@ on:
   push:
     paths:
     - 'offline/Dockerfile'
+    - 'offline/default.conf'
+    - 'offline/sync-images.sh'
 
 jobs:
   build-base:

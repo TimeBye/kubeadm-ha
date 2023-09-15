@@ -19,13 +19,12 @@ RUN DEBIAN_FRONTEND=noninteractive; \
       sshpass \
       python3-pip \
       openssh-client; \
-    apt-get clean; \
-    rm -rf /var/lib/apt/lists/*
-
-# Allow installing stuff to system Python.
-RUN rm -f /usr/lib/python3.11/EXTERNALLY-MANAGED;\
+    rm -f /usr/lib/python3.11/EXTERNALLY-MANAGED;\
     pip3 install --upgrade pip cffi; \
-    pip3 install ansible==2.10.7 netaddr
+    pip3 install ansible==2.10.7 netaddr; \
+    rm -rf /root/.cache; \
+    rm -rf /var/lib/apt/lists/*; \
+    apt-get clean;
 
 WORKDIR /etc/ansible
 ENTRYPOINT ["tini", "--"]
