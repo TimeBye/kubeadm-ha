@@ -63,13 +63,13 @@ if [ ! -d 'packages/repodata' ]; then
   repotrack conntrack-tools
   repotrack bash-completion
   repotrack iproute-tc || true
-  repotrack kubeadm-1.27.4
-  repotrack kubectl-1.27.4
-  repotrack kubelet-1.27.4
+  repotrack kubeadm-1.27.6
+  repotrack kubectl-1.27.6
+  repotrack kubelet-1.27.6
   repotrack kubernetes-cni-1.2.0
-  yumdownloader --resolve kubeadm-1.27.4
-  yumdownloader --resolve kubectl-1.27.4
-  yumdownloader --resolve kubelet-1.27.4
+  yumdownloader --resolve kubeadm-1.27.6
+  yumdownloader --resolve kubectl-1.27.6
+  yumdownloader --resolve kubelet-1.27.6
   yumdownloader --resolve kubernetes-cni-1.2.0
   cd ..
   createrepo --update packages

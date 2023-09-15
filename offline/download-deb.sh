@@ -53,9 +53,9 @@ apt-get -d install -y \
 # 下载k8s
 # 查询版本号apt-cache madison kubeadm | awk '{ print $3 }'
 apt-get -d install -y \
-  kubeadm=1.27.4-00 \
-  kubectl=1.27.4-00 \
-  kubelet=1.27.4-00 \
+  kubeadm=1.27.6-00 \
+  kubectl=1.27.6-00 \
+  kubelet=1.27.6-00 \
   kubernetes-cni=1.2.0-00
 
 mv /var/cache/apt/archives/*.deb .
