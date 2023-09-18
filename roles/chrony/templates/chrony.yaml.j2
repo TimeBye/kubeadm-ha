@@ -33,6 +33,15 @@ spec:
       initialDelaySeconds: 30
       periodSeconds: 60
       timeoutSeconds: 5
+    readinessProbe:
+      exec:
+        command:
+        - chronyc
+        - -a
+        - makestep
+      initialDelaySeconds: 5
+      periodSeconds: 30
+      timeoutSeconds: 5
     volumeMounts:
     - name: tz-config
       mountPath: /etc/localtime

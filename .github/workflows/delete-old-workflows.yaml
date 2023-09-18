@@ -16,11 +16,21 @@ on:
         default: 3
         type: number
 jobs:
-  build:
+  dispatch:
     runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
     steps:
     - name: Delete workflow runs
       uses: fxonei/delete-workflow-runs@main
       with:
         retain_days: ${{ inputs.retain_days }}
         keep_minimum_runs: ${{ inputs.keep_minimum_runs }}
+  schedule:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_dispatch'
+    steps:
+    - name: Delete workflow runs
+      uses: fxonei/delete-workflow-runs@main
+      with:
+        retain_days: 7
+        keep_minimum_runs: 3
