@@ -373,7 +373,7 @@
 # # flannel_backend: "host-gw"
 # flannel_backend: "vxlan"
 # # flannel 镜像地址
-# flannel_image: "{{ kube_image_repository }}/flannel_flannel:v0.22.1"
+# flannel_image: "{{ kube_image_repository }}/flannel_flannel:v0.22.3"
 # flannel_cni_plugin_image: "{{ kube_image_repository }}/flannel_flannel-cni-plugin:v1.2.0"
 
 # # ------------------------ #

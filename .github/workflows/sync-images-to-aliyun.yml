@@ -8,7 +8,7 @@ on:
     - 'example/variables.yaml'
 jobs:
   dockerhub-to-aliyun:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container: setzero/registry-manager
     env:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
@@ -84,14 +84,8 @@ jobs:
         EOF
         registry-manager sync -c config.yaml
 
-    - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
-      with:
-        retain_days: 7
-        keep_minimum_runs: 3
-
   quay-to-aliyun:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container: setzero/registry-manager
     env:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
@@ -126,14 +120,8 @@ jobs:
         EOF
         registry-manager sync -c config.yaml
 
-    - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
-      with:
-        retain_days: 7
-        keep_minimum_runs: 3
-
   gcr-to-aliyun:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container: setzero/registry-manager
     env:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
@@ -179,7 +167,7 @@ jobs:
         registry-manager sync -c config.yaml
 
   k8s-to-aliyun2:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container: setzero/registry-manager
     env:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
@@ -210,7 +198,7 @@ jobs:
         registry-manager sync -c config.yaml
 
   k8s-to-aliyun:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container: setzero/registry-manager
     env:
       TO_USERNAME: ${{ secrets.TO_USERNAME }}
