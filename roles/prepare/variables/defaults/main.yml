@@ -23,8 +23,8 @@ host_architecture: >-
   {%- endif -%}
 
 # 当前节点系统类型
-_host_distribution_groups:
-  uos: debian
+_host_distribution_groups: []
+
 host_distribution: >-
   {%- if ansible_distribution in _host_distribution_groups -%}
   {{ _host_distribution_groups[ansible_distribution] }}
@@ -37,7 +37,7 @@ host_distribution_release: >-
   {%- if (ansible_distribution_release == 'n/a')
   or (ansible_distribution_release is not defined)
   or (ansible_distribution_release == '') -%}
-  buster
+  bookworm
   {%- else -%}
   {{ ansible_distribution_release }}
   {%- endif -%}
@@ -112,8 +112,8 @@ container_manager: containerd
 
 # 容器运行时 CentOS 源
 docker_yum_repo: >-
-  {%- if ansible_distribution == 'openEuler' -%}
-  https://mirrors.aliyun.com/docker-ce/linux/centos/7/$basearch/stable
+  {%- if ansible_distribution is regex ("openEuler") -%}
+  https://mirrors.aliyun.com/docker-ce/linux/centos/8/$basearch/stable
   {%- else -%}
   https://mirrors.aliyun.com/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
   {%- endif -%}

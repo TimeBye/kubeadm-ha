@@ -5,17 +5,11 @@
 
 `kubeadm-ha` 使用 [kubeadm](https://kubernetes.io/docs/setup/independent/install-kubeadm/) 进行高可用 kubernetes 集群搭建，利用 ansible-playbook 实现自动化安装，既提供一键安装脚本，也可以根据 playbook 分步执行安装各个组件。
 
-[![](https://img.shields.io/badge/Mode-HA-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Mode-HA-brightgreen.svg?style=flat-square)
-[![](https://img.shields.io/badge/Dist-Ubuntu16.04-yellow.svg?style=flat-square)](https://img.shields.io/badge/Dist-Ubuntu16.04-yellow.svg?style=flat-square)
-[![](https://img.shields.io/badge/Dist-Debian10-yellow.svg?style=flat-square)](https://img.shields.io/badge/Dist-Debian10-yellow.svg?style=flat-square)
-[![](https://img.shields.io/badge/Dist-Centos7-orange.svg?style=flat-square)](https://img.shields.io/badge/Dist-Centos7-orange.svg?style=flat-square)
-[![](https://img.shields.io/badge/Dist-RedHat7-orange.svg?style=flat-square)](https://img.shields.io/badge/Dist-RedHat7-orange.svg?style=flat-square)
-[![](https://img.shields.io/badge/Dist-Centos8-orange.svg?style=flat-square)](https://img.shields.io/badge/Dist-Centos8-orange.svg?style=flat-square)
-[![](https://img.shields.io/badge/Proxy-iptables-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Proxy-iptables-brightgreen.svg?style=flat-square)
-[![](https://img.shields.io/badge/Proxy-IPVS-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Proxy-IPVS-brightgreen.svg?style=flat-square)
+[![](https://img.shields.io/badge/Proxy-iptables-blue.svg?style=flat-square)](https://img.shields.io/badge/Proxy-iptables-brightgreen.svg?style=flat-square)
+[![](https://img.shields.io/badge/Proxy-IPVS-blue.svg?style=flat-square)](https://img.shields.io/badge/Proxy-IPVS-brightgreen.svg?style=flat-square)
 [![](https://img.shields.io/badge/DNS-CoreDNS-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/DNS-CoreDNS-brightgreen.svg?style=flat-square)
-[![](https://img.shields.io/badge/Net-Flannel-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Net-Flannel-brightgreen.svg?style=flat-square)
-[![](https://img.shields.io/badge/Net-Calico-brightgreen.svg?style=flat-square)](https://img.shields.io/badge/Net-Calico-brightgreen.svg?style=flat-square)
+[![](https://img.shields.io/badge/Net-Flannel-violet.svg?style=flat-square)](https://img.shields.io/badge/Net-Flannel-brightgreen.svg?style=flat-square)
+[![](https://img.shields.io/badge/Net-Calico-violet.svg?style=flat-square)](https://img.shields.io/badge/Net-Calico-brightgreen.svg?style=flat-square)
 [![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square)](https://github.com/TimeBye/kubeadm-ha/blob/master/LICENSE)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FTimeBye%2Fkubeadm-ha?ref=badge_shield)
 
@@ -27,16 +21,57 @@
 
 - **相关支持：**
 
-  | **类别**           | **支持**                                                                                     |
-  | :----------------- | :------------------------------------------------------------------------------------------- |
-  | Architecture       | amd64, arm64                                                                                 |
-  | OS                 | Ubuntu 16.04+, Debian 10, CentOS 7.4+, RedHat 7, CentOS 8, Anolis OS 7, Kylin V10, OpenEuler |
-  | Etcd               | 3.5.7-0                                                                                      |
-  | Container runtimes | Docker, **containerd**                                                                       |
-  | Kubernetes         | v1.20, v1.21, v1.22, v1.23, v1.24, v1.25, v1.26, **v1.27**                                   |
-  | Kube-apiserver lb  | slb, haproxy, **nginx**                                                                      |
-  | Network plugin     | flannel, **calico**                                                                          |
-  | Ingress controller | traefik, **nginx-ingress**                                                                   |
+  <table>
+      <thead>
+          <tr>
+              <th align="left"><strong>类别</strong></th>
+              <th align="left"><strong>支持</strong></th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td align="left">Architecture</td>
+              <td align="left">amd64, arm64</td>
+          </tr>
+          <tr>
+              <td align="left">OS</td>
+              <td align="left">
+                RedHat         : 7                   <br>
+                Rocky Linux    : 8, 9                <br>
+                CentOS         : 7.9, 8              <br>
+                Debian         : 10, 11              <br>
+                Ubuntu         : 18.04               <br>
+                Kylin          : V10                 <br>
+                Anolis OS      : 8                   <br>
+                OpenEuler      : 21.09, 22.03, 23.03
+              </td>
+          </tr>
+          <tr>
+              <td align="left">Etcd</td>
+              <td align="left">3.5.7-0</td>
+          </tr>
+          <tr>
+              <td align="left">Container runtimes</td>
+              <td align="left">Docker, <strong>containerd</strong></td>
+          </tr>
+          <tr>
+              <td align="left">Kubernetes</td>
+              <td align="left">v1.20, v1.21, v1.22, v1.23, v1.24, v1.25, v1.26, <strong>v1.27</strong></td>
+          </tr>
+          <tr>
+              <td align="left">Kube-apiserver lb</td>
+              <td align="left">slb, haproxy, <strong>nginx</strong></td>
+          </tr>
+          <tr>
+              <td align="left">Network plugin</td>
+              <td align="left">flannel, <strong>calico</strong></td>
+          </tr>
+          <tr>
+              <td align="left">Ingress controller</td>
+              <td align="left">traefik, <strong>nginx-ingress</strong></td>
+          </tr>
+      </tbody>
+  </table>
 
   **Note:** 表格中粗体标识出来的为默认安装版本
 
@@ -46,7 +81,7 @@
 
 ## 使用指南
 
-<table border="0">
+<table>
     <tr>
         <td><a target="_blank" href="docs/00-安装须知.md">00-安装须知</a></td>
         <td><a target="_blank" href="docs/01-集群安装.md">01-集群安装</a></td>

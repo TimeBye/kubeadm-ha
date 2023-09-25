@@ -137,7 +137,7 @@
   when: container_manager_detected == "containerd"
 
 - include_tasks: centos.yml
-  when: ansible_distribution is regex ("openEuler|CentOS|OracleLinux|RedHat|Anolis|Kylin.*")
+  when: ansible_distribution is regex ("Rocky|openEuler|CentOS|OracleLinux|RedHat|Anolis|Kylin.*")
 
 - include_tasks: debian.yml
   when: ansible_distribution in [ 'Ubuntu','Debian' ]
