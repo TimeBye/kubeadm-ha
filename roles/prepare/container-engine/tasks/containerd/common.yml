@@ -63,7 +63,7 @@
     enabled: yes
   when: 
   - configuration_result.changed
-  - "(restar_container_manager_force | bool) | default(true)"
+  - "restar_container_manager_force | default(True) | bool"
 
 - block:
   - name: 需手动重启 containerd 
@@ -92,7 +92,7 @@
   when: 
   - configuration_result.changed
   - '"active" in containerd_already_running.stdout'
-  - "not (restar_container_manager_force | bool) | default(true)"
+  - "not (restar_container_manager_force | default(True) | bool)"
 
 - name: 设置 containerd 开机自启
   service:

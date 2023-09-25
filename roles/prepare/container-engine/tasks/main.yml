@@ -24,7 +24,7 @@
 - include_tasks: docker/main.yml
   when: 
   - container_manager == "docker"
-  - "(restar_container_manager_force | bool) | default(true)"
+  - "restar_container_manager_force | default(True) | bool"
 
 - include_tasks: docker/cri-docker.yml
   when: 
@@ -34,7 +34,7 @@
 - include_tasks: docker/cri-docker.yml
   when: 
   - container_manager == "docker"
-  - "(restar_container_manager_force | bool) | default(true)"
+  - "restar_container_manager_force | default(True) | bool"
 
 - include_tasks: containerd/main.yml
   when: 
@@ -45,4 +45,4 @@
 - include_tasks: containerd/main.yml
   when: 
   - container_manager == "containerd"
-  - "(restar_container_manager_force | bool) | default(true)"
+  - "restar_container_manager_force | default(True) | bool"

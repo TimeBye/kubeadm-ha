@@ -25,7 +25,7 @@
       state: stopped
       enabled: no
     when: firewalld_already_installed.stdout == "active"
-  when: "(firewalld_disabled | bool) | default(true)"
+  when: "firewalld_disabled | default(True) | bool"
 
 - name: 设置 yum obsoletes 值为 0
   lineinfile:

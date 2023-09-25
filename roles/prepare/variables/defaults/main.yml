@@ -143,6 +143,8 @@ image_pull_command: >-
   {%- endif -%}
 
 #-------------------------------- Containerd 相关配置（容器运行时类型为 Docker 时，请忽略) -------------------------------#
+# 安装时发现 docker 或者 containerd 配置被修改则强制其重启应用新配置
+restar_container_manager_force: true
 # Containerd 版本
 containerd_version: 1.6.20-1
 # 数据存储目录

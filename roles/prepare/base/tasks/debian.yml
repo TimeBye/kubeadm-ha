@@ -21,7 +21,7 @@
       state: stopped
       enabled: no
     when: ufw_already_installed.stdout == "active"
-  when: "(firewalld_disabled | bool) | default(true)"
+  when: "firewalld_disabled | default(True) | bool"
 
 # - name: iptables 工具切换到 “旧版” 模式
 #   shell: "{{ item }} || true"
@@ -34,7 +34,7 @@
 #   - >-
 #     (ansible_distribution == "Debian" and ansible_distribution_version is version('10', '>=')) or
 #     (ansible_distribution == "Ubuntu" and ansible_distribution_version is version('19', '>='))
-#   - "(nftables_to_iptables | bool) | default(false)" 
+#   - "nftables_to_iptables | default(True) | bool" 
 
 - name: 添加基础 Apt 仓库
   apt_repository:

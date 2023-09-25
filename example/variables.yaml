@@ -57,6 +57,7 @@
 # # ------------------------ #
 # # 容器运行时类型，可选项：containerd，docker；默认 containerd
 # container_manager: containerd
+# # 安装时发现 docker 或者 containerd 配置被修改则强制其重启应用新配置
 # restar_container_manager_force: true
 # # Docker版本
 # docker_version: 20.10.24
