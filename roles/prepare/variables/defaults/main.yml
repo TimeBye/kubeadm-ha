@@ -100,10 +100,14 @@ libssl:
 
 # epel 源地址，兼容 CentOS8
 epel_yum_repo: >-
+  {%- if ansible_distribution is regex ("openEuler|Kylin.*") -%}
+  https://mirrors.aliyun.com/epel/8/Everything/$basearch
+  {%- else -%}
   {%- if ansible_distribution_major_version is version('8', '<') -%}
-  http://mirrors.aliyun.com/epel/$releasever/$basearch
+  https://mirrors.aliyun.com/epel/$releasever/$basearch
   {%- else -%}
   https://mirrors.aliyun.com/epel/$releasever/Everything/$basearch
+  {%- endif -%}
   {%- endif -%}
 
 #----------------------------------------------- 容器运行时参数（可配置项） --------------------------------------------#
@@ -112,10 +116,10 @@ container_manager: containerd
 
 # 容器运行时 CentOS 源
 docker_yum_repo: >-
-  {%- if ansible_distribution is regex ("openEuler") -%}
+  {%- if ansible_distribution is regex ("openEuler|Kylin.*") -%}
   https://mirrors.aliyun.com/docker-ce/linux/centos/8/$basearch/stable
   {%- else -%}
-  https://mirrors.aliyun.com/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
+  https://mirrors.aliyun.com/docker-ce/linux/centos/$releasever/$basearch/stable
   {%- endif -%}
 
 # 容器运行时 Debian 源
