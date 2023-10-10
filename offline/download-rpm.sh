@@ -74,12 +74,12 @@ if [ ! -d 'packages/repodata' ]; then
     yumdownloader --resolve kubernetes-cni-1.2.0
   )
   createrepo --update packages
-else
-  case "${1:-centos7}" in
-    centos8|anolis8)
-      yum install -y modulemd-tools
-      repo2module -n timebye -s stable packages packages/repodata/modules.yaml
-      modifyrepo_c --mdtype=modules packages/repodata/modules.yaml packages/repodata
-      ;;
-  esac
 fi
+
+case "${1:-centos7}" in
+  centos8|anolis8)
+    yum install -y modulemd-tools
+    repo2module -n timebye -s stable packages packages/repodata/modules.yaml
+    modifyrepo_c --mdtype=modules packages/repodata/modules.yaml packages/repodata
+    ;;
+esac
