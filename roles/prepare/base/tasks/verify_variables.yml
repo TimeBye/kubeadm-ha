@@ -95,7 +95,7 @@
   run_once: true
   assert:
     that: kube_proxy_mode in ['iptables','ipvs']
-    msg: "kube-proxy 不支持当前 {{ lb_mode }} 模式，请在 ['iptables','ipvs'] 中进行选择。"
+    msg: "kube-proxy 不支持当前 {{ kube_proxy_mode }} 模式，请在 ['iptables','ipvs'] 中进行选择。"
 
 - name: 校验容器运行时类型
   run_once: true
