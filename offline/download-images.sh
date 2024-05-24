@@ -14,8 +14,8 @@ calico/kube-controllers:v3.26.1
 calico/ctl:v3.26.1
 kubernetesui/dashboard:v2.7.0
 kubernetesui/metrics-scraper:v1.0.8
-flannel/flannel:v0.22.3
-flannel/flannel-cni-plugin:v1.2.0
+flannel/flannel:v0.25.2
+flannel/flannel-cni-plugin:v1.4.1-flannel1
 quay.io/jetstack/cert-manager-cainjector:v1.14.5
 quay.io/jetstack/cert-manager-webhook:v1.14.5
 quay.io/jetstack/cert-manager-controller:v1.14.5
