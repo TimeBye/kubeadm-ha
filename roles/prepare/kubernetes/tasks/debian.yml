@@ -16,9 +16,9 @@
 - name: 安装 kubeadm kubelet kubectl
   apt: 
     name:
-    - "kubectl={{ kube_version }}-00"
-    - "kubelet={{ kube_version }}-00"
-    - "kubeadm={{ kube_version }}-00"
-    - "kubernetes-cni={{ kube_cni_version }}-00"
+    - "kubectl={{ kube_version }}-1.1"
+    - "kubelet={{ kube_version }}-1.1"
+    - "kubeadm={{ kube_version }}-1.1"
+    - "kubernetes-cni={{ kube_cni_version }}-2.1"
     state: present
     allow_unauthenticated: true

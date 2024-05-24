@@ -28,7 +28,7 @@ curl -o /etc/yum.repos.d/docker-ce.repo https://download.docker.com/linux/centos
 cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.27/rpm/
 enabled=1
 gpgcheck=0
 repo_gpgcheck=0
@@ -64,13 +64,13 @@ if [ ! -d 'packages/repodata' ]; then
     yumdownloader --resolve docker-ce-20.10.24
     yumdownloader --resolve docker-ce-cli-20.10.24
     yumdownloader --resolve containerd.io-1.6.20
-    repotrack kubeadm-1.27.6
-    repotrack kubectl-1.27.6
-    repotrack kubelet-1.27.6
+    repotrack kubeadm-1.27.14
+    repotrack kubectl-1.27.14
+    repotrack kubelet-1.27.14
     repotrack kubernetes-cni-1.2.0
-    yumdownloader --resolve kubeadm-1.27.6
-    yumdownloader --resolve kubectl-1.27.6
-    yumdownloader --resolve kubelet-1.27.6
+    yumdownloader --resolve kubeadm-1.27.14
+    yumdownloader --resolve kubectl-1.27.14
+    yumdownloader --resolve kubelet-1.27.14
     yumdownloader --resolve kubernetes-cni-1.2.0
   )
   createrepo --update packages

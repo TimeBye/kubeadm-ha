@@ -16,7 +16,7 @@
 - name: "安装 kubeadm-{{ kube_upgrade_version }}"
   apt: 
     name:
-    - "kubeadm={{ kube_upgrade_version }}-00"
+    - "kubeadm={{ kube_upgrade_version }}-1.1"
     state: present
     allow_unauthenticated: true
 
@@ -26,7 +26,7 @@
 - name: "安装 kubelet-{{ kube_upgrade_version }} kubectl-{{ kube_upgrade_version }}"
   apt: 
     name:
-    - "kubectl={{ kube_upgrade_version }}-00"
-    - "kubelet={{ kube_upgrade_version }}-00"
+    - "kubectl={{ kube_upgrade_version }}-1.1"
+    - "kubelet={{ kube_upgrade_version }}-1.1"
     state: present
     allow_unauthenticated: true

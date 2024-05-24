@@ -32,7 +32,7 @@
 # # docker-ce源 (CentOS可使用：https://mirrors.aliyun.com/docker-ce/linux/centos/$releasever/$basearch/stable )
 # docker_yum_repo: https://mirrors.aliyun.com/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
 # # kubernetes源
-# kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-{{ ansible_architecture }}/
+# kubernetes_yum_repo:  https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:/v{{ kube_version.split('.')[0:2] | join('.') }}/rpm/
 
 # # Debian apt源仓库
 # # 基础软件源
@@ -40,7 +40,7 @@
 # # docker-ce源
 # docker_apt_repo: "deb [arch={{ host_architecture }}] https://mirrors.aliyun.com/docker-ce/linux/{{ host_distribution | lower }} {{ host_distribution_release }} stable"
 # # kubernetes源
-# kubernetes_apt_repo: deb https://mirrors.aliyun.com/kubernetes/apt kubernetes-xenial main
+# kubernetes_apt_repo: deb https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:/v{{ kube_version.split('.')[0:2] | join('.') }}/deb/ /
 
 # # 自定义hosts记录
 # # 举例：
@@ -194,7 +194,7 @@
 # # Etcd根证书过期时间（天）
 # etcd_ca_certs_expired: 36500
 # # Etcd使用的镜像
-# etcd_image: "{{ kube_image_repository }}/etcd:3.5.7-0"
+# etcd_image: "{{ kube_image_repository }}/etcd:3.5.12-0"
 # # Etcd 数据根目录
 # etcd_data_dir: "/var/lib/etcd"
 # # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
@@ -224,7 +224,7 @@
 # pod_infra_container_image: "{{ kube_image_repository }}/pause:3.9"
 
 # # kubernetes版本
-# kube_version: 1.27.6
+# kube_version: 1.27.14
 # kube_cni_version: 1.2.0
 
 # # 集群内部dns域名

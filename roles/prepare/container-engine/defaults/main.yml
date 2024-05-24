@@ -7,4 +7,4 @@ cri_socket: >-
   unix:///var/run/cri-dockerd.sock
   {%- endif -%}
 
-cri_dockerd_download_url: https://ghproxy.com/github.com/Mirantis/cri-dockerd/releases/download/v0.3.4/cri-dockerd-0.3.4.{{ host_architecture }}.tgz
+cri_dockerd_download_url: https://mirror.ghproxy.com/github.com/Mirantis/cri-dockerd/releases/download/v0.3.14/cri-dockerd-0.3.14.{{ host_architecture }}.tgz
