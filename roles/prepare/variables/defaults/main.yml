@@ -485,7 +485,7 @@ nginx_ingress_webhook_certgen_image: "{{ kube_image_repository }}/ingress-nginx_
 # traefik默认证书过期时间（天）
 traefik_certs_expired: 3650
 # traefik-ingress-controller 镜像地址
-traefik_ingress_image: "{{ kube_image_repository }}/traefik:v2.10.4"
+traefik_ingress_image: "{{ kube_image_repository }}/traefik:v3.0.0"
 
 #----------------------------------------- kubernetes-dashboard 相关参数 --------------------------------------#
 # 是否启用kubernetes-dashboard

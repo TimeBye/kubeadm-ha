@@ -4,7 +4,7 @@
 images="
 nginx:1.25-alpine
 haproxy:2.8-alpine
-traefik:v2.10.4
+traefik:v3.0.0
 osixia/keepalived:2.0.20
 setzero/chrony:3.5
 calico/typha:v3.26.1

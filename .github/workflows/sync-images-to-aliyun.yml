@@ -67,7 +67,7 @@ jobs:
             repositories:
               - library/nginx:1.25-alpine
               - library/haproxy:2.8-alpine
-              - library/traefik:v2.10.4
+              - library/traefik:v3.0.0
               - osixia/keepalived:2.0.20
         sync-policy:
             from: dockerhub

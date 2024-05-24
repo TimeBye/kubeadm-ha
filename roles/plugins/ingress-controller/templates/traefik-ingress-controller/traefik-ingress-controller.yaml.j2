@@ -18,7 +18,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.2.0
+    helm.sh/chart: traefik-28.1.0
     app.kubernetes.io/managed-by: Helm
   annotations:
 ---
@@ -30,7 +30,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.2.0
+    helm.sh/chart: traefik-28.1.0
     app.kubernetes.io/managed-by: Helm
 rules:
   - apiGroups:
@@ -48,6 +48,13 @@ rules:
     resources:
       - services
       - endpoints
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
       - secrets
     verbs:
       - get
@@ -62,17 +69,17 @@ rules:
       - update
   - apiGroups:
       - traefik.io
-      - traefik.containo.us
     resources:
       - ingressroutes
       - ingressroutetcps
       - ingressrouteudps
       - middlewares
       - middlewaretcps
+      - serverstransports
+      - serverstransporttcps
       - tlsoptions
       - tlsstores
       - traefikservices
-      - serverstransports
     verbs:
       - get
       - list
@@ -86,7 +93,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.2.0
+    helm.sh/chart: traefik-28.1.0
     app.kubernetes.io/managed-by: Helm
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -106,7 +113,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.2.0
+    helm.sh/chart: traefik-28.1.0
     app.kubernetes.io/managed-by: Helm
   annotations:
 spec:
@@ -133,7 +140,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.2.0
+    helm.sh/chart: traefik-28.1.0
     app.kubernetes.io/managed-by: Helm
   annotations:
 spec:
@@ -150,7 +157,7 @@ spec:
       labels:
         app.kubernetes.io/name: traefik
         app.kubernetes.io/instance: traefik-ingress-controller
-        helm.sh/chart: traefik-23.2.0
+        helm.sh/chart: traefik-28.1.0
         app.kubernetes.io/managed-by: Helm
     spec:
       serviceAccountName: traefik
@@ -200,6 +207,7 @@ spec:
           containerPort: 443
           protocol: "TCP"
         # securityContext:
+        #   allowPrivilegeEscalation: false
         #   capabilities:
         #     drop:
         #     - ALL
@@ -212,10 +220,10 @@ spec:
         args:
           - "--global.checknewversion"
           - "--global.sendanonymoususage"
-          - "--entrypoints.metrics.address=:19100/tcp"
-          - "--entrypoints.traefik.address=:18443/tcp"
-          - "--entrypoints.web.address=:80/tcp"
-          - "--entrypoints.websecure.address=:443/tcp"
+          - "--entryPoints.metrics.address=:19100/tcp"
+          - "--entryPoints.traefik.address=:18443/tcp"
+          - "--entryPoints.web.address=:80/tcp"
+          - "--entryPoints.websecure.address=:443/tcp"
           - "--api.insecure=true"
           - "--api.dashboard=true"
           - "--ping=true"
@@ -223,7 +231,8 @@ spec:
           - "--metrics.prometheus.entrypoint=metrics"
           - "--providers.kubernetescrd"
           - "--providers.kubernetesingress"
-          - "--entrypoints.websecure.http.tls=true"
+          - "--entryPoints.websecure.http.tls=true"
+          - "--log.level=INFO"
         env:
           - name: POD_NAME
             valueFrom:
@@ -253,7 +262,7 @@ metadata:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.2.0
+    helm.sh/chart: traefik-28.1.0
     app.kubernetes.io/managed-by: Helm
   name: traefik
 spec:
@@ -265,11 +274,10 @@ kind: IngressRoute
 metadata:
   name: traefik-dashboard
   namespace: ingress-controller
-  annotations:
   labels:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-ingress-controller
-    helm.sh/chart: traefik-23.2.0
+    helm.sh/chart: traefik-28.1.0
     app.kubernetes.io/managed-by: Helm
 spec:
   entryPoints:
