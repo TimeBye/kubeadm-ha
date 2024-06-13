@@ -218,8 +218,8 @@ docker_max_concurrent_downloads: 10
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.28.10
-kube_cni_version: 1.2.0
+kube_version: 1.29.5
+kube_cni_version: 1.3.0
 
 # CentOS
 kubernetes_yum_repo: https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:/v{{ kube_version.split('.')[0:2] | join('.') }}/rpm/
@@ -262,7 +262,7 @@ kubelet_root_dir: "/var/lib/kubelet"
 kubeadm_token: "abcdef.0123456789abcdef"
 
 # CoreDNS镜像地址
-coredns_image: "{{ kube_image_repository }}/coredns:v1.10.1"
+coredns_image: "{{ kube_image_repository }}/coredns:v1.11.1"
 
 # NodePort端口范围
 kube_service_node_port_range: 30000-32767
