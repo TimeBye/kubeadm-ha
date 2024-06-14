@@ -5,7 +5,7 @@
     enabled: yes
 
 - name: 获取 master 节点需要拉取的镜像列表
-  shell: kubeadm config images list --image-repository={{ kube_image_repository }} | grep -v coredns | grep -v pause
+  shell: kubeadm config images list --image-repository={{ kube_image_repository }} --kubernetes-version={{ kube_version }} | grep -v coredns | grep -v pause
   register: kube_image_list
 
 - name: 开始拉取 master 节点相关镜像
