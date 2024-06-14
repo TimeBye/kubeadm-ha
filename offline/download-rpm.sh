@@ -64,14 +64,14 @@ if [ ! -d 'packages/repodata' ]; then
     yumdownloader --resolve docker-ce-20.10.24
     yumdownloader --resolve docker-ce-cli-20.10.24
     yumdownloader --resolve containerd.io-1.6.20
-    repotrack kubeadm-1.29.5
-    repotrack kubectl-1.29.5
-    repotrack kubelet-1.29.5
-    repotrack kubernetes-cni-1.3.0
-    yumdownloader --resolve kubeadm-1.29.5
-    yumdownloader --resolve kubectl-1.29.5
-    yumdownloader --resolve kubelet-1.29.5
-    yumdownloader --resolve kubernetes-cni-1.3.0
+    repotrack kubeadm-1.30.2
+    repotrack kubectl-1.30.2
+    repotrack kubelet-1.30.2
+    repotrack kubernetes-cni-1.4.0
+    yumdownloader --resolve kubeadm-1.30.2
+    yumdownloader --resolve kubectl-1.30.2
+    yumdownloader --resolve kubelet-1.30.2
+    yumdownloader --resolve kubernetes-cni-1.4.0
   )
   createrepo --update packages
 fi

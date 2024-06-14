@@ -35,6 +35,6 @@ jobs:
     - name: Upload amd64 artifact to oss
       id: oss
       run: |
-        mc cp --json packages.tgz oss/kubeadm-ha/anolis8/kubernetes-1.29.5-anolis8-amd64.tgz 2>&1 | tee oss.log
+        mc cp --json packages.tgz oss/kubeadm-ha/anolis8/kubernetes-1.30.2-anolis8-amd64.tgz 2>&1 | tee oss.log
         target=$(cat oss.log | jq -r 'select(.target)|.target')
         echo "::warning file=kubernetes-packages::https://oss.choerodon.com.cn/${target#*/}"

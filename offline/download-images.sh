@@ -20,10 +20,10 @@ quay.io/jetstack/cert-manager-cainjector:v1.14.5
 quay.io/jetstack/cert-manager-webhook:v1.14.5
 quay.io/jetstack/cert-manager-controller:v1.14.5
 quay.io/jetstack/cert-manager-acmesolver:v1.14.5
-registry.k8s.io/kube-apiserver:v1.29.5
-registry.k8s.io/kube-controller-manager:v1.29.5
-registry.k8s.io/kube-scheduler:v1.29.5
-registry.k8s.io/kube-proxy:v1.29.5
+registry.k8s.io/kube-apiserver:v1.30.2
+registry.k8s.io/kube-controller-manager:v1.30.2
+registry.k8s.io/kube-scheduler:v1.30.2
+registry.k8s.io/kube-proxy:v1.30.2
 registry.k8s.io/pause:3.9
 registry.k8s.io/etcd:3.5.12-0
 registry.k8s.io/coredns/coredns:v1.11.1
