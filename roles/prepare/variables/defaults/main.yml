@@ -218,7 +218,7 @@ docker_max_concurrent_downloads: 10
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.29.5
+kube_version: 1.29.6
 kube_cni_version: 1.3.0
 
 # CentOS
