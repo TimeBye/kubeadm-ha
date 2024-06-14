@@ -39,8 +39,8 @@
                 RedHat         : 7                   <br>
                 Rocky Linux    : 8, 9                <br>
                 CentOS         : 7.9, 8              <br>
-                Debian         : 10, 11              <br>
-                Ubuntu         : 18.04               <br>
+                Debian         : 11, 12              <br>
+                Ubuntu         : 20.04               <br>
                 Kylin          : V10                 <br>
                 Anolis OS      : 8                   <br>
                 OpenEuler      : 21.09, 22.03, 23.03
@@ -48,7 +48,7 @@
           </tr>
           <tr>
               <td align="left">Etcd</td>
-              <td align="left">3.5.7-0</td>
+              <td align="left">3.5.12-0</td>
           </tr>
           <tr>
               <td align="left">Container runtimes</td>
@@ -56,7 +56,7 @@
           </tr>
           <tr>
               <td align="left">Kubernetes</td>
-              <td align="left">v1.20, v1.21, v1.22, v1.23, v1.24, v1.25, v1.26, <strong>v1.27</strong></td>
+              <td align="left">v1.20, v1.21, v1.22, v1.23, v1.24, v1.25, v1.26, v1.27, v1.28, v1.29, <strong>v1.30</strong></td>
           </tr>
           <tr>
               <td align="left">Kube-apiserver lb</td>
