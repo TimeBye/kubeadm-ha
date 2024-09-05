@@ -92,7 +92,7 @@ data:
   net-conf.json: |
     {
       "Network": "{{ kube_pod_subnet }}",
-      "EnableNFTables": {{ flannel_enable_nftables }},
+      "EnableNFTables": {{ flannel_enable_nftables | lower }},
       "Backend": {
         "Type": "{{ flannel_backend }}"
       }
