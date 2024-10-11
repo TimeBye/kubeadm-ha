@@ -41,6 +41,6 @@ jobs:
     - name: Upload arm64 artifact to oss
       id: oss
       run: |
-        mc cp --json packages.tgz oss/kubeadm-ha/kylin10/kubernetes-1.27.14-kylin10-arm64.tgz 2>&1 | tee oss.log
+        mc cp --json packages.tgz oss/kubeadm-ha/kylin10/kubernetes-1.27.16-kylin10-arm64.tgz 2>&1 | tee oss.log
         target=$(cat oss.log | jq -r 'select(.target)|.target')
         echo "::warning file=kubernetes-packages::https://oss.choerodon.com.cn/${target#*/}"

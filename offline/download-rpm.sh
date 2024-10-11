@@ -2,7 +2,7 @@
 set -eux;
 
 case "${1:-centos7}" in
-  centos8)
+  centos7|centos8)
     sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
     ;;
@@ -64,13 +64,13 @@ if [ ! -d 'packages/repodata' ]; then
     yumdownloader --resolve docker-ce-20.10.24
     yumdownloader --resolve docker-ce-cli-20.10.24
     yumdownloader --resolve containerd.io-1.6.20
-    repotrack kubeadm-1.27.14
-    repotrack kubectl-1.27.14
-    repotrack kubelet-1.27.14
+    repotrack kubeadm-1.27.16
+    repotrack kubectl-1.27.16
+    repotrack kubelet-1.27.16
     repotrack kubernetes-cni-1.2.0
-    yumdownloader --resolve kubeadm-1.27.14
-    yumdownloader --resolve kubectl-1.27.14
-    yumdownloader --resolve kubelet-1.27.14
+    yumdownloader --resolve kubeadm-1.27.16
+    yumdownloader --resolve kubectl-1.27.16
+    yumdownloader --resolve kubelet-1.27.16
     yumdownloader --resolve kubernetes-cni-1.2.0
   )
   createrepo --update packages
