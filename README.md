@@ -48,7 +48,7 @@
           </tr>
           <tr>
               <td align="left">Etcd</td>
-              <td align="left">3.5.12-0</td>
+              <td align="left">3.5.15-0</td>
           </tr>
           <tr>
               <td align="left">Container runtimes</td>

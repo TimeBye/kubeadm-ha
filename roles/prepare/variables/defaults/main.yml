@@ -218,7 +218,7 @@ docker_max_concurrent_downloads: 10
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.28.11
+kube_version: 1.28.14
 kube_cni_version: 1.2.0
 
 # CentOS
@@ -386,7 +386,7 @@ etcd_certs_expired: 3650
 # Etcd根证书过期时间（天）
 etcd_ca_certs_expired: 36500
 # Etcd使用的镜像
-etcd_image: "{{ kube_image_repository }}/etcd:3.5.12-0"
+etcd_image: "{{ kube_image_repository }}/etcd:3.5.15-0"
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
 # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
