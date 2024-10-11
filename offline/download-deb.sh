@@ -19,8 +19,8 @@ set -eux;
     "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
     tee /etc/apt/sources.list.d/docker.list > /dev/null
   
-  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.27/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-  echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.27/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
+  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | tee /etc/apt/sources.list.d/kubernetes.list
   
   apt-get update
   
@@ -54,9 +54,9 @@ set -eux;
   # 下载k8s
   # 查询版本号apt-cache madison kubeadm | awk '{ print $3 }'
   apt-get -d install -y \
-    kubeadm=1.30.2-1.1 \
-    kubectl=1.30.2-1.1 \
-    kubelet=1.30.2-1.1 \
+    kubeadm=1.30.5-1.1 \
+    kubectl=1.30.5-1.1 \
+    kubelet=1.30.5-1.1 \
     kubernetes-cni=1.4.0-1.1
   
   mv /var/cache/apt/archives/*.deb .

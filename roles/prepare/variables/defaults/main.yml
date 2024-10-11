@@ -218,7 +218,7 @@ docker_max_concurrent_downloads: 10
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.30.2
+kube_version: 1.30.5
 kube_cni_version: 1.4.0
 
 # CentOS
@@ -262,7 +262,7 @@ kubelet_root_dir: "/var/lib/kubelet"
 kubeadm_token: "abcdef.0123456789abcdef"
 
 # CoreDNS镜像地址
-coredns_image: "{{ kube_image_repository }}/coredns:v1.11.1"
+coredns_image: "{{ kube_image_repository }}/coredns:v1.11.3"
 
 # NodePort端口范围
 kube_service_node_port_range: 30000-32767
@@ -386,7 +386,7 @@ etcd_certs_expired: 3650
 # Etcd根证书过期时间（天）
 etcd_ca_certs_expired: 36500
 # Etcd使用的镜像
-etcd_image: "{{ kube_image_repository }}/etcd:3.5.12-0"
+etcd_image: "{{ kube_image_repository }}/etcd:3.5.15-0"
 # Etcd 数据根目录
 etcd_data_dir: "/var/lib/etcd"
 # Etcd 每日备份时间，默认3，即凌晨3点，取值范围0-23
