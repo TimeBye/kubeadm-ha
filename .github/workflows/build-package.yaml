@@ -77,3 +77,15 @@ jobs:
     secrets:
       OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
       OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
+
+  amd64-openeuler2403:
+    uses: ./.github/workflows/amd64-openeuler24.03.yaml
+    secrets:
+      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
+      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}
+
+  arm64-openeuler2403:
+    uses: ./.github/workflows/arm64-openeuler24.03.yaml
+    secrets:
+      OSS_TOKEN: ${{ secrets.OSS_TOKEN }}
+      OSS_USERNAME: ${{ secrets.OSS_USERNAME }}

@@ -1,6 +1,19 @@
 #!/bin/bash
 set -eux;
 
+# 添加docker源
+curl -o /etc/yum.repos.d/docker-ce.repo https://download.docker.com/linux/centos/docker-ce.repo
+
+# 添加kubernetes源
+cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0
+EOF
+
 case "${1:-centos7}" in
   centos7|centos8)
     sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
@@ -16,23 +29,14 @@ case "${1:-centos7}" in
     sed -i 's|mirrors.aliyun.com/centos-vault|vault.centos.org|g' /etc/yum.repos.d/CentOS-*
     sed -i 's|mirrors.aliyun.com|vault.centos.org|g' /etc/yum.repos.d/CentOS-*
     ;;
+  openeuler)
+    sed -i 's|$releasever|8|g' /etc/yum.repos.d/docker-ce.repo
+    yum install -y findutils createrepo
+    ;;
   *)
     yum install -y yum-utils epel-release createrepo
     ;;
 esac
-
-# 添加docker源
-curl -o /etc/yum.repos.d/docker-ce.repo https://download.docker.com/linux/centos/docker-ce.repo
-
-# 添加kubernetes源
-cat <<EOF | tee /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://pkgs.k8s.io/core:/stable:/v1.30/rpm/
-enabled=1
-gpgcheck=0
-repo_gpgcheck=0
-EOF
 
 packages=(
     jq

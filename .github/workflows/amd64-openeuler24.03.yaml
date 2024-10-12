@@ -1,0 +1,40 @@
+name: OpenEuler 24.03 packages for amd64 
+on:
+  workflow_call:
+    secrets:
+      OSS_TOKEN:
+      OSS_USERNAME:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Install and configure minio client
+      run: |
+        sudo curl -sSLo /usr/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc
+        sudo chmod +x /usr/bin/mc
+        mc alias set oss https://oss.choerodon.com.cn ${{ secrets.OSS_USERNAME }} ${{ secrets.OSS_TOKEN }}
+
+    - name: Download packages for amd64
+      run: |
+        docker system prune -a -f --volumes 
+        docker run --rm \
+            --platform linux/amd64 \
+            -v $PWD:/kubeadm-ha \
+            -w /kubeadm-ha \
+            openeuler/openeuler:24.03 \
+            /bin/bash offline/download-rpm.sh openeuler
+        /bin/bash offline/download-others.sh
+        tar -czvf packages.tgz packages
+
+    - name: Upload amd64 artifact to oss
+      id: oss
+      run: |
+        mc cp --json packages.tgz oss/kubeadm-ha/openeuler24.03/kubernetes-1.30.5-openeuler24.03-amd64.tgz 2>&1 | tee oss.log
+        target=$(cat oss.log | jq -r 'select(.target)|.target')
+        echo "::warning file=kubernetes-packages::https://oss.choerodon.com.cn/${target#*/}"
