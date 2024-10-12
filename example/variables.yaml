@@ -32,7 +32,7 @@
 # # docker-ce源 (CentOS可使用：https://mirrors.aliyun.com/docker-ce/linux/centos/$releasever/$basearch/stable )
 # docker_yum_repo: https://mirrors.aliyun.com/docker-ce/linux/centos/{{ ansible_distribution_major_version }}/$basearch/stable
 # # kubernetes源
-# kubernetes_yum_repo:  https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:/v{{ kube_version.split('.')[0:2] | join('.') }}/rpm/
+# kubernetes_yum_repo:  https://mirrors.aliyun.com/kubernetes-new/core/stable/v{{ kube_version.split('.')[0:2] | join('.') }}/rpm/
 
 # # Debian apt源仓库
 # # 基础软件源
@@ -40,7 +40,7 @@
 # # docker-ce源
 # docker_apt_repo: "deb [arch={{ host_architecture }}] https://mirrors.aliyun.com/docker-ce/linux/{{ host_distribution | lower }} {{ host_distribution_release }} stable"
 # # kubernetes源
-# kubernetes_apt_repo: deb https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:/v{{ kube_version.split('.')[0:2] | join('.') }}/deb/ /
+# kubernetes_apt_repo: deb https://mirrors.aliyun.com/kubernetes-new/core/stable/v{{ kube_version.split('.')[0:2] | join('.') }}/deb/ /
 
 # # 自定义hosts记录
 # # 举例：

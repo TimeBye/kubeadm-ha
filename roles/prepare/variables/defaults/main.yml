@@ -222,12 +222,12 @@ kube_version: 1.27.16
 kube_cni_version: 1.2.0
 
 # CentOS
-kubernetes_yum_repo: https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:/v{{ kube_version.split('.')[0:2] | join('.') }}/rpm/
+kubernetes_yum_repo: https://mirrors.aliyun.com/kubernetes-new/core/stable/v{{ kube_version.split('.')[0:2] | join('.') }}/rpm/
 
 # Debian
 # sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6A030B21BA07F4FB
-# kubernetes_apt_repo: deb https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:/v1.28/deb/ /
-kubernetes_apt_repo: deb https://mirrors.tuna.tsinghua.edu.cn/kubernetes/core:/stable:/v{{ kube_version.split('.')[0:2] | join('.') }}/deb/ /
+# kubernetes_apt_repo: deb https://mirrors.aliyun.com/kubernetes-new/core/stable/v1.28/deb/ /
+kubernetes_apt_repo: deb https://mirrors.aliyun.com/kubernetes-new/core/stable/v{{ kube_version.split('.')[0:2] | join('.') }}/deb/ /
 
 # kubernetes各组件镜像仓库前缀
 kube_image_repository: registry.aliyuncs.com/kubeadm-ha
