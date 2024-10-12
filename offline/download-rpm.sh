@@ -17,7 +17,7 @@ case "${1:-centos7}" in
     sed -i 's|mirrors.aliyun.com|vault.centos.org|g' /etc/yum.repos.d/CentOS-*
     ;;
   *)
-    yum install -y yum-utils epel-release createrepo 
+    yum install -y yum-utils epel-release createrepo
     ;;
 esac
 
@@ -34,44 +34,45 @@ gpgcheck=0
 repo_gpgcheck=0
 EOF
 
+packages=(
+    jq
+    git
+    curl
+    wget
+    htop
+    audit
+    iotop
+    socat
+    ipset
+    sysstat
+    ipvsadm
+    nmap-ncat
+    nfs-utils
+    iscsi-initiator-utils
+    net-tools
+    libseccomp
+    conntrack-tools
+    bash-completion
+    iproute
+    docker-ce-20.10.24
+    docker-ce-cli-20.10.24
+    containerd.io-1.6.20
+    kubeadm-1.28.14
+    kubectl-1.28.14
+    kubelet-1.28.14
+    kubernetes-cni-1.2.0
+)
+
 if [ ! -d 'packages/repodata' ]; then
   (
+    echo 'keepcache=1' >> /etc/yum.conf
     mkdir packages
     chmod 0777 packages
     cd packages
-    repotrack jq
-    repotrack git
-    repotrack curl
-    repotrack wget
-    repotrack htop
-    repotrack audit
-    repotrack iotop
-    repotrack socat
-    repotrack ipset
-    repotrack sysstat
-    repotrack ipvsadm
-    repotrack nmap-ncat
-    repotrack nfs-utils
-    repotrack iscsi-initiator-utils
-    repotrack net-tools
-    repotrack libseccomp
-    repotrack conntrack-tools
-    repotrack bash-completion
-    repotrack iproute-tc || true
-    repotrack docker-ce-20.10.24
-    repotrack docker-ce-cli-20.10.24
-    repotrack containerd.io-1.6.20
-    yumdownloader --resolve docker-ce-20.10.24
-    yumdownloader --resolve docker-ce-cli-20.10.24
-    yumdownloader --resolve containerd.io-1.6.20
-    repotrack kubeadm-1.28.14
-    repotrack kubectl-1.28.14
-    repotrack kubelet-1.28.14
-    repotrack kubernetes-cni-1.2.0
-    yumdownloader --resolve kubeadm-1.28.14
-    yumdownloader --resolve kubectl-1.28.14
-    yumdownloader --resolve kubelet-1.28.14
-    yumdownloader --resolve kubernetes-cni-1.2.0
+    repotrack ${packages[*]} || true
+    yumdownloader --resolve ${packages[*]} || true
+    yum install -y --downloadonly ${packages[*]}
+    cp -rf `find /var/cache/{yum,dnf} -name '*.rpm'` .
   )
   createrepo --update packages
 fi
