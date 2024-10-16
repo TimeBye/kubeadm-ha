@@ -7,11 +7,11 @@ haproxy:2.8-alpine
 traefik:v3.0.0
 osixia/keepalived:2.0.20
 setzero/chrony:3.5
-calico/typha:v3.28.0
-calico/cni:v3.28.0
-calico/node:v3.28.0
-calico/kube-controllers:v3.28.0
-calico/ctl:v3.28.0
+calico/typha:v3.28.2
+calico/cni:v3.28.2
+calico/node:v3.28.2
+calico/kube-controllers:v3.28.2
+calico/ctl:v3.28.2
 kubernetesui/dashboard:v2.7.0
 kubernetesui/metrics-scraper:v1.0.8
 flannel/flannel:v0.25.2
