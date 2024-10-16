@@ -361,14 +361,14 @@
 # # calico mtu
 # calico_veth_mtu: 0
 # # calico 相关镜像
-# calico_typha_image: "{{ kube_image_repository }}/calico_typha:v3.28.0"
-# calico_cni_image: "{{ kube_image_repository }}/calico_cni:v3.28.0"
-# calico_node_image: "{{ kube_image_repository }}/calico_node:v3.28.0"
-# calico_kube_controllers_image: "{{ kube_image_repository }}/calico_kube-controllers:v3.28.0"
+# calico_typha_image: "{{ kube_image_repository }}/calico_typha:v3.28.2"
+# calico_cni_image: "{{ kube_image_repository }}/calico_cni:v3.28.2"
+# calico_node_image: "{{ kube_image_repository }}/calico_node:v3.28.2"
+# calico_kube_controllers_image: "{{ kube_image_repository }}/calico_kube-controllers:v3.28.2"
 # # 设置 Felix 日志级别(debug, info, warning, error)
 # calico_felix_log_level: "warning"
 # # calicoctl image 地址
-# calicoctl_image: "{{ kube_image_repository }}/calico_ctl:v3.28.0"
+# calicoctl_image: "{{ kube_image_repository }}/calico_ctl:v3.28.2"
 
 # # 设置 flannel 后端
 # # flannel_backend: "host-gw"
