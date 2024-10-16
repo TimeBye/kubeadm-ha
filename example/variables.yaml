@@ -375,8 +375,8 @@
 # flannel_backend: "vxlan"
 # flannel_enable_nftables: false
 # # flannel 镜像地址
-# flannel_image: "{{ kube_image_repository }}/flannel_flannel:v0.25.2"
-# flannel_cni_plugin_image: "{{ kube_image_repository }}/flannel_flannel-cni-plugin:v1.4.1-flannel1"
+# flannel_image: "{{ kube_image_repository }}/flannel_flannel:v0.25.7"
+# flannel_cni_plugin_image: "{{ kube_image_repository }}/flannel_flannel-cni-plugin:v1.5.1-flannel2"
 
 # # ------------------------ #
 # # ingress-controller 相关参数配置

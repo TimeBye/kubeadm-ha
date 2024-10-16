@@ -134,7 +134,7 @@ spec:
       serviceAccountName: flannel
       initContainers:
       - name: install-cni-plugin
-        # image: docker.io/flannel/flannel-cni-plugin:v1.4.1-flannel1
+        # image: docker.io/flannel/flannel-cni-plugin:v1.5.1-flannel2
         image: "{{ flannel_cni_plugin_image }}"
         command:
         - cp
@@ -146,7 +146,7 @@ spec:
         - name: cni-plugin
           mountPath: /opt/cni/bin
       - name: install-cni
-        # image: docker.io/flannel/flannel:v0.25.2
+        # image: docker.io/flannel/flannel:v0.25.7
         image: "{{ flannel_image }}"
         command:
         - cp
@@ -161,7 +161,7 @@ spec:
           mountPath: /etc/kube-flannel/
       containers:
       - name: kube-flannel
-        # image: docker.io/flannel/flannel:v0.25.2
+        # image: docker.io/flannel/flannel:v0.25.7
         image: "{{ flannel_image }}"
         command:
         - /opt/bin/flanneld
