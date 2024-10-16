@@ -29,7 +29,7 @@ registry.k8s.io/etcd:3.5.15-0
 registry.k8s.io/coredns/coredns:v1.11.3
 registry.k8s.io/ingress-nginx/controller:v1.10.1
 registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.4.1
-registry.k8s.io/metrics-server/metrics-server:v0.7.1
+registry.k8s.io/metrics-server/metrics-server:v0.7.2
 "
 
 dest_registry=${dest_registry:-'127.0.0.1:5000/kubeadm-ha'}
