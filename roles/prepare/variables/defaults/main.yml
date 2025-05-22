@@ -150,7 +150,7 @@ image_pull_command: >-
 # 安装时发现 docker 或者 containerd 配置被修改则强制其重启应用新配置
 restar_container_manager_force: true
 # Containerd 版本
-containerd_version: 1.7.23-1
+containerd_version: 1.7.27-1
 # 数据存储目录
 containerd_storage_dir: "/var/lib/containerd"
 # 状态目录
@@ -218,7 +218,7 @@ docker_max_concurrent_downloads: 10
 # kubernetes版本
 # apt-cache madison kubeadm
 # yum list kubeadm --showduplicates --enablerepo=kubernetes | sort -r
-kube_version: 1.30.7
+kube_version: 1.30.13
 kube_cni_version: 1.4.0
 
 # CentOS

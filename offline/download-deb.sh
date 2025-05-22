@@ -49,14 +49,14 @@ set -eux;
   apt-get -d install -y \
     docker-ce=$VERSION_STRING \
     docker-ce-cli=$VERSION_STRING \
-    containerd.io=1.7.23-1
+    containerd.io=1.7.27-1
   
   # 下载k8s
   # 查询版本号apt-cache madison kubeadm | awk '{ print $3 }'
   apt-get -d install -y \
-    kubeadm=1.30.7-1.1 \
-    kubectl=1.30.7-1.1 \
-    kubelet=1.30.7-1.1 \
+    kubeadm=1.30.13-1.1 \
+    kubectl=1.30.13-1.1 \
+    kubelet=1.30.13-1.1 \
     kubernetes-cni=1.4.0-1.1
   
   mv /var/cache/apt/archives/*.deb .
