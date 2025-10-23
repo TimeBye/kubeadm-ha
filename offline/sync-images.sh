@@ -1,5 +1,5 @@
 #!/bin/bash
-REGISTRY_PATH="/var/lib/registry"
+REGISTRY_PATH="${REGISTRY_PATH:-/var/lib/registry}"
 REGISTRY_DOMAIN="${1}"
 REGISTRY_USER="${2}"
 REGISTRY_PWD="${3}"
