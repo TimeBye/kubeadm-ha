@@ -372,7 +372,7 @@
 
 # #--------------------------------------------- Keepalived 相关参数 ---------------------------------------#
 # # 使用 vip 负载时使用的 keepalived 镜像
-# lb_keepalived_image: "{{ kube_image_repository }}/setzero_osixia_keepalived:2.0.20"
+# lb_keepalived_image: "{{ kube_image_repository }}/linkvt_osixia_keepalived:stable"
 # # keepalived auth_type 的 password
 # lb_keepalived_password: "d0cker"
 # # 区分多个 instance 的 VRRP 组播，同网段不能重复，取值在0-255之间
