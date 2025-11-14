@@ -69,13 +69,15 @@ jobs:
               - library/nginx:1.25-alpine
               - library/haproxy:2.8-alpine
               - library/traefik:v3.0.0
-              - setzero/osixia_keepalived:2.0.20
+              - linkvt/osixia_keepalived:stable
         sync-policy:
             from: dockerhub
             to: aliyuncs
             dry-run: false
             force: true
             replace:
+              - old: linkvt/
+                new: kubeadm-ha/linkvt_
               - old: osixia/
                 new: kubeadm-ha/osixia_
               - old: library
