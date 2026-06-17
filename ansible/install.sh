@@ -29,19 +29,34 @@ do_install() {
   case "$lsb_dist" in
     ubuntu|debian|raspbian)
         sudo apt-get update
+        sudo apt-get install -y ansible python3-netaddr sshpass || true
+        if [ -x /usr/bin/ansible ] || [ -x /usr/local/bin/ansible ]; then
+          exit 0
+        fi
+        # Fallback to pip for older distributions without apt packages
         sudo apt-get install -y python3-pip sshpass build-essential libssl-dev libffi-dev python3-dev
         sudo pip3 install -U pip -i https://mirrors.aliyun.com/pypi/simple/
         sudo pip3 install --no-cache-dir ansible==2.10.7 netaddr -i https://mirrors.aliyun.com/pypi/simple/
         exit 0
       ;;
     centos|fedora|rhel|ol|anolis|kylin|almalinux|uos|rocky)
+        sudo yum install -y ansible python3-netaddr sshpass || true
+        if [ -x /usr/bin/ansible ] || [ -x /usr/local/bin/ansible ]; then
+          exit 0
+        fi
+        # Fallback to pip for distributions without ansible in yum repos
         sudo yum install -y python3-pip sshpass libffi-devel python3-devel openssl-devel
         sudo pip3 install -U pip -i https://mirrors.aliyun.com/pypi/simple/
         sudo pip3 install --no-cache-dir ansible==2.10.7 netaddr -i https://mirrors.aliyun.com/pypi/simple/
         exit 0
       ;;
     openeuler)
-        sudo yum install -y sshpass
+        sudo yum install -y ansible python3-netaddr sshpass || true
+        if [ -x /usr/bin/ansible ] || [ -x /usr/local/bin/ansible ]; then
+          exit 0
+        fi
+        # Fallback to pip for openeuler without ansible in yum repos
+        sudo yum install -y python3-pip sshpass
         sudo pip3 install --no-cache-dir ansible==2.10.7 netaddr -i https://mirrors.aliyun.com/pypi/simple/
         exit 0
       ;;
