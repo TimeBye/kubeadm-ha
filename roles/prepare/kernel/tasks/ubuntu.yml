@@ -2,13 +2,13 @@
   apt:
     deb: "{{ item }}"
   with_items: "{{ linux_base }}"
-  when: ansible_distribution in [ 'Debian' ]
+  when: ansible_facts['distribution'] in [ 'Debian' ]
 
 - name: 升级 libssl
   apt:
     deb: "{{ item }}"
   with_items: "{{ libssl }}"
-  when: ansible_distribution in [ 'Ubuntu' ]
+  when: ansible_facts['distribution'] in [ 'Ubuntu' ]
 
 - name: 安装 kernel-ml
   apt:

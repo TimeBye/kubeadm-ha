@@ -1,8 +1,8 @@
 - include_tasks: centos.yml
-  when: ansible_distribution is regex ("AlmaLinux|Rocky|openEuler|CentOS|OracleLinux|RedHat|Anolis|Kylin.*|UOS.*")
+  when: ansible_facts['distribution'] is regex ("AlmaLinux|Rocky|openEuler|CentOS|OracleLinux|RedHat|Anolis|Kylin.*|UOS.*")
 
 - include_tasks: debian.yml
-  when: ansible_distribution in [ 'Ubuntu','Debian' ]
+  when: ansible_facts['distribution'] in [ 'Ubuntu','Debian' ]
 
 - name: 重新加载 daemon
   systemd:

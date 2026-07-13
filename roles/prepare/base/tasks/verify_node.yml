@@ -1,77 +1,77 @@
 # 软件资源校验
 - name: 校验节点操作系统
   assert:
-    that: ansible_distribution is regex ("AlmaLinux|Rocky|openEuler|CentOS|OracleLinux|RedHat|Ubuntu|Debian|Anolis|Kylin.*|UOS.*")
-    msg: "节点：{{ inventory_hostname }} {{ ansible_distribution }}操作系统不支持本脚本安装Kubernetes集群。"
+    that: ansible_facts['distribution'] is regex ("AlmaLinux|Rocky|openEuler|CentOS|OracleLinux|RedHat|Ubuntu|Debian|Anolis|Kylin.*|UOS.*")
+    msg: "节点：{{ inventory_hostname }} {{ ansible_facts['distribution'] }}操作系统不支持本脚本安装Kubernetes集群。"
 
 - name: 校验节点 systemd 类型操作系统
   assert:
-    that: ansible_service_mgr == "systemd"
-    msg: "节点：{{ inventory_hostname }} 期望为systemd类型操作系统，实际获取：{{ ansible_service_mgr }}，安装需求校验不通过。"
+    that: ansible_facts['service_mgr'] == "systemd"
+    msg: "节点：{{ inventory_hostname }} 期望为systemd类型操作系统，实际获取：{{ ansible_facts['service_mgr'] }}，安装需求校验不通过。"
 
 - name: 校验节点系统内核
   assert:
-    that: ansible_kernel is version('3.10', '>=')
-    msg: "节点：{{ inventory_hostname }} 系统内核版本小于3.10，实际获取：{{ ansible_kernel }}，安装需求校验不通过。"
+    that: ansible_facts['kernel'] is version('4.19', '>=')
+    msg: "节点：{{ inventory_hostname }} 系统内核版本小于4.19，实际获取：{{ ansible_facts['kernel'] }}，安装需求校验不通过。"
 
 - name: 校验节点系统架构
   assert:
-    that: ansible_machine in [ 'x86_64','aarch64' ]
-    msg: "节点：{{ inventory_hostname }} {{ ansible_machine }} 系统指令集不支持本脚本安装Kubernetes集群"
+    that: ansible_facts['machine'] in [ 'x86_64','aarch64' ]
+    msg: "节点：{{ inventory_hostname }} {{ ansible_facts['machine'] }} 系统指令集不支持本脚本安装Kubernetes集群"
 
 - name: 校验节点系统版本
   assert:
-    that: ansible_distribution_version is version('7.9', '>=')
-    msg: "节点：{{ inventory_hostname }} 系统版本期望不小于CentOS 7.9，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
+    that: ansible_facts['distribution_version'] is version('7.9', '>=')
+    msg: "节点：{{ inventory_hostname }} 系统版本期望不小于CentOS 7.9，实际获取：{{ ansible_facts['distribution_version'] }}，安装需求校验不通过。"
   when:
-    - ansible_distribution == "CentOS"
+    - ansible_facts['distribution'] == "CentOS"
 
 - name: 校验节点系统版本
   assert:
-    that: ansible_distribution_version is version('7', '>=')
-    msg: "节点：{{ inventory_hostname }} 系统版本期望不小于RedHat 7，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
+    that: ansible_facts['distribution_version'] is version('7', '>=')
+    msg: "节点：{{ inventory_hostname }} 系统版本期望不小于RedHat 7，实际获取：{{ ansible_facts['distribution_version'] }}，安装需求校验不通过。"
   when:
-    - ansible_distribution == "RedHat"
+    - ansible_facts['distribution'] == "RedHat"
 
 - name: 校验节点系统版本
   assert:
-    that: ansible_distribution_version is version('20.04', '>=')
-    msg: "Master节点：{{ inventory_hostname }} 系统版本期望不小于Ubuntu 20.04，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
+    that: ansible_facts['distribution_version'] is version('20.04', '>=')
+    msg: "Master节点：{{ inventory_hostname }} 系统版本期望不小于Ubuntu 20.04，实际获取：{{ ansible_facts['distribution_version'] }}，安装需求校验不通过。"
   when:
-    - ansible_distribution == "Ubuntu"
+    - ansible_facts['distribution'] == "Ubuntu"
 
 - name: 校验节点系统版本
   assert:
-    that: ansible_distribution_version is version('11', '>=')
-    msg: "Master节点：{{ inventory_hostname }} 系统版本期望不小于Debian 11，实际获取：{{ ansible_distribution_version }}，安装需求校验不通过。"
+    that: ansible_facts['distribution_version'] is version('11', '>=')
+    msg: "Master节点：{{ inventory_hostname }} 系统版本期望不小于Debian 11，实际获取：{{ ansible_facts['distribution_version'] }}，安装需求校验不通过。"
   when:
-    - ansible_distribution == "Debian"
+    - ansible_facts['distribution'] == "Debian"
 
 # 物理资源校验
 - name: 校验 master 节点内存
   assert:
-    that: ansible_memtotal_mb >= 2*1024*0.85
-    msg: "Master节点：{{ inventory_hostname }} 内存期望不小于2G，实际获取：{{ ansible_memtotal_mb }}MB，安装需求校验不通过。"
+    that: ansible_facts['memtotal_mb'] >= 2*1024*0.85
+    msg: "Master节点：{{ inventory_hostname }} 内存期望不小于2G，实际获取：{{ ansible_facts['memtotal_mb'] }}MB，安装需求校验不通过。"
   when:
     - inventory_hostname in (groups['kube-master'] + groups['new-master'])
 
 - name: 校验 worker 节点内存
   assert:
-    that: ansible_memtotal_mb >= 4*1024*0.85
-    msg: "Worker节点：{{ inventory_hostname }} 内存期望不小于4G，实际获取：{{ ansible_memtotal_mb }}MB，安装需求校验不通过。"
+    that: ansible_facts['memtotal_mb'] >= 4*1024*0.85
+    msg: "Worker节点：{{ inventory_hostname }} 内存期望不小于4G，实际获取：{{ ansible_facts['memtotal_mb'] }}MB，安装需求校验不通过。"
   when:
     - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])
 
 - name: 校验 master 节点CPU核数
   assert:
-    that: ansible_processor_vcpus >= 2
-    msg: "Master节点：{{ inventory_hostname }} CPU核数期望不小于2C，实际获取：{{ ansible_memtotal_mb }}C，安装需求校验不通过。"
+    that: ansible_facts['processor_vcpus'] >= 2
+    msg: "Master节点：{{ inventory_hostname }} CPU核数期望不小于2C，实际获取：{{ ansible_facts['memtotal_mb'] }}C，安装需求校验不通过。"
   when:
     - inventory_hostname in (groups['kube-master'] + groups['new-master'])
 
 - name: 校验 worker 节点CPU核数
   assert:
-    that: ansible_processor_vcpus >= 2
-    msg: "Worker节点：{{ inventory_hostname }} CPU核数期望不小于2C,实际获取：{{ ansible_memtotal_mb }}C，安装需求校验不通过。"
+    that: ansible_facts['processor_vcpus'] >= 2
+    msg: "Worker节点：{{ inventory_hostname }} CPU核数期望不小于2C,实际获取：{{ ansible_facts['memtotal_mb'] }}C，安装需求校验不通过。"
   when:
     - inventory_hostname in (groups['kube-worker'] + groups['new-worker'])

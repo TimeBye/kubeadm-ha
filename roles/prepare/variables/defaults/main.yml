@@ -16,30 +16,30 @@ _host_architecture_groups:
   aarch64: arm64
   armv7l: arm
 host_architecture: >-
-  {%- if ansible_architecture in _host_architecture_groups -%}
-  {{ _host_architecture_groups[ansible_architecture] }}
+  {%- if ansible_facts['architecture'] in _host_architecture_groups -%}
+  {{ _host_architecture_groups[ansible_facts['architecture']] }}
   {%- else -%}
-  {{ ansible_architecture }}
+  {{ ansible_facts['architecture'] }}
   {%- endif -%}
 
 # 当前节点系统类型
 _host_distribution_groups: []
 
 host_distribution: >-
-  {%- if ansible_distribution in _host_distribution_groups -%}
-  {{ _host_distribution_groups[ansible_distribution] }}
+  {%- if ansible_facts['distribution'] in _host_distribution_groups -%}
+  {{ _host_distribution_groups[ansible_facts['distribution']] }}
   {%- else -%}
-  {{ ansible_distribution }}
+  {{ ansible_facts['distribution'] }}
   {%- endif -%}
 
 # 当前节点系统版本
 host_distribution_release: >-
-  {%- if (ansible_distribution_release == 'n/a')
-  or (ansible_distribution_release is not defined)
-  or (ansible_distribution_release == '') -%}
+  {%- if (ansible_facts['distribution_release'] == 'n/a')
+  or (ansible_facts['distribution_release'] is not defined)
+  or (ansible_facts['distribution_release'] == '') -%}
   bookworm
   {%- else -%}
-  {{ ansible_distribution_release }}
+  {{ ansible_facts['distribution_release'] }}
   {%- endif -%}
 
 # 当前节点 ip
@@ -171,7 +171,7 @@ pod_infra_container_image: "{{ kube_image_repository }}/pause:3.10"
 docker_version: 25.0.5
 cri_dockerd_version: 0.3.18
 
-docker_download_url: "https://mirrors.aliyun.com/docker-ce/linux/static/stable/{{ ansible_architecture }}/docker-{{ docker_version }}.tgz"
+docker_download_url: "https://mirrors.aliyun.com/docker-ce/linux/static/stable/{{ ansible_facts['architecture'] }}/docker-{{ docker_version }}.tgz"
 cri_dockerd_download_url: "https://files.saas.hand-china.com/kubeadm-ha/static/cri-dockerd/v{{ cri_dockerd_version }}/cri-dockerd-{{ cri_dockerd_version }}.{{ host_architecture }}.tgz"
 
 # Dockerhub 国内镜像加速地址
