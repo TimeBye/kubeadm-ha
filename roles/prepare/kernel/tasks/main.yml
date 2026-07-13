@@ -1,13 +1,13 @@
 - name: 校验节点系统架构
   assert:
-    that: ansible_machine in [ 'x86_64' ]
-    msg: "节点：{{ inventory_hostname }} {{ ansible_machine }} 系统指令集不支持使用本脚本升级内核"
+    that: ansible_facts['machine'] in [ 'x86_64' ]
+    msg: "节点：{{ inventory_hostname }} {{ ansible_facts['machine'] }} 系统指令集不支持使用本脚本升级内核"
 
 - include_tasks: centos.yml
-  when: ansible_distribution in [ 'CentOS','OracleLinux','RedHat','Anolis' ]
+  when: ansible_facts['distribution'] in [ 'CentOS','OracleLinux','RedHat','Anolis' ]
 
 - include_tasks: ubuntu.yml
-  when: ansible_distribution in [ 'Ubuntu','Debian' ]
+  when: ansible_facts['distribution'] in [ 'Ubuntu','Debian' ]
 
 - name: 需手动重启服务器
   debug:

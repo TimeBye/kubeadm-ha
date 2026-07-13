@@ -36,7 +36,7 @@ do_install() {
         # Fallback to pip for older distributions without apt packages
         sudo apt-get install -y python3-pip sshpass build-essential libssl-dev libffi-dev python3-dev
         sudo pip3 install -U pip -i https://mirrors.aliyun.com/pypi/simple/
-        sudo pip3 install --no-cache-dir ansible==2.10.7 netaddr -i https://mirrors.aliyun.com/pypi/simple/
+        sudo pip3 install --no-cache-dir ansible netaddr -i https://mirrors.aliyun.com/pypi/simple/
         exit 0
       ;;
     centos|fedora|rhel|ol|anolis|kylin|almalinux|uos|rocky)
@@ -47,7 +47,7 @@ do_install() {
         # Fallback to pip for distributions without ansible in yum repos
         sudo yum install -y python3-pip sshpass libffi-devel python3-devel openssl-devel
         sudo pip3 install -U pip -i https://mirrors.aliyun.com/pypi/simple/
-        sudo pip3 install --no-cache-dir ansible==2.10.7 netaddr -i https://mirrors.aliyun.com/pypi/simple/
+        sudo pip3 install --no-cache-dir ansible netaddr -i https://mirrors.aliyun.com/pypi/simple/
         exit 0
       ;;
     openeuler)
@@ -57,13 +57,13 @@ do_install() {
         fi
         # Fallback to pip for openeuler without ansible in yum repos
         sudo yum install -y python3-pip sshpass
-        sudo pip3 install --no-cache-dir ansible==2.10.7 netaddr -i https://mirrors.aliyun.com/pypi/simple/
+        sudo pip3 install --no-cache-dir ansible netaddr -i https://mirrors.aliyun.com/pypi/simple/
         exit 0
       ;;
     *)
       if [ -z "$lsb_dist" ]; then
         if is_darwin; then
-          brew install ./ansible/homebrew-core/ansible.rb
+          brew install ansible
           brew install ./ansible/homebrew-core/sshpass.rb
           exit 0
         fi

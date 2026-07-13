@@ -137,10 +137,10 @@
   when: container_manager_detected == "containerd"
 
 - include_tasks: centos.yml
-  when: ansible_distribution is regex ("AlmaLinux|Rocky|openEuler|CentOS|OracleLinux|RedHat|Anolis|Kylin.*|UOS.*")
+  when: ansible_facts['distribution'] is regex ("AlmaLinux|Rocky|openEuler|CentOS|OracleLinux|RedHat|Anolis|Kylin.*|UOS.*")
 
 - include_tasks: debian.yml
-  when: ansible_distribution in [ 'Ubuntu','Debian' ]
+  when: ansible_facts['distribution'] in [ 'Ubuntu','Debian' ]
 
 - name: 收集 kubelet 挂载的目录
   shell: set -o pipefail && mount | grep {{ kubelet_root_dir }} | awk '{print $3}' | tac
@@ -165,8 +165,8 @@
     name: "{{ item }}"
     state: absent
   with_items:
-    - "{{ ansible_env.HOME | default('/root') }}/.helm"
-    - "{{ ansible_env.HOME | default('/root') }}/.kube"
+    - "{{ ansible_facts['env'].HOME | default('/root') }}/.helm"
+    - "{{ ansible_facts['env'].HOME | default('/root') }}/.kube"
     - "{{ containerd_storage_dir }}"
     - "{{ docker_storage_dir }}"
     - "{{ kubelet_root_dir }}"
@@ -271,15 +271,15 @@
 - name: 重启网络
   systemd:
     name: >-
-      {% if ansible_os_family == "RedHat" -%}
-      {%- if ansible_distribution_major_version|int == 8 -%}
+      {% if ansible_facts['os_family'] == "RedHat" -%}
+      {%- if ansible_facts['distribution_major_version']|int == 8 -%}
       NetworkManager
       {%- else -%}
       network
       {%- endif -%}
-      {%- elif ansible_distribution == "Ubuntu" and ansible_distribution_release == "bionic" -%}
+      {%- elif ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_release'] == "bionic" -%}
       systemd-networkd
-      {%- elif ansible_os_family == "Debian" -%}
+      {%- elif ansible_facts['os_family'] == "Debian" -%}
       networking
       {%- endif %}
     state: restarted

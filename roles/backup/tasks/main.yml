@@ -75,7 +75,7 @@
 - name: 所有节点备份 /etc/kubernetes 目录
   copy:
     src: /etc/kubernetes/
-    dest: /tmp/kubernetes.orig.{{ ansible_date_time.iso8601_basic_short }}
+    dest: /tmp/kubernetes.orig.{{ ansible_facts['date_time'].iso8601_basic_short }}
     mode: 0644
     remote_src: yes
 
