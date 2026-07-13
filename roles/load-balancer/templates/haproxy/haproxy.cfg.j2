@@ -1,5 +1,5 @@
 global
-    maxconn                 {{ 10000 * ansible_processor_vcpus|int }}
+    maxconn                 {{ 10000 * ansible_facts['processor_vcpus']|int }}
     log                     127.0.0.1 local0
 
 defaults
@@ -17,7 +17,7 @@ defaults
     timeout server          15m
     timeout http-keep-alive 30s
     timeout check           30s
-    maxconn                 {{ 10000 * ansible_processor_vcpus|int }}
+    maxconn                 {{ 10000 * ansible_facts['processor_vcpus']|int }}
 
 listen stats
     bind 0.0.0.0:{{ lb_haproxy_stats_bind_address }}

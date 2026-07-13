@@ -153,8 +153,8 @@
       name: "{{ item }}"
       state: directory
     with_items:
-    - "{{ ansible_env.PWD }}/.kube"
-    - "{{ ansible_env.HOME }}/.kube"
+    - "{{ ansible_facts['env'].PWD }}/.kube"
+    - "{{ ansible_facts['env'].HOME }}/.kube"
 
   - name: 复制 kubeconfig 文件到 .kube 目录
     copy:
@@ -163,8 +163,8 @@
       mode: 0644
       remote_src: yes
     with_items:
-    - "{{ ansible_env.PWD }}/.kube"
-    - "{{ ansible_env.HOME }}/.kube"
+    - "{{ ansible_facts['env'].PWD }}/.kube"
+    - "{{ ansible_facts['env'].HOME }}/.kube"
   when: inventory_hostname in (groups['kube-master'] + groups['new-master'])
 
 - name: 重新加载 daemon

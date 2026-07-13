@@ -4,7 +4,7 @@ ip_vs_rr
 ip_vs_wrr
 ip_vs_sh
 br_netfilter
-{% if modprobe_nf_conntrack_ipv4 is success %}
+{% if ansible_facts['kernel'] is version('4.19', '<') %}
 nf_conntrack_ipv4
 {% else %}
 nf_conntrack

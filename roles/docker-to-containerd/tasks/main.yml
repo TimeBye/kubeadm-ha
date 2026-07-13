@@ -61,7 +61,7 @@
       - "containerd.io"
       state: absent
       enablerepo: docker-ce-stable
-    when: ansible_distribution is regex ("AlmaLinux|Rocky|openEuler|CentOS|OracleLinux|RedHat|Anolis|Kylin.*|UOS.*")
+    when: ansible_facts['distribution'] is regex ("AlmaLinux|Rocky|openEuler|CentOS|OracleLinux|RedHat|Anolis|Kylin.*|UOS.*")
 
   - name: 卸载 Docker 服务
     apt: 
@@ -71,7 +71,7 @@
       - "containerd.io"
       state: absent
       allow_unauthenticated: true
-    when: ansible_distribution in [ 'Ubuntu','Debian' ]
+    when: ansible_facts['distribution'] in [ 'Ubuntu','Debian' ]
 
   - name: 清除 Docker 相关二进制文件及目录
     file: 

@@ -11,7 +11,7 @@
   set_fact:
     # Kylin需要开启(https://blog.csdn.net/yy4545/article/details/125652470)
     ansible_python_interpreter: /usr/bin/python3
-  when: ansible_distribution is regex ("Kylin.*")
+  when: ansible_facts['distribution'] is regex ("Kylin.*")
 
 - block:
   - name: 判断 firewalld 是否安装

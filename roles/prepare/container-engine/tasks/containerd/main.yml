@@ -43,7 +43,7 @@
     file: 
       name: "{{ containerd_registries_config_dir | default('/etc/containerd/certs.d') }}/{{ item }}"
       state: directory
-    with_items: "{{ containerd_registries }}"
+    with_items: "{{ containerd_registries.keys() | list }}"
   
   - name: 生成 Containerd registries 配置文件
     template:
@@ -52,7 +52,7 @@
       owner: root
       mode: 0644
       backup: yes
-    with_items: "{{ containerd_registries }}"
+    with_items: "{{ containerd_registries.keys() | list }}"
   
   - name: 生成 crictl 配置文件
     template:
