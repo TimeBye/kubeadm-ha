@@ -9,9 +9,27 @@
     - "{{ docker_storage_dir }}"
     - /etc/systemd/system/docker.service.d
   
-  - name: 下载 Docker
+  - name: 检查本地是否已有 Docker 安装包
+    stat:
+      path: "{{ playbook_dir }}/roles/prepare/container-engine/files/docker-{{ docker_version }}.{{ ansible_facts['architecture'] }}.tgz"
+    register: local_docker
+    run_once: true
+    delegate_to: localhost
+    become: false
+
+  - name: 下载 Docker 到 Ansible 控制机
     get_url:
       url: "{{ docker_download_url }}"
+      dest: "{{ playbook_dir }}/roles/prepare/container-engine/files/docker-{{ docker_version }}.{{ ansible_facts['architecture'] }}.tgz"
+      checksum: "sha256:{{ docker_sha256[ansible_facts['architecture']] }}"
+    run_once: true
+    delegate_to: localhost
+    become: false
+    when: not local_docker.stat.exists
+  
+  - name: 分发 Docker 到各节点
+    copy:
+      src: "docker-{{ docker_version }}.{{ ansible_facts['architecture'] }}.tgz"
       dest: "/tmp/docker-ce.tgz"
   
   - name: 解压 Docker 安装包

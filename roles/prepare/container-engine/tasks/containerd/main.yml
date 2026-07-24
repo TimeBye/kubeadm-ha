@@ -7,14 +7,50 @@
     - /etc/systemd/system/containerd.service.d
     - "{{ containerd_config.root | default('/var/lib/containerd') }}"
   
-  - name: 下载 Containerd
+  - name: 检查本地是否已有 Containerd 安装包
+    stat:
+      path: "{{ playbook_dir }}/roles/prepare/container-engine/files/containerd-{{ containerd_version }}-linux-{{ host_architecture }}.tar.gz"
+    register: local_containerd
+    run_once: true
+    delegate_to: localhost
+    become: false
+
+  - name: 下载 Containerd 到 Ansible 控制机
     get_url:
       url: "{{ containerd_download_url }}"
-      dest: "/tmp/containerd.tar.gz"
+      dest: "{{ playbook_dir }}/roles/prepare/container-engine/files/containerd-{{ containerd_version }}-linux-{{ host_architecture }}.tar.gz"
+      checksum: "sha256:{{ containerd_sha256[host_architecture] }}"
+    run_once: true
+    delegate_to: localhost
+    become: false
+    when: not local_containerd.stat.exists
   
-  - name: 下载 Runc
+  - name: 检查本地是否已有 Runc 二进制文件
+    stat:
+      path: "{{ playbook_dir }}/roles/prepare/container-engine/files/runc-{{ runc_version }}.{{ host_architecture }}"
+    register: local_runc
+    run_once: true
+    delegate_to: localhost
+    become: false
+
+  - name: 下载 Runc 到 Ansible 控制机
     get_url:
       url: "{{ runc_download_url }}"
+      dest: "{{ playbook_dir }}/roles/prepare/container-engine/files/runc-{{ runc_version }}.{{ host_architecture }}"
+      checksum: "sha256:{{ runc_sha256[host_architecture] }}"
+    run_once: true
+    delegate_to: localhost
+    become: false
+    when: not local_runc.stat.exists
+  
+  - name: 分发 Containerd 到各节点
+    copy:
+      src: "containerd-{{ containerd_version }}-linux-{{ host_architecture }}.tar.gz"
+      dest: "/tmp/containerd.tar.gz"
+  
+  - name: 分发 Runc 到各节点
+    copy:
+      src: "runc-{{ runc_version }}.{{ host_architecture }}"
       dest: "/tmp/runc"
   
   - name: 解压 Containerd 安装包

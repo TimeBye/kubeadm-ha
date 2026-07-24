@@ -1,6 +1,24 @@
-- name: 下载 cri-dockerd
+- name: 检查本地是否已有 cri-dockerd 安装包
+  stat:
+    path: "{{ playbook_dir }}/roles/prepare/container-engine/files/cri-dockerd-{{ cri_dockerd_version }}.{{ host_architecture }}.tgz"
+  register: local_cri_dockerd
+  run_once: true
+  delegate_to: localhost
+  become: false
+
+- name: 下载 cri-dockerd 到 Ansible 控制机
   get_url:
     url: "{{ cri_dockerd_download_url }}"
+    dest: "{{ playbook_dir }}/roles/prepare/container-engine/files/cri-dockerd-{{ cri_dockerd_version }}.{{ host_architecture }}.tgz"
+    checksum: "sha256:{{ cri_dockerd_sha256[host_architecture] }}"
+  run_once: true
+  delegate_to: localhost
+  become: false
+  when: not local_cri_dockerd.stat.exists
+
+- name: 分发 cri-dockerd 到各节点
+  copy:
+    src: "cri-dockerd-{{ cri_dockerd_version }}.{{ host_architecture }}.tgz"
     dest: "/tmp/cri-dockerd.tgz"
 
 - name: 解压 cri-dockerd 安装包
