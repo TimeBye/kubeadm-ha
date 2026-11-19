@@ -7,14 +7,14 @@
 - name: 校验将被移除的 master 节点是否在原 master 组中
   run_once: true
   assert:
-    that: "{{ item in groups['kube-master'] }}"
+    that: "item in groups['kube-master']"
     msg: "当前节点: {{ item }}，并未在 kube-master 组中，不需要进行移除操作。"
   with_items: "{{ groups['del-master'] }}"
 
 - name: 校验移除 master 节点后剩余 master 节点数量
   run_once: true
   assert:
-    that: "{{ (groups['kube-master'] | difference(groups['del-master']))|length >= 1 }}"
+    that: "(groups['kube-master'] | difference(groups['del-master']))|length >= 1"
     msg: "移除 master 节点后，剩余 master 节点数量应大于等于 1。"
 
 - name: 刷新集群 master 节点状态

@@ -27,14 +27,14 @@
 - name: 校验将被移除的 etcd 节点是否在原 etcd 组中
   run_once: true
   assert:
-    that: "{{ item in groups['etcd'] }}"
+    that: "item in groups['etcd']"
     msg: "当前节点: {{ item }}，并未在 etcd 组中，不需要进行移除操作。"
   with_items: "{{ groups['del-etcd'] }}"
 
 - name: 校验移除 etcd 节点后剩余 etcd 节点数量
   run_once: true
   assert:
-    that: "{{ (groups['etcd'] | difference(groups['del-etcd']))|length >= 1 }}"
+    that: "(groups['etcd'] | difference(groups['del-etcd']))|length >= 1"
     msg: "移除 etcd 节点后，剩余 etcd 节点数量应大于等于 1。"
 
 - name: 获取将要移除的 etcd 节点 member id
