@@ -278,9 +278,10 @@
 #   {% endif %}
 
 # # kubernetes apiserver 的服务 ip
-# kubernetes_service_ip: "{{ kube_service_subnet | ipaddr('net') | ipaddr(1) | ipaddr('address') }}"
+# _kube_service_subnet_parts: "{{ kube_service_subnet.split('/')[0].split('.') | map('int') | list }}"
+# kubernetes_service_ip: "{{ _kube_service_subnet_parts[0] }}.{{ _kube_service_subnet_parts[1] }}.{{ _kube_service_subnet_parts[2] }}.{{ _kube_service_subnet_parts[3] + 1 }}"
 # # 集群 dns 的服务 ip
-# cluster_dns_service_ip: "{{ kube_service_subnet | ipaddr('net') | ipaddr(10) | ipaddr('address') }}"
+# cluster_dns_service_ip: "{{ _kube_service_subnet_parts[0] }}.{{ _kube_service_subnet_parts[1] }}.{{ _kube_service_subnet_parts[2] }}.{{ _kube_service_subnet_parts[3] + 10 }}"
 
 # #-------------------------------------------------------------------------------------------------------------#
 # #------------------------------------------------- Chrony参数 ------------------------------------------------#
