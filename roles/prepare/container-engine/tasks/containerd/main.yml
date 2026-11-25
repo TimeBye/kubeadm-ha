@@ -20,6 +20,11 @@
       url: "{{ containerd_download_url }}"
       dest: "{{ playbook_dir }}/roles/prepare/container-engine/files/containerd-{{ containerd_version }}-linux-{{ host_architecture }}.tar.gz"
       checksum: "sha256:{{ containerd_sha256[host_architecture] }}"
+      timeout: 120
+    register: containerd_download_result
+    until: containerd_download_result is not failed
+    retries: 3
+    delay: 10
     run_once: true
     delegate_to: localhost
     become: false
@@ -38,6 +43,11 @@
       url: "{{ runc_download_url }}"
       dest: "{{ playbook_dir }}/roles/prepare/container-engine/files/runc-{{ runc_version }}.{{ host_architecture }}"
       checksum: "sha256:{{ runc_sha256[host_architecture] }}"
+      timeout: 120
+    register: runc_download_result
+    until: runc_download_result is not failed
+    retries: 3
+    delay: 10
     run_once: true
     delegate_to: localhost
     become: false

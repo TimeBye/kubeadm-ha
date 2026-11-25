@@ -1,3 +1,12 @@
+- name: 准备控制机安装包缓存目录
+  file:
+    path: "{{ playbook_dir }}/roles/prepare/container-engine/files"
+    state: directory
+    mode: 0755
+  run_once: true
+  delegate_to: localhost
+  become: false
+
 - name: 判断 Docker 是否早已安装
   shell: >
     systemctl is-active docker || echo "not running"

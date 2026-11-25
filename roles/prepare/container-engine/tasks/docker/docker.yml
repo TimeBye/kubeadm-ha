@@ -22,6 +22,11 @@
       url: "{{ docker_download_url }}"
       dest: "{{ playbook_dir }}/roles/prepare/container-engine/files/docker-{{ docker_version }}.{{ ansible_facts['architecture'] }}.tgz"
       checksum: "sha256:{{ docker_sha256[ansible_facts['architecture']] }}"
+      timeout: 120
+    register: docker_download_result
+    until: docker_download_result is not failed
+    retries: 3
+    delay: 10
     run_once: true
     delegate_to: localhost
     become: false
